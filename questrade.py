@@ -85,3 +85,6 @@ def get_active_balance_usd(acctNum):
                 if k in selectedKeys:
                     tempUSD[k] = v
             return tempUSD
+
+
+print(get_account_num())

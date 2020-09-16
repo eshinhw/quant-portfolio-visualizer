@@ -1,9 +1,29 @@
 import questrade as qt
 import pandas as pd
 from prettytable import PrettyTable
+import sys
+import os
+import smtplib
+from email.message import EmailMessage
+
+EMAIL_ADDRESS = "eshinhw@gmail.com"
+EMAIL_PASSWORD = "qjsdfhgqdphqpbvd"
+
+msg = EmailMessage()
+
+msg['Subject'] = "Test 1"
+msg['From'] = "eshinhw@gmail.com"
+msg['To'] = "eshinhw@gmail.com"
 
 # input target allocation ratio bewteen two assets
-target = {'VFV.TO': 0.6, 'XBB.TO': 0.4}
+target = {'VFV.TO': 1, 'XBB.TO': 0}
+try:
+    if sum(target.values()) < 0 or sum(target.values()) > 1:
+        raise Exception
+except:
+    print("INVALID TARGET RATIO INPUTS - PLEASE GO BACK AND FIX")
+    sys.exit()
+
 # input transaction cost for selling assets
 transaction = 5
 
@@ -69,7 +89,7 @@ for symbol in df.index:
             qty = new_qty            
         post_cash = post_cash - buy
         df.loc[symbol, 'after rebalancing'] = df.loc[symbol, 'currentMarketValue'] + buy
-        rebal.add_row([symbol, 'BUY', int(qty), currP])
+        rebal.add_row([symbol, 'BUY', int(qty), "$ {}".format(currP)])
         #print("Total ${} is subtracted from cash account".format(buy))
     
     # selling
@@ -77,19 +97,16 @@ for symbol in df.index:
         sell = (-qty) * currP
         post_cash = post_cash + sell - transaction
         df.loc[symbol, 'after rebalancing'] = df.loc[symbol, 'currentMarketValue'] - sell
-        rebal.add_row([symbol, 'SELL', -int(qty), currP])
+        rebal.add_row([symbol, 'SELL', -int(qty), "$ {}".format(currP)])
         #print("Total ${} is added from cash account".format(sell))
     
     # no rebalancing
     else:
-        print("{} |  -  |      -     | $ -".format(symbol))
+        df.loc[symbol, 'after rebalancing'] = df.loc[symbol, 'currentMarketValue']
+        rebal.add_row([symbol, '-', '-', "$ -"])
 
         
 df = df.astype({'after rebalancing': float})
-
-
-
-
 
 
 
@@ -112,9 +129,18 @@ for symbol in df.index:
                      "$ {:.2f}".format(postMV), 
                      "{:.2f} %".format((priorMV/totalEquity)*100), 
                      "{:.2f} %".format((postMV/totalEquity)*100)])
-
-print("==> REBALANCING SUMMARY")
-print(rebal)
+    
 print()
-print("==> POST-REBALANCING ACCOUNT STATUS")
-print(summary)
+rebal.sortby = 'SYMBOL'
+print(rebal.get_string(title="REBALANCING ORDER SUMMARY"))
+print()
+summary.sortby = 'ASSETS'
+print(summary.get_string(title="POST-REBALANCING ACCOUNT STATUS OVERVIEW"))
+
+msg.set_content(rebal.get_html_string())
+
+# with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+#     smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+#     smtp.send_message(msg)
+    
+#     print('completed')
