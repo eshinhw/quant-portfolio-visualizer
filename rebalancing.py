@@ -3,14 +3,15 @@ import pandas as pd
 from prettytable import PrettyTable
 
 # input target allocation ratio bewteen two assets
-target = {'VFV.TO': 0.8, 'XBB.TO': 0.2}
+target = {'VFV.TO': 0.6, 'XBB.TO': 0.4}
 # input transaction cost for selling assets
 transaction = 5
 
 acctNum = qt.get_account_num()[0]
 
 totalEquity = qt.get_active_balance_cad(acctNum)['totalEquity']
-cash = qt.get_active_balance_cad(acctNum)['cash']
+prior_cash = qt.get_active_balance_cad(acctNum)['cash']
+post_cash = prior_cash
 
 positions = qt.get_open_positions(acctNum)
 
@@ -48,9 +49,10 @@ df.sort_values(by=['Qty Change'], inplace=True)
 
 # iterate from the top to sell first and buy later with cash adjustment
 
-x = PrettyTable()
+rebal = PrettyTable()
 
-x.field_names = ['SYMBOL', 'ACTION REQ.', '# SHARES', 'PRICE']
+
+rebal.field_names = ['SYMBOL', 'ACTION REQ.', '# SHARES', 'PRICE']
 
 for symbol in df.index:
 
@@ -60,17 +62,22 @@ for symbol in df.index:
     # buying
     if qty > 0:
         buy = qty * currP
-        cash = cash - buy
+        
+        if post_cash < buy:
+            new_qty = int(post_cash / currP)
+            buy = currP * new_qty
+            qty = new_qty            
+        post_cash = post_cash - buy
         df.loc[symbol, 'after rebalancing'] = df.loc[symbol, 'currentMarketValue'] + buy
-        x.add_row([symbol, 'BUY', int(qty), currP])
+        rebal.add_row([symbol, 'BUY', int(qty), currP])
         #print("Total ${} is subtracted from cash account".format(buy))
     
     # selling
     elif qty < 0:
         sell = (-qty) * currP
-        cash = cash + sell - transaction
+        post_cash = post_cash + sell - transaction
         df.loc[symbol, 'after rebalancing'] = df.loc[symbol, 'currentMarketValue'] - sell
-        x.add_row([symbol, 'SELL', -int(qty), currP])
+        rebal.add_row([symbol, 'SELL', -int(qty), currP])
         #print("Total ${} is added from cash account".format(sell))
     
     # no rebalancing
@@ -79,5 +86,35 @@ for symbol in df.index:
 
         
 df = df.astype({'after rebalancing': float})
-print(x)
-print(cash)
+
+
+
+
+
+
+
+summary = PrettyTable()
+
+summary.field_names = ['ASSETS', 'PRIOR ($)', 'POST ($)', 'PRIOR (%)', 'POST (%)']
+
+summary.add_row(['CASH', 
+                 "$ {:.2f}".format(prior_cash), 
+                 "$ {:.2f}".format(post_cash), 
+                 "{:.2f} %".format((prior_cash/totalEquity)*100), 
+                 "{:.2f} %".format((post_cash/totalEquity)*100)])
+
+for symbol in df.index:
+    priorMV = df.loc[symbol,'currentMarketValue']
+    postMV = df.loc[symbol, 'after rebalancing']
+    
+    summary.add_row([symbol, 
+                     "$ {:.2f}".format(priorMV), 
+                     "$ {:.2f}".format(postMV), 
+                     "{:.2f} %".format((priorMV/totalEquity)*100), 
+                     "{:.2f} %".format((postMV/totalEquity)*100)])
+
+print("==> REBALANCING SUMMARY")
+print(rebal)
+print()
+print("==> POST-REBALANCING ACCOUNT STATUS")
+print(summary)
