@@ -86,5 +86,5 @@ def get_active_balance_usd(acctNum):
                     tempUSD[k] = v
             return tempUSD
 
-
-print(get_account_num())
+if '__name__' == '__main__':
+    print(get_account_num())

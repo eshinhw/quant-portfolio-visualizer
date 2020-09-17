@@ -2,27 +2,22 @@ import questrade as qt
 import pandas as pd
 from prettytable import PrettyTable
 import sys
-import os
-import smtplib
-from email.message import EmailMessage
-
-EMAIL_ADDRESS = "eshinhw@gmail.com"
-EMAIL_PASSWORD = "qjsdfhgqdphqpbvd"
-
-msg = EmailMessage()
-
-msg['Subject'] = "Test 1"
-msg['From'] = "eshinhw@gmail.com"
-msg['To'] = "eshinhw@gmail.com"
 
 # input target allocation ratio bewteen two assets
-target = {'VFV.TO': 1, 'XBB.TO': 0}
+target = {'VFV.TO': 0.7, 'XBB.TO': 0.3}
 try:
     if sum(target.values()) < 0 or sum(target.values()) > 1:
         raise Exception
 except:
     print("INVALID TARGET RATIO INPUTS - PLEASE GO BACK AND FIX")
     sys.exit()
+
+else:
+    print()
+    print("TARGET PERCENTAGE FOR EACH ASSET")
+    print()
+    for symbol in target:
+        print("{} : {} %".format(symbol,target[symbol] * 100))
 
 # input transaction cost for selling assets
 transaction = 5
@@ -89,7 +84,7 @@ for symbol in df.index:
             qty = new_qty            
         post_cash = post_cash - buy
         df.loc[symbol, 'after rebalancing'] = df.loc[symbol, 'currentMarketValue'] + buy
-        rebal.add_row([symbol, 'BUY', int(qty), "$ {}".format(currP)])
+        rebal.add_row([symbol, 'BUY', int(qty), "$ {:.2f}".format(currP)])
         #print("Total ${} is subtracted from cash account".format(buy))
     
     # selling
@@ -97,7 +92,7 @@ for symbol in df.index:
         sell = (-qty) * currP
         post_cash = post_cash + sell - transaction
         df.loc[symbol, 'after rebalancing'] = df.loc[symbol, 'currentMarketValue'] - sell
-        rebal.add_row([symbol, 'SELL', -int(qty), "$ {}".format(currP)])
+        rebal.add_row([symbol, 'SELL', -int(qty), "$ {:.2f}".format(currP)])
         #print("Total ${} is added from cash account".format(sell))
     
     # no rebalancing
@@ -108,16 +103,14 @@ for symbol in df.index:
         
 df = df.astype({'after rebalancing': float})
 
-
-
 summary = PrettyTable()
 
-summary.field_names = ['ASSETS', 'PRIOR ($)', 'POST ($)', 'PRIOR (%)', 'POST (%)']
+summary.field_names = ['ASSETS', 'PRIOR ($)', 'PRIOR (%)', 'POST ($)', 'POST (%)']
 
 summary.add_row(['CASH', 
                  "$ {:.2f}".format(prior_cash), 
-                 "$ {:.2f}".format(post_cash), 
-                 "{:.2f} %".format((prior_cash/totalEquity)*100), 
+                 "{:.2f} %".format((prior_cash/totalEquity)*100),
+                 "$ {:.2f}".format(post_cash),                   
                  "{:.2f} %".format((post_cash/totalEquity)*100)])
 
 for symbol in df.index:
@@ -125,9 +118,9 @@ for symbol in df.index:
     postMV = df.loc[symbol, 'after rebalancing']
     
     summary.add_row([symbol, 
-                     "$ {:.2f}".format(priorMV), 
-                     "$ {:.2f}".format(postMV), 
-                     "{:.2f} %".format((priorMV/totalEquity)*100), 
+                     "$ {:.2f}".format(priorMV),
+                     "{:.2f} %".format((priorMV/totalEquity)*100),
+                     "$ {:.2f}".format(postMV),                      
                      "{:.2f} %".format((postMV/totalEquity)*100)])
     
 print()
@@ -137,10 +130,3 @@ print()
 summary.sortby = 'ASSETS'
 print(summary.get_string(title="POST-REBALANCING ACCOUNT STATUS OVERVIEW"))
 
-msg.set_content(rebal.get_html_string())
-
-# with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-#     smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-#     smtp.send_message(msg)
-    
-#     print('completed')
