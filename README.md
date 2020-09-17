@@ -1,1 +1,1 @@
-# questrade-port-manager
+# Automatic Portfolio Manager
