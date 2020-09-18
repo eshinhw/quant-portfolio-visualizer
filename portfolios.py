@@ -1,4 +1,27 @@
 
+def get_user_input():
+    
+    print('Please choose one of the following allocation strategies below')
+    print()    
+    
+    print('1. All Weather Portfolio')
+    print('2. Conservative Portfolio')
+    print('3. Balanced Portfolio')
+    print('4. Growth Portfolio')
+    print('5. Permanent Portfolio')
+    
+    choice = input('Enter: ')    
+    
+    switcher = {
+                '1': all_weather_port(),
+                '2': conservative_port(),
+                '3': balanced_port(),
+                '4': growth_port(),
+                '5': permanent_port()}
+    
+    return switcher.get(choice)
+
+
 
 def all_weather_port():
     """
@@ -17,6 +40,15 @@ def conservative_port():
     allocation = {'XBB.TO': 0.7, 'VFV.TO': 0.3}
     
     return allocation
+
+def balanced_port():
+    """
+    70% in Bonds and 30% in Stocks
+    """
+    
+    allocation = {'XBB.TO': 0.5, 'VFV.TO': 0.5}
+    
+    return allocation
     
 
 def growth_port():
@@ -33,7 +65,7 @@ def permanent_port():
     25% in Stocks, 50% in Fixed Income and 25% in Comodities
     """
     
-    
+    pass
 
 def crisis_port():
     """
@@ -43,5 +75,9 @@ def crisis_port():
     
     return {}
     
-    
+
+if __name__ == '__main__':
+    print('executed directly')
+    print(growth_port())
+    print(conservative_port())
 

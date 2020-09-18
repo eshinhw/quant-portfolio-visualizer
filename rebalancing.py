@@ -2,16 +2,34 @@ import questrade as qt
 import pandas as pd
 from prettytable import PrettyTable
 import sys
+import portfolios
+
 
 # input target allocation ratio bewteen two assets
-target = {'VFV.TO': 0.7, 'XBB.TO': 0.3}
+#target = {'VFV.TO': 0.7, 'XBB.TO': 0.3}
+
+target = portfolios.get_user_input()
+
 try:
     if sum(target.values()) < 0 or sum(target.values()) > 1:
         raise Exception
+        
 except:
     print("INVALID TARGET RATIO INPUTS - PLEASE GO BACK AND FIX")
     sys.exit()
 
+# check if assets in selected portfolio are tradeable in Questrade 
+
+try:
+    for symbol in target.keys():
+        
+        if qt.check_symbol_exists(symbol) == False:
+            nta = symbol
+            raise Exception
+except:
+    print('PORTFOLIO CONTAINS A NON-TRADABLE ASSET {}'.format(nta))
+    sys.exit()  
+    
 else:
     print()
     print("TARGET PERCENTAGE FOR EACH ASSET")
@@ -32,17 +50,29 @@ positions = qt.get_open_positions(acctNum)
 
 df = pd.DataFrame()
 
-# add positions into dataframe
+# add currently holding positions into dataframe
 
 for position in positions:    
     
     symbol = position['symbol']
     openQuantity = position['openQuantity']
     currMV = position['currentMarketValue']
-    currPrice = position['currentPrice']    
-    t = target[position['symbol']]
+    currPrice = position['currentPrice']  
+    print(position)
     
     df = df.append(position, ignore_index=True)    
+    
+
+# add newly added assets into dataframe
+
+for symbol in target.keys():
+    
+    if symbol not in df['symbol']:
+        new = {}
+        new['symbol'] = symbol
+        new['openQuantity'] = 0
+        new['currentMarketValue'] = 0 
+        new['currentPrice'] = 
 
 df.set_index('symbol', inplace=True)
 

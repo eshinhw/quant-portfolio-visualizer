@@ -85,6 +85,23 @@ def get_active_balance_usd(acctNum):
                 if k in selectedKeys:
                     tempUSD[k] = v
             return tempUSD
+        
+def check_symbol_exists(symbol):
+    """
+    Check to see if the given symbol is tradable in Questrade
+    """
+    
+    data = q.symbols_search(prefix=symbol)
+    
+    if len(data['symbols']) == 0:
+        return False
+    else:
+        return True
+    
+    
+    
+    
+    
 
 if '__name__' == '__main__':
     print(get_account_num())
