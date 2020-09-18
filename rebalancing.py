@@ -66,7 +66,6 @@ df.sort_values(by=['Qty Change'], inplace=True)
 
 rebal = PrettyTable()
 
-
 rebal.field_names = ['SYMBOL', 'ACTION REQ.', '# SHARES', 'PRICE']
 
 for symbol in df.index:
