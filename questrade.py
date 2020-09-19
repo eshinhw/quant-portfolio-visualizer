@@ -97,6 +97,8 @@ def check_symbol_exists(symbol):
         return False
     else:
         return True
+
+def get_current_price(symbol):
     
     
     
