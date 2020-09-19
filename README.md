@@ -1,1 +1,1 @@
-# Automatic Portfolio Manager
+# Automatic Position Calculator
