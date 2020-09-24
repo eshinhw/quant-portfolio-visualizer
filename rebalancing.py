@@ -46,43 +46,64 @@ totalEquity = qt.get_active_balance_cad(acctNum)['totalEquity']
 prior_cash = qt.get_active_balance_cad(acctNum)['cash']
 post_cash = prior_cash
 
+# returns a list of positions called position
+# where each element is a dictionary containing position info for each position
 positions = qt.get_open_positions(acctNum)
 
+# output dataframe for rebalancing calculation
 df = pd.DataFrame()
 
-# add currently holding positions into dataframe
+# print(positions)
+currentHoldings = []
 
+# add currently holding positions into dataframe from a list of positions
 for position in positions:    
     
     symbol = position['symbol']
     openQuantity = position['openQuantity']
     currMV = position['currentMarketValue']
     currPrice = position['currentPrice']  
-    print(position)
+    #print(position)
+    currentHoldings.append(symbol)
     
-    df = df.append(position, ignore_index=True)    
+    df = df.append(position, ignore_index=True)   
     
+# print(df)
+# print(currentHoldings)
 
 # add newly added assets into dataframe
 
 for symbol in target.keys():
     
-    if symbol not in df['symbol']:
+    # print("target symbol: ", symbol)
+    # print(df['symbol'])
+    
+    if symbol not in currentHoldings:
+        
+        # print("not in current portfolio: " ,symbol)
         new = {}
         new['symbol'] = symbol
         new['openQuantity'] = 0
-        new['currentMarketValue'] = 0 
-        new['currentPrice'] = 
+        new['currentMarketValue'] = 0
+        new['currentPrice'] = qt.get_current_price(symbol)
+        new['symbolId'] = qt.get_symbol_id(symbol)
+        
+        df = df.append(new, ignore_index=True)
 
 df.set_index('symbol', inplace=True)
 
 # calculate quantity changes for rebalancing
 
 for symbol in df.index:
-    
-    df.loc[symbol,'targetValue'] = (totalEquity * target[symbol])
-    df.loc[symbol,'variation'] = df.loc[symbol,'targetValue'] - df.loc[symbol,'currentMarketValue']  
-    df.loc[symbol,'Qty Change'] = df.loc[symbol,'variation'] / df.loc[symbol,'currentPrice']
+    if symbol not in target: # we have to sell all shares of symbol
+        df.loc[symbol, 'targetValue'] = 0
+        df.loc[symbol,'variation'] = df.loc[symbol,'targetValue'] - df.loc[symbol,'currentMarketValue']  
+        df.loc[symbol,'Qty Change'] = df.loc[symbol,'variation'] / df.loc[symbol,'currentPrice']
+    else:
+                    
+        df.loc[symbol,'targetValue'] = (totalEquity * target[symbol])
+        df.loc[symbol,'variation'] = df.loc[symbol,'targetValue'] - df.loc[symbol,'currentMarketValue']  
+        df.loc[symbol,'Qty Change'] = df.loc[symbol,'variation'] / df.loc[symbol,'currentPrice']
     
 # change datatype for certain columns
 
@@ -153,9 +174,11 @@ for symbol in df.index:
                      "{:.2f} %".format((postMV/totalEquity)*100)])
     
 print()
-rebal.sortby = 'SYMBOL'
+rebal.sortby = 'ACTION REQ.'
+rebal.reversesort = True
 print(rebal.get_string(title="REBALANCING ORDER SUMMARY"))
 print()
-summary.sortby = 'ASSETS'
+summary.sortby = 'POST (%)'
+summary.reversesort = True
 print(summary.get_string(title="POST-REBALANCING ACCOUNT STATUS OVERVIEW"))
 

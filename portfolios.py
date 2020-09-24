@@ -1,5 +1,7 @@
 
 def get_user_input():
+    print()
+    print() 
     
     print('Please choose one of the following allocation strategies below')
     print()    
@@ -8,7 +10,9 @@ def get_user_input():
     print('2. Conservative Portfolio')
     print('3. Balanced Portfolio')
     print('4. Growth Portfolio')
-    print('5. Permanent Portfolio')
+    print('5. EM Portfolio')
+    print('6. International Stock Portfolio')
+    print('7. Crisis 100% Cash Portfolio')
     
     choice = input('Enter: ')    
     
@@ -17,7 +21,9 @@ def get_user_input():
                 '2': conservative_port(),
                 '3': balanced_port(),
                 '4': growth_port(),
-                '5': permanent_port()}
+                '5': emerging_market_port(),
+                '6': international_port(),
+                '7': crisis_port()}
     
     return switcher.get(choice)
 
@@ -60,12 +66,22 @@ def growth_port():
     
     return allocation
 
-def permanent_port():
+def emerging_market_port():
     """
-    25% in Stocks, 50% in Fixed Income and 25% in Comodities
+    50% in EM Stocks and 50% in Bonds
     """
     
+    return {'XEF.TO': 0.5, 'XBB.TO': 0.5}
+    
     pass
+
+def international_port():
+    """
+    50% in International Stocks and 50% in Bonds
+    """
+    return {'XEC.TO': 0.5, 'XBB.TO': 0.5}
+    
+    
 
 def crisis_port():
     """

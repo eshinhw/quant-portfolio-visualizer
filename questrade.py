@@ -97,8 +97,26 @@ def check_symbol_exists(symbol):
         return False
     else:
         return True
-
+def get_symbol_id(symbol):
+    
+    data = q.symbols_search(prefix=symbol)
+    
+    return data['symbols'][0]['symbolId']
+    
+    
 def get_current_price(symbol):
+    
+    data = q.symbols_search(prefix=symbol)
+    
+    symbolId = data['symbols'][0]['symbolId']
+    
+    price = q.symbol(symbolId)
+    
+    #print(price)
+    
+    return price['symbols'][0]['prevDayClosePrice'] 
+    
+    
     
     
     
