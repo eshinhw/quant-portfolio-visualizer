@@ -10,12 +10,18 @@ import portfolios
 
 target = portfolios.get_user_input()
 
+weights = {}
+
+for k, v in target.items():    
+    if k != 'model':
+        weights[k] = target[k]
+
 try:
-    if sum(target.values()) < 0 or sum(target.values()) > 1:
+    if sum(weights.values()) < 0 or sum(weights.values()) > 1:
         raise Exception
         
 except:
-    print("INVALID TARGET RATIO INPUTS - PLEASE GO BACK AND FIX")
+    print("Invalid Portfolio Inputs")
     sys.exit()
 
 # check if assets in selected portfolio are tradeable in Questrade 
@@ -32,10 +38,10 @@ except:
     
 else:
     print()
-    print("TARGET PERCENTAGE FOR EACH ASSET")
+    print("Rebalancing to {}".format(target['model']))
     print()
-    for symbol in target:
-        print("{} : {} %".format(symbol,target[symbol] * 100))
+    for symbol in weights:
+            print("{} : {} %".format(symbol,weights[symbol] * 100))        
 
 # input transaction cost for selling assets
 transaction = 5
@@ -73,9 +79,9 @@ for position in positions:
 
 # add newly added assets into dataframe
 
-for symbol in target.keys():
+for symbol in weights.keys():
     
-    # print("target symbol: ", symbol)
+    # print("weights symbol: ", symbol)
     # print(df['symbol'])
     
     if symbol not in currentHoldings:
@@ -95,13 +101,13 @@ df.set_index('symbol', inplace=True)
 # calculate quantity changes for rebalancing
 
 for symbol in df.index:
-    if symbol not in target: # we have to sell all shares of symbol
+    if symbol not in weights: # we have to sell all shares of symbol
         df.loc[symbol, 'targetValue'] = 0
         df.loc[symbol,'variation'] = df.loc[symbol,'targetValue'] - df.loc[symbol,'currentMarketValue']  
         df.loc[symbol,'Qty Change'] = df.loc[symbol,'variation'] / df.loc[symbol,'currentPrice']
     else:
                     
-        df.loc[symbol,'targetValue'] = (totalEquity * target[symbol])
+        df.loc[symbol,'targetValue'] = (totalEquity * weights[symbol])
         df.loc[symbol,'variation'] = df.loc[symbol,'targetValue'] - df.loc[symbol,'currentMarketValue']  
         df.loc[symbol,'Qty Change'] = df.loc[symbol,'variation'] / df.loc[symbol,'currentPrice']
     
