@@ -1,6 +1,7 @@
 import sys
+import questrade as qt
 
-DIVIDER = "=" * 27
+DIVIDER = "=" * 60
 
 def get_user_input():
  
@@ -12,42 +13,43 @@ def get_user_input():
         print(DIVIDER)
         print() 
         
-        print('1. Balanced Portfolio')
-        print('2. EM Portfolio')
-        print('3. International Stock Portfolio')
-        print('4. Crisis 100% Cash Portfolio')
-        print('0. Exit')
+        print('1. BALANCED PORTFOLIO')
+        print('2. EMERGING MARKETS PORTFOLIO')
+        print('3. INTERNATIONAL EQUITIES PORTFOLIO')
+        print('4. CRISIS 100% CASH PORTFOLIO')
+        print('0. EXIT')
         
-        port_choice = input('Selection: ')
+        port_choice = input('>> ')
         
         if port_choice == '0':
             print("GOODBYE!")
             sys.exit()
         
         elif port_choice == '1':
-            balanced_port.description()
+            balanced.description()
         
         elif port_choice == '2':
-            emerging_market_port.description()
+            emerging_market.description()
             
         elif port_choice == '3':
-            international_port.description() 
+            international_equities.description() 
             
         elif port_choice == '4':
-            crisis_port.description() 
+            crisis.description() 
         
         print()
-        print("Would you like to proceed? [Y/N]")
+        print(DIVIDER)
+        print("PROCEED? [Y/N]")
         
-        proceed = input('Selection: ')
+        proceed = input('>> ')
         
         if proceed == 'Y' or proceed == 'y':        
         
             allocation = {
-                    '1': balanced_port.get_allocation(),
-                    '2': emerging_market_port.get_allocation(),
-                    '3': international_port.get_allocation(),
-                    '4': crisis_port.get_allocation()}
+                    '1': balanced.get_allocation(),
+                    '2': emerging_market.get_allocation(),
+                    '3': international_equities.get_allocation(),
+                    '4': crisis.get_allocation()}
             
             return allocation.get(port_choice)
         
@@ -55,23 +57,37 @@ def get_user_input():
             continue
 
 
-class balanced_port():
+class balanced():
     """
     50% in Bonds and 50% in Stocks
     """
+    
+    allocation = {'XBB.TO': 0.5, 'VFV.TO': 0.5}        
+        
     def description():
         print()
         print(DIVIDER)
         print("BALANCED PORTFOLIO DESCRIPTION")
         print(DIVIDER)
-        des = "50% in Bonds and 50% in Stocks"
-        print(des)
+        print()
+        
+        print("1. ALLOCATION PREVIEW\n")
+        
+        for symbol in balanced.allocation:    
+            print("{} % | {} | {}".format(balanced.allocation[symbol] * 100, 
+                                          symbol, 
+                                          qt.get_symbol_description(symbol)))
+        print()
+        
+        print("2. HISTORICAL RETURNS\n")
+        
+        print("3. RISK MEASURES\n")
     
     def get_allocation():
-        return {'model': 'Balanced Portfolio', 'XBB.TO': 0.5, 'VFV.TO': 0.5}
+        return balanced.allocation
     
 
-class emerging_market_port():
+class emerging_market():
     """
     50% in EM Stocks and 50% in Bonds
     """
@@ -87,7 +103,7 @@ class emerging_market_port():
     def get_allocation():
         return {'model': 'Emerging Markets Portfolio', 'XBB.TO': 0.3, 'VFV.TO': 0.7}
 
-class international_port():
+class international_equities():
     """
     50% in International Stocks and 50% in Bonds
     """
@@ -102,7 +118,7 @@ class international_port():
     def get_allocation():
         return {'model': 'International Portfolio', 'XBB.TO': 0.3, 'VFV.TO': 0.7}    
 
-class crisis_port():
+class crisis():
     """
     100% in Cash
     No holding means sell everything and hold cash

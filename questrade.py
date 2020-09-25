@@ -92,11 +92,13 @@ def check_symbol_exists(symbol):
     """
     
     data = q.symbols_search(prefix=symbol)
+    # print(data)
     
     if len(data['symbols']) == 0:
         return False
     else:
         return True
+
 def get_symbol_id(symbol):
     
     data = q.symbols_search(prefix=symbol)
@@ -115,6 +117,12 @@ def get_current_price(symbol):
     #print(price)
     
     return price['symbols'][0]['prevDayClosePrice'] 
+
+def get_symbol_description(symbol):
+    
+    data = q.symbols_search(prefix=symbol)
+    
+    return data['symbols'][0]['description']
     
     
     
@@ -123,5 +131,6 @@ def get_current_price(symbol):
     
     
 
-if '__name__' == '__main__':
-    print(get_account_num())
+if __name__ == '__main__':
+    check_symbol_exists('XBB.TO')
+    print("hello?")

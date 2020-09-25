@@ -4,17 +4,12 @@ from prettytable import PrettyTable
 import sys
 import portfolios
 
+DIVIDER = "=" * 60
 
 # input target allocation ratio bewteen two assets
 #target = {'VFV.TO': 0.7, 'XBB.TO': 0.3}
 
-target = portfolios.get_user_input()
-
-weights = {}
-
-for k, v in target.items():    
-    if k != 'model':
-        weights[k] = target[k]
+weights = portfolios.get_user_input()
 
 try:
     if sum(weights.values()) < 0 or sum(weights.values()) > 1:
@@ -27,7 +22,7 @@ except:
 # check if assets in selected portfolio are tradeable in Questrade 
 
 try:
-    for symbol in target.keys():
+    for symbol in weights.keys():
         
         if qt.check_symbol_exists(symbol) == False:
             nta = symbol
@@ -38,8 +33,9 @@ except:
     
 else:
     print()
-    print("Rebalancing to {}".format(target['model']))
-    print()
+    print(DIVIDER)
+    print("TARGET ALLOCATION")
+    print(DIVIDER)
     for symbol in weights:
             print("{} : {} %".format(symbol,weights[symbol] * 100))        
 
