@@ -31,7 +31,7 @@ def rebalancing(weights):
         
         print("■ TARGET PORTFOLIO\n")
         for symbol in weights:
-                print("\t\t{} % | {} | {}".format(weights[symbol] * 100, symbol, qt.get_symbol_description(symbol)))        
+                print(helper.INDENT + "{} % | {} | {}".format(weights[symbol] * 100, symbol, qt.get_symbol_description(symbol)))        
     
     # input transaction cost for selling assets
     transaction = 5
@@ -56,9 +56,6 @@ def rebalancing(weights):
     for position in positions:    
         
         symbol = position['symbol']
-        openQuantity = position['openQuantity']
-        currMV = position['currentMarketValue']
-        currPrice = position['currentPrice']  
         #print(position)
         currentHoldings.append(symbol)
         

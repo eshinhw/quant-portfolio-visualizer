@@ -3,7 +3,6 @@ import questrade as qt
 import backtesting as bt
 import helper
 
-
 def get_description(allocation):
     
     print("■ ALLOCATION PREVIEW\n")
