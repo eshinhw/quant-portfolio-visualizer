@@ -49,7 +49,7 @@ while (1):
     print(helper.INDENT + '3. ' + internationalName)
     print(helper.INDENT + '4. ' + crisisName)
     print()
-    print('\t\t0. EXIT')
+    print(helper.INDENT + '0. EXIT')
     
     port_choice = input('>> ')
     

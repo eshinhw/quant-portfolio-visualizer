@@ -1,6 +1,7 @@
 
 import questrade as qt
 import backtesting as bt
+import helper
 
 
 def get_description(allocation):
@@ -8,7 +9,7 @@ def get_description(allocation):
     print("■ ALLOCATION PREVIEW\n")
     
     for symbol in allocation:    
-        print("\t\t{} % | {} | {}".format(allocation[symbol] * 100, 
+        print(helper.INDENT + "{} % | {} | {}".format(allocation[symbol] * 100, 
                                       symbol, 
                                       qt.get_symbol_description(symbol)))
     print()    
@@ -16,9 +17,9 @@ def get_description(allocation):
     
     measures = bt.portfolio_measures(allocation)    
     
-    print("\t\tCAGR: {:.2f} %".format(measures[1] * 100))
-    print("\t\tVOLATILITY: {:.2f} %".format(measures[2] * 100))
-    print("\t\tSHARPE RATIO: {:.2f}".format(measures[3]))
+    print(helper.INDENT + "CAGR: {:.2f} %".format(measures[1] * 100))
+    print(helper.INDENT + "VOLATILITY: {:.2f} %".format(measures[2] * 100))
+    print(helper.INDENT + "SHARPE RATIO: {:.2f}".format(measures[3]))
     
         
         
