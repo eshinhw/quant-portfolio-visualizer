@@ -16,8 +16,8 @@ def get_description(allocation):
     
     measures = bt.portfolio_measures(allocation)    
     
-    print(helper.INDENT + "CAGR: {:.2f} %".format(measures[1] * 100))
-    print(helper.INDENT + "VOLATILITY: {:.2f} %".format(measures[2] * 100))
+    print(helper.INDENT + "COMPOUNDED ANNUAL GROWTH RATE (CAGR): {:.2f} %".format(measures[1] * 100))
+    print(helper.INDENT + "MAXIMUM DRAWDOWN (MDD): {:.2f} %".format(measures[2] * 100))
     print(helper.INDENT + "SHARPE RATIO: {:.2f}".format(measures[3]))
     
         
