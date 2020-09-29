@@ -14,11 +14,11 @@ def get_description(allocation):
     print()    
     print("■ HISTORICAL PERFORMANCE MEASURES\n")
     
-    measures = bt.portfolio_measures(allocation)    
+    inception_date, cagr, mdd, sharpe = bt.portfolio_measures(allocation)    
     
-    print(helper.INDENT + "COMPOUNDED ANNUAL GROWTH RATE (CAGR): {:.2f} %".format(measures[1] * 100))
-    print(helper.INDENT + "MAXIMUM DRAWDOWN (MDD): {:.2f} %".format(measures[2] * 100))
-    print(helper.INDENT + "SHARPE RATIO: {:.2f}".format(measures[3]))
+    print(helper.INDENT + "COMPOUNDED ANNUAL GROWTH RATE (CAGR): {:.2f} %".format(cagr * 100))
+    print(helper.INDENT + "MAXIMUM DRAWDOWN (MDD): {:.2f} %".format(mdd * 100))
+    print(helper.INDENT + "SHARPE RATIO: {:.2f}".format(sharpe))
     
         
         

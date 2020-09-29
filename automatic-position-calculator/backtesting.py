@@ -70,7 +70,7 @@ def portfolio_measures(data):
     # print(mdd.values[0])
     # print(mdd.values[1])
     
-    return [df.index[0].strftime('%b-%d-%Y'), port_cagr, port_mdd, port_sharpe]
+    return df.index[0].strftime('%b-%d-%Y'), port_cagr, port_mdd, port_sharpe
 
 if __name__ == '__main__':
     portfolio_measures({'VFV.TO': 0.5, 'XBB.TO': 0.5})
