@@ -19,7 +19,9 @@ def get_description(allocation):
     print(helper.INDENT + "COMPOUNDED ANNUAL GROWTH RATE (CAGR): {:.2f} %".format(cagr * 100))
     print(helper.INDENT + "MAXIMUM DRAWDOWN (MDD): {:.2f} %".format(mdd * 100))
     print(helper.INDENT + "SHARPE RATIO: {:.2f}".format(sharpe))
-    
+
+
+
         
         
     
