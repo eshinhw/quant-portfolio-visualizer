@@ -2,20 +2,49 @@ import streamlit as st
 import pandas as pd
 import calculator
 import questrade as qt
+import sys
 
 
+st.title("**Portfolio Rebalancing Calculator**")
 
-st.title("**Portfolio Performance Tracker**")
+st.sidebar.header('User Input')
 
-st.sidebar.header('Portfolios')
+accountNum = st.sidebar.text_input('Enter Your Questrade Account Number', type='password')
 
-if st.sidebar.checkbox('S&P 500 Benchmark'):
-    acctNum = qt.get_account_num()[0]
+if st.sidebar.button('Submit'):
+    result = accountNum.title()
+    st.sidebar.success(result)
+
+st.sidebar.header('Model Portfolios')
+
+if st.sidebar.checkbox('Balanced Portfolio'):
     
-    target = {'VFV.TO': 0, 'XBB.TO': 1}
-    cal = calculator.portfolio_rebalancing_calculator(target, acctNum)
+    st.subheader('Balanced Portfolio')
+    
+    target = {'VFV.TO': 0.5, 'XBB.TO': 0.5}
+    cal = calculator.portfolio_rebalancing_calculator(target, '51802566')
+   
+    df = cal.target_positions()    
+    final = cal.order_calculation(df)
+    st.dataframe(final.style.format("{:.2f}"))
+    # st.dataframe(final)
 
-    if cal.valid_input() == True:    
-        df = cal.target_positions()    
-        final = cal.order_calculation(df)
-    st.dataframe(final)
+if st.sidebar.checkbox('Crisis 100% Cash Portfolio'):
+    
+    st.subheader('Crisis 100% Cash Portfolio')
+    
+    target = {}
+    cal = calculator.portfolio_rebalancing_calculator(target, '51802566')
+   
+    df = cal.target_positions()    
+    final = cal.order_calculation(df)
+    st.dataframe(final.style.format("{:.2f}"))
+    # st.dataframe(final)
+    
+
+
+
+
+
+if __name__ == '__main__':
+    sys.argv = ['streamlit', 'run', 'visualization.py']
