@@ -4,7 +4,7 @@ import numpy as np
 import datetime as dt
 
 
-def get_price(symbols):
+def price(symbols):
     
     start = dt.datetime(1970,1,1)
     end = dt.datetime.today()
@@ -17,7 +17,7 @@ def get_price(symbols):
     
     return df
 
-def get_cumulative_returns(df):
+def cumulative_returns(df):
     
     daily_returns = df.pct_change()
     
@@ -27,7 +27,7 @@ def get_cumulative_returns(df):
     return cumulative_returns
     
 
-# def get_portfolio_daily_returns(df, weights):
+def portfolio_daily_returns(df, weights):
     
     
 
