@@ -50,11 +50,11 @@ class portfolio_rebalancing_calculator():
                 df = df.append(new, ignore_index=True)
         
         df.set_index('symbol', inplace=True)
-        df = df.rename(columns={'currentMarketValue': 'Prior Amt', 
+        df = df.rename(columns={'currentMarketValue': 'Prior Amt ($)', 
                            'currentPrice': 'Price',
                            'openQuantity': 'Qty'})
         
-        df = df[['Price', 'Qty', 'Prior Amt']]
+        df = df[['Price', 'Qty', 'Prior Amt ($)']]
         
         return df
     
@@ -62,12 +62,12 @@ class portfolio_rebalancing_calculator():
         
         for symbol in df.index:
             if symbol not in self.symbols: # we have to sell all shares of symbol
-                df.loc[symbol, 'Post Amt'] = 0
-                df.loc[symbol,'Change in Amt'] = df.loc[symbol,'Post Amt'] - df.loc[symbol,'Prior Amt']  
+                df.loc[symbol, 'Post Amt ($)'] = 0
+                df.loc[symbol,'Change in Amt'] = df.loc[symbol,'Post Amt ($)'] - df.loc[symbol,'Prior Amt ($)']  
                 df.loc[symbol,'Qty Change'] = df.loc[symbol,'Change in Amt'] / df.loc[symbol,'Price']
             else:                            
-                df.loc[symbol,'Post Amt'] = (self.totalEquity * self.target[symbol])
-                df.loc[symbol,'Change in Amt'] = df.loc[symbol,'Post Amt'] - df.loc[symbol,'Prior Amt']  
+                df.loc[symbol,'Post Amt ($)'] = (self.totalEquity * self.target[symbol])
+                df.loc[symbol,'Change in Amt'] = df.loc[symbol,'Post Amt ($)'] - df.loc[symbol,'Prior Amt ($)']  
                 df.loc[symbol,'Qty Change'] = df.loc[symbol,'Change in Amt'] / df.loc[symbol,'Price']
         
         # change datatype for certain columns        
@@ -95,28 +95,28 @@ class portfolio_rebalancing_calculator():
                     buy = currP * new_qty
                     qty = new_qty            
                 post_cash = post_cash - buy
-                df.loc[symbol, 'Post Amt'] = df.loc[symbol, 'Prior Amt'] + buy
+                df.loc[symbol, 'Post Amt ($)'] = df.loc[symbol, 'Prior Amt ($)'] + buy
                 #print("Total ${} is subtracted from cash account".format(buy))
             
             # selling
             elif qty < 0:
                 sell = (-qty) * currP
                 post_cash = post_cash + sell - portfolio_rebalancing_calculator.TRANSACTION_COST
-                df.loc[symbol, 'Post Amt'] = df.loc[symbol, 'Prior Amt'] - sell
+                df.loc[symbol, 'Post Amt ($)'] = df.loc[symbol, 'Prior Amt ($)'] - sell
                 #print("Total ${} is added from cash account".format(sell))
             
             # no rebalancing
             else:
-                df.loc[symbol, 'Post Amt'] = df.loc[symbol, 'Prior Amt']
+                df.loc[symbol, 'Post Amt ($)'] = df.loc[symbol, 'Prior Amt ($)']
         
                 
-        df = df.astype({'Post Amt': float})
+        df = df.astype({'Post Amt ($)': float})
         
-        summary = df[['Price', 'Qty', 'Prior Amt','Qty Change', 'Post Amt']]
+        summary = df[['Price', 'Qty', 'Prior Amt ($)','Qty Change', 'Post Amt ($)']]
 
-        for col in summary.columns:
-            if type(summary[col]) == float:
-                summary[col].round(2)
+        # for col in summary.columns:
+        #     if type(summary[col]) == float:
+        #         summary[col].round(2)
         
         return summary
 
@@ -124,7 +124,7 @@ if __name__ == '__main__':
     
     acctNum = qt.get_account_num()[0]
     
-    target = {'VFV.TO': 0, 'XBB.TO': 1}
+    target = {'VTI': 0.3, 'TLT': 0.4, 'IEI': 0.15, 'GLD': 0.075, 'GSG': 0.075}
 
     
     cal = portfolio_rebalancing_calculator(target, acctNum)
