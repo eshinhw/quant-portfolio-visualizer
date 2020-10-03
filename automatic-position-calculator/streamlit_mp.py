@@ -53,24 +53,26 @@ class model_portfolio():
         
         st.table(measures_table)
         
-    def benchmark_comparison(self):
+    # def benchmark_comparison(self):
         
-        START_DATE = dt.datetime(1970,1,1)
-        END_DATE = dt.datetime.today()
+    #     START_DATE = dt.datetime(1970,1,1)
+    #     END_DATE = dt.datetime.today()
         
-        prices = pd.DataFrame()
-        assetList = ['SPY'] + self.symbols
+    #     prices = pd.DataFrame()
+    #     assetList = ['SPY'] + self.symbols
         
-        for symbol in assetList:
+    #     for symbol in assetList:
             
-            prices[symbol] = web.DataReader(symbol,'yahoo', START_DATE, END_DATE)['Adj Close']
+    #         prices[symbol] = web.DataReader(symbol,'yahoo', START_DATE, END_DATE)['Adj Close']
             
-        prices.dropna(inplace=True)
+    #     prices.dropna(inplace=True)
         
-        cumulative = qf.cumulative_returns(prices)
-        cumulative['portfolio'] = 
+    #     cumulative = qf.cumulative_returns(prices)
         
-        return prices, cumulative
+    #     weights = np.array(self.weights)
+    #     cumulative['portfolio'] = np.
+        
+    #     return prices, cumulative
         
         
             

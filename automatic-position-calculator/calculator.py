@@ -1,7 +1,5 @@
 import pandas as pd
 import questrade as qt
-import sys
-
 
 
 class portfolio_rebalancing_calculator():    
@@ -96,23 +94,51 @@ class portfolio_rebalancing_calculator():
                     qty = new_qty            
                 post_cash = post_cash - buy
                 df.loc[symbol, 'Post Amt ($)'] = df.loc[symbol, 'Prior Amt ($)'] + buy
-                #print("Total ${} is subtracted from cash account".format(buy))
             
             # selling
             elif qty < 0:
                 sell = (-qty) * currP
                 post_cash = post_cash + sell - portfolio_rebalancing_calculator.TRANSACTION_COST
                 df.loc[symbol, 'Post Amt ($)'] = df.loc[symbol, 'Prior Amt ($)'] - sell
-                #print("Total ${} is added from cash account".format(sell))
             
             # no rebalancing
             else:
-                df.loc[symbol, 'Post Amt ($)'] = df.loc[symbol, 'Prior Amt ($)']            
+                df.loc[symbol, 'Post Amt ($)'] = df.loc[symbol, 'Prior Amt ($)']  
+                
+        # print("Prior " + str(post_cash))                
+       
+        # Minimize cash holding loop - extra distribution to available assets        
+        # if post_cash > 0:
             
-        
+        #     df = df.sort_values(by=['Post Amt ($)'], ascending= True)
+            
+        #     for symbol in df.index:
+                
+        #         post_amt = df.loc[symbol, 'Post Amt ($)']
+        #         symbol_price = df.loc[symbol, 'Price']
+                
+        #         if post_amt > 0 and post_cash > symbol_price:    
+                    
+        #             # newQty = int(post_cash / symbol_price)
+        #             # post_cash = post_cash - (symbol_price * newQty)
+        #             # df.loc[symbol, 'Qty Change'] = df.loc[symbol, 'Qty Change'] + newQty
+        #             # df.loc[symbol, 'Post Amt ($)'] = df.loc[symbol, 'Post Amt ($)'] + (symbol_price * newQty)
+                    
+        #             df.loc[symbol, 'Qty Change'] = df.loc[symbol, 'Qty Change'] + 1
+        #             post_cash = post_cash - symbol_price
+        #             df.loc[symbol, 'Post Amt ($)'] = df.loc[symbol, 'Post Amt ($)'] + symbol_price
+
         df = df.astype({'Post Amt ($)': float})
         
-        summary = df[['Price', 'Qty', 'Prior Amt ($)','Qty Change', 'Post Amt ($)']]
+        df = df.sort_values(by=['Qty Change'], ascending= True)
+        
+        for symbol in df.index:
+            
+            df.loc[symbol, 'Prior Amt (%)'] = (df.loc[symbol, 'Prior Amt ($)'] / self.totalEquity) * 100
+            df.loc[symbol, 'Post Amt (%)'] = (df.loc[symbol, 'Post Amt ($)'] / self.totalEquity) * 100
+            
+        print("Post " + str(post_cash))
+        summary = df[['Price', 'Qty', 'Prior Amt ($)', 'Prior Amt (%)', 'Post Amt ($)', 'Post Amt (%)', 'Qty Change']]
         
         return summary, post_cash
 
@@ -120,14 +146,14 @@ if __name__ == '__main__':
     
     acctNum = qt.get_account_num()[0]
     
-    target = {'VTI': 0.3, 'TLT': 0.4, 'IEI': 0.15, 'GLD': 0.075, 'GSG': 0.075}
+    target = {'VFV.TO': 0.5, 'XBB.TO': 0.5}
 
     
     cal = portfolio_rebalancing_calculator(target, acctNum)
        
     df = cal.target_positions() 
     print(df)
-    final = cal.order_calculation(df)
+    final, cash = cal.order_calculation(df)
     
     print(final)
             
