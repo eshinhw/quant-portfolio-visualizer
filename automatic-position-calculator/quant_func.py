@@ -22,14 +22,14 @@ def cumulative_returns(df):
     daily_returns = df.pct_change()
     
     cumulative_returns = (1+daily_returns).cumprod()
-    cumulative_returns.fillna(1, inplace=True)
+    cumulative_returns.dropna(inplace=True)
+    # cumulative_returns.fillna(1, inplace=True)
     
     return cumulative_returns
     
 
 def portfolio_daily_returns(df, weights):
     pass
-    
     
 
     

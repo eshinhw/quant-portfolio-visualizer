@@ -4,6 +4,9 @@ import calculator
 import questrade as qt
 import sys
 
+import pandas_datareader.data as web
+import quant_func as qf
+
 import portfolios
 
 import datetime as dt
@@ -16,6 +19,8 @@ class model_portfolio():
         
         self.name = name
         self.target = target
+        self.symbols = list(target.keys())
+        self.weights = list(target.values())
         st.header("Selected Portfolio: " + name)        
     
     def description(self):  
@@ -36,9 +41,7 @@ class model_portfolio():
     
     def performance_measures(self):
         
-        today = dt.datetime.today().strftime('%B %d, %Y')
-        
-        
+        today = dt.datetime.today().strftime('%B %d, %Y')        
         
         st.subheader('Historical Performance Measures as of ' + today)
         stats = portfolios.get_performance(self.target)
@@ -49,6 +52,33 @@ class model_portfolio():
         measures_table.set_index('Name', inplace=True)
         
         st.table(measures_table)
+        
+    def benchmark_comparison(self):
+        
+        START_DATE = dt.datetime(1970,1,1)
+        END_DATE = dt.datetime.today()
+        
+        prices = pd.DataFrame()
+        assetList = ['SPY'] + self.symbols
+        
+        for symbol in assetList:
+            
+            prices[symbol] = web.DataReader(symbol,'yahoo', START_DATE, END_DATE)['Adj Close']
+            
+        prices.dropna(inplace=True)
+        
+        cumulative = qf.cumulative_returns(prices)
+        cumulative['portfolio'] = 
+        
+        return prices, cumulative
+        
+        
+            
+        
+        
+        
+        
+        
         
     def rebalancing_summary(self):
         
@@ -61,6 +91,14 @@ class model_portfolio():
         st.table(final.style.format("{:.2f}"))        
         
         st.write("POST REBALANCING CASH BALANCE: $ {:.2f} ".format(remaining_cash))
+        
+
+if __name__ == '__main__':
+    
+    balanced = model_portfolio('Balanced Portfolio', 
+                                  {'VFV.TO': 0.5, 'XBB.TO': 0.5})   
+    
+    p, cum = balanced.benchmark_comparison()
 
             
             

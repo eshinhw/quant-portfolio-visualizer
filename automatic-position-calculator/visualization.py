@@ -1,20 +1,8 @@
 import streamlit as st
-import pandas as pd
-import calculator
-import questrade as qt
-
-import portfolios
 import streamlit_mp as mp
 
 
 st.title("**Portfolio Rebalancing Calculator**")
-
-st.sidebar.header('User Input')
-
-accountNum = st.sidebar.text_input('Enter Your Questrade Account Number')
-
-if st.sidebar.button('Submit'):
-    st.sidebar.success("Submitted!")
 
 st.sidebar.header('Model Portfolios')
 
