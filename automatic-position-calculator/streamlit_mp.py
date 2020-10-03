@@ -6,6 +6,8 @@ import sys
 
 import portfolios
 
+import datetime as dt
+
 ACCOUNT_NUM = '51802566'
 
 class model_portfolio():
@@ -13,9 +15,12 @@ class model_portfolio():
     def __init__(self, name, target):
         
         self.name = name
-        self.target = target        
+        self.target = target
+        st.header("Selected Portfolio: " + name)        
     
-    def description(self):        
+    def description(self):  
+        
+        st.subheader('Portfolio Description')
     
         description = portfolios.get_description(self.target)    
         input_dict = {'Symbol':[], 'Symbol Description':[], 'Weight':[]}
@@ -31,7 +36,11 @@ class model_portfolio():
     
     def performance_measures(self):
         
-        st.subheader('Historical Performance Measures')
+        today = dt.datetime.today().strftime('%B %d, %Y')
+        
+        
+        
+        st.subheader('Historical Performance Measures as of ' + today)
         stats = portfolios.get_performance(self.target)
         
         measures_dict = {'Name': [self.name], 'Since': [stats[0]], 'CAGR': [stats[1]], 'MDD': [stats[2]], 'Sharpe': [stats[3]]}    
@@ -43,22 +52,16 @@ class model_portfolio():
         
     def rebalancing_summary(self):
         
+        st.subheader('Portfolio Rebalancing Summary')
+        
         cal = calculator.portfolio_rebalancing_calculator(self.target, ACCOUNT_NUM)
    
         df = cal.target_positions()    
-        final = cal.order_calculation(df)
-        st.table(final.style.format("{:.2f}"))
+        final, remaining_cash = cal.order_calculation(df)
+        st.table(final.style.format("{:.2f}"))        
         
-        for symbol in final.index:
-            qtychange = final.loc[symbol,'Qty Change']
-            price = final.loc[symbol, 'Price']
-            
-            if  qtychange < 0:
-                st.write("SELL {} SHARES OF {} AT $ {}".format(abs(qtychange), symbol, price))
-            
-            if qtychange > 0:
-                st.write("BUY {} SHARES OF {} AT $ {}".format(abs(qtychange), symbol, price))
-            
+        st.write("POST REBALANCING CASH BALANCE: $ {:.2f} ".format(remaining_cash))
+
             
             
             

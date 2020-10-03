@@ -25,7 +25,7 @@ class portfolio_rebalancing_calculator():
             if sum(self.weights) < 0 or sum(self.weights) > 1:
                 raise Exception
         
-        except Exception as e:
+        except Exception:
             print('INVALID SYMBOLS OR WEIGHTS')
     
     def target_positions(self):
@@ -107,18 +107,14 @@ class portfolio_rebalancing_calculator():
             
             # no rebalancing
             else:
-                df.loc[symbol, 'Post Amt ($)'] = df.loc[symbol, 'Prior Amt ($)']
+                df.loc[symbol, 'Post Amt ($)'] = df.loc[symbol, 'Prior Amt ($)']            
+            
         
-                
         df = df.astype({'Post Amt ($)': float})
         
         summary = df[['Price', 'Qty', 'Prior Amt ($)','Qty Change', 'Post Amt ($)']]
-
-        # for col in summary.columns:
-        #     if type(summary[col]) == float:
-        #         summary[col].round(2)
         
-        return summary
+        return summary, post_cash
 
 if __name__ == '__main__':
     
