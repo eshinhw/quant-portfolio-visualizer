@@ -11,6 +11,8 @@ Value + Growth + Quality + Dividend
 
 Finding high quality under valued stocks with margin of safety
 Make sure the selected stocks have high growth potential
-While continuously growing business models, the selected companies also respect their shareholders by paying dividends
+While continuously growing business models, the selected companies also respect their shareholders by paying dividends 
+
+Dividend Analysis
 
 """
