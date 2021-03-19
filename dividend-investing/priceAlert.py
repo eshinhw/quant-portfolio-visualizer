@@ -1,19 +1,11 @@
 import os
 import datetime as dt
 import email_sender as email
-from qtrade import Questrade
-import schedule
-import time
+import pandas_datareader.data as web
 
 watchlist = [('MO', 45), # Altria Group
              ('SBUX', 100) # Starbucks
              ]
-
-
-
-
-qt = Questrade(token_yaml=r'C:\Users\eshin\Desktop\GitHub\quantitative-finance-and-investing\dividend-investing\access_token.yml')
-qt.refresh_access_token(from_yaml=True)
 
 
 startDate = (dt.date.today() - dt.timedelta(days=1)).strftime("%Y-%m-%d")
@@ -24,8 +16,7 @@ EMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD")
 for stock in watchlist:
     symbol = stock[0]
     targetPrice = stock[1]
-    data = qt.get_historical_data(symbol, startDate, endDate, 'OneDay')
-    close = data[1]['close']
+    close = web.DataReader(symbol, 'yahoo', startDate, endDate)['Adj Close'].iloc[-1].round(2)
     if close <= targetPrice:
         email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD,
                         'Time to consider buying ' + symbol, 'Recent close price is $' + str(close))
