@@ -17,7 +17,7 @@ for stock in watchlist:
     symbol = stock[0]
     targetPrice = stock[1]
     close = web.DataReader(symbol, 'yahoo', startDate, endDate)['Adj Close'].iloc[-1].round(2)
-    print(close)
+    #print(close)
     if close <= targetPrice:
         email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD,
                         'Time to consider buying ' + symbol, 'Recent close price is $' + str(close))
