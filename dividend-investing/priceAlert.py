@@ -4,7 +4,8 @@ import email_sender as email
 import pandas_datareader.data as web
 
 watchlist = [('MO', 45), # Altria Group
-             ('SBUX', 100) # Starbucks
+             ('SBUX', 100), # Starbucks
+             ('ABBV', 100)
              ]
 
 
