@@ -17,7 +17,8 @@ You can compare the overall performances of different kinds of portfolios.
 You can see how Dual Momentum portfolios such as GEM and GBM have been doing compared to the market benchmark.
 ![image](https://user-images.githubusercontent.com/41933169/112768475-3d63c500-8fea-11eb-912b-15261c7bffef.png)
 
-If you are interested in dividend investing, you can learn how to find companies with strong dividend history.
+If you are interested in dividend investing, you can learn how to find companies with strong dividend history. <br>
+Below are some of the companies' historical dividend payout charts.
 ![image](https://user-images.githubusercontent.com/41933169/112768890-3b026a80-8fec-11eb-919a-6f762719bed5.png)
 ![image](https://user-images.githubusercontent.com/41933169/112768897-481f5980-8fec-11eb-909a-0be331141ef5.png)
 
