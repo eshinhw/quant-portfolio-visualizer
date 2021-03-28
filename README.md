@@ -2,7 +2,7 @@
 
 This repository contains a collection of notebooks specifically related to quantitative investing topics such as below.
 
-▶ Dual Momentum
+▶ Dual Momentum\n
 ▶ Dividend Investing
 ▶ Portfolio Returns and Volatility Measures
 ▶ automated tools for quant investing
