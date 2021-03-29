@@ -7,7 +7,7 @@ A jupyter notebook called 'Questrade Portfolio Manager' retrieves account inform
 
 Whenever I am curious of how my investing account is doing, all I need to do is just run this notebook to see the overall performance. In terms of security, qtrade wrapper automatically refreshes a security token, so I don't have to log in to the website to get a new token everytime I run the notebook.
 
-Below are data-tables and visualizations I can get from the notebook.
+Below are a sample dataframe and visualizations I can create from the notebook.
 
 ## Breakdown of Holdings
 ![image](https://user-images.githubusercontent.com/41933169/112911987-84be8400-90c4-11eb-94cf-b3c9836887f5.png)
