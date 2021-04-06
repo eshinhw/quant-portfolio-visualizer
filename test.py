@@ -10,6 +10,34 @@ INSTRUMENTS = ["EUR_USD", "GBP_USD", "USD_JPY", "USD_CAD"]
 RISK_PER_TRADE = 0.001
 
 
+def cancel_all_trades(accountID):
+    """ Cancel all open orders
+
+    Args:
+        accountID (String): account ID
+    """
+    order_list = get_order_list(accountID)
+    #print("RESPONSE:\n{}".format(json.dumps(order_list, indent=2)))
+    # print(order_list)
+    for order in order_list:
+        r = orders.OrderCancel(accountID=accountID, orderID=order['id'])
+        client.request(r)
+
+
+def get_order_list(accountID):
+    """ Retrieve a list of open orders
+
+    Args:
+        accountID (String): account ID
+
+    Returns:
+        List[String]: open orders
+    """
+    r = orders.OrderList(accountID)
+    resp = client.request(r)
+    return resp['orders']
+
+
 def get_account_conversion_rate():
     """ Base currency of the account is CAD so pip value should be converted to CAD from other base currencies.
 
@@ -115,43 +143,39 @@ def get_current_ask_bid_price(pair):
     return (ask_price, bid_price)
 
 
-def create_buy_stop(pair, entry, stopLoss):
+def create_buy_stop(pair, entry, stop_loss, unit_size):
     order_body = {
         "order": {
             "price": str(entry),
-            "stopLossOnFill": {"timeInForce": "GFD", "price": str(stopLoss)},
+            "stopLossOnFill": {"timeInForce": "GFD", "price": str(stop_loss)},
             "timeInForce": "GFD",
             "instrument": pair,
-            "units": "100",
+            "units": str(unit_size),
             "type": "STOP",
             "positionFill": "DEFAULT",
         }
     }
-
     r = orders.OrderCreate(accountID, data=order_body)
     client.request(r)
 
 
-def create_sell_stop(pair, entry, stopLoss):
+def create_sell_stop(pair, entry, stop_loss, unit_size):
     order_body = {
         "order": {
             "price": str(entry),
-            "stopLossOnFill": {"timeInForce": "GFD", "price": str(stopLoss)},
+            "stopLossOnFill": {"timeInForce": "GFD", "price": str(stop_loss)},
             "timeInForce": "GFD",
             "instrument": pair,
-            "units": "-100",
+            "units": "-" + str(unit_size),
             "type": "STOP",
             "positionFill": "DEFAULT",
         }
     }
-
     r = orders.OrderCreate(accountID, data=order_body)
     client.request(r)
 
 
 # Initialize OANDA API Client
-
-
 with open("oanda_demo_api_token.txt", "r") as secret:
     contents = secret.readlines()
     api_token = contents[0].rstrip("\n")
@@ -159,6 +183,8 @@ with open("oanda_demo_api_token.txt", "r") as secret:
     secret.close()
 
 client = API(access_token=api_token)
+
+cancel_all_trades(accountID)
 
 # while True:
 
