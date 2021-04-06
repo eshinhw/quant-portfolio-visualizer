@@ -1,4 +1,4 @@
-# Py Forex Trading Bot
+# Py FX Trading Bot
 
 ## Introduction
 
