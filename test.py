@@ -8,13 +8,13 @@ import oandapyV20.endpoints.instruments as instruments
 
 
 INSTRUMENTS = ['EUR_USD', 'GBP_USD', 'USD_JPY', 'USD_CAD']
-
+RISK_PER_TRADE = 0.01
 
 def get_acct_summary(accountID):
     r = accounts.AccountSummary(accountID)
     resp = client.request(r)
-    print("RESPONSE:\n{}".format(json.dumps(rv, indent=2)))
-    return resp
+    #print("RESPONSE:\n{}".format(json.dumps(rv, indent=2)))
+    return float(resp['account']['balance'])
 
 
 def get_price_data(symbol):
@@ -33,7 +33,7 @@ def calculate_moving_average(symbol):
     r = instruments.InstrumentsCandles(instrument=symbol,
                                        params=instrument_params)
     resp = client.request(r)
-    print(len(resp['candles']))
+    #print(len(resp['candles']))
     closes = []
     for day in resp['candles']:
         if day['complete'] == True:
@@ -112,6 +112,13 @@ with open('oanda_demo_api_token.txt', 'r') as secret:
 
 client = API(access_token=api_token)
 
+account_balance = get_acct_summary(accountID)
+risk_amt_per_trade = account_balance * RISK_PER_TRADE
+print(account_balance)
+print(risk_amt_per_trade)
+
+# pos_size =
+
 # Get previous day's range
 
 #while True:
@@ -140,19 +147,27 @@ for pair in INSTRUMENTS:
     twenty_ma = calculate_moving_average(pair)
 
     print(f'Symbol: {pair}, Today_Open: {today_open}, prev_high: {prev_high}, prev_low: {prev_low}, buy_stop: {buy_stop}, sell_stop: {sell_stop}, twenty_ma: {twenty_ma}')
+    if '_USD' in pair:
+        sell_stop = round(sell_stop,5)
+        today_open = round(today_open,5)
+        stopLoss_pips = round(abs(sell_stop - today_open)* 10000,1)
+        print(stopLoss_pips)
 
-    # print(twenty_ma)
+        print(risk_amt_per_trade/stopLoss_pips)
 
-    if today_open < twenty_ma: # bearish
-        if 'JPY' in pair:
-            create_sell_stop(pair, round(sell_stop,3), round(today_open,3))
-        else:
-            create_sell_stop(pair, round(sell_stop,5), round(today_open,5))
-    if today_open > twenty_ma: # bullish
-        if 'JPY' in pair:
-            create_buy_stop(pair, round(buy_stop,3), round(today_open,3))
-        else:
-            create_buy_stop(pair, round(buy_stop,3), round(today_open,5))
+    # if today_open < twenty_ma: # bearish
+    #     if 'JPY' in pair:
+    #         create_sell_stop(pair, round(sell_stop,3), round(today_open,3))
+    #     else:
+    #         # sell_stop = round(sell_stop,5)
+    #         # today_open = round(today_open,5)
+    #         # stopLoss_pips = abs()
+    #         create_sell_stop(pair, round(sell_stop,5), round(today_open,5))
+    # if today_open > twenty_ma: # bullish
+    #     if 'JPY' in pair:
+    #         create_buy_stop(pair, round(buy_stop,3), round(today_open,3))
+    #     else:
+    #         create_buy_stop(pair, round(buy_stop,3), round(today_open,5))
 
 
 
