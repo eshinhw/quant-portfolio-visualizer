@@ -6,8 +6,11 @@ import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 
-INSTRUMENTS = ["EUR_USD", "GBP_USD", "USD_JPY", "USD_CAD"]
+# INSTRUMENTS = ["EUR_USD", "GBP_USD", "USD_JPY", "USD_CAD"]
+INSTRUMENTS = ['EUR_USD']
 RISK_PER_TRADE = 0.001
+
+POSITION_STATUS = {}
 
 
 def cancel_all_trades(accountID):
@@ -17,7 +20,7 @@ def cancel_all_trades(accountID):
         accountID (String): account ID
     """
     order_list = get_order_list(accountID)
-    #print("RESPONSE:\n{}".format(json.dumps(order_list, indent=2)))
+    # print("RESPONSE:\n{}".format(json.dumps(order_list, indent=2)))
     # print(order_list)
     for order in order_list:
         r = orders.OrderCancel(accountID=accountID, orderID=order['id'])
@@ -38,14 +41,19 @@ def get_order_list(accountID):
     return resp['orders']
 
 
-def get_account_conversion_rate():
-    """ Base currency of the account is CAD so pip value should be converted to CAD from other base currencies.
+def get_trade_list(accountID):
+    """ Retrieve a list of open trades
+
+    Args:
+        accountID (String): account ID
 
     Returns:
-        Float: CAD/USD exchange rate
+        List[String]: open trades
     """
-    (currentAsk, currentBid) = get_current_ask_bid_price("USD_CAD")
-    return 1 / ((currentAsk + currentBid) / 2)
+    r = trades.TradesList(accountID)
+    resp = client.request(r)
+    print("RESPONSE:\n{}".format(json.dumps(resp, indent=2)))
+    return resp
 
 
 def calculate_unit_size(entry, stop_loss):
@@ -63,7 +71,8 @@ def calculate_unit_size(entry, stop_loss):
     entry = round(entry, 4)
     stop_loss = round(stop_loss, 4)
     stop_loss_pips = round(abs(entry - stop_loss) * 10000, 0)
-    acct_conversion_rate = get_account_conversion_rate()
+    (currentAsk, currentBid) = get_current_ask_bid_price("USD_CAD")
+    acct_conversion_rate = 1 / ((currentAsk + currentBid) / 2)
     unit_size = round(
         (risk_amt_per_trade / stop_loss_pips * acct_conversion_rate) * 10000, 0
     )
@@ -83,7 +92,7 @@ def get_acct_summary(accountID):
     return float(resp["account"]["balance"])
 
 
-def get_price_data(symbol, count, interval):
+def get_candle_data(symbol, count, interval):
     """ Return historical price data.
 
     Args:
@@ -118,14 +127,6 @@ def calculate_moving_average(symbol, count, interval):
     return sum(closes) / len(closes)
 
 
-def get_trade_list():
-    r = trades.TradesList(accountID)
-    # show the endpoint as it is constructed for this call
-    # print("REQUEST:{}".format(r))
-    rv = client.request(r)
-    print("RESPONSE:\n{}".format(json.dumps(rv, indent=2)))
-
-
 def get_current_ask_bid_price(pair):
     """ Return current ask and bid price for pair
 
@@ -152,11 +153,12 @@ def create_buy_stop(pair, entry, stop_loss, unit_size):
             "instrument": pair,
             "units": str(unit_size),
             "type": "STOP",
-            "positionFill": "DEFAULT",
+            "positionFill": "DEFAULT"
         }
     }
     r = orders.OrderCreate(accountID, data=order_body)
     client.request(r)
+    POSITION_STATUS[pair] = 1
 
 
 def create_sell_stop(pair, entry, stop_loss, unit_size):
@@ -168,11 +170,46 @@ def create_sell_stop(pair, entry, stop_loss, unit_size):
             "instrument": pair,
             "units": "-" + str(unit_size),
             "type": "STOP",
-            "positionFill": "DEFAULT",
+            "positionFill": "DEFAULT"
         }
     }
     r = orders.OrderCreate(accountID, data=order_body)
     client.request(r)
+    POSITION_STATUS[pair] = 1
+
+
+def create_sell_limit(pair, entry, stop_loss, unit_size):
+    order_body = {
+        "order": {
+            "price": str(entry),
+            "stopLossOnFill": {"timeInForce": "GFD", "price": str(stop_loss)},
+            "timeInForce": "GFD",
+            "instrument": pair,
+            "units": "-" + str(unit_size),
+            "type": "LIMIT",
+            "positionFill": "DEFAULT"
+        }
+    }
+    r = orders.OrderCreate(accountID, data=order_body)
+    client.request(r)
+    POSITION_STATUS[pair] = 1
+
+
+def create_buy_limit(pair, entry, stop_loss, unit_size):
+    order_body = {
+        "order": {
+            "price": str(entry),
+            "stopLossOnFill": {"timeInForce": "GFD", "price": str(stop_loss)},
+            "timeInForce": "GFD",
+            "instrument": pair,
+            "units": str(unit_size),
+            "type": "LIMIT",
+            "positionFill": "DEFAULT"
+        }
+    }
+    r = orders.OrderCreate(accountID, data=order_body)
+    client.request(r)
+    POSITION_STATUS[pair] = 1
 
 
 # Initialize OANDA API Client
@@ -184,44 +221,72 @@ with open("oanda_demo_api_token.txt", "r") as secret:
 
 client = API(access_token=api_token)
 
-cancel_all_trades(accountID)
+# cancel_all_trades(accountID)
+# get_trade_list(accountID)
 
-# while True:
 
-# for pair in INSTRUMENTS:
-#     data = get_price_data(pair)
-#     # print(data)
-#     prev_high = float(data['candles'][0]['mid']['h'])
-#     prev_low = float(data['candles'][0]['mid']['l'])
-#     prev_range = prev_high - prev_low
-#     k = 0.6
-#     rangeK = prev_range * k
+# get two previous 4H candles & check ohlc -> c0, c1
+for pair in INSTRUMENTS:
+    q = 0.95
+    rk = 1.5
 
-#     today_open = float(data['candles'][1]['mid']['o'])
-#     # print(today_open)
-#     #print(currentAsk, currentBid)
-#     # print(currentPrice)
-#     # buy stop order at today_open + rangeK
-#     buy_stop = today_open + rangeK
-#     sell_stop = today_open - rangeK
-#     twenty_ma = calculate_moving_average(pair)
+    candles = get_candle_data(pair, 3, 'H4')['candles']
+    base = candles[0]
+    signal = candles[1]
+    current = candles[2]
+    # buy signal
+    signal_close = float(signal['mid']['c'])
+    signal_range = float(signal['mid']['h']) - float(signal['mid']['l'])
+    signal_min_close = float(signal['mid']['l']) + (signal_range * q)
 
-#     print(f'Symbol: {pair}, Today_Open: {today_open}, prev_high: {prev_high}, prev_low: {prev_low}, buy_stop: {buy_stop}, sell_stop: {sell_stop}, twenty_ma: {twenty_ma}')
-#     if '_USD' in pair:
+    base_high = float(base['mid']['h'])
+    base_range = float(base['mid']['h']) - float(base['mid']['l'])
+    print(signal_min_close)
+    print(signal_range)
+    print(base_range)
+    if signal_close > base_high and signal_close > signal_min_close and signal_range > (base_range * rk):
+        entry = float(current['mid']['o'])
+        stop_loss = float(signal['mid']['l'])
+        # if that's true: buy at current open + stop loss at previous candle's high or low
 
-# if today_open < twenty_ma: # bearish
-#     if 'JPY' in pair:
-#         create_sell_stop(pair, round(sell_stop,3), round(today_open,3))
-#     else:
-#         # sell_stop = round(sell_stop,5)
-#         # today_open = round(today_open,5)
-#         # stopLoss_pips = abs()
-#         create_sell_stop(pair, round(sell_stop,5), round(today_open,5))
-# if today_open > twenty_ma: # bullish
-#     if 'JPY' in pair:
-#         create_buy_stop(pair, round(buy_stop,3), round(today_open,3))
-#     else:
-#         create_buy_stop(pair, round(buy_stop,3), round(today_open,5))
+        # when the current candle is complete, move stop to current candle's high or low
 
-# print(f'buy stop: {buy_stop}, sell stop: {sell_stop}')
-# print(f'stop loss: {stop_loss}, take profit: {take_profit}')
+        # while True:
+
+        # for pair in INSTRUMENTS:
+        #     data = get_price_data(pair)
+        #     # print(data)
+        #     prev_high = float(data['candles'][0]['mid']['h'])
+        #     prev_low = float(data['candles'][0]['mid']['l'])
+        #     prev_range = prev_high - prev_low
+        #     k = 0.6
+        #     rangeK = prev_range * k
+
+        #     today_open = float(data['candles'][1]['mid']['o'])
+        #     # print(today_open)
+        #     #print(currentAsk, currentBid)
+        #     # print(currentPrice)
+        #     # buy stop order at today_open + rangeK
+        #     buy_stop = today_open + rangeK
+        #     sell_stop = today_open - rangeK
+        #     twenty_ma = calculate_moving_average(pair)
+
+        #     print(f'Symbol: {pair}, Today_Open: {today_open}, prev_high: {prev_high}, prev_low: {prev_low}, buy_stop: {buy_stop}, sell_stop: {sell_stop}, twenty_ma: {twenty_ma}')
+        #     if '_USD' in pair:
+
+        # if today_open < twenty_ma: # bearish
+        #     if 'JPY' in pair:
+        #         create_sell_stop(pair, round(sell_stop,3), round(today_open,3))
+        #     else:
+        #         # sell_stop = round(sell_stop,5)
+        #         # today_open = round(today_open,5)
+        #         # stopLoss_pips = abs()
+        #         create_sell_stop(pair, round(sell_stop,5), round(today_open,5))
+        # if today_open > twenty_ma: # bullish
+        #     if 'JPY' in pair:
+        #         create_buy_stop(pair, round(buy_stop,3), round(today_open,3))
+        #     else:
+        #         create_buy_stop(pair, round(buy_stop,3), round(today_open,5))
+
+        # print(f'buy stop: {buy_stop}, sell stop: {sell_stop}')
+        # print(f'stop loss: {stop_loss}, take profit: {take_profit}')
