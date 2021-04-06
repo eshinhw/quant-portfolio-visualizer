@@ -7,7 +7,7 @@ import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 
 
-INSTRUMENTS = ['EUR_USD']
+INSTRUMENTS = ['EUR_USD', 'GBP_USD', 'USD_JPY', 'USD_CAD']
 
 
 def get_acct_summary(accountID):
@@ -69,7 +69,7 @@ def create_buy_stop(pair, entry, stopLoss):
                 "price": str(stopLoss)
             },
             "timeInForce": "GFD",
-            "instrument": "EUR_USD",
+            "instrument": pair,
             "units": "100",
             "type": "STOP",
             "positionFill": "DEFAULT"
@@ -90,7 +90,7 @@ def create_sell_stop(pair, entry, stopLoss):
                 "price": str(stopLoss)
             },
             "timeInForce": "GFD",
-            "instrument": "EUR_USD",
+            "instrument": pair,
             "units": "-100",
             "type": "STOP",
             "positionFill": "DEFAULT"
@@ -135,18 +135,26 @@ for pair in INSTRUMENTS:
     #print(currentAsk, currentBid)
     #print(currentPrice)
     # buy stop order at today_open + rangeK
-
-    twenty_ma = calculate_moving_average(pair)
-
-    print(twenty_ma)
-
     buy_stop = today_open + rangeK
     sell_stop = today_open - rangeK
+    twenty_ma = calculate_moving_average(pair)
 
-    #create_buy_stop(pair, buy_stop, today_open)
-    create_sell_stop(pair, sell_stop, today_open)
-    stop_loss = buy_stop - today_open
-    take_profit = 2 * stop_loss
+    print(f'Symbol: {pair}, Today_Open: {today_open}, prev_high: {prev_high}, prev_low: {prev_low}, buy_stop: {buy_stop}, sell_stop: {sell_stop}, twenty_ma: {twenty_ma}')
+
+    # print(twenty_ma)
+
+    if today_open < twenty_ma: # bearish
+        if 'JPY' in pair:
+            create_sell_stop(pair, round(sell_stop,3), round(today_open,3))
+        else:
+            create_sell_stop(pair, round(sell_stop,5), round(today_open,5))
+    if today_open > twenty_ma: # bullish
+        if 'JPY' in pair:
+            create_buy_stop(pair, round(buy_stop,3), round(today_open,3))
+        else:
+            create_buy_stop(pair, round(buy_stop,3), round(today_open,5))
+
+
 
     #print(f'buy stop: {buy_stop}, sell stop: {sell_stop}')
     #print(f'stop loss: {stop_loss}, take profit: {take_profit}')
