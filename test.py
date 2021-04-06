@@ -20,19 +20,34 @@ def get_acct_summary(accountID):
 def get_price_data(symbol):
     instrument_params = {'count': 2, 'granularity': 'D'}
 
-    r = instruments.InstrumentsCandles(instrument="EUR_USD",
+    r = instruments.InstrumentsCandles(instrument=symbol,
                                        params=instrument_params)
     resp = client.request(r)
-    print("RESPONSE:\n{}".format(json.dumps(resp, indent=2)))
+    #print("RESPONSE:\n{}".format(json.dumps(resp, indent=2)))
     return resp
 
+
+def calculate_moving_average(symbol):
+    instrument_params = {'count': 21, 'granularity': 'D'}
+
+    r = instruments.InstrumentsCandles(instrument=symbol,
+                                       params=instrument_params)
+    resp = client.request(r)
+    print(len(resp['candles']))
+    closes = []
+    for day in resp['candles']:
+        if day['complete'] == True:
+            closes.append(float(day['mid']['c']))
+
+    return sum(closes)/len(closes)
+    #print("RESPONSE:\n{}".format(json.dumps(resp, indent=2)))
 
 def get_trade_list():
     r = trades.TradesList(accountID)
     # show the endpoint as it is constructed for this call
-    print("REQUEST:{}".format(r))
+    #print("REQUEST:{}".format(r))
     rv = client.request(r)
-    print("RESPONSE:\n{}".format(json.dumps(rv, indent=2)))
+    #print("RESPONSE:\n{}".format(json.dumps(rv, indent=2)))
 
 def get_current_price(pair):
 
@@ -41,7 +56,7 @@ def get_current_price(pair):
         }
     r = pricing.PricingInfo(accountID=accountID, params=params)
     rv = client.request(r)
-    print("RESPONSE:\n{}".format(json.dumps(rv, indent=2)))
+    #print("RESPONSE:\n{}".format(json.dumps(rv, indent=2)))
     return rv
 
 
@@ -90,7 +105,7 @@ def create_sell_stop(pair, entry, stopLoss):
 
 with open('oanda_demo_api_token.txt', 'r') as secret:
     contents = secret.readlines()
-    print(contents)
+    #print(contents)
     api_token = contents[0].rstrip('\n')
     accountID = contents[1]
     secret.close()
@@ -117,9 +132,13 @@ for pair in INSTRUMENTS:
     currentAsk = currentPrice['prices'][0]['closeoutAsk']
     currentBid = currentPrice['prices'][0]['closeoutBid']
 
-    print(currentAsk, currentBid)
+    #print(currentAsk, currentBid)
     #print(currentPrice)
     # buy stop order at today_open + rangeK
+
+    twenty_ma = calculate_moving_average(pair)
+
+    print(twenty_ma)
 
     buy_stop = today_open + rangeK
     sell_stop = today_open - rangeK
@@ -129,8 +148,8 @@ for pair in INSTRUMENTS:
     stop_loss = buy_stop - today_open
     take_profit = 2 * stop_loss
 
-    print(f'buy stop: {buy_stop}, sell stop: {sell_stop}')
-    print(f'stop loss: {stop_loss}, take profit: {take_profit}')
+    #print(f'buy stop: {buy_stop}, sell stop: {sell_stop}')
+    #print(f'stop loss: {stop_loss}, take profit: {take_profit}')
 
 
 
