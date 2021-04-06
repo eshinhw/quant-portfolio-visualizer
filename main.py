@@ -1,4 +1,7 @@
 import json
+import time
+import schedule
+import datetime as dt
 from oandapyV20 import API
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.trades as trades
@@ -9,13 +12,14 @@ import oandapyV20.endpoints.instruments as instruments
 INSTRUMENTS = ["EUR_USD", "GBP_USD", 'AUD_USD', 'NZD_USD']
 #INSTRUMENTS = ["EUR_USD"]
 RISK_PER_TRADE = 0.001
+ACCOUNT_ID = None
 
 POSITION_STATUS = {}
 
 
-def update_position_status(pair, accountID):
+def update_position_status(pair):
 
-    trades_list = get_trade_list(accountID)
+    trades_list = get_trade_list()
     open_trades_inst = []
     for trade in trades_list:
         open_trades_inst.append(trade["instrument"])
@@ -29,21 +33,21 @@ def update_position_status(pair, accountID):
             POSITION_STATUS[pair] = 0
 
 
-def cancel_all_trades(accountID):
+def cancel_all_trades():
     """ Cancel all open orders
 
     Args:
         accountID (String): account ID
     """
-    order_list = get_order_list(accountID)
+    order_list = get_order_list()
     # print("RESPONSE:\n{}".format(json.dumps(order_list, indent=2)))
     # print(order_list)
     for order in order_list:
-        r = orders.OrderCancel(accountID=accountID, orderID=order["id"])
+        r = orders.OrderCancel(accountID=ACCOUNT_ID, orderID=order["id"])
         client.request(r)
 
 
-def get_order_list(accountID):
+def get_order_list():
     """ Retrieve a list of open orders
 
     Args:
@@ -52,12 +56,12 @@ def get_order_list(accountID):
     Returns:
         List[String]: open orders
     """
-    r = orders.OrderList(accountID)
+    r = orders.OrderList(ACCOUNT_ID)
     resp = client.request(r)
     return resp["orders"]
 
 
-def get_trade_list(accountID):
+def get_trade_list():
     """ Retrieve a list of open trades
 
     Args:
@@ -66,7 +70,7 @@ def get_trade_list(accountID):
     Returns:
         List[String]: open trades
     """
-    r = trades.TradesList(accountID)
+    r = trades.TradesList(ACCOUNT_ID)
     resp = client.request(r)
     #print("RESPONSE:\n{}".format(json.dumps(resp, indent=2)))
     return resp["trades"]
@@ -82,7 +86,7 @@ def calculate_unit_size(entry, stop_loss):
     Returns:
         Float: unit size
     """
-    account_balance = get_acct_summary(accountID)
+    account_balance = get_acct_summary()
     risk_amt_per_trade = account_balance * RISK_PER_TRADE
     entry = round(entry, 4)
     stop_loss = round(stop_loss, 4)
@@ -95,7 +99,7 @@ def calculate_unit_size(entry, stop_loss):
     return unit_size
 
 
-def get_acct_summary(accountID):
+def get_acct_summary():
     """ Retrieve account balance.
 
     Args:
@@ -104,7 +108,7 @@ def get_acct_summary(accountID):
     Returns:
         Float: current account balance
     """
-    resp = client.request(accounts.AccountSummary(accountID))
+    resp = client.request(accounts.AccountSummary(ACCOUNT_ID))
     return float(resp["account"]["balance"])
 
 
@@ -151,7 +155,7 @@ def get_current_ask_bid_price(pair):
         Tuple: (ask price, bid price)
     """
 
-    r = pricing.PricingInfo(accountID=accountID, params={"instruments": pair})
+    r = pricing.PricingInfo(accountID=ACCOUNT_ID, params={"instruments": pair})
     resp = client.request(r)
     ask_price = float(resp["prices"][0]["closeoutAsk"])
     bid_price = float(resp["prices"][0]["closeoutBid"])
@@ -170,7 +174,7 @@ def create_buy_stop(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(accountID, data=order_body)
+    r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
     client.request(r)
     POSITION_STATUS[pair] = 1
 
@@ -187,7 +191,7 @@ def create_sell_stop(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(accountID, data=order_body)
+    r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
     client.request(r)
     POSITION_STATUS[pair] = 1
 
@@ -204,7 +208,7 @@ def create_sell_limit(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(accountID, data=order_body)
+    r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
     client.request(r)
     POSITION_STATUS[pair] = 1
     print(
@@ -223,7 +227,7 @@ def create_buy_limit(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(accountID, data=order_body)
+    r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
     client.request(r)
     POSITION_STATUS[pair] = 1
     print(
@@ -263,10 +267,10 @@ def create_buy_limit(pair, entry, stop_loss, unit_size):
 #     client.request(r)
 #     POSITION_STATUS[pair] = 1
 
-def execute(accountID):
+def execute():
     # get two previous 4H candles & check ohlc -> c0, c1
     for pair in INSTRUMENTS:
-        update_position_status(pair, accountID)
+        update_position_status(pair)
 
         q = 0.95
         rk = 1.5
@@ -318,6 +322,8 @@ def execute(accountID):
                 create_sell_limit(pair, entry, stop_loss, unit_size)
             else:
                 continue
+
+    print("execution completed")
     # if that's true: buy at current open + stop loss at previous candle's high or low
 
     # when the current candle is complete, move stop to current candle's high or low
@@ -368,9 +374,18 @@ if __name__ == '__main__':
     with open("oanda_demo_api_token.txt", "r") as secret:
         contents = secret.readlines()
         api_token = contents[0].rstrip("\n")
-        accountID = contents[1]
+        ACCOUNT_ID = contents[1]
         secret.close()
 
     client = API(access_token=api_token)
+    # run execute every 4 hours
+    schedule.every().day.at("09:00").do(execute)
+    schedule.every().day.at("13:00").do(execute)
+    schedule.every().day.at("17:00").do(execute)
+    schedule.every().day.at("21:00").do(execute)
+    schedule.every().day.at("00:00").do(execute)
+    schedule.every().day.at("05:00").do(execute)
 
-    execute(accountID)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
