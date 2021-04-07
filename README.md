@@ -35,7 +35,7 @@ Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opp
 
 #### Resources
 
-- The Original Turtle Rules (https://bigpicture.typepad.com/comments/files/turtlerules.pdf)
+- The Original Turtle Rules: https://bigpicture.typepad.com/comments/files/turtlerules.pdf
 
 ## Volatility Breakout Strategy by Larry Williams
 
