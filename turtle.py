@@ -1,12 +1,55 @@
+import time
 import oanda
+import schedule
 import pandas as pd
-from oanda import get_candle_data, get_current_ask_price, get_current_bid_price
+
 
 INSTRUMENTS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
+RISK_PER_TRADE = 0.001
+POSITION_STATUS = {}
+
+
+def calculate_unit_size(entry, stop_loss):
+    """ Calculate unit size per trade (fixed % risk per trade assigned in RISK_PER_TRADE).
+
+    Args:
+        entry (Float): entry price
+        stop_loss (Float): stop loss price
+
+    Returns:
+        Float: unit size
+    """
+    account_balance = oanda.get_acct_balance()
+    risk_amt_per_trade = account_balance * RISK_PER_TRADE
+    entry = round(entry, 4)
+    stop_loss = round(stop_loss, 4)
+    stop_loss_pips = round(abs(entry - stop_loss) * 10000, 0)
+    (currentAsk, currentBid) = oanda.get_current_ask_bid_price("USD_CAD")
+    acct_conversion_rate = 1 / ((currentAsk + currentBid) / 2)
+    unit_size = round(
+        (risk_amt_per_trade / stop_loss_pips * acct_conversion_rate) * 10000, 0
+    )
+    return unit_size
+
+
+def update_position_status(pair):
+
+    trades_list = oanda.get_trade_list()
+    open_trades_inst = []
+    for trade in trades_list:
+        open_trades_inst.append(trade["instrument"])
+    for pair in INSTRUMENTS:
+
+        if (
+            pair in POSITION_STATUS.keys()
+            and POSITION_STATUS[pair] == 1
+            and not (pair in open_trades_inst)
+        ):
+            POSITION_STATUS[pair] = 0
 
 
 def retrieve_data(symbol, days):
-    candles = get_candle_data(symbol, days + 1, "D")
+    candles = oanda.get_candle_data(symbol, days + 1, "D")
 
     data_dict = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
 
@@ -36,33 +79,26 @@ def calculate_ATR(df, symbol, days):
 
 def long_entry(df, symbol, days):
     df = df.copy()
-    df['High_' + str(days)] = df['High'].shift(1).rolling(window=days).max()
+    df["High_" + str(days)] = df["High"].shift(1).rolling(window=days).max()
 
-    return df['High_' + str(days)].iloc[-1]
+    return df["High_" + str(days)].iloc[-1]
 
 
 def short_entry(df, symbol, days):
     df = df.copy()
-    df['Low_' + str(days)] = df['Low'].shift(1).rolling(window=days).min()
+    df["Low_" + str(days)] = df["Low"].shift(1).rolling(window=days).min()
 
-    return df['Low_' + str(days)].iloc[-1]
+    return df["Low_" + str(days)].iloc[-1]
+
 
 # def long_exit(symbol, days):
 #     df = _retrieve_data(symbol, days)
 #     df['Low_' + str(days)] = df['Low'].shift(1).rolling(window=days).min()
+# df['High_' + str(days)] = df['High'].shift(1).rolling(window=days).max()
 
 #     return df['Low_' + str(days)].iloc[-1]
 
-
-# def short_exit(symbol, days):
-#     df = _retrieve_data(symbol, days)
-#     df['High_' + str(days)] = df['High'].shift(1).rolling(window=days).max()
-
-#     return df['High_' + str(days)].iloc[-1]
-
-
-if __name__ == "__main__":
-
+def entry_check():
     for symbol in INSTRUMENTS:
         # retrieve price data
         df = retrieve_data(symbol, 55)
@@ -76,17 +112,26 @@ if __name__ == "__main__":
         short_stop_loss = round(short_entry_price + TwoATR, 5)
 
         # current prices
-        current_ask = get_current_ask_price(symbol)
-        current_bid = get_current_bid_price(symbol)
-
-        oanda.cancel_all_orders()
+        current_price = oanda.get_current_price(symbol)
 
         # place entry orders
-        # if current_ask < short_entry_price:
-        # units = oanda.calculate_unit_size(current_ask, long_stop_loss)
-        # oanda.create_sell_limit(
-        #     symbol, current_ask, short_stop_loss, units)
-        # # if current_bid > long_entry_price:
-        # units = oanda.calculate_unit_size(current_bid, short_stop_loss)
-        # oanda.create_sell_limit(
-        #     symbol, current_bid, short_stop_loss, units)
+        if current_price < short_entry_price:
+            units = calculate_unit_size(current_price, long_stop_loss)
+            oanda.create_sell_limit(
+                symbol, current_price, short_stop_loss, units)
+        if current_price > long_entry_price:
+            units = calculate_unit_size(current_price, short_stop_loss)
+            oanda.create_buy_limit(symbol, current_price,
+                                   short_stop_loss, units)
+
+
+if __name__ == "__main__":
+    # oanda.close_all_trades()
+    # oanda.cancel_all_orders()
+
+    # run execute every 4 hours
+    schedule.every().day.at("21:01").do(oanda.cancel_all_orders)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
