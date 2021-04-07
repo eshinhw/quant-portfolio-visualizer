@@ -9,12 +9,20 @@ import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 
-INSTRUMENTS = ["EUR_USD", "GBP_USD", 'AUD_USD', 'NZD_USD']
-#INSTRUMENTS = ["EUR_USD"]
+#INSTRUMENTS = ["EUR_USD", "GBP_USD", 'AUD_USD', 'NZD_USD']
+INSTRUMENTS = ["EUR_USD"]
 RISK_PER_TRADE = 0.001
 ACCOUNT_ID = None
 
 POSITION_STATUS = {}
+
+with open("oanda_demo_api_token.txt", "r") as secret:
+    contents = secret.readlines()
+    api_token = contents[0].rstrip("\n")
+    ACCOUNT_ID = contents[1]
+    secret.close()
+
+client = API(access_token=api_token)
 
 
 def update_position_status(pair):
@@ -33,7 +41,7 @@ def update_position_status(pair):
             POSITION_STATUS[pair] = 0
 
 
-def cancel_all_trades():
+def cancel_all_orders():
     """ Cancel all open orders
 
     Args:
@@ -162,6 +170,39 @@ def get_current_ask_bid_price(pair):
     return (ask_price, bid_price)
 
 
+def get_current_bid_price(pair):
+    """ Return current ask and bid price for pair
+
+    Args:
+        pair (String): currency pair
+
+    Returns:
+        Tuple: (ask price, bid price)
+    """
+
+    r = pricing.PricingInfo(accountID=ACCOUNT_ID, params={"instruments": pair})
+    resp = client.request(r)
+    bid_price = float(resp["prices"][0]["closeoutBid"])
+    return bid_price
+
+
+def get_current_ask_price(pair):
+    """ Return current ask and bid price for pair
+
+    Args:
+        pair (String): currency pair
+
+    Returns:
+        Tuple: (ask price, bid price)
+    """
+
+    r = pricing.PricingInfo(accountID=ACCOUNT_ID, params={"instruments": pair})
+    resp = client.request(r)
+    ask_price = float(resp["prices"][0]["closeoutAsk"])
+
+    return ask_price
+
+
 def create_buy_stop(pair, entry, stop_loss, unit_size):
     trailing_stop = abs(entry - stop_loss)
     order_body = {
@@ -180,7 +221,7 @@ def create_buy_stop(pair, entry, stop_loss, unit_size):
     client.request(r)
     POSITION_STATUS[pair] = 1
     print(
-        f"BUY STOP | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
+        f"BUY STOP | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
 
 
 def create_sell_stop(pair, entry, stop_loss, unit_size):
@@ -201,16 +242,16 @@ def create_sell_stop(pair, entry, stop_loss, unit_size):
     client.request(r)
     POSITION_STATUS[pair] = 1
     print(
-        f"SELL STOP | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
+        f"SELL STOP | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
 
 
 def create_sell_limit(pair, entry, stop_loss, unit_size):
-    trailing_stop = abs(entry - stop_loss)
+    trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
             "price": str(entry),
             "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
-            "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": trailing_stop},
+            "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(trailing_stop)},
             "timeInForce": "GTC",
             "instrument": pair,
             "units": "-" + str(unit_size),
@@ -222,16 +263,16 @@ def create_sell_limit(pair, entry, stop_loss, unit_size):
     client.request(r)
     POSITION_STATUS[pair] = 1
     print(
-        f"SELL LIMIT | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
+        f"SELL LIMIT | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
 
 
 def create_buy_limit(pair, entry, stop_loss, unit_size):
-    trailing_stop = abs(entry - stop_loss)
+    trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
             "price": str(entry),
             "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
-            "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": trailing_stop},
+            "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(trailing_stop)},
             "timeInForce": "GTC",
             "instrument": pair,
             "units": str(unit_size),
@@ -243,7 +284,7 @@ def create_buy_limit(pair, entry, stop_loss, unit_size):
     client.request(r)
     POSITION_STATUS[pair] = 1
     print(
-        f"BUY LIMIT | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
+        f"BUY LIMIT | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
 
 
 # def create_buy_market(pair, stop_loss, unit_size):
@@ -280,13 +321,18 @@ def create_buy_limit(pair, entry, stop_loss, unit_size):
 #     POSITION_STATUS[pair] = 1
 
 def execute():
+
     # get two previous 4H candles & check ohlc -> c0, c1
     for pair in INSTRUMENTS:
         update_position_status(pair)
+        dma_20 = calculate_moving_average(pair, 20, 'D')
+        dma_40 = calculate_moving_average(pair, 40, 'D')
+
+        #print(dma_20, dma_40)
 
         q = 0.95
         rk = 1.5
-        entry_buffer = 0.0003
+        entry_buffer = 0.0001
 
         candles = get_candle_data(pair, 3, "H4")["candles"]
         base = candles[0]
@@ -305,11 +351,11 @@ def execute():
         base_range = float(base["mid"]["h"]) - float(base["mid"]["l"])
 
         # buy setup
-        if (
-            signal_close > base_high
+        if ((signal_close > dma_20 > dma_40)  # bullish trend
+            and signal_close > base_high
             and signal_close > signal_upper_close_threshold
             and signal_range > (base_range * rk)
-        ):
+            ):
             if POSITION_STATUS[pair] == 0:
                 entry = float(current["mid"]["o"]) - entry_buffer
                 stop_loss = float(signal["mid"]["l"])
@@ -319,11 +365,11 @@ def execute():
                 continue
 
         # sell setup
-        if (
-            signal_close < base_low
+        if ((signal_close < dma_20 < dma_40)  # bearish trend
+            and signal_close < base_low
             and signal_close < signal_lower_close_threshold
             and signal_range > (base_range * rk)
-        ):
+            ):
             if POSITION_STATUS[pair] == 0:
                 entry = float(current["mid"]["o"]) + entry_buffer
                 stop_loss = float(signal["mid"]["l"])
@@ -387,16 +433,17 @@ if __name__ == '__main__':
         secret.close()
 
     client = API(access_token=api_token)
+
     # run execute every 4 hours
+    schedule.every().day.at("21:01").do(cancel_all_orders)
+    schedule.every().day.at("21:01").do(execute)
+    schedule.every().day.at("01:01").do(execute)
+    schedule.every().day.at("05:01").do(execute)
     schedule.every().day.at("09:01").do(execute)
     schedule.every().day.at("13:01").do(execute)
     schedule.every().day.at("17:01").do(execute)
-    schedule.every().day.at("21:01").do(execute)
-    schedule.every().day.at("00:01").do(execute)
-    schedule.every().day.at("05:01").do(execute)
-
-    #create_buy_limit('EUR_USD', 1.18100, 1.17000, 130)
 
     while True:
         schedule.run_pending()
         time.sleep(1)
+        # execute()
