@@ -34,20 +34,11 @@ def calculate_unit_size(entry, stop_loss):
     return unit_size
 
 
-def update_position_status(pair):
+def update_position_status():
 
     trades_list = oanda.get_trade_list()
-    open_trades_inst = []
     for trade in trades_list:
-        open_trades_inst.append(trade["instrument"])
-    for pair in SYMBOLS:
-
-        if (
-            pair in POSITION_STATUS.keys()
-            and POSITION_STATUS[pair] == 1
-            and not (pair in open_trades_inst)
-        ):
-            POSITION_STATUS[pair] = 0
+        POSITION_STATUS[trade["instrument"]] = 1
 
 
 def retrieve_data(symbol, days):
@@ -125,14 +116,18 @@ def entry_condition_check():
         # short_target = short_exit(df, symbol, SL_TP_DAYS)
 
         # current prices
-        current_price = oanda.get_current_price(symbol)
+        current_price = round(oanda.get_current_price(symbol), 5)
 
+        print(
+            f"LONG {symbol} | currentPrice: {current_price} | entryTarget: {long_entry_price} | stopLoss: {long_stop_loss}")
+        print(
+            f"SHORT {symbol} | currentPrice: {current_price} | entryTarget: {short_entry_price} | stopLoss: {short_stop_loss}")
         # place entry orders
-        if current_price < short_entry_price:
+        if current_price < short_entry_price and not (symbol in POSITION_STATUS.keys()):
             units = calculate_unit_size(current_price, long_stop_loss)
             oanda.create_sell_limit(
                 symbol, current_price, short_stop_loss, units)
-        if current_price > long_entry_price:
+        if current_price > long_entry_price and not (symbol in POSITION_STATUS.keys()):
             units = calculate_unit_size(current_price, short_stop_loss)
             oanda.create_buy_limit(symbol, current_price,
                                    short_stop_loss, units)
@@ -142,11 +137,11 @@ if __name__ == "__main__":
     # oanda.close_all_trades()
     # oanda.cancel_all_orders()
 
-    entry_condition_check()
+    # close all pending orders every friday evening before weekend
+    schedule.every().friday.at("21:01").do(oanda.cancel_all_orders)
 
-    # run execute every 4 hours
-    # schedule.every().day.at("21:01").do(oanda.cancel_all_orders)
-
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
+    while True:
+        schedule.run_pending()
+        update_position_status()
+        entry_condition_check()
+        time.sleep(10)
