@@ -379,12 +379,12 @@ if __name__ == '__main__':
 
     client = API(access_token=api_token)
     # run execute every 4 hours
-    schedule.every().day.at("09:00").do(execute)
-    schedule.every().day.at("13:00").do(execute)
-    schedule.every().day.at("17:00").do(execute)
-    schedule.every().day.at("21:00").do(execute)
-    schedule.every().day.at("00:00").do(execute)
-    schedule.every().day.at("05:00").do(execute)
+    schedule.every().day.at("09:01").do(execute)
+    schedule.every().day.at("13:01").do(execute)
+    schedule.every().day.at("17:01").do(execute)
+    schedule.every().day.at("21:01").do(execute)
+    schedule.every().day.at("00:01").do(execute)
+    schedule.every().day.at("05:01").do(execute)
 
     while True:
         schedule.run_pending()
