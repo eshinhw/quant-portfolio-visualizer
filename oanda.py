@@ -103,8 +103,7 @@ def get_candle_data(symbol, count, interval):
     """
     instrument_params = {"count": count, "granularity": interval}
 
-    r = instruments.InstrumentsCandles(
-        instrument=symbol, params=instrument_params)
+    r = instruments.InstrumentsCandles(instrument=symbol, params=instrument_params)
     resp = client.request(r)
     return resp
 
@@ -112,8 +111,7 @@ def get_candle_data(symbol, count, interval):
 def calculate_moving_average(symbol, count, interval):
     instrument_params = {"count": count + 1, "granularity": interval}
 
-    r = instruments.InstrumentsCandles(
-        instrument=symbol, params=instrument_params)
+    r = instruments.InstrumentsCandles(instrument=symbol, params=instrument_params)
     resp = client.request(r)
     closes = []
     for day in resp["candles"]:

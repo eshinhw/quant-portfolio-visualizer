@@ -3,10 +3,12 @@ import oanda
 import schedule
 import pandas as pd
 
-
-INSTRUMENTS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
+SYMBOLS = ['EUR_USD', 'GBP_USD', 'AUD_USD', 'NZD_USD']
 RISK_PER_TRADE = 0.001
 POSITION_STATUS = {}
+
+ENTRY_DAYS = 55
+SL_TP_DAYS = 20
 
 
 def calculate_unit_size(entry, stop_loss):
@@ -38,7 +40,7 @@ def update_position_status(pair):
     open_trades_inst = []
     for trade in trades_list:
         open_trades_inst.append(trade["instrument"])
-    for pair in INSTRUMENTS:
+    for pair in SYMBOLS:
 
         if (
             pair in POSITION_STATUS.keys()
@@ -91,25 +93,36 @@ def short_entry(df, symbol, days):
     return df["Low_" + str(days)].iloc[-1]
 
 
-# def long_exit(symbol, days):
-#     df = _retrieve_data(symbol, days)
-#     df['Low_' + str(days)] = df['Low'].shift(1).rolling(window=days).min()
-# df['High_' + str(days)] = df['High'].shift(1).rolling(window=days).max()
+def long_exit(df, symbol, days):
+    df = df.copy()
+    df["Low_" + str(days)] = df["Low"].shift(1).rolling(window=days).min()
 
-#     return df['Low_' + str(days)].iloc[-1]
+    return df["Low_" + str(days)].iloc[-1]
 
-def entry_check():
-    for symbol in INSTRUMENTS:
+
+def short_exit(df, symbol, days):
+    df = df.copy()
+    df["High_" + str(days)] = df["High"].shift(1).rolling(window=days).max()
+
+    return df["High_" + str(days)].iloc[-1]
+
+
+def entry_condition_check():
+    for symbol in SYMBOLS:
         # retrieve price data
-        df = retrieve_data(symbol, 55)
+        df = retrieve_data(symbol, ENTRY_DAYS)
         # entry prices
-        long_entry_price = long_entry(df, symbol, 55)
-        short_entry_price = short_entry(df, symbol, 55)
+        long_entry_price = long_entry(df, symbol, ENTRY_DAYS)
+        short_entry_price = short_entry(df, symbol, ENTRY_DAYS)
 
         # stops
-        TwoATR = 2 * calculate_ATR(df, symbol, 20)
+        TwoATR = 2 * calculate_ATR(df, symbol, SL_TP_DAYS)
         long_stop_loss = round(long_entry_price - TwoATR, 5)
         short_stop_loss = round(short_entry_price + TwoATR, 5)
+
+        # dynamic exit rules
+        # long_target = long_exit(df, symbol, SL_TP_DAYS)
+        # short_target = short_exit(df, symbol, SL_TP_DAYS)
 
         # current prices
         current_price = oanda.get_current_price(symbol)
@@ -129,9 +142,11 @@ if __name__ == "__main__":
     # oanda.close_all_trades()
     # oanda.cancel_all_orders()
 
-    # run execute every 4 hours
-    schedule.every().day.at("21:01").do(oanda.cancel_all_orders)
+    entry_condition_check()
 
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    # run execute every 4 hours
+    # schedule.every().day.at("21:01").do(oanda.cancel_all_orders)
+
+    # while True:
+    #     schedule.run_pending()
+    #     time.sleep(1)
