@@ -1,11 +1,13 @@
-# Py FX Trading Bot
+# Py Trading Bot
 
 ## Introduction
 
-Deleveop a trading bot deployed in forex market to capture trading opportunities in systematic and algorithmic ways, using different short-term trading strategies.
+Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opportunities in systematic and algorithmic ways, using various historically proven trading strategies.
 
 ## Trading Strategies
 
-- Volatility Breakout Strategy
+- Volatility Breakout Strategy by Larry Williams
 - Trend Following by Turtle Traders
-- Simple Level Trading based on Support and Resistance
+- Many more to come...
+
+
