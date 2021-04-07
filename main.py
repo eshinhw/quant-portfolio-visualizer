@@ -163,75 +163,87 @@ def get_current_ask_bid_price(pair):
 
 
 def create_buy_stop(pair, entry, stop_loss, unit_size):
+    trailing_stop = abs(entry - stop_loss)
     order_body = {
         "order": {
             "price": str(entry),
-            "stopLossOnFill": {"timeInForce": "GFD", "price": str(stop_loss)},
-            "timeInForce": "GFD",
+            "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
+            "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": trailing_stop},
+            "timeInForce": "GTC",
             "instrument": pair,
             "units": str(unit_size),
             "type": "STOP",
-            "positionFill": "DEFAULT",
+            "positionFill": "DEFAULT"
         }
     }
     r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
     client.request(r)
     POSITION_STATUS[pair] = 1
+    print(
+        f"BUY STOP | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
 
 
 def create_sell_stop(pair, entry, stop_loss, unit_size):
+    trailing_stop = abs(entry - stop_loss)
     order_body = {
         "order": {
             "price": str(entry),
-            "stopLossOnFill": {"timeInForce": "GFD", "price": str(stop_loss)},
-            "timeInForce": "GFD",
+            "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
+            "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": trailing_stop},
+            "timeInForce": "GTC",
             "instrument": pair,
             "units": "-" + str(unit_size),
             "type": "STOP",
-            "positionFill": "DEFAULT",
+            "positionFill": "DEFAULT"
         }
     }
     r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
     client.request(r)
     POSITION_STATUS[pair] = 1
+    print(
+        f"SELL STOP | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
 
 
 def create_sell_limit(pair, entry, stop_loss, unit_size):
+    trailing_stop = abs(entry - stop_loss)
     order_body = {
         "order": {
             "price": str(entry),
-            "stopLossOnFill": {"timeInForce": "GFD", "price": str(stop_loss)},
-            "timeInForce": "GFD",
+            "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
+            "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": trailing_stop},
+            "timeInForce": "GTC",
             "instrument": pair,
             "units": "-" + str(unit_size),
             "type": "LIMIT",
-            "positionFill": "DEFAULT",
+            "positionFill": "DEFAULT"
         }
     }
     r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
     client.request(r)
     POSITION_STATUS[pair] = 1
     print(
-        f"LIMIT Trade Placed --- pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
+        f"SELL LIMIT | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
 
 
 def create_buy_limit(pair, entry, stop_loss, unit_size):
+    trailing_stop = abs(entry - stop_loss)
     order_body = {
         "order": {
             "price": str(entry),
-            "stopLossOnFill": {"timeInForce": "GFD", "price": str(stop_loss)},
-            "timeInForce": "GFD",
+            "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
+            "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": trailing_stop},
+            "timeInForce": "GTC",
             "instrument": pair,
             "units": str(unit_size),
             "type": "LIMIT",
-            "positionFill": "DEFAULT",
+            "positionFill": "DEFAULT"
         }
     }
     r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
     client.request(r)
     POSITION_STATUS[pair] = 1
     print(
-        f"LIMIT Trade Placed --- pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
+        f"BUY LIMIT | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}")
 
 
 # def create_buy_market(pair, stop_loss, unit_size):
@@ -291,9 +303,6 @@ def execute():
         base_high = float(base["mid"]["h"])
         base_low = float(base["mid"]["l"])
         base_range = float(base["mid"]["h"]) - float(base["mid"]["l"])
-        # print(signal_upper_close_threshold)
-        # print(signal_range)
-        # print(base_range)
 
         # buy setup
         if (
@@ -385,6 +394,8 @@ if __name__ == '__main__':
     schedule.every().day.at("21:01").do(execute)
     schedule.every().day.at("00:01").do(execute)
     schedule.every().day.at("05:01").do(execute)
+
+    #create_buy_limit('EUR_USD', 1.18100, 1.17000, 130)
 
     while True:
         schedule.run_pending()
