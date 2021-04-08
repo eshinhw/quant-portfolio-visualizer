@@ -7,7 +7,7 @@ Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opp
 ## Trend Following by Original Turtle Traders
 
 <p align="center">
-  <img width="400" height="300" src="https://user-images.githubusercontent.com/41933169/113924806-3f7f0e00-97b8-11eb-918a-b2b2cd8e8e0b.png">
+  <img width="500" height="500" src="https://user-images.githubusercontent.com/41933169/113924806-3f7f0e00-97b8-11eb-918a-b2b2cd8e8e0b.png">
 </p>
 
 #### Strategy Overview
