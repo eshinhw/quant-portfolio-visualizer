@@ -6,22 +6,10 @@ import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 
-INSTRUMENTS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
-RISK_PER_TRADE = 0.001
-
-ACCOUNT_ID = None
-POSITION_STATUS = {}
-
-# class oanda:
-
-#     def __init__(self, token, acctID):
-#         self.token = token
-#         self.acctID = acctID
-
 with open("oanda_demo_api_token.txt", "r") as secret:
     contents = secret.readlines()
     api_token = contents[0].rstrip("\n")
-    ACCOUNT_ID = contents[1]
+    account_ID = contents[1]
     secret.close()
 
 client = API(access_token=api_token)
@@ -30,8 +18,9 @@ client = API(access_token=api_token)
 def close_all_trades():
     trades_list = get_trade_list()
     for trade in trades_list:
-        r = trades.TradeClose(accountID=ACCOUNT_ID, tradeID=trade["id"])
+        r = trades.TradeClose(accountID=account_ID, tradeID=trade["id"])
         client.request(r)
+    print("All open trades are CLOSED.")
 
 
 def cancel_all_orders():
@@ -41,11 +30,10 @@ def cancel_all_orders():
         accountID (String): account ID
     """
     order_list = get_order_list()
-    # print("RESPONSE:\n{}".format(json.dumps(order_list, indent=2)))
-    # print(order_list)
     for order in order_list:
-        r = orders.OrderCancel(accountID=ACCOUNT_ID, orderID=order["id"])
+        r = orders.OrderCancel(accountID=account_ID, orderID=order["id"])
         client.request(r)
+    print("All open orders are CANCELLED.")
 
 
 def get_order_list():
@@ -57,7 +45,7 @@ def get_order_list():
     Returns:
         List[String]: open orders
     """
-    r = orders.OrderList(ACCOUNT_ID)
+    r = orders.OrderList(account_ID)
     resp = client.request(r)
     return resp["orders"]
 
@@ -71,7 +59,7 @@ def get_trade_list():
     Returns:
         List[String]: open trades
     """
-    r = trades.TradesList(ACCOUNT_ID)
+    r = trades.TradesList(account_ID)
     resp = client.request(r)
     # print("RESPONSE:\n{}".format(json.dumps(resp, indent=2)))
     return resp["trades"]
@@ -86,7 +74,7 @@ def get_acct_balance():
     Returns:
         Float: current account balance
     """
-    resp = client.request(accounts.AccountSummary(ACCOUNT_ID))
+    resp = client.request(accounts.AccountSummary(account_ID))
     return float(resp["account"]["balance"])
 
 
@@ -103,8 +91,7 @@ def get_candle_data(symbol, count, interval):
     """
     instrument_params = {"count": count, "granularity": interval}
 
-    r = instruments.InstrumentsCandles(
-        instrument=symbol, params=instrument_params)
+    r = instruments.InstrumentsCandles(instrument=symbol, params=instrument_params)
     resp = client.request(r)
     return resp
 
@@ -112,8 +99,7 @@ def get_candle_data(symbol, count, interval):
 def calculate_moving_average(symbol, count, interval):
     instrument_params = {"count": count + 1, "granularity": interval}
 
-    r = instruments.InstrumentsCandles(
-        instrument=symbol, params=instrument_params)
+    r = instruments.InstrumentsCandles(instrument=symbol, params=instrument_params)
     resp = client.request(r)
     closes = []
     for day in resp["candles"]:
@@ -133,7 +119,7 @@ def get_current_ask_bid_price(pair):
         Tuple: (ask price, bid price)
     """
 
-    r = pricing.PricingInfo(accountID=ACCOUNT_ID, params={"instruments": pair})
+    r = pricing.PricingInfo(accountID=account_ID, params={"instruments": pair})
     resp = client.request(r)
     ask_price = float(resp["prices"][0]["closeoutAsk"])
     bid_price = float(resp["prices"][0]["closeoutBid"])
@@ -144,8 +130,8 @@ def get_current_price(pair):
     return sum(get_current_ask_bid_price(pair)) / 2
 
 
-def create_buy_stop(pair, entry, stop_loss, unit_size):
-    trailing_stop = round(abs(entry - stop_loss), 5)
+def create_buy_stop(pair, entry, stop_loss, unit_size, trailing_stop=0):
+    # trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
             "price": str(entry),
@@ -161,16 +147,15 @@ def create_buy_stop(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
+    r = orders.OrderCreate(account_ID, data=order_body)
     client.request(r)
-    POSITION_STATUS[pair] = 1
     print(
         f"BUY STOP | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
     )
 
 
-def create_sell_stop(pair, entry, stop_loss, unit_size):
-    trailing_stop = round(abs(entry - stop_loss), 5)
+def create_sell_stop(pair, entry, stop_loss, unit_size, trailing_stop=0):
+    # trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
             "price": str(entry),
@@ -186,16 +171,16 @@ def create_sell_stop(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
+    r = orders.OrderCreate(account_ID, data=order_body)
     client.request(r)
-    POSITION_STATUS[pair] = 1
+
     print(
         f"SELL STOP | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
     )
 
 
-def create_sell_limit(pair, entry, stop_loss, unit_size):
-    trailing_stop = round(abs(entry - stop_loss), 5)
+def create_sell_limit(pair, entry, stop_loss, unit_size, trailing_stop=0):
+    # trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
             "price": str(entry),
@@ -211,16 +196,16 @@ def create_sell_limit(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
+    r = orders.OrderCreate(account_ID, data=order_body)
     client.request(r)
-    POSITION_STATUS[pair] = 1
+
     print(
         f"SELL LIMIT | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
     )
 
 
-def create_buy_limit(pair, entry, stop_loss, unit_size):
-    trailing_stop = round(abs(entry - stop_loss), 5)
+def create_buy_limit(pair, entry, stop_loss, unit_size, trailing_stop=0):
+    # trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
             "price": str(entry),
@@ -236,9 +221,9 @@ def create_buy_limit(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(ACCOUNT_ID, data=order_body)
+    r = orders.OrderCreate(account_ID, data=order_body)
     client.request(r)
-    POSITION_STATUS[pair] = 1
+
     print(
         f"BUY LIMIT | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
     )
