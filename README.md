@@ -4,7 +4,7 @@
 
 Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opportunities in systematic and algorithmic ways, using various historically proven trading strategies.
 
-## Trend Following by Turtle Traders
+## Trend Following by Original Turtle Traders
 
 <p align="center">
   <img width="400" height="300" src="https://user-images.githubusercontent.com/41933169/113924806-3f7f0e00-97b8-11eb-918a-b2b2cd8e8e0b.png">
@@ -12,10 +12,7 @@ Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opp
 
 #### Strategy Overview
 
-- Long term trend following strategy with wide stop and target.
-- A breakout signal of previous highs or lows is considered as the beginning of new trend.
-- Stops are determined by Average True Range of previous days.
-- System 1 uses shorter periods to catch short trend and System 2 uses longer periods to catch long term trend.
+Long term trend following strategy with wide stop and target. A breakout signal of previous highs or lows is considered as the beginning of new trend. Stops are determined by Average True Range of previous days. System 1 uses shorter periods to catch short trend and System 2 uses longer periods to catch long term trend.
 
 #### Trading Rules (System 2)
 
@@ -32,13 +29,20 @@ Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opp
 
 - Possibly lots of small losing trades, and it must catch big trends to cover previous losses.
 - Long term view might not be best for FX markets with lots of noise and consolidation phases.
+- Out-dated strategy with today's advanced markets.
 
 #### Resources
 
 - The Original Turtle Rules: https://bigpicture.typepad.com/comments/files/turtlerules.pdf
 
+## Turtle Soup Plus One (Counter Strategy of Original Turtle Trading System)
+
+Since original turtle trading system has about 30% of success rate which means 70% of the time it fails. We can reverse-engineer to bet against original turtles to capitalize 70% of false breakouts. 'Turtle Soup Plus One' strategy goes long at previous lows and goes short at previous highs but wait for one day until the daily candle completes to determine whether previous highs or lows are right places to enter. If the daily candle indicates that the highs or lows are not going to hold, it doesn't enter a trade. However, if the daily candle shows some sort of rejections at the level, we can enter a trade. 
+
 ## Volatility Breakout Strategy by Larry Williams
 
 - Coming up soon...
+
+## Momentum Pinball Strategy
 
 
