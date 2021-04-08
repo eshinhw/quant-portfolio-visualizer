@@ -37,7 +37,13 @@ Long term trend following strategy with wide stop and target. A breakout signal 
 
 ## Turtle Soup Plus One (Counter Strategy of Original Turtle Trading System)
 
-Since original turtle trading system has about 30% of success rate which means 70% of the time it fails. We can reverse-engineer to bet against original turtles to capitalize 70% of false breakouts. 'Turtle Soup Plus One' strategy goes long at previous lows and goes short at previous highs but wait for one day until the daily candle completes to determine whether previous highs or lows are right places to enter. If the daily candle indicates that the highs or lows are not going to hold, it doesn't enter a trade. However, if the daily candle shows some sort of rejections at the level, we can enter a trade. 
+<p align="center">
+  <img width="500" height="500" src="https://user-images.githubusercontent.com/41933169/114104687-59445200-9899-11eb-97f5-94144b5b7824.png">
+</p>
+
+Since original turtle trading system has about 30% of breakout success rate at key highs and lows, that means 70% of the time markets fail to break out key levels. We can reverse-engineer to bet against original turtles to capitalize 70% of false breakouts. 'Turtle Soup' strategy goes long at previous lows and goes short at previous highs, entering trades against original turtles.
+
+'Turtle Soup Plus One' can further improve the success rate by wating for one day at key ares until the daily candle completes to determine whether previous highs or lows are right places to enter. If the daily candle indicates that the highs or lows are not going to hold, it doesn't enter a trade. However, if the daily candle shows some sort of rejections at the level, we can enter a trade. 
 
 ## Volatility Breakout Strategy by Larry Williams
 
