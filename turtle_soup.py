@@ -2,14 +2,15 @@ import time
 import oanda
 import schedule
 import pandas as pd
-
-SYMBOLS = ['EUR_USD', 'GBP_USD', 'AUD_USD', 'NZD_USD']
+#SYMBOLS = ['EUR_USD']
+SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
 RISK_PER_TRADE = 0.001
-POSITION_STATUS = {}
+TRADE_STATUS = {}
+ORDER_STATUS = {}
 
-ENTRY_DAYS = 55
-SL_TP_DAYS = 20
-ATR_MULTIPLE = 1.5
+PREV_DAYS = 20
+ENTRY_PIP_BUFF = 0.0007
+ATR_SL_MULTIPLE = 0.5
 
 
 def calculate_unit_size(entry, stop_loss):
@@ -35,11 +36,12 @@ def calculate_unit_size(entry, stop_loss):
     return unit_size
 
 
-def update_position_status():
+def update_order_trade_status():
 
     trades_list = oanda.get_trade_list()
     for trade in trades_list:
-        POSITION_STATUS[trade["instrument"]] = 1
+        TRADE_STATUS[trade["instrument"]] = 1
+        ORDER_STATUS[trade['instrument']] = 0
 
 
 def retrieve_data(symbol, days):
@@ -85,64 +87,88 @@ def short_entry(df, symbol, days):
     return df["Low_" + str(days)].iloc[-1]
 
 
-def long_exit(df, symbol, days):
+def prev_low(df, symbol, days):  # place to go long
     df = df.copy()
     df["Low_" + str(days)] = df["Low"].shift(1).rolling(window=days).min()
 
     return df["Low_" + str(days)].iloc[-1]
 
 
-def short_exit(df, symbol, days):
+def prev_high(df, symbol, days):  # place to go short
     df = df.copy()
     df["High_" + str(days)] = df["High"].shift(1).rolling(window=days).max()
-
+    print(df)
     return df["High_" + str(days)].iloc[-1]
 
 
-def trend_following_condition_check():
+def turtle_soup_plus_one_condition_check():
     for symbol in SYMBOLS:
         # retrieve price data
-        df = retrieve_data(symbol, ENTRY_DAYS)
+        df = retrieve_data(symbol, PREV_DAYS)
         # entry prices
-        long_entry_price = long_entry(df, symbol, ENTRY_DAYS)
-        short_entry_price = short_entry(df, symbol, ENTRY_DAYS)
+        long_entry_price = round(
+            prev_low(df, symbol, PREV_DAYS) + ENTRY_PIP_BUFF, 5)
+        short_entry_price = round(
+            prev_high(df, symbol, PREV_DAYS) - ENTRY_PIP_BUFF, 5)
+
+        stop_loss = calculate_ATR(df, symbol, PREV_DAYS) * ATR_SL_MULTIPLE
+        long_sl = round(long_entry_price - stop_loss, 5)
+        short_sl = round(short_entry_price + stop_loss, 5)
+
+        # Enter trades at all previous highs and lows
+        print(
+            f"LONG ENTRY @ {long_entry_price}, SL @ {long_sl}  | SHORT ENTRY @ {short_entry_price}, SL @ {short_sl}")
+
+        # Possible filters
+
+        # follow long term market direction
+        # bearish --> short only at prev highs
+        # bullish --> long only at prev lows
+        if ORDER_STATUS[symbol] == 0:
+            oanda.create_buy_limit(symbol, long_entry_price, long_sl, calculate_unit_size(
+                long_entry_price, long_sl), trailing_stop=True)
+            oanda.create_sell_limit(symbol, short_entry_price, short_sl, calculate_unit_size(
+                short_entry_price, short_sl), trailing_stop=True)
+            ORDER_STATUS[symbol] = 1
 
         # stops
-        ATR_sl = ATR_MULTIPLE * calculate_ATR(df, symbol, SL_TP_DAYS)
-        long_stop_loss = round(long_entry_price - ATR_sl, 5)
-        short_stop_loss = round(short_entry_price + ATR_sl, 5)
+        # ATR_sl = ATR_MULTIPLE * calculate_ATR(df, symbol, SL_TP_DAYS)
+        # long_stop_loss = round(long_entry_price - ATR_sl, 5)
+        # short_stop_loss = round(short_entry_price + ATR_sl, 5)
 
         # dynamic exit rules
         # long_target = long_exit(df, symbol, SL_TP_DAYS)
         # short_target = short_exit(df, symbol, SL_TP_DAYS)
 
         # current prices
-        current_price = round(oanda.get_current_price(symbol), 5)
+        #current_price = round(oanda.get_current_price(symbol), 5)
 
         # print(
         #     f"LONG {symbol} | currentPrice: {current_price} | entryTarget: {long_entry_price} | stopLoss: {long_stop_loss}")
         # print(
         #     f"SHORT {symbol} | currentPrice: {current_price} | entryTarget: {short_entry_price} | stopLoss: {short_stop_loss}")
         # place entry orders
-        if current_price < short_entry_price and not (symbol in POSITION_STATUS.keys()):
-            units = calculate_unit_size(current_price, long_stop_loss)
-            oanda.create_sell_limit(
-                symbol, current_price, short_stop_loss, units)
-        if current_price > long_entry_price and not (symbol in POSITION_STATUS.keys()):
-            units = calculate_unit_size(current_price, short_stop_loss)
-            oanda.create_buy_limit(symbol, current_price,
-                                   short_stop_loss, units)
+        # if current_price < short_entry_price and not (symbol in POSITION_STATUS.keys()):
+        #     units = calculate_unit_size(current_price, long_stop_loss)
+        #     oanda.create_sell_limit(
+        #         symbol, current_price, short_stop_loss, units)
+        # if current_price > long_entry_price and not (symbol in POSITION_STATUS.keys()):
+        #     units = calculate_unit_size(current_price, short_stop_loss)
+        #     oanda.create_buy_limit(symbol, current_price,
+        #                            short_stop_loss, units)
 
 
 if __name__ == "__main__":
     # oanda.close_all_trades()
     # oanda.cancel_all_orders()
 
-    # close all pending orders every friday evening before weekend
-    schedule.every().friday.at("21:01").do(oanda.cancel_all_orders)
+    turtle_soup_plus_one_condition_check()
 
-    while True:
-        schedule.run_pending()
-        update_position_status()
-        trend_following_condition_check()
-        time.sleep(10)
+    # close all pending orders every friday evening before weekend
+    # schedule.every().friday.at("21:01").do(oanda.cancel_all_orders)
+
+    # while True:
+    #     schedule.run_pending()
+    #     update_position_status()
+    #     turtle_soup_plus_one_condition_check()
+    #     time.sleep(10)
