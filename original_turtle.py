@@ -99,7 +99,7 @@ def short_exit(df, symbol, days):
     return df["High_" + str(days)].iloc[-1]
 
 
-def entry_condition_check():
+def trend_following_condition_check():
     for symbol in SYMBOLS:
         # retrieve price data
         df = retrieve_data(symbol, ENTRY_DAYS)
@@ -144,5 +144,5 @@ if __name__ == "__main__":
     while True:
         schedule.run_pending()
         update_position_status()
-        entry_condition_check()
+        trend_following_condition_check()
         time.sleep(10)
