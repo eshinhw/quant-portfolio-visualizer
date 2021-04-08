@@ -7,7 +7,7 @@ Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opp
 ## Trend Following by Original Turtle Traders
 
 <p align="center">
-  <img width="500" height="500" src="https://user-images.githubusercontent.com/41933169/113924806-3f7f0e00-97b8-11eb-918a-b2b2cd8e8e0b.png">
+  <img width="400" height="300" src="https://user-images.githubusercontent.com/41933169/113924806-3f7f0e00-97b8-11eb-918a-b2b2cd8e8e0b.png">
 </p>
 
 #### Strategy Overview
@@ -38,7 +38,7 @@ Long term trend following strategy with wide stop and target. A breakout signal 
 ## Turtle Soup Plus One (Counter Strategy of Original Turtle Trading System)
 
 <p align="center">
-  <img width="400" height="300" src="https://user-images.githubusercontent.com/41933169/114104687-59445200-9899-11eb-97f5-94144b5b7824.png">
+  <img width="500" height="500" src="https://user-images.githubusercontent.com/41933169/114104687-59445200-9899-11eb-97f5-94144b5b7824.png">
 </p>
 
 Since original turtle trading system has about 30% of breakout success rate at key highs and lows, that means 70% of the time markets fail to break out key levels. We can reverse-engineer to bet against original turtles to capitalize 70% of false breakouts. 'Turtle Soup' strategy goes long at previous lows and goes short at previous highs, entering trades against original turtles.
