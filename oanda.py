@@ -181,8 +181,11 @@ def create_sell_stop(pair, entry, stop_loss, unit_size, trailing_stop=0):
     )
 
 
-def create_sell_limit(pair, entry, stop_loss, unit_size, trailing_stop=0):
-    # trailing_stop = round(abs(entry - stop_loss), 5)
+def create_sell_limit(pair, entry, stop_loss, unit_size, trailing_stop=False):
+    if trailing_stop:
+        trailing_stop = round(abs(entry - stop_loss), 5)
+    else:
+        trailing_stop = 0
     order_body = {
         "order": {
             "price": str(entry),
@@ -206,8 +209,11 @@ def create_sell_limit(pair, entry, stop_loss, unit_size, trailing_stop=0):
     )
 
 
-def create_buy_limit(pair, entry, stop_loss, unit_size, trailing_stop=0):
-    # trailing_stop = round(abs(entry - stop_loss), 5)
+def create_buy_limit(pair, entry, stop_loss, unit_size, trailing_stop=False):
+    if trailing_stop:
+        trailing_stop = round(abs(entry - stop_loss), 5)
+    else:
+        trailing_stop = 0
     order_body = {
         "order": {
             "price": str(entry),
