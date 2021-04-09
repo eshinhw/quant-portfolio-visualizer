@@ -42,7 +42,7 @@ def update_order_trade_status():
 
     for trade in trade_list:
         for order in order_list:
-            if trade["instrument"] == order["instrument"]:
+            if order['type'] == 'LIMIT' and trade["instrument"] == order["instrument"]:
                 oanda.cancel_single_order(order["id"])
                 print(
                     f"Order {order['id']} for {trade['instrument']} has been cancelled."
@@ -51,8 +51,9 @@ def update_order_trade_status():
 
 def check_open_order(symbol):
     order_list = oanda.get_order_list()
+    print(order_list)
     for order in order_list:
-        if order["instrument"] == symbol:
+        if order['type'] == 'LIMIT' and order["instrument"] == symbol:
             return True
 
     return False
