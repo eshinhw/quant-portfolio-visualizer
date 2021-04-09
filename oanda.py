@@ -15,6 +15,11 @@ with open("oanda_demo_api_token.txt", "r") as secret:
 client = API(access_token=api_token)
 
 
+def cancel_single_order(order_ID):
+    r = orders.OrderCancel(accountID=account_ID, orderID=order_ID)
+    client.request(r)
+
+
 def close_all_trades():
     trades_list = get_trade_list()
     for trade in trades_list:
@@ -152,7 +157,7 @@ def create_buy_stop(pair, entry, stop_loss, unit_size, trailing_stop=0):
     r = orders.OrderCreate(account_ID, data=order_body)
     client.request(r)
     print(
-        f"BUY STOP | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
+        f"BUY STOP ORDER PLACED | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
     )
 
 
@@ -177,7 +182,7 @@ def create_sell_stop(pair, entry, stop_loss, unit_size, trailing_stop=0):
     client.request(r)
 
     print(
-        f"SELL STOP | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
+        f"SELL STOP ORDER PLACED | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
     )
 
 
@@ -205,7 +210,7 @@ def create_sell_limit(pair, entry, stop_loss, unit_size, trailing_stop=False):
     client.request(r)
 
     print(
-        f"SELL LIMIT | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
+        f"SELL LIMIT ORDER PLACED | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
     )
 
 
@@ -233,5 +238,5 @@ def create_buy_limit(pair, entry, stop_loss, unit_size, trailing_stop=False):
     client.request(r)
 
     print(
-        f"BUY LIMIT | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
+        f"BUY LIMIT ORDER PLACED | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
     )

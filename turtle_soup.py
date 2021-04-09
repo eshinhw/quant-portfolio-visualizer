@@ -2,11 +2,10 @@ import time
 import oanda
 import schedule
 import pandas as pd
-#SYMBOLS = ['EUR_USD']
+
+#SYMBOLS = ["EUR_USD"]
 SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
 RISK_PER_TRADE = 0.001
-TRADE_STATUS = {}
-ORDER_STATUS = {}
 
 PREV_DAYS = 20
 ENTRY_PIP_BUFF = 0.0007
@@ -38,10 +37,34 @@ def calculate_unit_size(entry, stop_loss):
 
 def update_order_trade_status():
 
-    trades_list = oanda.get_trade_list()
-    for trade in trades_list:
-        TRADE_STATUS[trade["instrument"]] = 1
-        ORDER_STATUS[trade['instrument']] = 0
+    trade_list = oanda.get_trade_list()
+    order_list = oanda.get_order_list()
+
+    for trade in trade_list:
+        for order in order_list:
+            if trade["instrument"] == order["instrument"]:
+                oanda.cancel_single_order(order["id"])
+                print(
+                    f"Order {order['id']} for {trade['instrument']} has been cancelled."
+                )
+
+
+def check_open_order(symbol):
+    order_list = oanda.get_order_list()
+    for order in order_list:
+        if order["instrument"] == symbol:
+            return True
+
+    return False
+
+
+def check_open_trade(symbol):
+    trade_list = oanda.get_trade_list()
+    for trade in trade_list:
+        if trade["instrument"] == symbol:
+            return True
+
+    return False
 
 
 def retrieve_data(symbol, days):
@@ -97,7 +120,6 @@ def prev_low(df, symbol, days):  # place to go long
 def prev_high(df, symbol, days):  # place to go short
     df = df.copy()
     df["High_" + str(days)] = df["High"].shift(1).rolling(window=days).max()
-    print(df)
     return df["High_" + str(days)].iloc[-1]
 
 
@@ -116,20 +138,30 @@ def turtle_soup_plus_one_condition_check():
         short_sl = round(short_entry_price + stop_loss, 5)
 
         # Enter trades at all previous highs and lows
-        print(
-            f"LONG ENTRY @ {long_entry_price}, SL @ {long_sl}  | SHORT ENTRY @ {short_entry_price}, SL @ {short_sl}")
 
         # Possible filters
 
         # follow long term market direction
         # bearish --> short only at prev highs
         # bullish --> long only at prev lows
-        if ORDER_STATUS[symbol] == 0:
-            oanda.create_buy_limit(symbol, long_entry_price, long_sl, calculate_unit_size(
-                long_entry_price, long_sl), trailing_stop=True)
-            oanda.create_sell_limit(symbol, short_entry_price, short_sl, calculate_unit_size(
-                short_entry_price, short_sl), trailing_stop=True)
-            ORDER_STATUS[symbol] = 1
+        print(f"PREV HIGH: {symbol} | ENTRY: {short_entry_price}")
+        print(f"PREV LOW: {symbol} | ENTRY: {long_entry_price}")
+        if (not check_open_order(symbol)) and (not check_open_trade(symbol)):
+            oanda.create_buy_limit(
+                symbol,
+                long_entry_price,
+                long_sl,
+                calculate_unit_size(long_entry_price, long_sl),
+                trailing_stop=True,
+            )
+
+            oanda.create_sell_limit(
+                symbol,
+                short_entry_price,
+                short_sl,
+                calculate_unit_size(short_entry_price, short_sl),
+                trailing_stop=True,
+            )
 
         # stops
         # ATR_sl = ATR_MULTIPLE * calculate_ATR(df, symbol, SL_TP_DAYS)
@@ -141,7 +173,7 @@ def turtle_soup_plus_one_condition_check():
         # short_target = short_exit(df, symbol, SL_TP_DAYS)
 
         # current prices
-        #current_price = round(oanda.get_current_price(symbol), 5)
+        # current_price = round(oanda.get_current_price(symbol), 5)
 
         # print(
         #     f"LONG {symbol} | currentPrice: {current_price} | entryTarget: {long_entry_price} | stopLoss: {long_stop_loss}")
@@ -159,11 +191,9 @@ def turtle_soup_plus_one_condition_check():
 
 
 if __name__ == "__main__":
-    # oanda.close_all_trades()
-    # oanda.cancel_all_orders()
 
     turtle_soup_plus_one_condition_check()
-
+    update_order_trade_status()
     # close all pending orders every friday evening before weekend
     # schedule.every().friday.at("21:01").do(oanda.cancel_all_orders)
 
