@@ -148,20 +148,18 @@ def turtle_soup_plus_one_condition_check():
         print(f"PREV HIGH: {symbol} | ENTRY: {short_entry_price}")
         print(f"PREV LOW: {symbol} | ENTRY: {long_entry_price}")
         if (not check_open_order(symbol)) and (not check_open_trade(symbol)):
-            oanda.create_buy_limit(
+            oanda.create_buy_limit_with_trailing_stop(
                 symbol,
                 long_entry_price,
                 long_sl,
-                calculate_unit_size(long_entry_price, long_sl),
-                trailing_stop=True,
+                calculate_unit_size(long_entry_price, long_sl)
             )
 
-            oanda.create_sell_limit(
+            oanda.create_sell_limit_with_trailing_stop(
                 symbol,
                 short_entry_price,
                 short_sl,
-                calculate_unit_size(short_entry_price, short_sl),
-                trailing_stop=True,
+                calculate_unit_size(short_entry_price, short_sl)
             )
 
         # stops

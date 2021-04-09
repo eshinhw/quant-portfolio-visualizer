@@ -145,13 +145,13 @@ def create_buy_stop(pair, entry, stop_loss, unit_size, trailing_stop=0):
             "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
             "trailingStopLossOnFill": {
                 "timeInForce": "GTC",
-                "distance": str(trailing_stop),
+                "distance": str(trailing_stop)
             },
             "timeInForce": "GTC",
             "instrument": pair,
             "units": str(unit_size),
             "type": "STOP",
-            "positionFill": "DEFAULT",
+            "positionFill": "DEFAULT"
         }
     }
     r = orders.OrderCreate(account_ID, data=order_body)
@@ -169,13 +169,13 @@ def create_sell_stop(pair, entry, stop_loss, unit_size, trailing_stop=0):
             "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
             "trailingStopLossOnFill": {
                 "timeInForce": "GTC",
-                "distance": str(trailing_stop),
+                "distance": str(trailing_stop)
             },
             "timeInForce": "GTC",
             "instrument": pair,
             "units": "-" + str(unit_size),
             "type": "STOP",
-            "positionFill": "DEFAULT",
+            "positionFill": "DEFAULT"
         }
     }
     r = orders.OrderCreate(account_ID, data=order_body)
@@ -230,7 +230,7 @@ def create_sell_limit(pair, entry, stop_loss, unit_size):
     )
 
 
-def create_buy_limit_with_trailing_stop(pair, entry, stop_loss, unit_size, trailing_stop=False):
+def create_buy_limit_with_trailing_stop(pair, entry, stop_loss, unit_size):
     trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
@@ -251,4 +251,24 @@ def create_buy_limit_with_trailing_stop(pair, entry, stop_loss, unit_size, trail
 
     print(
         f"BUY LIMIT ORDER PLACED | @ {dt.datetime.now()} | Symbol: {pair} | Entry: {str(entry)} | Trailing Stop: {str(stop_loss)} with {str(trailing_stop)} pips | unit_size: {str(unit_size)}"
+    )
+
+
+def create_buy_limit(pair, entry, stop_loss, unit_size):
+    order_body = {
+        "order": {
+            "price": str(entry),
+            "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
+            "timeInForce": "GTC",
+            "instrument": pair,
+            "units": str(unit_size),
+            "type": "LIMIT",
+            "positionFill": "DEFAULT"
+        }
+    }
+    r = orders.OrderCreate(account_ID, data=order_body)
+    client.request(r)
+
+    print(
+        f"BUY LIMIT ORDER PLACED | @ {dt.datetime.now()} | Symbol: {pair} | Entry: {str(entry)} | Stop Loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
     )
