@@ -94,7 +94,8 @@ def get_candle_data(symbol, count, interval):
     Returns:
         JSON: json format in python dictionary
     """
-    instrument_params = {"count": count, "granularity": interval}
+    instrument_params = {"count": count,
+                         "granularity": interval, 'dailyAlignment': 20}
 
     r = instruments.InstrumentsCandles(
         instrument=symbol, params=instrument_params)
@@ -137,8 +138,8 @@ def get_current_price(pair):
     return sum(get_current_ask_bid_price(pair)) / 2
 
 
-def create_buy_stop(pair, entry, stop_loss, unit_size, trailing_stop=0):
-    # trailing_stop = round(abs(entry - stop_loss), 5)
+def create_buy_stop_with_trailing_stop(pair, entry, stop_loss, unit_size):
+    trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
             "price": str(entry),
@@ -161,8 +162,8 @@ def create_buy_stop(pair, entry, stop_loss, unit_size, trailing_stop=0):
     )
 
 
-def create_sell_stop(pair, entry, stop_loss, unit_size, trailing_stop=0):
-    # trailing_stop = round(abs(entry - stop_loss), 5)
+def create_sell_stop_with_trailing_stop(pair, entry, stop_loss, unit_size):
+    trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
             "price": str(entry),
