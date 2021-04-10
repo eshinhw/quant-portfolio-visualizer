@@ -272,3 +272,26 @@ def create_buy_limit(pair, entry, stop_loss, unit_size):
     print(
         f"BUY LIMIT ORDER PLACED | @ {dt.datetime.now()} | Symbol: {pair} | Entry: {str(entry)} | Stop Loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
     )
+
+
+if __name__ == '__main__':
+
+    with open("oanda_demo_api_token.txt", "r") as secret:
+        contents = secret.readlines()
+        api_token = contents[0].rstrip("\n")
+        account_ID = contents[1]
+        secret.close()
+
+    client = API(access_token=api_token)
+
+    resp = client.request(accounts.AccountSummary(account_ID))
+    print(float(resp["account"]["balance"]))
+
+    # r = orders.OrderList(account_ID)
+    # resp = client.request(r)
+    # print(resp["orders"])
+
+    r = trades.TradesList(account_ID)
+    resp = client.request(r)
+    # print("RESPONSE:\n{}".format(json.dumps(resp, indent=2)))
+    print(resp["trades"])
