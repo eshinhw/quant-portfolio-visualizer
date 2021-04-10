@@ -194,10 +194,10 @@ if __name__ == "__main__":
     turtle_soup_plus_one_condition_check()
     update_order_trade_status()
     # close all pending orders every friday evening before weekend
-    # schedule.every().friday.at("21:01").do(oanda.cancel_all_orders)
+    schedule.every().friday.at("16:30").do(oanda.cancel_all_orders)
 
     # while True:
     #     schedule.run_pending()
     #     update_position_status()
     #     turtle_soup_plus_one_condition_check()
-    #     time.sleep(10)
+    #     time.sleep(5)

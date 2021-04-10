@@ -31,6 +31,20 @@ def calculate_unit_size(entry, stop_loss):
     return unit_size
 
 
+def update_order_trade_status():
+
+    trade_list = oanda.get_trade_list()
+    order_list = oanda.get_order_list()
+
+    for trade in trade_list:
+        for order in order_list:
+            if order['type'] == 'LIMIT' and trade["instrument"] == order["instrument"]:
+                oanda.cancel_single_order(order["id"])
+                print(
+                    f"Order {order['id']} for {trade['instrument']} has been cancelled."
+                )
+
+
 def retrieve_data(symbol, days):
     candles = oanda.get_candle_data(symbol, days + 1, "D")
 
@@ -48,7 +62,7 @@ def retrieve_data(symbol, days):
     return df
 
 
-def check():
+def breakout_check():
 
     for symbol in SYMBOL:
 
@@ -76,4 +90,13 @@ def check():
 
 
 if __name__ == '__main__':
-    check()
+    breakout_check()
+    update_order_trade_status()
+
+    schedule.every().friday.at("16:30").do(oanda.cancel_all_orders)
+
+    # while True:
+    #     schedule.run_pending()
+    #     update_position_status()
+    #     turtle_soup_plus_one_condition_check()
+    #     time.sleep(5)
