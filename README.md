@@ -38,7 +38,7 @@ Long term trend following strategy with wide stop and target. A breakout signal 
 ## Turtle Soup Plus One (Counter Strategy of Original Turtle Trading System)
 
 <p align="center">
-  <img width="500" height="500" src="https://user-images.githubusercontent.com/41933169/114104687-59445200-9899-11eb-97f5-94144b5b7824.png">
+  <img width="700" height="500" src="https://user-images.githubusercontent.com/41933169/114284407-a7825e00-9a1d-11eb-8a42-38906125221b.png">
 </p>
 
 Since original turtle trading system has about 30% of breakout success rate at key highs and lows, that means 70% of the time markets fail to break out key levels. We can reverse-engineer to bet against original turtles to capitalize 70% of false breakouts. 'Turtle Soup' strategy goes long at previous lows and goes short at previous highs, entering trades against original turtles.
@@ -47,8 +47,13 @@ Since original turtle trading system has about 30% of breakout success rate at k
 
 ## Volatility Breakout Strategy by Larry Williams
 
-- Coming up soon...
+<p align="center">
+  <img width="700" height="500" src="https://user-images.githubusercontent.com/41933169/114284586-e4028980-9a1e-11eb-893b-e2df34434285.png">
+</p>
 
-## Momentum Pinball Strategy
+- Follow daily breakout momentum.
+- Entry determined by previous day's range * K (0 <= K <= 1, usually K = 0.5 ~ 0.6)
+- Trailing stop to maximize return and minimize risk
+
 
 
