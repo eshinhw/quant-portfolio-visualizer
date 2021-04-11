@@ -20,8 +20,9 @@ if __name__ == "__main__":
     vol_breakout.update_order_trade_status()
 
     # cancel all pending order before weekend
+    schedule.every().sunday.at("17:00").do(oanda.cancel_all_orders)
     schedule.every().friday.at("16:30").do(oanda.cancel_all_orders)
 
     while True:
         schedule.run_pending()
-        time.sleep(5)
+        time.sleep(3)

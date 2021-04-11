@@ -11,6 +11,11 @@ PREV_DAYS = 20
 ENTRY_PIP_BUFF = 0.0007
 ATR_SL_MULTIPLE = 0.5
 
+with open("turtle_soup_account_id.txt", "r") as secret:
+    contents = secret.readlines()
+    account_ID = contents[0]
+    secret.close()
+
 
 def calculate_unit_size(entry, stop_loss):
     """ Calculate unit size per trade (fixed % risk per trade assigned in RISK_PER_TRADE).
@@ -22,7 +27,7 @@ def calculate_unit_size(entry, stop_loss):
     Returns:
         Float: unit size
     """
-    account_balance = oanda.get_acct_balance()
+    account_balance = oanda.get_acct_balance(account_ID)
     risk_amt_per_trade = account_balance * RISK_PER_TRADE
     entry = round(entry, 4)
     stop_loss = round(stop_loss, 4)
@@ -37,20 +42,20 @@ def calculate_unit_size(entry, stop_loss):
 
 def update_order_trade_status():
 
-    trade_list = oanda.get_trade_list()
-    order_list = oanda.get_order_list()
+    trade_list = oanda.get_trade_list(account_ID)
+    order_list = oanda.get_order_list(account_ID)
 
     for trade in trade_list:
         for order in order_list:
             if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
-                oanda.cancel_single_order(order["id"])
+                oanda.cancel_single_order(account_ID, order["id"])
                 print(
                     f"Order {order['id']} for {trade['instrument']} has been cancelled."
                 )
 
 
 def check_open_order(symbol):
-    order_list = oanda.get_order_list()
+    order_list = oanda.get_order_list(account_ID)
     print(order_list)
     for order in order_list:
         if order["type"] == "LIMIT" and order["instrument"] == symbol:
@@ -60,7 +65,7 @@ def check_open_order(symbol):
 
 
 def check_open_trade(symbol):
-    trade_list = oanda.get_trade_list()
+    trade_list = oanda.get_trade_list(account_ID)
     for trade in trade_list:
         if trade["instrument"] == symbol:
             return True
@@ -129,8 +134,10 @@ def check_trade_conditions():
         # retrieve price data
         df = retrieve_data(symbol, PREV_DAYS)
         # entry prices
-        long_entry_price = round(prev_low(df, symbol, PREV_DAYS) + ENTRY_PIP_BUFF, 5)
-        short_entry_price = round(prev_high(df, symbol, PREV_DAYS) - ENTRY_PIP_BUFF, 5)
+        long_entry_price = round(
+            prev_low(df, symbol, PREV_DAYS) + ENTRY_PIP_BUFF, 5)
+        short_entry_price = round(
+            prev_high(df, symbol, PREV_DAYS) - ENTRY_PIP_BUFF, 5)
 
         stop_loss = calculate_ATR(df, symbol, PREV_DAYS) * ATR_SL_MULTIPLE
         long_sl = round(long_entry_price - stop_loss, 5)
@@ -147,6 +154,7 @@ def check_trade_conditions():
         print(f"PREV LOW: {symbol} | ENTRY: {long_entry_price}")
         if (not check_open_order(symbol)) and (not check_open_trade(symbol)):
             oanda.create_buy_limit_with_trailing_stop(
+                account_ID,
                 symbol,
                 long_entry_price,
                 long_sl,
@@ -154,6 +162,7 @@ def check_trade_conditions():
             )
 
             oanda.create_sell_limit_with_trailing_stop(
+                account_ID,
                 symbol,
                 short_entry_price,
                 short_sl,
@@ -189,7 +198,6 @@ def check_trade_conditions():
 
 if __name__ == "__main__":
 
-    turtle_soup_plus_one_condition_check()
     update_order_trade_status()
     # close all pending orders every friday evening before weekend
     schedule.every().friday.at("16:30").do(oanda.cancel_all_orders)

@@ -3,11 +3,16 @@ import oanda
 import schedule
 import pandas as pd
 
-#SYMBOL = ["EUR_USD"]
+# SYMBOL = ["EUR_USD"]
 SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
 RISK_PER_TRADE = 0.001
 RANGE_K = 0.6
 PREV_DAYS = 30
+
+with open("turtle_soup_account_id.txt", "r") as secret:
+    contents = secret.readlines()
+    account_ID = contents[0]
+    secret.close()
 
 
 def calculate_unit_size(entry, stop_loss):
@@ -20,7 +25,7 @@ def calculate_unit_size(entry, stop_loss):
     Returns:
         Float: unit size
     """
-    account_balance = oanda.get_acct_balance()
+    account_balance = oanda.get_acct_balance(account_ID)
     risk_amt_per_trade = account_balance * RISK_PER_TRADE
     entry = round(entry, 4)
     stop_loss = round(stop_loss, 4)
@@ -35,13 +40,13 @@ def calculate_unit_size(entry, stop_loss):
 
 def update_order_trade_status():
 
-    trade_list = oanda.get_trade_list()
-    order_list = oanda.get_order_list()
+    trade_list = oanda.get_trade_list(account_ID)
+    order_list = oanda.get_order_list(account_ID)
 
     for trade in trade_list:
         for order in order_list:
             if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
-                oanda.cancel_single_order(order["id"])
+                oanda.cancel_single_order(account_ID, order["id"])
                 print(
                     f"Order {order['id']} for {trade['instrument']} has been cancelled."
                 )
@@ -67,7 +72,7 @@ def retrieve_data(symbol, days):
 
 def check_trade_conditions():
 
-    for symbol in SYMBOL:
+    for symbol in SYMBOLS:
 
         prices = retrieve_data(symbol, PREV_DAYS)
         # print(prices)
@@ -83,6 +88,7 @@ def check_trade_conditions():
             # long breakout entry
             long_price = today_open + (prev_range * RANGE_K)
             oanda.create_buy_stop_with_trailing_stop(
+                account_ID,
                 symbol,
                 long_price,
                 today_open,
@@ -93,6 +99,7 @@ def check_trade_conditions():
             # short breakout entry
             short_price = today_open - (prev_range * RANGE_K)
             oanda.create_sell_stop_with_trailing_stop(
+                account_ID,
                 symbol,
                 short_price,
                 today_open,
@@ -101,7 +108,7 @@ def check_trade_conditions():
 
 
 if __name__ == "__main__":
-    breakout_check()
+
     update_order_trade_status()
 
     schedule.every().friday.at("16:30").do(oanda.cancel_all_orders)

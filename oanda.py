@@ -15,33 +15,33 @@ with open("oanda_demo_api_token.txt", "r") as secret:
 client = API(access_token=api_token)
 
 
-def cancel_single_order(order_ID):
-    r = orders.OrderCancel(accountID=account_ID, orderID=order_ID)
+def cancel_single_order(acct_ID, order_ID):
+    r = orders.OrderCancel(accountID=acct_ID, orderID=order_ID)
     client.request(r)
 
 
-def close_all_trades():
-    trades_list = get_trade_list()
+def close_all_trades(acct_ID):
+    trades_list = get_trade_list(acct_ID)
     for trade in trades_list:
-        r = trades.TradeClose(accountID=account_ID, tradeID=trade["id"])
+        r = trades.TradeClose(accountID=acct_ID, tradeID=trade["id"])
         client.request(r)
     print("All open trades are CLOSED.")
 
 
-def cancel_all_orders():
+def cancel_all_orders(acct_ID):
     """ Cancel all open orders
 
     Args:
         accountID (String): account ID
     """
-    order_list = get_order_list()
+    order_list = get_order_list(acct_ID)
     for order in order_list:
-        r = orders.OrderCancel(accountID=account_ID, orderID=order["id"])
+        r = orders.OrderCancel(accountID=acct_ID, orderID=order["id"])
         client.request(r)
     print("All open orders are CANCELLED.")
 
 
-def get_order_list():
+def get_order_list(acct_ID):
     """ Retrieve a list of open orders
 
     Args:
@@ -50,12 +50,12 @@ def get_order_list():
     Returns:
         List[String]: open orders
     """
-    r = orders.OrderList(account_ID)
+    r = orders.OrderList(acct_ID)
     resp = client.request(r)
     return resp["orders"]
 
 
-def get_trade_list():
+def get_trade_list(acct_ID):
     """ Retrieve a list of open trades
 
     Args:
@@ -64,13 +64,13 @@ def get_trade_list():
     Returns:
         List[String]: open trades
     """
-    r = trades.TradesList(account_ID)
+    r = trades.TradesList(acct_ID)
     resp = client.request(r)
     # print("RESPONSE:\n{}".format(json.dumps(resp, indent=2)))
     return resp["trades"]
 
 
-def get_acct_balance():
+def get_acct_balance(acct_ID):
     """ Retrieve account balance.
 
     Args:
@@ -79,7 +79,7 @@ def get_acct_balance():
     Returns:
         Float: current account balance
     """
-    resp = client.request(accounts.AccountSummary(account_ID))
+    resp = client.request(accounts.AccountSummary(acct_ID))
     return float(resp["account"]["balance"])
 
 
@@ -94,11 +94,9 @@ def get_candle_data(symbol, count, interval):
     Returns:
         JSON: json format in python dictionary
     """
-    instrument_params = {"count": count,
-                         "granularity": interval, "dailyAlignment": 13}
+    instrument_params = {"count": count, "granularity": interval, "dailyAlignment": 13}
 
-    r = instruments.InstrumentsCandles(
-        instrument=symbol, params=instrument_params)
+    r = instruments.InstrumentsCandles(instrument=symbol, params=instrument_params)
     resp = client.request(r)
     return resp
 
@@ -106,8 +104,7 @@ def get_candle_data(symbol, count, interval):
 def calculate_moving_average(symbol, count, interval):
     instrument_params = {"count": count + 1, "granularity": interval}
 
-    r = instruments.InstrumentsCandles(
-        instrument=symbol, params=instrument_params)
+    r = instruments.InstrumentsCandles(instrument=symbol, params=instrument_params)
     resp = client.request(r)
     closes = []
     for day in resp["candles"]:
@@ -138,7 +135,7 @@ def get_current_price(pair):
     return sum(get_current_ask_bid_price(pair)) / 2
 
 
-def create_buy_stop_with_trailing_stop(pair, entry, stop_loss, unit_size):
+def create_buy_stop_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_size):
     trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
@@ -155,14 +152,14 @@ def create_buy_stop_with_trailing_stop(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(account_ID, data=order_body)
+    r = orders.OrderCreate(acct_ID, data=order_body)
     client.request(r)
     print(
         f"BUY STOP ORDER PLACED | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
     )
 
 
-def create_sell_stop_with_trailing_stop(pair, entry, stop_loss, unit_size):
+def create_sell_stop_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_size):
     trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
@@ -179,7 +176,7 @@ def create_sell_stop_with_trailing_stop(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(account_ID, data=order_body)
+    r = orders.OrderCreate(acct_ID, data=order_body)
     client.request(r)
 
     print(
@@ -187,7 +184,7 @@ def create_sell_stop_with_trailing_stop(pair, entry, stop_loss, unit_size):
     )
 
 
-def create_sell_limit_with_trailing_stop(pair, entry, stop_loss, unit_size):
+def create_sell_limit_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_size):
     trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
@@ -203,7 +200,7 @@ def create_sell_limit_with_trailing_stop(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(account_ID, data=order_body)
+    r = orders.OrderCreate(acct_ID, data=order_body)
     client.request(r)
 
     print(
@@ -211,7 +208,7 @@ def create_sell_limit_with_trailing_stop(pair, entry, stop_loss, unit_size):
     )
 
 
-def create_sell_limit(pair, entry, stop_loss, unit_size):
+def create_sell_limit(acct_ID, pair, entry, stop_loss, unit_size):
     order_body = {
         "order": {
             "price": str(entry),
@@ -223,7 +220,7 @@ def create_sell_limit(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(account_ID, data=order_body)
+    r = orders.OrderCreate(acct_ID, data=order_body)
     client.request(r)
 
     print(
@@ -231,7 +228,7 @@ def create_sell_limit(pair, entry, stop_loss, unit_size):
     )
 
 
-def create_buy_limit_with_trailing_stop(pair, entry, stop_loss, unit_size):
+def create_buy_limit_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_size):
     trailing_stop = round(abs(entry - stop_loss), 5)
     order_body = {
         "order": {
@@ -247,7 +244,7 @@ def create_buy_limit_with_trailing_stop(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(account_ID, data=order_body)
+    r = orders.OrderCreate(acct_ID, data=order_body)
     client.request(r)
 
     print(
@@ -255,7 +252,7 @@ def create_buy_limit_with_trailing_stop(pair, entry, stop_loss, unit_size):
     )
 
 
-def create_buy_limit(pair, entry, stop_loss, unit_size):
+def create_buy_limit(acct_ID, pair, entry, stop_loss, unit_size):
     order_body = {
         "order": {
             "price": str(entry),
@@ -267,7 +264,7 @@ def create_buy_limit(pair, entry, stop_loss, unit_size):
             "positionFill": "DEFAULT",
         }
     }
-    r = orders.OrderCreate(account_ID, data=order_body)
+    r = orders.OrderCreate(acct_ID, data=order_body)
     client.request(r)
 
     print(

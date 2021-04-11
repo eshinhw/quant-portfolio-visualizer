@@ -11,6 +11,11 @@ ENTRY_DAYS = 55
 SL_TP_DAYS = 20
 ATR_MULTIPLE = 1.5
 
+with open("turtle_soup_account_id.txt", "r") as secret:
+    contents = secret.readlines()
+    account_ID = contents[0]
+    secret.close()
+
 
 def calculate_unit_size(entry, stop_loss):
     """ Calculate unit size per trade (fixed % risk per trade assigned in RISK_PER_TRADE).
@@ -22,7 +27,7 @@ def calculate_unit_size(entry, stop_loss):
     Returns:
         Float: unit size
     """
-    account_balance = oanda.get_acct_balance()
+    account_balance = oanda.get_acct_balance(account_ID)
     risk_amt_per_trade = account_balance * RISK_PER_TRADE
     entry = round(entry, 4)
     stop_loss = round(stop_loss, 4)
@@ -37,7 +42,7 @@ def calculate_unit_size(entry, stop_loss):
 
 def update_position_status():
 
-    trades_list = oanda.get_trade_list()
+    trades_list = oanda.get_trade_list(account_ID)
     for trade in trades_list:
         POSITION_STATUS[trade["instrument"]] = 1
 
@@ -126,10 +131,14 @@ def check_trade_conditions():
         # place entry orders
         if current_price < short_entry_price and not (symbol in POSITION_STATUS.keys()):
             units = calculate_unit_size(current_price, long_stop_loss)
-            oanda.create_sell_limit(symbol, current_price, short_stop_loss, units)
+            oanda.create_sell_limit(
+                account_ID, symbol, current_price, short_stop_loss, units
+            )
         if current_price > long_entry_price and not (symbol in POSITION_STATUS.keys()):
             units = calculate_unit_size(current_price, short_stop_loss)
-            oanda.create_buy_limit(symbol, current_price, short_stop_loss, units)
+            oanda.create_buy_limit(
+                account_ID, symbol, current_price, short_stop_loss, units
+            )
 
 
 if __name__ == "__main__":
@@ -142,5 +151,4 @@ if __name__ == "__main__":
     while True:
         schedule.run_pending()
         update_position_status()
-        trend_following_condition_check()
         time.sleep(5)
