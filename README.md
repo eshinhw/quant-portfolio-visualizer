@@ -54,6 +54,7 @@ Since original turtle trading system has about 30% of breakout success rate at k
 - Follow daily breakout momentum.
 - Entry determined by previous day's range * K (0 <= K <= 1, usually K = 0.5 ~ 0.6)
 - Trailing stop to maximize return and minimize risk
-
+- Price data misalignment issue from weekend since fx markets don't have official open and close time like stock markets.
+- Need to filter out specified time periods like from London Open to NY Close.
 
 
