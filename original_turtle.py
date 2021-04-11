@@ -3,7 +3,7 @@ import oanda
 import schedule
 import pandas as pd
 
-SYMBOLS = ['EUR_USD', 'GBP_USD', 'AUD_USD', 'NZD_USD']
+SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
 RISK_PER_TRADE = 0.001
 POSITION_STATUS = {}
 
@@ -99,7 +99,7 @@ def short_exit(df, symbol, days):
     return df["High_" + str(days)].iloc[-1]
 
 
-def trend_following_condition_check():
+def check_trade_conditions():
     for symbol in SYMBOLS:
         # retrieve price data
         df = retrieve_data(symbol, ENTRY_DAYS)
@@ -126,12 +126,10 @@ def trend_following_condition_check():
         # place entry orders
         if current_price < short_entry_price and not (symbol in POSITION_STATUS.keys()):
             units = calculate_unit_size(current_price, long_stop_loss)
-            oanda.create_sell_limit(
-                symbol, current_price, short_stop_loss, units)
+            oanda.create_sell_limit(symbol, current_price, short_stop_loss, units)
         if current_price > long_entry_price and not (symbol in POSITION_STATUS.keys()):
             units = calculate_unit_size(current_price, short_stop_loss)
-            oanda.create_buy_limit(symbol, current_price,
-                                   short_stop_loss, units)
+            oanda.create_buy_limit(symbol, current_price, short_stop_loss, units)
 
 
 if __name__ == "__main__":
@@ -145,4 +143,4 @@ if __name__ == "__main__":
         schedule.run_pending()
         update_position_status()
         trend_following_condition_check()
-        time.sleep(10)
+        time.sleep(5)

@@ -3,7 +3,7 @@ import oanda
 import schedule
 import pandas as pd
 
-#SYMBOLS = ["EUR_USD"]
+# SYMBOLS = ["EUR_USD"]
 SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
 RISK_PER_TRADE = 0.001
 
@@ -42,7 +42,7 @@ def update_order_trade_status():
 
     for trade in trade_list:
         for order in order_list:
-            if order['type'] == 'LIMIT' and trade["instrument"] == order["instrument"]:
+            if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
                 oanda.cancel_single_order(order["id"])
                 print(
                     f"Order {order['id']} for {trade['instrument']} has been cancelled."
@@ -53,7 +53,7 @@ def check_open_order(symbol):
     order_list = oanda.get_order_list()
     print(order_list)
     for order in order_list:
-        if order['type'] == 'LIMIT' and order["instrument"] == symbol:
+        if order["type"] == "LIMIT" and order["instrument"] == symbol:
             return True
 
     return False
@@ -124,15 +124,13 @@ def prev_high(df, symbol, days):  # place to go short
     return df["High_" + str(days)].iloc[-1]
 
 
-def turtle_soup_plus_one_condition_check():
+def check_trade_conditions():
     for symbol in SYMBOLS:
         # retrieve price data
         df = retrieve_data(symbol, PREV_DAYS)
         # entry prices
-        long_entry_price = round(
-            prev_low(df, symbol, PREV_DAYS) + ENTRY_PIP_BUFF, 5)
-        short_entry_price = round(
-            prev_high(df, symbol, PREV_DAYS) - ENTRY_PIP_BUFF, 5)
+        long_entry_price = round(prev_low(df, symbol, PREV_DAYS) + ENTRY_PIP_BUFF, 5)
+        short_entry_price = round(prev_high(df, symbol, PREV_DAYS) - ENTRY_PIP_BUFF, 5)
 
         stop_loss = calculate_ATR(df, symbol, PREV_DAYS) * ATR_SL_MULTIPLE
         long_sl = round(long_entry_price - stop_loss, 5)
@@ -152,14 +150,14 @@ def turtle_soup_plus_one_condition_check():
                 symbol,
                 long_entry_price,
                 long_sl,
-                calculate_unit_size(long_entry_price, long_sl)
+                calculate_unit_size(long_entry_price, long_sl),
             )
 
             oanda.create_sell_limit_with_trailing_stop(
                 symbol,
                 short_entry_price,
                 short_sl,
-                calculate_unit_size(short_entry_price, short_sl)
+                calculate_unit_size(short_entry_price, short_sl),
             )
 
         # stops

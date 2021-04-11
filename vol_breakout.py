@@ -3,9 +3,11 @@ import oanda
 import schedule
 import pandas as pd
 
-SYMBOL = ['EUR_USD']
+#SYMBOL = ["EUR_USD"]
+SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
 RISK_PER_TRADE = 0.001
 RANGE_K = 0.6
+PREV_DAYS = 30
 
 
 def calculate_unit_size(entry, stop_loss):
@@ -38,7 +40,7 @@ def update_order_trade_status():
 
     for trade in trade_list:
         for order in order_list:
-            if order['type'] == 'LIMIT' and trade["instrument"] == order["instrument"]:
+            if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
                 oanda.cancel_single_order(order["id"])
                 print(
                     f"Order {order['id']} for {trade['instrument']} has been cancelled."
@@ -47,6 +49,7 @@ def update_order_trade_status():
 
 def retrieve_data(symbol, days):
     candles = oanda.get_candle_data(symbol, days + 1, "D")
+    print(candles)
 
     data_dict = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
 
@@ -62,34 +65,42 @@ def retrieve_data(symbol, days):
     return df
 
 
-def breakout_check():
+def check_trade_conditions():
 
     for symbol in SYMBOL:
 
-        prices = retrieve_data(symbol, 15)
+        prices = retrieve_data(symbol, PREV_DAYS)
         # print(prices)
 
         # Compute previous day's range
-        prev_high = prices['High'].iloc[-2]
-        prev_low = prices['Low'].iloc[-2]
-        prev_close = prices['Close'].iloc[-2]
+        prev_high = prices["High"].iloc[-2]
+        prev_low = prices["Low"].iloc[-2]
+        prev_close = prices["Close"].iloc[-2]
         prev_range = prev_high - prev_low
-        today_open = prices['Open'].iloc[-1]
+        today_open = prices["Open"].iloc[-1]
 
         if prev_close > prev_high - (prev_range * 0.1):  # bullish range
             # long breakout entry
             long_price = today_open + (prev_range * RANGE_K)
             oanda.create_buy_stop_with_trailing_stop(
-                symbol, long_price, today_open, calculate_unit_size(long_price, today_open))
+                symbol,
+                long_price,
+                today_open,
+                calculate_unit_size(long_price, today_open),
+            )
 
         if prev_close < prev_low + (prev_range * 0.1):  # bearish range
             # short breakout entry
             short_price = today_open - (prev_range * RANGE_K)
             oanda.create_sell_stop_with_trailing_stop(
-                symbol, short_price, today_open, calculate_unit_size(short_price, today_open))
+                symbol,
+                short_price,
+                today_open,
+                calculate_unit_size(short_price, today_open),
+            )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     breakout_check()
     update_order_trade_status()
 

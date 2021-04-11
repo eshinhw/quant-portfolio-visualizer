@@ -95,7 +95,7 @@ def get_candle_data(symbol, count, interval):
         JSON: json format in python dictionary
     """
     instrument_params = {"count": count,
-                         "granularity": interval, 'dailyAlignment': 20}
+                         "granularity": interval, "dailyAlignment": 13}
 
     r = instruments.InstrumentsCandles(
         instrument=symbol, params=instrument_params)
@@ -146,13 +146,13 @@ def create_buy_stop_with_trailing_stop(pair, entry, stop_loss, unit_size):
             "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
             "trailingStopLossOnFill": {
                 "timeInForce": "GTC",
-                "distance": str(trailing_stop)
+                "distance": str(trailing_stop),
             },
             "timeInForce": "GTC",
             "instrument": pair,
             "units": str(unit_size),
             "type": "STOP",
-            "positionFill": "DEFAULT"
+            "positionFill": "DEFAULT",
         }
     }
     r = orders.OrderCreate(account_ID, data=order_body)
@@ -170,13 +170,13 @@ def create_sell_stop_with_trailing_stop(pair, entry, stop_loss, unit_size):
             "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
             "trailingStopLossOnFill": {
                 "timeInForce": "GTC",
-                "distance": str(trailing_stop)
+                "distance": str(trailing_stop),
             },
             "timeInForce": "GTC",
             "instrument": pair,
             "units": "-" + str(unit_size),
             "type": "STOP",
-            "positionFill": "DEFAULT"
+            "positionFill": "DEFAULT",
         }
     }
     r = orders.OrderCreate(account_ID, data=order_body)
@@ -194,13 +194,13 @@ def create_sell_limit_with_trailing_stop(pair, entry, stop_loss, unit_size):
             "price": str(entry),
             "trailingStopLossOnFill": {
                 "timeInForce": "GTC",
-                "distance": str(trailing_stop)
+                "distance": str(trailing_stop),
             },
             "timeInForce": "GTC",
             "instrument": pair,
             "units": "-" + str(unit_size),
             "type": "LIMIT",
-            "positionFill": "DEFAULT"
+            "positionFill": "DEFAULT",
         }
     }
     r = orders.OrderCreate(account_ID, data=order_body)
@@ -220,7 +220,7 @@ def create_sell_limit(pair, entry, stop_loss, unit_size):
             "instrument": pair,
             "units": "-" + str(unit_size),
             "type": "LIMIT",
-            "positionFill": "DEFAULT"
+            "positionFill": "DEFAULT",
         }
     }
     r = orders.OrderCreate(account_ID, data=order_body)
@@ -238,13 +238,13 @@ def create_buy_limit_with_trailing_stop(pair, entry, stop_loss, unit_size):
             "price": str(entry),
             "trailingStopLossOnFill": {
                 "timeInForce": "GTC",
-                "distance": str(trailing_stop)
+                "distance": str(trailing_stop),
             },
             "timeInForce": "GTC",
             "instrument": pair,
             "units": str(unit_size),
             "type": "LIMIT",
-            "positionFill": "DEFAULT"
+            "positionFill": "DEFAULT",
         }
     }
     r = orders.OrderCreate(account_ID, data=order_body)
@@ -264,7 +264,7 @@ def create_buy_limit(pair, entry, stop_loss, unit_size):
             "instrument": pair,
             "units": str(unit_size),
             "type": "LIMIT",
-            "positionFill": "DEFAULT"
+            "positionFill": "DEFAULT",
         }
     }
     r = orders.OrderCreate(account_ID, data=order_body)
@@ -275,7 +275,7 @@ def create_buy_limit(pair, entry, stop_loss, unit_size):
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     with open("oanda_demo_api_token.txt", "r") as secret:
         contents = secret.readlines()
