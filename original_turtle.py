@@ -3,7 +3,8 @@ import oanda
 import schedule
 import pandas as pd
 
-SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
+SYMBOLS = ["EUR_USD"]
+#SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
 RISK_PER_TRADE = 0.001
 POSITION_STATUS = {}
 
@@ -11,7 +12,7 @@ ENTRY_DAYS = 55
 SL_TP_DAYS = 20
 ATR_MULTIPLE = 1.5
 
-with open("turtle_soup_account_id.txt", "r") as secret:
+with open("/home/pi/Desktop/py-fx-trading-bot/turtle_soup_account_id.txt", "r") as secret:
     contents = secret.readlines()
     account_ID = contents[0]
     secret.close()
@@ -141,14 +142,14 @@ def check_trade_conditions():
             )
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     # oanda.close_all_trades()
     # oanda.cancel_all_orders()
 
     # close all pending orders every friday evening before weekend
-    schedule.every().friday.at("16:30").do(oanda.cancel_all_orders)
+    # schedule.every().friday.at("16:30").do(oanda.cancel_all_orders)
 
-    while True:
-        schedule.run_pending()
-        update_position_status()
-        time.sleep(5)
+    # while True:
+    #     schedule.run_pending()
+    #     update_position_status()
+    #     time.sleep(5)

@@ -6,7 +6,7 @@ import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 
-with open("oanda_demo_api_token.txt", "r") as secret:
+with open("/home/pi/Desktop/py-fx-trading-bot/oanda_api_token.txt", "r") as secret:
     contents = secret.readlines()
     api_token = contents[0].rstrip("\n")
     account_ID = contents[1]
@@ -25,7 +25,7 @@ def close_all_trades(acct_ID):
     for trade in trades_list:
         r = trades.TradeClose(accountID=acct_ID, tradeID=trade["id"])
         client.request(r)
-    print("All open trades are CLOSED.")
+    #print("All open trades are CLOSED.")
 
 
 def cancel_all_orders(acct_ID):
@@ -38,7 +38,7 @@ def cancel_all_orders(acct_ID):
     for order in order_list:
         r = orders.OrderCancel(accountID=acct_ID, orderID=order["id"])
         client.request(r)
-    print("All open orders are CANCELLED.")
+    #print("All open orders are CANCELLED.")
 
 
 def get_order_list(acct_ID):
@@ -94,9 +94,11 @@ def get_candle_data(symbol, count, interval):
     Returns:
         JSON: json format in python dictionary
     """
-    instrument_params = {"count": count, "granularity": interval, "dailyAlignment": 13}
+    instrument_params = {"count": count,
+                         "granularity": interval, "dailyAlignment": 13}
 
-    r = instruments.InstrumentsCandles(instrument=symbol, params=instrument_params)
+    r = instruments.InstrumentsCandles(
+        instrument=symbol, params=instrument_params)
     resp = client.request(r)
     return resp
 
@@ -104,7 +106,8 @@ def get_candle_data(symbol, count, interval):
 def calculate_moving_average(symbol, count, interval):
     instrument_params = {"count": count + 1, "granularity": interval}
 
-    r = instruments.InstrumentsCandles(instrument=symbol, params=instrument_params)
+    r = instruments.InstrumentsCandles(
+        instrument=symbol, params=instrument_params)
     resp = client.request(r)
     closes = []
     for day in resp["candles"]:
@@ -137,6 +140,7 @@ def get_current_price(pair):
 
 def create_buy_stop_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_size):
     trailing_stop = round(abs(entry - stop_loss), 5)
+    # print(trailing_stop)
     order_body = {
         "order": {
             "price": str(entry),
@@ -161,6 +165,7 @@ def create_buy_stop_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_siz
 
 def create_sell_stop_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_size):
     trailing_stop = round(abs(entry - stop_loss), 5)
+    # print(trailing_stop)
     order_body = {
         "order": {
             "price": str(entry),
@@ -274,22 +279,10 @@ def create_buy_limit(acct_ID, pair, entry, stop_loss, unit_size):
 
 if __name__ == "__main__":
 
-    with open("oanda_demo_api_token.txt", "r") as secret:
+    with open("oanda_api_token.txt", "r") as secret:
         contents = secret.readlines()
         api_token = contents[0].rstrip("\n")
         account_ID = contents[1]
         secret.close()
 
     client = API(access_token=api_token)
-
-    resp = client.request(accounts.AccountSummary(account_ID))
-    print(float(resp["account"]["balance"]))
-
-    # r = orders.OrderList(account_ID)
-    # resp = client.request(r)
-    # print(resp["orders"])
-
-    r = trades.TradesList(account_ID)
-    resp = client.request(r)
-    # print("RESPONSE:\n{}".format(json.dumps(resp, indent=2)))
-    print(resp["trades"])

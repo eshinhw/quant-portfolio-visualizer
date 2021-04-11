@@ -3,15 +3,15 @@ import oanda
 import schedule
 import pandas as pd
 
-# SYMBOLS = ["EUR_USD"]
+#SYMBOLS = ["EUR_USD"]
 SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
 RISK_PER_TRADE = 0.001
 
-PREV_DAYS = 20
+PREV_DAYS = 30
 ENTRY_PIP_BUFF = 0.0007
 ATR_SL_MULTIPLE = 0.5
 
-with open("turtle_soup_account_id.txt", "r") as secret:
+with open("/home/pi/Desktop/py-fx-trading-bot/turtle_soup_account_id.txt", "r") as secret:
     contents = secret.readlines()
     account_ID = contents[0]
     secret.close()
@@ -56,7 +56,7 @@ def update_order_trade_status():
 
 def check_open_order(symbol):
     order_list = oanda.get_order_list(account_ID)
-    print(order_list)
+    # print(order_list)
     for order in order_list:
         if order["type"] == "LIMIT" and order["instrument"] == symbol:
             return True
@@ -150,8 +150,8 @@ def check_trade_conditions():
         # follow long term market direction
         # bearish --> short only at prev highs
         # bullish --> long only at prev lows
-        print(f"PREV HIGH: {symbol} | ENTRY: {short_entry_price}")
-        print(f"PREV LOW: {symbol} | ENTRY: {long_entry_price}")
+        # print(f"PREV HIGH: {symbol} | ENTRY: {short_entry_price}")
+        # print(f"PREV LOW: {symbol} | ENTRY: {long_entry_price}")
         if (not check_open_order(symbol)) and (not check_open_trade(symbol)):
             oanda.create_buy_limit_with_trailing_stop(
                 account_ID,

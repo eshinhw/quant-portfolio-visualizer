@@ -3,8 +3,8 @@ import oanda
 import schedule
 import pandas as pd
 
-# SYMBOL = ["EUR_USD"]
-SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
+SYMBOLS = ["EUR_USD"]
+#SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", "NZD_USD"]
 RISK_PER_TRADE = 0.001
 RANGE_K = 0.6
 PREV_DAYS = 30
@@ -54,7 +54,7 @@ def update_order_trade_status():
 
 def retrieve_data(symbol, days):
     candles = oanda.get_candle_data(symbol, days + 1, "D")
-    print(candles)
+    # print(candles)
 
     data_dict = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
 
@@ -75,7 +75,7 @@ def check_trade_conditions():
     for symbol in SYMBOLS:
 
         prices = retrieve_data(symbol, PREV_DAYS)
-        # print(prices)
+        print(prices)
 
         # Compute previous day's range
         prev_high = prices["High"].iloc[-2]
@@ -86,6 +86,7 @@ def check_trade_conditions():
 
         if prev_close > prev_high - (prev_range * 0.1):  # bullish range
             # long breakout entry
+            print("true...?")
             long_price = today_open + (prev_range * RANGE_K)
             oanda.create_buy_stop_with_trailing_stop(
                 account_ID,
@@ -95,7 +96,13 @@ def check_trade_conditions():
                 calculate_unit_size(long_price, today_open),
             )
 
+        print(f"prev_close: {prev_close}")
+        print(f"prev_high: {prev_high}")
+        print(f"prev_low: {prev_low}")
+        print(f"prev_range: {prev_high - prev_low}")
+        print(f"threshold: {prev_low + (prev_range * 0.1)}")
         if prev_close < prev_low + (prev_range * 0.1):  # bearish range
+            print("bearish true?")
             # short breakout entry
             short_price = today_open - (prev_range * RANGE_K)
             oanda.create_sell_stop_with_trailing_stop(
@@ -109,9 +116,10 @@ def check_trade_conditions():
 
 if __name__ == "__main__":
 
+    check_trade_conditions()
     update_order_trade_status()
 
-    schedule.every().friday.at("16:30").do(oanda.cancel_all_orders)
+    # schedule.every().friday.at("16:30").do(oanda.cancel_all_orders)
 
     # while True:
     #     schedule.run_pending()
