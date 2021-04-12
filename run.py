@@ -11,8 +11,6 @@ if __name__ == "__main__":
     # original_turtle.update_position_status()
 
     # turtle soup reversal system at prev highs and lows
-    turtle_soup.check_trade_conditions()
-    turtle_soup.update_order_trade_status()
 
     # volatility breakout based on prev day's range
     # vol_breakout.check_trade_conditions()
@@ -24,4 +22,6 @@ if __name__ == "__main__":
 
     while True:
         schedule.run_pending()
+        turtle_soup.check_trade_conditions()
+        turtle_soup.update_order_trade_status()
         time.sleep(3)

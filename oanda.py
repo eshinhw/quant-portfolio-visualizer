@@ -5,7 +5,7 @@ import oandapyV20.endpoints.trades as trades
 import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
-
+# /home/pi/Desktop/py-fx-trading-bot/
 with open("/home/pi/Desktop/py-fx-trading-bot/oanda_api_token.txt", "r") as secret:
     contents = secret.readlines()
     api_token = contents[0].rstrip("\n")
@@ -286,3 +286,17 @@ if __name__ == "__main__":
         secret.close()
 
     client = API(access_token=api_token)
+
+    # cancel_all_orders('101-002-5334779-004')
+
+    trade_list = get_trade_list('101-002-5334779-004')
+
+    order_list = get_order_list('101-002-5334779-004')
+
+    for trade in trade_list:
+        for order in order_list:
+            if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
+                cancel_single_order('101-002-5334779-004', order["id"])
+                print(
+                    f"Order {order['id']} for {trade['instrument']} has been cancelled."
+                )
