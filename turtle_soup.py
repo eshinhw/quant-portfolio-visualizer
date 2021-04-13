@@ -1,8 +1,9 @@
 import time
 import oanda
+import dfdata
 import schedule
 import pandas as pd
-import dfdata
+
 
 # SYMBOLS = ["EUR_USD"]
 #SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", 'NZD_USD', 'USD_JPY', 'GBP_JPY']
@@ -23,7 +24,7 @@ ATR_SL_MULTIPLE = 1
 account_ID = '101-002-5334779-003'
 
 
-def check_condition_and_place_orders(symbol: str):
+def check_condition_and_place_orders():
 
     for symbol in SYMBOLS:
 

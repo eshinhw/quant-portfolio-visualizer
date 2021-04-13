@@ -1,3 +1,4 @@
+import json
 import time
 import oanda
 import schedule
@@ -6,15 +7,9 @@ import turtle_soup
 
 if __name__ == "__main__":
 
-    # original turtle trend following system
-    # original_turtle.check_trade_conditions()
-    # original_turtle.update_position_status()
-
-    # turtle soup reversal system at prev highs and lows
-
-    # volatility breakout based on prev day's range
-    # vol_breakout.check_trade_conditions()
-    # vol_breakout.update_order_trade_status()
+    with open('./account_info.json', 'r') as fp:
+        accounts = json.load(fp)
+        print(accounts)
 
     # cancel all pending order before weekend
     schedule.every().sunday.at("17:00").do(oanda.cancel_all_orders)
@@ -23,5 +18,5 @@ if __name__ == "__main__":
     while True:
         schedule.run_pending()
         turtle_soup.check_condition_and_place_orders()
-        oanda.update_order_trade_status()
+        oanda.update_order_trade_status(accounts['turtle_soup'])
         time.sleep(3)

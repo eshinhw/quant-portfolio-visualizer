@@ -1,3 +1,4 @@
+import os
 import json
 import datetime as dt
 from oandapyV20 import API
@@ -12,11 +13,27 @@ import oandapyV20.endpoints.instruments as instruments
 
 # /home/pi/Desktop/py-fx-trading-bot/
 
-with open("oanda_api_token.txt", "r") as auth:
-    contents = auth.readlines()
-    api_token = contents[0].rstrip("\n")
-    client = API(access_token=api_token)
-    auth.close()
+# with open("account_info.txt", "r") as auth:
+#     contents = auth.readlines()
+#     auth_data = {}
+#     for content in contents:
+#         print(content)
+#     api_token = contents[0].rstrip("\n")
+#     client = API(access_token=api_token)
+#     auth.close()
+
+
+def save_auth():
+    with open('./account_info.txt', 'r') as secret:
+        contents = secret.readlines()
+        auth_dict = {}
+        for content in contents:
+            splits = content.rstrip('\n').split(':')
+            auth_dict[splits[0]] = splits[1]
+        secret.close()
+
+    with open('account_info.json', 'w') as auth:
+        json.dump(auth_dict, auth)
 
 
 def calculate_unit_size(account_ID: str,
@@ -197,12 +214,16 @@ def get_current_ask_bid_price(account_ID: str, symbol: str) -> Tuple[float]:
     return (ask_price, bid_price)
 
 
-def get_current_price(symbol: str) -> float:
-    return sum(get_current_ask_bid_price(account_ID, symbol)) / 2
+# def get_current_price(symbol: str) -> float:
+#     return sum(get_current_ask_bid_price(account_ID, symbol)) / 2
 
 
-def create_sell_limit(
-        account_ID: str, symbol: str, entry: float, stop: float, units: int, trailing_stop: bool) -> None:
+def create_sell_limit(account_ID: str,
+                      symbol: str,
+                      entry: float,
+                      stop: float,
+                      units: int,
+                      trailing_stop: bool) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:
@@ -239,8 +260,12 @@ def create_sell_limit(
     client.request(r)
 
 
-def create_buy_limit(
-        account_ID: str, symbol: str, entry: float, stop: float, units: int, trailing_stop: bool) -> None:
+def create_buy_limit(account_ID: str,
+                     symbol: str,
+                     entry: float,
+                     stop: float,
+                     units: int,
+                     trailing_stop: bool) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:
@@ -277,8 +302,12 @@ def create_buy_limit(
     client.request(r)
 
 
-def create_sell_stop(
-        account_ID: str, symbol: str, entry: float, stop: float, units: int, trailing_stop: bool) -> None:
+def create_sell_stop(account_ID: str,
+                     symbol: str,
+                     entry: float,
+                     stop: float,
+                     units: int,
+                     trailing_stop: bool) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:
@@ -315,8 +344,12 @@ def create_sell_stop(
     client.request(r)
 
 
-def create_buy_stop(
-        account_ID: str, symbol: str, entry: float, stop: float, units: int, trailing_stop: bool) -> None:
+def create_buy_stop(account_ID: str,
+                    symbol: str,
+                    entry: float,
+                    stop: float,
+                    units: int,
+                    trailing_stop: bool) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:
@@ -353,13 +386,20 @@ def create_buy_stop(
     client.request(r)
 
 
-if __name__ == "__main__":
+if os.path.exists('./account_info.json'):
+    data = json.load(open('account_info.json', 'r'))
+    client = API(access_token=data['token'])
+else:
+    save_auth()
 
-    with open("oanda_api_token.txt", "r") as secret:
-        contents = secret.readlines()
-        api_token = contents[0].rstrip("\n")
-        account_ID = contents[1]
-        client = API(access_token=api_token)
-        secret.close()
 
-    cancel_all_orders(account_ID)
+# if __name__ == "__main__":
+
+#     with open("oanda_api_token.txt", "r") as secret:
+#         contents = secret.readlines()
+#         api_token = contents[0].rstrip("\n")
+#         account_ID = contents[1]
+#         client = API(access_token=api_token)
+#         secret.close()
+
+#     cancel_all_orders(account_ID)
