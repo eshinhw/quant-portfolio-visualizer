@@ -33,19 +33,52 @@ def calculate_unit_size(account_ID: str,
         decimal = 2
         multiple = 100
 
-    print(decimal, multiple)
     account_balance = get_acct_balance(account_ID)
     risk_amt_per_trade = account_balance * risk_per_trade
     entry = round(entry, decimal)
-    stop_loss = round(stop, decimal)
-    stop_loss_pips = round(abs(entry - stop_loss) * multiple, 0)
-    print(f"entry: {entry}, stop: {stop_loss}, stop_pips: {stop_loss_pips}")
-    (currentAsk, currentBid) = get_current_ask_bid_price(account_ID, "USD_CAD")
-    acct_conversion_rate = 1 / ((currentAsk + currentBid) / 2)
-    unit_size = round((risk_amt_per_trade / stop_loss_pips *
-                      acct_conversion_rate) * multiple, 0)
-    print(unit_size)
-    return unit_size
+    stop = round(stop, decimal)
+    stop_loss_pips = round(abs(entry - stop) * multiple, 0)
+
+    if '_USD' in symbol:
+        (currentAsk, currentBid) = get_current_ask_bid_price(account_ID, "USD_CAD")
+        acct_conversion_rate = 1 / ((currentAsk + currentBid) / 2)
+        unit_size = round((risk_amt_per_trade / stop_loss_pips *
+                           acct_conversion_rate) * multiple, 0)
+        return unit_size
+
+    if '_JPY' in symbol:
+        (currentAsk, currentBid) = get_current_ask_bid_price(account_ID, "CAD_JPY")
+        acct_conversion_rate = ((currentAsk + currentBid) / 2)
+        unit_size = round((risk_amt_per_trade / stop_loss_pips *
+                           acct_conversion_rate) * multiple, 0)
+        return unit_size
+
+
+def update_order_trade_status(account_ID: str):
+
+    trade_list = get_trade_list(account_ID)
+    order_list = get_order_list(account_ID)
+
+    for trade in trade_list:
+        for order in order_list:
+            if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
+                cancel_single_order(account_ID, order["id"])
+
+
+def check_open_order(account_ID: str, symbol: str):
+    order_list = get_order_list(account_ID)
+    for order in order_list:
+        if order["type"] == "LIMIT" and order["instrument"] == symbol:
+            return True
+    return False
+
+
+def check_open_trade(account_ID: str, symbol: str):
+    trade_list = get_trade_list(account_ID)
+    for trade in trade_list:
+        if trade["instrument"] == symbol:
+            return True
+    return False
 
 
 def cancel_single_order(account_ID: str, order_ID: str) -> None:

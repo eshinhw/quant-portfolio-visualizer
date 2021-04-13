@@ -22,36 +22,6 @@ ATR_SL_MULTIPLE = 1
 account_ID = '101-002-5334779-003'
 
 
-def update_order_trade_status():
-
-    trade_list = oanda.get_trade_list(account_ID)
-    order_list = oanda.get_order_list(account_ID)
-
-    for trade in trade_list:
-        for order in order_list:
-            if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
-                oanda.cancel_single_order(account_ID, order["id"])
-
-
-def check_open_order(symbol):
-    order_list = oanda.get_order_list(account_ID)
-    # print(order_list)
-    for order in order_list:
-        if order["type"] == "LIMIT" and order["instrument"] == symbol:
-            return True
-
-    return False
-
-
-def check_open_trade(symbol):
-    trade_list = oanda.get_trade_list(account_ID)
-    for trade in trade_list:
-        if trade["instrument"] == symbol:
-            return True
-
-    return False
-
-
 def retrieve_data(symbol, days):
     candles = oanda.get_candle_data(symbol, days + 1, "D")
 
@@ -129,7 +99,7 @@ def place_orders(symbol: str):
     long_sl = round(long_entry_price - stop_loss, decimal)
     short_sl = round(short_entry_price + stop_loss, decimal)
 
-    if (not check_open_order(symbol)) and (not check_open_trade(symbol)):
+    if (not oanda.check_open_order(account_ID, symbol)) and (not oanda.check_open_trade(account_ID, symbol)):
         oanda.create_buy_limit(
             account_ID,
             symbol,
@@ -158,5 +128,5 @@ def check_trade_conditions():
 
 if __name__ == "__main__":
 
-    update_order_trade_status()
+    oanda.update_order_trade_status(account_ID)
     check_trade_conditions()
