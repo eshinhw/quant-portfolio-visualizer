@@ -9,8 +9,8 @@ import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 import oandapyV20.contrib.requests as requests
 
-# /home/pi/Desktop/py-fx-trading-bot/
 
+# /home/pi/Desktop/py-fx-trading-bot/
 
 with open("oanda_api_token.txt", "r") as auth:
     contents = auth.readlines()
@@ -20,11 +20,22 @@ with open("oanda_api_token.txt", "r") as auth:
 
 
 def cancel_single_order(account_ID: str, order_ID: str) -> None:
+    """ Cancel a single open order.
+
+    Args:
+        account_ID (str): [description]
+        order_ID (str): [description]
+    """
     r = orders.OrderCancel(accountID=account_ID, orderID=order_ID)
     client.request(r)
 
 
 def close_all_trades(account_ID: str) -> None:
+    """ Close all open trades.
+
+    Args:
+        account_ID (str): [description]
+    """
     trades_list = get_trade_list(account_ID)
     for trade in trades_list:
         r = trades.TradeClose(accountID=account_ID, tradeID=trade["id"])
@@ -45,12 +56,6 @@ def cancel_all_orders(account_ID: str) -> None:
 
 def get_order_list(account_ID: str) -> List[Dict]:
     """ Retrieve a list of open orders
-
-    Args:
-        accountID (String): account ID
-
-    Returns:
-        List[String]: open orders
     """
     r = orders.OrderList(account_ID)
     resp = client.request(r)
@@ -59,12 +64,6 @@ def get_order_list(account_ID: str) -> List[Dict]:
 
 def get_trade_list(account_ID: str) -> List[Dict]:
     """ Retrieve a list of open trades
-
-    Args:
-        accountID (String): account ID
-
-    Returns:
-        List[String]: open trades
     """
     r = trades.TradesList(account_ID)
     resp = client.request(r)
@@ -118,7 +117,7 @@ def calculate_moving_average(symbol: str, period: int, interval: str) -> float:
     return sum(closes) / len(closes)
 
 
-def get_current_ask_bid_price(symbol: str) -> Tuple[float]:
+def get_current_ask_bid_price(account_ID: str, symbol: str) -> Tuple[float]:
     """ Return current ask and bid price for pair
 
     Args:
@@ -128,8 +127,8 @@ def get_current_ask_bid_price(symbol: str) -> Tuple[float]:
         Tuple: (ask price, bid price)
     """
 
-    r = pricing.PricingInfo(accountID=account_ID,
-                            params={"instruments": symbol})
+    r = pricing.PricingInfo(accountID=account_ID, params={
+                            "instruments": symbol})
     resp = client.request(r)
     ask_price = float(resp["prices"][0]["closeoutAsk"])
     bid_price = float(resp["prices"][0]["closeoutBid"])
@@ -140,32 +139,31 @@ def get_current_price(symbol: str) -> float:
     return sum(get_current_ask_bid_price(symbol)) / 2
 
 
-def create_sell_limit_new(account_ID: str,
-                          symbol: str,
-                          entry: float,
-                          stop: float,
-                          units: int,
-                          trailing_stop: bool) -> None:
+def create_sell_limit(
+    account_ID: str,
+    symbol: str,
+    entry: float,
+    stop: float,
+    units: int,
+    trailing_stop: bool,
+) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:
             dist = round(abs(entry - stop), 5)
 
-        if '_JPY' in symbol:
-            dist = round(abs(entry-stop), 3)
+        if "_JPY" in symbol:
+            dist = round(abs(entry - stop), 3)
 
         order_body = {
             "order": {
                 "price": str(entry),
-                "trailingStopLossOnFill": {
-                    "timeInForce": "GTC",
-                    "distance": str(dist)
-                },
+                "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(dist)},
                 "timeInForce": "GTC",
                 "instrument": symbol,
                 "units": "-" + str(units),
                 "type": "LIMIT",
-                "positionFill": "DEFAULT"
+                "positionFill": "DEFAULT",
             }
         }
 
@@ -176,41 +174,40 @@ def create_sell_limit_new(account_ID: str,
                 "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
                 "timeInForce": "GTC",
                 "instrument": symbol,
-                "units": '-' + str(units),
+                "units": "-" + str(units),
                 "type": "LIMIT",
-                "positionFill": "DEFAULT"
+                "positionFill": "DEFAULT",
             }
         }
     r = orders.OrderCreate(account_ID, data=order_body)
     client.request(r)
 
 
-def create_buy_limit_new(account_ID: str,
-                         symbol: str,
-                         entry: float,
-                         stop: float,
-                         units: int,
-                         trailing_stop: bool) -> None:
+def create_buy_limit(
+    account_ID: str,
+    symbol: str,
+    entry: float,
+    stop: float,
+    units: int,
+    trailing_stop: bool,
+) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:
             dist = round(abs(entry - stop), 5)
 
-        if '_JPY' in symbol:
-            dist = round(abs(entry-stop), 3)
+        if "_JPY" in symbol:
+            dist = round(abs(entry - stop), 3)
 
         order_body = {
             "order": {
                 "price": str(entry),
-                "trailingStopLossOnFill": {
-                    "timeInForce": "GTC",
-                    "distance": str(dist)
-                },
+                "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(dist)},
                 "timeInForce": "GTC",
                 "instrument": symbol,
                 "units": str(units),
                 "type": "LIMIT",
-                "positionFill": "DEFAULT"
+                "positionFill": "DEFAULT",
             }
         }
 
@@ -223,39 +220,38 @@ def create_buy_limit_new(account_ID: str,
                 "instrument": symbol,
                 "units": str(units),
                 "type": "LIMIT",
-                "positionFill": "DEFAULT"
+                "positionFill": "DEFAULT",
             }
         }
     r = orders.OrderCreate(account_ID, data=order_body)
     client.request(r)
 
 
-def create_sell_stop_new(account_ID: str,
-                         symbol: str,
-                         entry: float,
-                         stop: float,
-                         units: int,
-                         trailing_stop: bool) -> None:
+def create_sell_stop(
+    account_ID: str,
+    symbol: str,
+    entry: float,
+    stop: float,
+    units: int,
+    trailing_stop: bool,
+) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:
             dist = round(abs(entry - stop), 5)
 
-        if '_JPY' in symbol:
-            dist = round(abs(entry-stop), 3)
+        if "_JPY" in symbol:
+            dist = round(abs(entry - stop), 3)
 
         order_body = {
             "order": {
                 "price": str(entry),
-                "trailingStopLossOnFill": {
-                    "timeInForce": "GTC",
-                    "distance": str(dist)
-                },
+                "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(dist)},
                 "timeInForce": "GTC",
                 "instrument": symbol,
-                "units": '-' + str(units),
+                "units": "-" + str(units),
                 "type": "STOP",
-                "positionFill": "DEFAULT"
+                "positionFill": "DEFAULT",
             }
         }
 
@@ -266,41 +262,40 @@ def create_sell_stop_new(account_ID: str,
                 "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
                 "timeInForce": "GTC",
                 "instrument": symbol,
-                "units": '-' + str(units),
+                "units": "-" + str(units),
                 "type": "STOP",
-                "positionFill": "DEFAULT"
+                "positionFill": "DEFAULT",
             }
         }
     r = orders.OrderCreate(account_ID, data=order_body)
     client.request(r)
 
 
-def create_buy_stop_new(account_ID: str,
-                        symbol: str,
-                        entry: float,
-                        stop: float,
-                        units: int,
-                        trailing_stop: bool) -> None:
+def create_buy_stop(
+    account_ID: str,
+    symbol: str,
+    entry: float,
+    stop: float,
+    units: int,
+    trailing_stop: bool,
+) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:
             dist = round(abs(entry - stop), 5)
 
-        if '_JPY' in symbol:
-            dist = round(abs(entry-stop), 3)
+        if "_JPY" in symbol:
+            dist = round(abs(entry - stop), 3)
 
         order_body = {
             "order": {
                 "price": str(entry),
-                "trailingStopLossOnFill": {
-                    "timeInForce": "GTC",
-                    "distance": str(dist)
-                },
+                "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(dist)},
                 "timeInForce": "GTC",
                 "instrument": symbol,
                 "units": str(units),
                 "type": "STOP",
-                "positionFill": "DEFAULT"
+                "positionFill": "DEFAULT",
             }
         }
 
@@ -313,7 +308,7 @@ def create_buy_stop_new(account_ID: str,
                 "instrument": symbol,
                 "units": str(units),
                 "type": "STOP",
-                "positionFill": "DEFAULT"
+                "positionFill": "DEFAULT",
             }
         }
     r = orders.OrderCreate(account_ID, data=order_body)
@@ -326,20 +321,7 @@ if __name__ == "__main__":
         contents = secret.readlines()
         api_token = contents[0].rstrip("\n")
         account_ID = contents[1]
+        client = API(access_token=api_token)
         secret.close()
 
-    client = API(access_token=api_token)
-
-    # cancel_all_orders('101-002-5334779-004')
-
-    # trade_list = get_trade_list("101-002-5334779-004")
-
-    # order_list = get_order_list("101-002-5334779-004")
-
-    # for trade in trade_list:
-    #     for order in order_list:
-    #         if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
-    #             cancel_single_order("101-002-5334779-004", order["id"])
-    #             print(
-    #                 f"Order {order['id']} for {trade['instrument']} has been cancelled."
-    #             )
+    cancel_all_orders(account_ID)
