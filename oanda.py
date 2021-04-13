@@ -19,6 +19,35 @@ with open("oanda_api_token.txt", "r") as auth:
     auth.close()
 
 
+def calculate_unit_size(account_ID: str,
+                        symbol: str,
+                        entry: float,
+                        stop: float,
+                        risk_per_trade: float):
+
+    if '_USD' in symbol:
+        decimal = 4
+        multiple = 10000
+
+    if '_JPY' in symbol:
+        decimal = 2
+        multiple = 100
+
+    print(decimal, multiple)
+    account_balance = get_acct_balance(account_ID)
+    risk_amt_per_trade = account_balance * risk_per_trade
+    entry = round(entry, decimal)
+    stop_loss = round(stop, decimal)
+    stop_loss_pips = round(abs(entry - stop_loss) * multiple, 0)
+    print(f"entry: {entry}, stop: {stop_loss}, stop_pips: {stop_loss_pips}")
+    (currentAsk, currentBid) = get_current_ask_bid_price(account_ID, "USD_CAD")
+    acct_conversion_rate = 1 / ((currentAsk + currentBid) / 2)
+    unit_size = round((risk_amt_per_trade / stop_loss_pips *
+                      acct_conversion_rate) * multiple, 0)
+    print(unit_size)
+    return unit_size
+
+
 def cancel_single_order(account_ID: str, order_ID: str) -> None:
     """ Cancel a single open order.
 
@@ -136,17 +165,11 @@ def get_current_ask_bid_price(account_ID: str, symbol: str) -> Tuple[float]:
 
 
 def get_current_price(symbol: str) -> float:
-    return sum(get_current_ask_bid_price(symbol)) / 2
+    return sum(get_current_ask_bid_price(account_ID, symbol)) / 2
 
 
 def create_sell_limit(
-    account_ID: str,
-    symbol: str,
-    entry: float,
-    stop: float,
-    units: int,
-    trailing_stop: bool,
-) -> None:
+        account_ID: str, symbol: str, entry: float, stop: float, units: int, trailing_stop: bool) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:
@@ -184,13 +207,7 @@ def create_sell_limit(
 
 
 def create_buy_limit(
-    account_ID: str,
-    symbol: str,
-    entry: float,
-    stop: float,
-    units: int,
-    trailing_stop: bool,
-) -> None:
+        account_ID: str, symbol: str, entry: float, stop: float, units: int, trailing_stop: bool) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:
@@ -228,13 +245,7 @@ def create_buy_limit(
 
 
 def create_sell_stop(
-    account_ID: str,
-    symbol: str,
-    entry: float,
-    stop: float,
-    units: int,
-    trailing_stop: bool,
-) -> None:
+        account_ID: str, symbol: str, entry: float, stop: float, units: int, trailing_stop: bool) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:
@@ -272,13 +283,7 @@ def create_sell_stop(
 
 
 def create_buy_stop(
-    account_ID: str,
-    symbol: str,
-    entry: float,
-    stop: float,
-    units: int,
-    trailing_stop: bool,
-) -> None:
+        account_ID: str, symbol: str, entry: float, stop: float, units: int, trailing_stop: bool) -> None:
 
     if trailing_stop is True:
         if "_USD" in symbol:

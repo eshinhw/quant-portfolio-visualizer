@@ -22,28 +22,6 @@ ATR_SL_MULTIPLE = 1
 account_ID = '101-002-5334779-003'
 
 
-def calculate_unit_size(entry, stop_loss):
-    """ Calculate unit size per trade (fixed % risk per trade assigned in RISK_PER_TRADE).
-
-    Args:
-        entry (Float): entry price
-        stop_loss (Float): stop loss price
-
-    Returns:
-        Float: unit size
-    """
-    account_balance = oanda.get_acct_balance(account_ID)
-    risk_amt_per_trade = account_balance * RISK_PER_TRADE
-    entry = round(entry, 4)
-    stop_loss = round(stop_loss, 4)
-    stop_loss_pips = round(abs(entry - stop_loss) * 10000, 0)
-    (currentAsk, currentBid) = oanda.get_current_ask_bid_price(account_ID, "USD_CAD")
-    acct_conversion_rate = 1 / ((currentAsk + currentBid) / 2)
-    unit_size = round((risk_amt_per_trade / stop_loss_pips *
-                      acct_conversion_rate) * 10000, 0)
-    return unit_size
-
-
 def update_order_trade_status():
 
     trade_list = oanda.get_trade_list(account_ID)
@@ -130,7 +108,7 @@ def prev_high(df, symbol, days):  # place to go short
     return df["High_" + str(days)].iloc[-1]
 
 
-def execute(symbol: str):
+def place_orders(symbol: str):
 
     decimal = 5
 
@@ -157,7 +135,8 @@ def execute(symbol: str):
             symbol,
             long_entry_price,
             long_sl,
-            calculate_unit_size(long_entry_price, long_sl),
+            oanda.calculate_unit_size(
+                account_ID, symbol, long_entry_price, long_sl, RISK_PER_TRADE),
             True,
         )
 
@@ -166,14 +145,15 @@ def execute(symbol: str):
             symbol,
             short_entry_price,
             short_sl,
-            calculate_unit_size(short_entry_price, short_sl),
+            oanda.calculate_unit_size(account_ID, symbol,
+                                      short_entry_price, short_sl, RISK_PER_TRADE),
             True,
         )
 
 
 def check_trade_conditions():
     for symbol in SYMBOLS:
-        execute(symbol)
+        place_orders(symbol)
 
 
 if __name__ == "__main__":
