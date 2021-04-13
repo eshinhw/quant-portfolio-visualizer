@@ -4,27 +4,16 @@ import dfdata
 import schedule
 import pandas as pd
 
+SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", 'NZD_USD',
+           'USD_JPY', 'EUR_JPY', 'GBP_JPY', 'CAD_JPY', 'AUD_JPY']
 
-# SYMBOLS = ["EUR_USD"]
-#SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", 'NZD_USD', 'USD_JPY', 'GBP_JPY']
-SYMBOLS = ['USD_JPY', 'GBP_JPY']
 RISK_PER_TRADE = 0.001
-
 PREV_DAYS = 30
 ENTRY_PIP_BUFF = 0.0007
 ATR_SL_MULTIPLE = 1
 
-# /home/pi/Desktop/py-fx-trading-bot/
 
-# with open("turtle_soup_account_id.txt", "r") as secret:
-#     contents = secret.readlines()
-#     account_ID = contents[0]
-#     secret.close()
-
-account_ID = '101-002-5334779-003'
-
-
-def check_condition_and_place_orders():
+def check_condition_and_place_orders(account_ID: str):
 
     for symbol in SYMBOLS:
 
@@ -68,7 +57,7 @@ def check_condition_and_place_orders():
             )
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    oanda.update_order_trade_status(account_ID)
-    check_condition_and_place_orders()
+#     oanda.update_order_trade_status(account_ID)
+#     check_condition_and_place_orders()

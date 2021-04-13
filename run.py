@@ -9,7 +9,6 @@ if __name__ == "__main__":
 
     with open('./account_info.json', 'r') as fp:
         accounts = json.load(fp)
-        print(accounts)
 
     # cancel all pending order before weekend
     schedule.every().sunday.at("17:00").do(oanda.cancel_all_orders)
@@ -17,6 +16,6 @@ if __name__ == "__main__":
 
     while True:
         schedule.run_pending()
-        turtle_soup.check_condition_and_place_orders()
+        turtle_soup.check_condition_and_place_orders(accounts['turtle_soup'])
         oanda.update_order_trade_status(accounts['turtle_soup'])
         time.sleep(3)
