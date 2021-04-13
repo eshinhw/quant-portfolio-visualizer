@@ -1,3 +1,4 @@
+import json
 import datetime as dt
 from oandapyV20 import API
 from typing import List, Dict, Tuple
@@ -6,11 +7,12 @@ import oandapyV20.endpoints.trades as trades
 import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
+import oandapyV20.contrib.requests as requests
 
 # /home/pi/Desktop/py-fx-trading-bot/
 
 
-with open("/home/pi/Desktop/py-fx-trading-bot/oanda_api_token.txt", "r") as auth:
+with open("oanda_api_token.txt", "r") as auth:
     contents = auth.readlines()
     api_token = contents[0].rstrip("\n")
     client = API(access_token=api_token)
@@ -138,143 +140,184 @@ def get_current_price(symbol: str) -> float:
     return sum(get_current_ask_bid_price(symbol)) / 2
 
 
-def create_buy_stop_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_size):
-    trailing_stop = round(abs(entry - stop_loss), 5)
-    # print(trailing_stop)
-    order_body = {
-        "order": {
-            "price": str(entry),
-            "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
-            "trailingStopLossOnFill": {
+def create_sell_limit_new(account_ID: str,
+                          symbol: str,
+                          entry: float,
+                          stop: float,
+                          units: int,
+                          trailing_stop: bool) -> None:
+
+    if trailing_stop is True:
+        if "_USD" in symbol:
+            dist = round(abs(entry - stop), 5)
+
+        if '_JPY' in symbol:
+            dist = round(abs(entry-stop), 3)
+
+        order_body = {
+            "order": {
+                "price": str(entry),
+                "trailingStopLossOnFill": {
+                    "timeInForce": "GTC",
+                    "distance": str(dist)
+                },
                 "timeInForce": "GTC",
-                "distance": str(trailing_stop),
-            },
-            "timeInForce": "GTC",
-            "instrument": pair,
-            "units": str(unit_size),
-            "type": "STOP",
-            "positionFill": "DEFAULT",
+                "instrument": symbol,
+                "units": "-" + str(units),
+                "type": "LIMIT",
+                "positionFill": "DEFAULT"
+            }
         }
-    }
-    r = orders.OrderCreate(acct_ID, data=order_body)
-    client.request(r)
-    print(
-        f"BUY STOP ORDER PLACED | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
-    )
 
-
-def create_sell_stop_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_size):
-    trailing_stop = round(abs(entry - stop_loss), 5)
-    # print(trailing_stop)
-    order_body = {
-        "order": {
-            "price": str(entry),
-            "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
-            "trailingStopLossOnFill": {
+    if trailing_stop is False:
+        order_body = {
+            "order": {
+                "price": str(entry),
+                "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
                 "timeInForce": "GTC",
-                "distance": str(trailing_stop),
-            },
-            "timeInForce": "GTC",
-            "instrument": pair,
-            "units": "-" + str(unit_size),
-            "type": "STOP",
-            "positionFill": "DEFAULT",
+                "instrument": symbol,
+                "units": '-' + str(units),
+                "type": "LIMIT",
+                "positionFill": "DEFAULT"
+            }
         }
-    }
-    r = orders.OrderCreate(acct_ID, data=order_body)
+    r = orders.OrderCreate(account_ID, data=order_body)
     client.request(r)
 
-    print(
-        f"SELL STOP ORDER PLACED | @ {dt.datetime.now()} | pair: {pair} | entry: {str(entry)} | stop_loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
-    )
 
+def create_buy_limit_new(account_ID: str,
+                         symbol: str,
+                         entry: float,
+                         stop: float,
+                         units: int,
+                         trailing_stop: bool) -> None:
 
-def create_sell_limit_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_size):
-    trailing_stop = round(abs(entry - stop_loss), 5)
-    order_body = {
-        "order": {
-            "price": str(entry),
-            "trailingStopLossOnFill": {
+    if trailing_stop is True:
+        if "_USD" in symbol:
+            dist = round(abs(entry - stop), 5)
+
+        if '_JPY' in symbol:
+            dist = round(abs(entry-stop), 3)
+
+        order_body = {
+            "order": {
+                "price": str(entry),
+                "trailingStopLossOnFill": {
+                    "timeInForce": "GTC",
+                    "distance": str(dist)
+                },
                 "timeInForce": "GTC",
-                "distance": str(trailing_stop),
-            },
-            "timeInForce": "GTC",
-            "instrument": pair,
-            "units": "-" + str(unit_size),
-            "type": "LIMIT",
-            "positionFill": "DEFAULT",
+                "instrument": symbol,
+                "units": str(units),
+                "type": "LIMIT",
+                "positionFill": "DEFAULT"
+            }
         }
-    }
-    r = orders.OrderCreate(acct_ID, data=order_body)
-    client.request(r)
 
-    print(
-        f"SELL LIMIT ORDER PLACED | @ {dt.datetime.now()} | Symbol: {pair} | Entry: {str(entry)} | Trailing Stop: {str(stop_loss)} with {str(trailing_stop)} pips | unit_size: {str(unit_size)}"
-    )
-
-
-def create_sell_limit(acct_ID, pair, entry, stop_loss, unit_size):
-    order_body = {
-        "order": {
-            "price": str(entry),
-            "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
-            "timeInForce": "GTC",
-            "instrument": pair,
-            "units": "-" + str(unit_size),
-            "type": "LIMIT",
-            "positionFill": "DEFAULT",
-        }
-    }
-    r = orders.OrderCreate(acct_ID, data=order_body)
-    client.request(r)
-
-    print(
-        f"SELL LIMIT ORDER PLACED | @ {dt.datetime.now()} | Symbol: {pair} | Entry: {str(entry)} | Stop Loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
-    )
-
-
-def create_buy_limit_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_size):
-    trailing_stop = round(abs(entry - stop_loss), 5)
-    order_body = {
-        "order": {
-            "price": str(entry),
-            "trailingStopLossOnFill": {
+    if trailing_stop is False:
+        order_body = {
+            "order": {
+                "price": str(entry),
+                "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
                 "timeInForce": "GTC",
-                "distance": str(trailing_stop),
-            },
-            "timeInForce": "GTC",
-            "instrument": pair,
-            "units": str(unit_size),
-            "type": "LIMIT",
-            "positionFill": "DEFAULT",
+                "instrument": symbol,
+                "units": str(units),
+                "type": "LIMIT",
+                "positionFill": "DEFAULT"
+            }
         }
-    }
-    r = orders.OrderCreate(acct_ID, data=order_body)
+    r = orders.OrderCreate(account_ID, data=order_body)
     client.request(r)
 
-    print(
-        f"BUY LIMIT ORDER PLACED | @ {dt.datetime.now()} | Symbol: {pair} | Entry: {str(entry)} | Trailing Stop: {str(stop_loss)} with {str(trailing_stop)} pips | unit_size: {str(unit_size)}"
-    )
 
+def create_sell_stop_new(account_ID: str,
+                         symbol: str,
+                         entry: float,
+                         stop: float,
+                         units: int,
+                         trailing_stop: bool) -> None:
 
-def create_buy_limit(acct_ID, pair, entry, stop_loss, unit_size):
-    order_body = {
-        "order": {
-            "price": str(entry),
-            "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop_loss)},
-            "timeInForce": "GTC",
-            "instrument": pair,
-            "units": str(unit_size),
-            "type": "LIMIT",
-            "positionFill": "DEFAULT",
+    if trailing_stop is True:
+        if "_USD" in symbol:
+            dist = round(abs(entry - stop), 5)
+
+        if '_JPY' in symbol:
+            dist = round(abs(entry-stop), 3)
+
+        order_body = {
+            "order": {
+                "price": str(entry),
+                "trailingStopLossOnFill": {
+                    "timeInForce": "GTC",
+                    "distance": str(dist)
+                },
+                "timeInForce": "GTC",
+                "instrument": symbol,
+                "units": '-' + str(units),
+                "type": "STOP",
+                "positionFill": "DEFAULT"
+            }
         }
-    }
-    r = orders.OrderCreate(acct_ID, data=order_body)
+
+    if trailing_stop is False:
+        order_body = {
+            "order": {
+                "price": str(entry),
+                "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
+                "timeInForce": "GTC",
+                "instrument": symbol,
+                "units": '-' + str(units),
+                "type": "STOP",
+                "positionFill": "DEFAULT"
+            }
+        }
+    r = orders.OrderCreate(account_ID, data=order_body)
     client.request(r)
 
-    print(
-        f"BUY LIMIT ORDER PLACED | @ {dt.datetime.now()} | Symbol: {pair} | Entry: {str(entry)} | Stop Loss: {str(stop_loss)} | unit_size: {str(unit_size)}"
-    )
+
+def create_buy_stop_new(account_ID: str,
+                        symbol: str,
+                        entry: float,
+                        stop: float,
+                        units: int,
+                        trailing_stop: bool) -> None:
+
+    if trailing_stop is True:
+        if "_USD" in symbol:
+            dist = round(abs(entry - stop), 5)
+
+        if '_JPY' in symbol:
+            dist = round(abs(entry-stop), 3)
+
+        order_body = {
+            "order": {
+                "price": str(entry),
+                "trailingStopLossOnFill": {
+                    "timeInForce": "GTC",
+                    "distance": str(dist)
+                },
+                "timeInForce": "GTC",
+                "instrument": symbol,
+                "units": str(units),
+                "type": "STOP",
+                "positionFill": "DEFAULT"
+            }
+        }
+
+    if trailing_stop is False:
+        order_body = {
+            "order": {
+                "price": str(entry),
+                "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
+                "timeInForce": "GTC",
+                "instrument": symbol,
+                "units": str(units),
+                "type": "STOP",
+                "positionFill": "DEFAULT"
+            }
+        }
+    r = orders.OrderCreate(account_ID, data=order_body)
+    client.request(r)
 
 
 if __name__ == "__main__":
@@ -289,14 +332,14 @@ if __name__ == "__main__":
 
     # cancel_all_orders('101-002-5334779-004')
 
-    trade_list = get_trade_list("101-002-5334779-004")
+    # trade_list = get_trade_list("101-002-5334779-004")
 
-    order_list = get_order_list("101-002-5334779-004")
+    # order_list = get_order_list("101-002-5334779-004")
 
-    for trade in trade_list:
-        for order in order_list:
-            if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
-                cancel_single_order("101-002-5334779-004", order["id"])
-                print(
-                    f"Order {order['id']} for {trade['instrument']} has been cancelled."
-                )
+    # for trade in trade_list:
+    #     for order in order_list:
+    #         if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
+    #             cancel_single_order("101-002-5334779-004", order["id"])
+    #             print(
+    #                 f"Order {order['id']} for {trade['instrument']} has been cancelled."
+    #             )
