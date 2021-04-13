@@ -22,6 +22,6 @@ if __name__ == "__main__":
 
     while True:
         schedule.run_pending()
-        turtle_soup.check_trade_conditions()
-        turtle_soup.update_order_trade_status()
+        turtle_soup.check_condition_and_place_orders()
+        oanda.update_order_trade_status()
         time.sleep(3)
