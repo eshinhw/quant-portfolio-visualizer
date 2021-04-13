@@ -35,25 +35,32 @@ Long term trend following strategy with wide stop and target. A breakout signal 
 
 - The Original Turtle Rules: https://bigpicture.typepad.com/comments/files/turtlerules.pdf
 
-## Turtle Soup Plus One (Counter Strategy of Original Turtle Trading System)
+## Turtle Soup by Linda Bradford-Raschke
 
 <p align="center">
   <img width="700" height="500" src="https://user-images.githubusercontent.com/41933169/114284407-a7825e00-9a1d-11eb-8a42-38906125221b.png">
 </p>
 
+#### Strategy Overview
+
 Since original turtle trading system has about 30% of breakout success rate at key highs and lows, that means 70% of the time markets fail to break out key levels. We can reverse-engineer to bet against original turtles to capitalize 70% of false breakouts. 'Turtle Soup' strategy goes long at previous lows and goes short at previous highs, entering trades against original turtles.
 
 'Turtle Soup Plus One' can further improve the success rate by wating for one day at key ares until the daily candle completes to determine whether previous highs or lows are right places to enter. If the daily candle indicates that the highs or lows are not going to hold, it doesn't enter a trade. However, if the daily candle shows some sort of rejections at the level, we can enter a trade. 
 
-## Volatility Breakout Strategy by Larry Williams
+## Volatility Breakout Strategy by Larry Williams (Still In Development)
 
 <p align="center">
   <img width="700" height="500" src="https://user-images.githubusercontent.com/41933169/114284586-e4028980-9a1e-11eb-893b-e2df34434285.png">
 </p>
 
+#### Strategy Overview
+
 - Follow daily breakout momentum.
 - Entry determined by previous day's range * K (0 <= K <= 1, usually K = 0.5 ~ 0.6)
 - Trailing stop to maximize return and minimize risk
+
+#### Issues
+
 - Price data misalignment issue from weekend since fx markets don't have official open and close time like stock markets.
 - Need to filter out specified time periods like from London Open to NY Close.
 
