@@ -1,47 +1,47 @@
 import datetime as dt
 from oandapyV20 import API
+from typing import List, Dict, Tuple
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.trades as trades
 import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
+
 # /home/pi/Desktop/py-fx-trading-bot/
-with open("/home/pi/Desktop/py-fx-trading-bot/oanda_api_token.txt", "r") as secret:
-    contents = secret.readlines()
+
+
+with open("/home/pi/Desktop/py-fx-trading-bot/oanda_api_token.txt", "r") as auth:
+    contents = auth.readlines()
     api_token = contents[0].rstrip("\n")
-    account_ID = contents[1]
-    secret.close()
-
-client = API(access_token=api_token)
+    client = API(access_token=api_token)
+    auth.close()
 
 
-def cancel_single_order(acct_ID, order_ID):
-    r = orders.OrderCancel(accountID=acct_ID, orderID=order_ID)
+def cancel_single_order(account_ID: str, order_ID: str) -> None:
+    r = orders.OrderCancel(accountID=account_ID, orderID=order_ID)
     client.request(r)
 
 
-def close_all_trades(acct_ID):
-    trades_list = get_trade_list(acct_ID)
+def close_all_trades(account_ID: str) -> None:
+    trades_list = get_trade_list(account_ID)
     for trade in trades_list:
-        r = trades.TradeClose(accountID=acct_ID, tradeID=trade["id"])
+        r = trades.TradeClose(accountID=account_ID, tradeID=trade["id"])
         client.request(r)
-    #print("All open trades are CLOSED.")
 
 
-def cancel_all_orders(acct_ID):
+def cancel_all_orders(account_ID: str) -> None:
     """ Cancel all open orders
 
     Args:
         accountID (String): account ID
     """
-    order_list = get_order_list(acct_ID)
+    order_list = get_order_list(account_ID)
     for order in order_list:
-        r = orders.OrderCancel(accountID=acct_ID, orderID=order["id"])
+        r = orders.OrderCancel(accountID=account_ID, orderID=order["id"])
         client.request(r)
-    #print("All open orders are CANCELLED.")
 
 
-def get_order_list(acct_ID):
+def get_order_list(account_ID: str) -> List[Dict]:
     """ Retrieve a list of open orders
 
     Args:
@@ -50,12 +50,12 @@ def get_order_list(acct_ID):
     Returns:
         List[String]: open orders
     """
-    r = orders.OrderList(acct_ID)
+    r = orders.OrderList(account_ID)
     resp = client.request(r)
     return resp["orders"]
 
 
-def get_trade_list(acct_ID):
+def get_trade_list(account_ID: str) -> List[Dict]:
     """ Retrieve a list of open trades
 
     Args:
@@ -64,13 +64,12 @@ def get_trade_list(acct_ID):
     Returns:
         List[String]: open trades
     """
-    r = trades.TradesList(acct_ID)
+    r = trades.TradesList(account_ID)
     resp = client.request(r)
-    # print("RESPONSE:\n{}".format(json.dumps(resp, indent=2)))
     return resp["trades"]
 
 
-def get_acct_balance(acct_ID):
+def get_acct_balance(account_ID: str) -> float:
     """ Retrieve account balance.
 
     Args:
@@ -79,11 +78,11 @@ def get_acct_balance(acct_ID):
     Returns:
         Float: current account balance
     """
-    resp = client.request(accounts.AccountSummary(acct_ID))
+    resp = client.request(accounts.AccountSummary(account_ID))
     return float(resp["account"]["balance"])
 
 
-def get_candle_data(symbol, count, interval):
+def get_candle_data(symbol: str, count: int, interval: str):
     """ Return historical price data.
 
     Args:
@@ -103,8 +102,8 @@ def get_candle_data(symbol, count, interval):
     return resp
 
 
-def calculate_moving_average(symbol, count, interval):
-    instrument_params = {"count": count + 1, "granularity": interval}
+def calculate_moving_average(symbol: str, period: int, interval: str) -> float:
+    instrument_params = {"count": period + 1, "granularity": interval}
 
     r = instruments.InstrumentsCandles(
         instrument=symbol, params=instrument_params)
@@ -117,7 +116,7 @@ def calculate_moving_average(symbol, count, interval):
     return sum(closes) / len(closes)
 
 
-def get_current_ask_bid_price(pair):
+def get_current_ask_bid_price(symbol: str) -> Tuple[float]:
     """ Return current ask and bid price for pair
 
     Args:
@@ -127,15 +126,16 @@ def get_current_ask_bid_price(pair):
         Tuple: (ask price, bid price)
     """
 
-    r = pricing.PricingInfo(accountID=account_ID, params={"instruments": pair})
+    r = pricing.PricingInfo(accountID=account_ID,
+                            params={"instruments": symbol})
     resp = client.request(r)
     ask_price = float(resp["prices"][0]["closeoutAsk"])
     bid_price = float(resp["prices"][0]["closeoutBid"])
     return (ask_price, bid_price)
 
 
-def get_current_price(pair):
-    return sum(get_current_ask_bid_price(pair)) / 2
+def get_current_price(symbol: str) -> float:
+    return sum(get_current_ask_bid_price(symbol)) / 2
 
 
 def create_buy_stop_with_trailing_stop(acct_ID, pair, entry, stop_loss, unit_size):
@@ -289,14 +289,14 @@ if __name__ == "__main__":
 
     # cancel_all_orders('101-002-5334779-004')
 
-    trade_list = get_trade_list('101-002-5334779-004')
+    trade_list = get_trade_list("101-002-5334779-004")
 
-    order_list = get_order_list('101-002-5334779-004')
+    order_list = get_order_list("101-002-5334779-004")
 
     for trade in trade_list:
         for order in order_list:
             if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
-                cancel_single_order('101-002-5334779-004', order["id"])
+                cancel_single_order("101-002-5334779-004", order["id"])
                 print(
                     f"Order {order['id']} for {trade['instrument']} has been cancelled."
                 )
