@@ -11,18 +11,6 @@ import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 
 
-# /home/pi/Desktop/py-fx-trading-bot/
-
-# with open("account_info.txt", "r") as auth:
-#     contents = auth.readlines()
-#     auth_data = {}
-#     for content in contents:
-#         print(content)
-#     api_token = contents[0].rstrip("\n")
-#     client = API(access_token=api_token)
-#     auth.close()
-
-
 def save_auth():
     with open('./account_info.txt', 'r') as secret:
         contents = secret.readlines()
@@ -32,7 +20,7 @@ def save_auth():
             auth_dict[splits[0]] = splits[1]
         secret.close()
 
-    with open('account_info.json', 'w') as auth:
+    with open('./account_info.json', 'w') as auth:
         json.dump(auth_dict, auth)
 
 
@@ -80,6 +68,24 @@ def update_order_trade_status(account_ID: str):
         for order in order_list:
             if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
                 cancel_single_order(account_ID, order["id"])
+
+
+def get_order_details(account_ID: str, order_ID: str) -> Dict:
+    r = orders.OrderDetails(accountID=account_ID, orderID=order_ID)
+    resp = client.request(r)
+    return (resp['order'])
+
+
+def find_order_id(account_ID: str, symbol: str, direction: str) -> str:
+    order_list = get_order_list(account_ID)
+
+    for order in order_list:
+        if direction == 'LONG':
+            if order['type'] == 'LIMIT' and order['instrument'] == symbol and not ('-' in order['units']):
+                return order['id']
+        if direction == 'SHORT':
+            if order['type'] == 'LIMIT' and order['instrument'] == symbol and ('-' in order['units']):
+                return order['id']
 
 
 def check_open_order(account_ID: str, symbol: str):
@@ -207,7 +213,7 @@ def get_current_ask_bid_price(account_ID: str, symbol: str) -> Tuple[float]:
     """
 
     r = pricing.PricingInfo(accountID=account_ID, params={
-                            "instruments": symbol})
+        "instruments": symbol})
     resp = client.request(r)
     ask_price = float(resp["prices"][0]["closeoutAsk"])
     bid_price = float(resp["prices"][0]["closeoutBid"])
@@ -393,13 +399,12 @@ else:
     save_auth()
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 
-#     with open("oanda_api_token.txt", "r") as secret:
-#         contents = secret.readlines()
-#         api_token = contents[0].rstrip("\n")
-#         account_ID = contents[1]
-#         client = API(access_token=api_token)
-#         secret.close()
+    with open('./account_info.json', 'r') as fp:
+        accounts = json.load(fp)
+        client = API(access_token=accounts['token'])
+        account_ID = accounts['turtle_soup']
+        fp.close()
 
-#     cancel_all_orders(account_ID)
+    cancel_all_orders(account_ID)
