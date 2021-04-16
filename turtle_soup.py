@@ -55,38 +55,39 @@ def check_condition_and_place_orders(account_ID: str):
             )
 
         if (oanda.check_open_order(account_ID, symbol)):
-
             long_id = oanda.find_order_id(account_ID, symbol, 'LONG')
             short_id = oanda.find_order_id(account_ID, symbol, 'SHORT')
 
-            # long entry update
-            order_detail = oanda.get_order_details(account_ID, long_id)
-            if float(order_detail['price']) != long_entry_price:
-                # cancel existing order
-                oanda.cancel_single_order(account_ID, long_id)
-                oanda.create_buy_limit(
-                    account_ID=account_ID,
-                    symbol=symbol,
-                    entry=long_entry_price,
-                    stop=long_sl,
-                    units=oanda.calculate_unit_size(
-                        account_ID, symbol, long_entry_price, long_sl, RISK_PER_TRADE),
-                    trailing_stop=True,
-                )
+            if (not long_id):
+                # long entry update
+                order_detail = oanda.get_order_details(account_ID, long_id)
+                if float(order_detail['price']) != long_entry_price:
+                    # cancel existing order
+                    oanda.cancel_single_order(account_ID, long_id)
+                    oanda.create_buy_limit(
+                        account_ID=account_ID,
+                        symbol=symbol,
+                        entry=long_entry_price,
+                        stop=long_sl,
+                        units=oanda.calculate_unit_size(
+                            account_ID, symbol, long_entry_price, long_sl, RISK_PER_TRADE),
+                        trailing_stop=True,
+                    )
 
-            order_detail = oanda.get_order_details(account_ID, short_id)
-            if float(order_detail['price']) != short_entry_price:
-                # replace order
-                oanda.cancel_single_order(account_ID, short_id)
-                oanda.create_sell_limit(
-                    account_ID=account_ID,
-                    symbol=symbol,
-                    entry=short_entry_price,
-                    stop=short_sl,
-                    units=oanda.calculate_unit_size(account_ID, symbol,
-                                                    short_entry_price, short_sl, RISK_PER_TRADE),
-                    trailing_stop=True,
-                )
+            if (not short_id):
+                order_detail = oanda.get_order_details(account_ID, short_id)
+                if float(order_detail['price']) != short_entry_price:
+                    # replace order
+                    oanda.cancel_single_order(account_ID, short_id)
+                    oanda.create_sell_limit(
+                        account_ID=account_ID,
+                        symbol=symbol,
+                        entry=short_entry_price,
+                        stop=short_sl,
+                        units=oanda.calculate_unit_size(account_ID, symbol,
+                                                        short_entry_price, short_sl, RISK_PER_TRADE),
+                        trailing_stop=True,
+                    )
 
                 # if __name__ == "__main__":
 
