@@ -1,4 +1,4 @@
-# Py Trading Bot
+# Py Trader
 
 ## Introduction
 
