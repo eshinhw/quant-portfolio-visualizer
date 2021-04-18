@@ -4,7 +4,7 @@
 
 Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opportunities in systematic and algorithmic ways, using various historically proven trading strategies.
 
-## Limitations of FX & CFD Trading with Brokers (Before We Begin)
+## Limitations of FX & CFD Trading (Before We Begin)
 
 FX & CFD trading looks attractive for beginners who are interested in trading the markets, as they only need small amount of capital to start trading and it's very easy to access the markets from Forex brokers. However, there are downsides of it when you want to seriously manage large amount of money in this platform. Compared to stock markets and futures markets, you are not trading against real players in centralized and regulated exchanges, but trading against the brokers that you are registered with. Therefore, there is information disadvantages between you and your brokers as your broker knows everything about your open trades, transactions and account activities. They can always use those information against you for their own benefits.
 
