@@ -1,4 +1,4 @@
-# Py Trader
+# Py OANDA Forex Trader
 
 ## Introduction
 
