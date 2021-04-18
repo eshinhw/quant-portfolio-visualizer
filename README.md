@@ -4,6 +4,14 @@
 
 Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opportunities in systematic and algorithmic ways, using various historically proven trading strategies.
 
+## Limitations of FX & CFD Trading with Brokers (Before We Begin)
+
+FX & CFD trading looks attractive for beginners who are interested in trading the markets, as they only need small amount of capital to start trading and it's very easy to access the markets from Forex brokers. However, there are downsides of it when you want to seriously manage large amount of money in this platform. Compared to stock markets and futures markets, you are not trading against real players in centralized and regulated exchanges, but trading against the brokers that you are registered with. Therefore, there is information disadvantages between you and your brokers as your broker knows everything about your open trades, transactions and account activities. They can always use those information against you for their own benefits.
+
+My advice is that if you really want to go into trading seriously, you should look into futures instead of FX & CFD. Trading futures involves real market participation through centralized exchanges, and you have access to real market order flows which are transparant and no hidden stuff.
+
+In summary, it's a good practice to test trading algorithms through these FX brokers, but be aware of hidden truth about them as well. 
+
 ## Trend Following by Original Turtle Traders
 
 <p align="center">
@@ -63,5 +71,3 @@ Since original turtle trading system has about 30% of breakout success rate at k
 
 - Price data misalignment issue from weekend since fx markets don't have official open and close time like stock markets.
 - Need to filter out specified time periods like from London Open to NY Close.
-
-
