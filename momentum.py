@@ -41,7 +41,9 @@ def calculate_equal_weight_momentum(universe: List[str], start_date: dt, end_dat
             momentums[f'{str(period)}M_Return'].append(returns[symbol].iloc[-1])
 
     momentum_df = pd.DataFrame(momentums)
+    momentum_df.set_index('Symbol', inplace=True)
     momentum_df['EW_MOMENTUM'] = momentum_df.mean(axis=1)
+    momentum_df.sort_values(by='EW_MOMENTUM', inplace=True, ascending=False)
     return momentum_df
 
 
@@ -58,4 +60,4 @@ if __name__ == '__main__':
     # print(mom['DBC'].iloc[-1])
     # print(df)
     # print(df.loc['DBC', -2])
-    print(calculate_momentum(universe, start, end, [1,3,6,12]))
+    print(calculate_equal_weight_momentum(universe, start, end, [1,3,6,12]))
