@@ -1,1 +1,1 @@
-# top-down-market-analyzer
+# Quantitative Dividend Growth Investing
