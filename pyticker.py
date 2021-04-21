@@ -34,7 +34,6 @@ def get_symbols_by_index(exchange: str):
     symbols = []
     try:
         for stock in get_stocks_by_index(exchange):
-            print(stock['symbol'])
             symbols.append(stock['symbol'])
         return symbols
     except:
@@ -42,5 +41,5 @@ def get_symbols_by_index(exchange: str):
 
 if __name__ == '__main__':
 
-    sp = get_symbols_by_index('S&P 500')
+    sp = get_symbols_by_index('DOW JONES')
     print(sp)
