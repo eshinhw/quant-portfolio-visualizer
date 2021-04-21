@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import datetime as dt
+import yfinance as yf
 from typing import List
 import matplotlib.pyplot as plt
 import pandas_datareader.data as web
@@ -8,7 +9,7 @@ from price import convert_monthly_prices, calculate_periodic_returns
 
 def calculate_equal_weight_momentum(symbols: str or List[str], start_date: dt, end_date: dt, periods: List[int]):
     monthly_prices = convert_monthly_prices(symbols, start_date, end_date)
-    momentums = {'Symbol': []}
+    momentums = {'Symbol': [], 'Name': []}
 
     for period in periods:
         returns = calculate_periodic_returns(monthly_prices, period)
@@ -16,6 +17,7 @@ def calculate_equal_weight_momentum(symbols: str or List[str], start_date: dt, e
         for symbol in list(monthly_prices.columns):
             if symbol not in momentums['Symbol']:
                 momentums['Symbol'].append(symbol)
+                momentums['Name'].append(yf.Ticker(symbol).info['shortName'])
             momentums[f'{str(period)}M_Return'].append(returns[symbol].iloc[-1])
 
     momentum_df = pd.DataFrame(momentums)
