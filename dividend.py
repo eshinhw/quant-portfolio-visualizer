@@ -63,7 +63,6 @@ def calculate_historical_avg_div_yield(symbol: str, period: int):
     end_date = dt.date.today()
     price_data = calculate_historical_prices(symbol, start_date, end_date)
 
-    # compute 5 years average dividend yield
     start_year = price_data.index[0].year + 1
     last_year = dt.date.today().year - 1
 
