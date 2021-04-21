@@ -5,7 +5,7 @@ import yfinance as yf
 import datetime as dt
 from typing import List, Dict
 import pandas_datareader.data as web
-from price import calculate_current_price
+from price import calculate_current_price, calculate_historical_prices
 
 def get_historical_annual_dividends(symbol: str, threshold: int) -> Dict:
     div_data = {}
@@ -59,11 +59,9 @@ def calculate_current_dividend_yield(symbol: str):
     return prev_annual_div / curr_price
 
 def calculate_historical_avg_div_yield(symbol: str, period: int):
-    startDate = (dt.date.today() - dt.timedelta(days=(365*(period + 1)))
-                 ).strftime("%Y-%m-%d")
-    endDate = dt.date.today().strftime("%Y-%m-%d")
-    price_data = web.DataReader(symbol, 'yahoo', startDate,
-                                endDate)
+    start_date = (dt.date.today() - dt.timedelta(days=365*(period+1)))
+    end_date = dt.date.today()
+    price_data = calculate_historical_prices(symbol, start_date, end_date)
 
     # compute 5 years average dividend yield
     start_year = price_data.index[0].year + 1
@@ -71,29 +69,19 @@ def calculate_historical_avg_div_yield(symbol: str, period: int):
 
     dy_list = []
 
+    div_data = get_historical_annual_dividends(symbol,period+1)
+
     for year in range(start_year, last_year + 1):
-        yearly_data = price_data['Close'][price_data.index.year == year]
+        yearly_data = price_data[symbol][price_data.index.year == year]
         firstPrice = yearly_data.iloc[0]
         lastPrice = yearly_data.iloc[-1]
         yearly_avg_price = (firstPrice + lastPrice) / 2
-        yearly_dividend_yield = div_data[symbol.upper()][0][year] / yearly_avg_price
+        yearly_dividend_yield = div_data[symbol][0][year] / yearly_avg_price
         dy_list.append(yearly_dividend_yield)
 
-    historical_avg_dy = round((sum(dy_list) / len(dy_list)) * 100, 2)
-    # print(historical_avg_dy)
-
-    close = price_data['Adj Close'].iloc[-1].round(2)
-    # print(close)
-    #return (close, historical_avg_dy)
+    historical_avg_dy = sum(dy_list) / len(dy_list)
+    print(historical_avg_dy)
     return historical_avg_dy
 
 if __name__ == '__main__':
-    # for symbol in pyticker.get_symbols_by_index('DOW JONES'):
-    #     print(symbol)
-    #     print(get_historical_annual_dividends(symbol))
-    #print(get_historical_annual_dividends('SSE'))
-    print(calcualte_avg_dividend_growth('AAPL', 5))
-    print(calculate_current_dividend_yield('DIS'))
-    print(get_historical_annual_dividends('AAPL',0))
-    # print(calculate_current_dividend_yield('MMM'))
-    #print(get_num_dividend_payout_history(['MMM'], 30))
+    calculate_historical_avg_div_yield('MMM', 15)

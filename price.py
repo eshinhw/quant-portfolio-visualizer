@@ -50,7 +50,6 @@ def get_price_and_return_data(symbol, start_date, end_date):
     df["daily_returns"] = df.pct_change()
     df["cumulative_returns"] = (1+df["daily_returns"]).cumprod()
     df["cumulative_returns"].dropna(inplace=True)
-    # cumulative_returns.fillna(1, inplace=True)
     return df
 
 def calculate_cagr(df):
