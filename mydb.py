@@ -1,9 +1,10 @@
-import mysql.connector
-import datetime as dt
-import yfinance as yf
-import pandas_datareader.data as web
+import requests
 import sqlalchemy
 import pandas as pd
+import datetime as dt
+import yfinance as yf
+import mysql.connector
+import pandas_datareader.data as web
 
 with open('./credentials.txt', 'r') as fp:
     secret = fp.readlines()
@@ -12,103 +13,99 @@ with open('./credentials.txt', 'r') as fp:
     pw = secret[2]
     fp.close()
 
-db = mysql.connector.connect(
-    host = host_ip,
-    user = user_id,
-    passwd = pw,
-    db = 'financial_data'
-)
+# creds = {'usr': user_id,
+#         'pwd': pw,
+#         'hst': host_ip,
+#         'prt': 3306,
+#         'dbn': 'financial_data'}
+# # MySQL conection string.
+# connstr = 'mysql+mysqlconnector://{usr}:{pwd}@{hst}:{prt}/{dbn}'
+# # Create sqlalchemy engine for MySQL connection.
+# engine = sqlalchemy.create_engine(connstr.format(**creds))
 
-mycursor = db.cursor()
-# mycursor.execute("SHOW DATABASES")
-# for x in mycursor:
-#     print(x)
+# db = mysql.connector.connect(
+#     host = host_ip,
+#     user = user_id,
+#     passwd = pw,
+#     db = 'financial_data'
+# )
 
-# engine=sqlalchemy.create_engine('mysql://')
-start_date = (dt.date.today() - dt.timedelta(days=5)).strftime("%Y-%m-%d")
-end_date = dt.date.today().strftime("%Y-%m-%d")
+# mycursor = db.cursor()
 
-creds = {'usr': user_id,
-            'pwd': pw,
-            'hst': host_ip,
-            'prt': 3306,
-            'dbn': 'financial_data'}
-# MySQL conection string.
-connstr = 'mysql+mysqlconnector://{usr}:{pwd}@{hst}:{prt}/{dbn}'
-# Create sqlalchemy engine for MySQL connection.
-engine = sqlalchemy.create_engine(connstr.format(**creds))
+# https://financialmodelingprep.com/developer/docs
 
-#price_data = web.DataReader('MMM', 'yahoo', start_date, end_date)
+fmp_api = open("./fmp_api.txt", 'r').read()
 
-# print(prices)
+class db_master:
 
-# print(type(prices['Open'].iloc[-1]))
-symbol = 'MMM'
-# mycursor.execute('USE financial_data')
-# mycursor.execute("CREATE TABLE MMM (Date datetime, Open float, High float, Low float, Close float, Volume int, Dividends float)")
+    def __init__(self, symbol, key):
+        self.key = key
+        self.db = mysql.connector.connect(
+            host = host_ip,
+            user = user_id,
+            passwd = pw
+        )
+        self.symbol = symbol.upper()
+        self.mycursor = self.db.cursor()
+        self.mycursor.execute(f"CREATE DATABASE IF NOT EXISTS {symbol}")
+        self.db.commit()
 
-# db.commit()
+        creds = {'usr': user_id,
+        'pwd': pw,
+        'hst': host_ip,
+        'prt': 3306,
+        'dbn': symbol}
+        connstr = 'mysql+mysqlconnector://{usr}:{pwd}@{hst}:{prt}/{dbn}'
+        self.engine = sqlalchemy.create_engine(connstr.format(**creds))
 
-mycursor.execute("SELECT * FROM MMM")
+    def income_statement(self, period: str, limit: int):
+        if period.upper() == 'Y':
+            annual = requests.get(f"https://financialmodelingprep.com/api/v3/income-statement/{self.symbol}?limit={limit}&apikey={self.key}").json()
+            return annual
 
-# print(mycursor.fetchall())
+            #annual = requests.get(f'https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={key}')
+        if period.upper() == 'Q':
+            quarter = requests.get(f"https://financialmodelingprep.com/api/v3/income-statement/{self.symbol}?period=quarter&limit={limit}&apikey={self.key}").json()
+            return quarter
 
-new = pd.DataFrame(mycursor.fetchall(), columns=['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividends'])
+        return None
 
-print(new)
-# mycursor.execute("SHOW TABLES")
-# for x in mycursor:
-#     print(x)
-# prices = yf.Ticker(symbol).history(period='max')
-# prices.reset_index(inplace=True)
+    def financial_ratios(self, limit: int):
 
-# prices.to_sql(name='MMM', con=engine, if_exists='replace', index=False)
+        # data = {'Symbol': [], 'Date': [], 'Revenue_Growth': [], 'ROE': [], 'Dividend_Yield': [], 'Payout Ratio': []}
 
-# for i, row in prices.iterrows():
-#     print(i,tuple(row))
+        financial_ratios = requests.get(f'https://financialmodelingprep.com/api/v3/ratios-ttm/{self.symbol}?apikey={self.key}').json()
 
-#mycursor.execute("CREATE TABLE Person (name VARCHAR(255), age smallint UNSIGNED, personID int PRIMARY KEY AUTO_INCREMENT)")
-#mycursor.execute("DESCRIBE Person")
-# mycursor.execute("INSERT INTO Person (name, age) VALUES (%s,%s)", ("Joe", 22))
+        return financial_ratios
 
-# db.commit()
+    def financial_growth(self, key: str, limit: int):
 
-# mycursor.execute("SELECT * FROM Person")
-# for x in mycursor:
-#     print(x)
+        financial_growth = requests.get(f'https://financialmodelingprep.com/api/v3/financial-growth/{self.symbol}?period=quarter&limit={limit}&apikey={self.key}').json()
 
-#mycursor.execute("CREATE TABLE Test (name VARCHAR(50) NOT NULL, created datetime NOT NULL, gender ENUM('M', 'F', 'O') NOT NULL, ID int PRIMARY KEY NOT NULL AUTO_INCREMENT)")
+        return financial_growth
 
-# mycursor.execute("INSERT INTO Test (name, created, gender) VALUES (%s,%s,%s)", ('Kimmy', datetime.now(), 'F'))
-# db.commit()
+    def price_df_to_sql(self):
+        try:
+            prices = yf.Ticker(self.symbol).history(period='max')
+        except:
+            return None
+        prices.reset_index(inplace=True)
 
-# mycursor.execute("DESCRIBE Test")
-# mycursor.execute("SELECT * FROM Test WHERE gender = 'M'")
+        self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {self.symbol} (Date datetime, Open float, High float, Low float, Close float, Dividends float, Stock_Splits float)")
+        self.db.commit()
 
-# for x in mycursor:
-#     print(x)
+        prices.to_sql(name=self.symbol, con=self.engine, if_exists='replace', index=False)
 
-#mycursor.execute("ALTER TABLE Test ADD COLUMN food VARCHAR(50) NOT NULL")
+    def price_sql_to_df(self):
+        self.mycursor.execute(f"SELECT * FROM {self.symbol}")
 
-# mycursor.execute("ALTER TABLE Test CHANGE name first_name VARCHAR(50)")
+        df = pd.DataFrame(self.mycursor.fetchall(), columns=['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Stock_Splits'])
+        df.set_index('Date',inplace=True)
+        return df
 
+if __name__ == '__main__':
 
-# print(mycursor.fetchall())
+    aapl = db_master('AAPL', fmp_api)
+    x = aapl.income_statement('Q', 8)
+    print(x)
 
-#mycursor.execute("ALTER TABLE Test DROP food")
-
-# mycursor.execute("DESCRIBE Test")
-
-# for x in mycursor:
-#     print(x)
-
-# Q1 = "CREATE TABLE Users (id int PRIMARY KEY AUTO_INCREMENT, name VARCHAR(50), passwd VARCHAR(50))"
-# Q2 = "CREATE TABLE Scores (userId int PRIMARY KEY, FOREIGN KEY(userId) REFERENCES Users(id), game1 int DEFAULT 0, game2 int DEFAULT 0)"
-
-# # mycursor.execute(Q1)
-# #mycursor.execute(Q2)
-
-# mycursor.execute("SHOW TABLES")
-
-# for x in mycursor:
-#     print(x)
