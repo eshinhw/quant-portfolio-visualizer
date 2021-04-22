@@ -8,35 +8,16 @@ import yfinance as yf
 import mysql.connector
 import pandas_datareader.data as web
 
-with open('./credentials.txt', 'r') as fp:
+# https://financialmodelingprep.com/developer/docs
+
+with open('./credentials/pi_db_server.txt', 'r') as fp:
     secret = fp.readlines()
     host_ip = secret[0].rstrip('\n')
     user_id = secret[1].rstrip('\n')
     pw = secret[2]
     fp.close()
 
-# creds = {'usr': user_id,
-#         'pwd': pw,
-#         'hst': host_ip,
-#         'prt': 3306,
-#         'dbn': 'financial_data'}
-# # MySQL conection string.
-# connstr = 'mysql+mysqlconnector://{usr}:{pwd}@{hst}:{prt}/{dbn}'
-# # Create sqlalchemy engine for MySQL connection.
-# engine = sqlalchemy.create_engine(connstr.format(**creds))
-
-# db = mysql.connector.connect(
-#     host = host_ip,
-#     user = user_id,
-#     passwd = pw,
-#     db = 'financial_data'
-# )
-
-# mycursor = db.cursor()
-
-# https://financialmodelingprep.com/developer/docs
-
-fmp_api = open("./fmp_api.txt", 'r').read()
+fmp_api = open("./credentials/fmp_api.txt", 'r').read()
 
 class db_master:
 
@@ -54,10 +35,10 @@ class db_master:
         self.db.commit()
 
         creds = {'usr': user_id,
-        'pwd': pw,
-        'hst': host_ip,
-        'prt': 3306,
-        'dbn': self.symbol}
+                'pwd': pw,
+                'hst': host_ip,
+                'prt': 3306,
+                'dbn': self.symbol}
         connstr = 'mysql+mysqlconnector://{usr}:{pwd}@{hst}:{prt}/{dbn}'
         self.engine = sqlalchemy.create_engine(connstr.format(**creds))
 
