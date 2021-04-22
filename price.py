@@ -1,8 +1,11 @@
 import numpy as np
 import pandas as pd
+import yfinance as yf
 import datetime as dt
 from typing import List
 import pandas_datareader.data as web
+
+
 
 def calculate_current_price(symbol: str) -> float:
     start_date = (dt.date.today() - dt.timedelta(days=5)).strftime("%Y-%m-%d")
@@ -69,3 +72,6 @@ def calculate_vol(df):
 
 def calculate_ex_post_sharpe(df):
     return np.mean(df.iloc[:,1]) / np.std(df.iloc[:,1]) * np.sqrt(252)
+
+if __name__ == '__main__':
+    print(calculate_current_price('TRV'))
