@@ -1,6 +1,12 @@
 import mysql.connector
 from datetime import datetime
 
+with open('./credentials.txt', 'r') as fp:
+    secret = fp.readlines()
+    host_ip = secret[0].rstrip('\n')
+    user_id = secret[1].rstrip('\n')
+    pw = secret[2]
+
 db = mysql.connector.connect(
     host="192.168.2.21",
     user="eddie",
