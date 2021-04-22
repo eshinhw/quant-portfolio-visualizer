@@ -24,7 +24,7 @@ Financial ratios, price and dividend data is automatically collected from yahoo 
 </p>
 
 <p align="center">
-**Dividend History**
+Dividend History
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@ Financial ratios, price and dividend data is automatically collected from yahoo 
 </p>
 
 <p align="center">
-**Historical Prices**
+Historical Prices
 </p>
 
 <p align="center">
@@ -40,7 +40,7 @@ Financial ratios, price and dividend data is automatically collected from yahoo 
 </p>
 
 <p align="center">
-**Finalcial Ratios**
+Financial Ratios
 </p>
 
 
