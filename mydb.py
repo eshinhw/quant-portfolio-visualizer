@@ -6,11 +6,12 @@ with open('./credentials.txt', 'r') as fp:
     host_ip = secret[0].rstrip('\n')
     user_id = secret[1].rstrip('\n')
     pw = secret[2]
+    fp.close()
 
 db = mysql.connector.connect(
-    host="192.168.2.21",
-    user="eddie",
-    passwd="abc123"
+    host = host_ip,
+    user = user_id,
+    passwd = pw
 )
 
 mycursor = db.cursor()
