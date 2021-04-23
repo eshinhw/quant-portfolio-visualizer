@@ -65,7 +65,6 @@ def calculate_periodic_returns(symbol, period):
 #     return historical_dd.min()
 
 # def calculate_vol(df):
-
 #     return np.std(df.iloc[:,1]) * np.sqrt(252)
 
 # def calculate_ex_post_sharpe(df):
