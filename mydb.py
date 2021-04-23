@@ -17,19 +17,20 @@ with open('./credentials/pi_db_server.txt', 'r') as fp:
     pw = secret[2]
     fp.close()
 
-fmp_api = open("./credentials/fmp_api.txt", 'r').read()
+FMP_API_KEYS = open("./credentials/fmp_api.txt", 'r').read()
+DIV_TBN = 'Annual_Dividends'
+PRICE_TBN = 'Price'
 
 class db_master:
 
-    def __init__(self, symbol, key):
-        self.key = key
+    def __init__(self, symbol):
+        self.key = FMP_API_KEYS
         self.db = mysql.connector.connect(
             host = host_ip,
             user = user_id,
             passwd = pw
         )
         self.symbol = symbol.upper()
-        print(self.symbol)
         self.mycursor = self.db.cursor()
         self.mycursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.symbol}")
         self.db.commit()
@@ -59,8 +60,6 @@ class db_master:
         self.mycursor.execute("CREATE TABLE IF NOT EXISTS Financial_Ratios (Date VARCHAR(100) NOT NULL, Ratio VARCHAR(255) NOT NULL, Value float)")
         self.db.commit()
 
-        # data = {'Symbol': [], 'Date': [], 'Revenue_Growth': [], 'ROE': [], 'Dividend_Yield': [], 'Payout Ratio': []}
-
         financial_growth = requests.get(f'https://financialmodelingprep.com/api/v3/financial-growth/{self.symbol}?period=quarter&limit={limit}&apikey={self.key}').json()[0]
         financial_ratios = requests.get(f'https://financialmodelingprep.com/api/v3/ratios-ttm/{self.symbol}?apikey={self.key}').json()[0]
 
@@ -82,60 +81,53 @@ class db_master:
         self.db.commit()
 
     def dividend_history_export_to_sql(self):
-        tbn = 'Dividend'
         try:
             data = yf.Ticker(self.symbol).history(period='max')
         except:
             return None
 
-        dividends = data[data['Dividends'] > 0.01]
-        dividends.reset_index(inplace=True)
+        div = data[data['Dividends'] > 0.01]
+        first_year = div.index[0].year
+        last_year = div.index[-1].year
+        data = {'Year': [], 'Dividends': []}
+        for year in range(first_year,last_year):
+            div_sum = div[div.index.year == year]['Dividends'].sum()
+            data['Year'].append(year)
+            data['Dividends'].append(div_sum)
+        annual_div = pd.DataFrame(data)
         self.mycursor.execute(f"USE {self.symbol}")
-        self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {tbn} (Date datetime, Open float, High float, Low float, Close float, Dividends float, Stock_Splits float)")
+        self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {DIV_TBN} (Year VARCHAR(20), Dividends float)")
         self.db.commit()
 
-        dividends.to_sql(name=tbn, con=self.engine, if_exists='replace', index=False)
+        annual_div.to_sql(name=DIV_TBN, con=self.engine, if_exists='replace', index=False)
 
     def dividend_history_import_to_df(self):
         self.mycursor.execute(f"USE {self.symbol}")
-        self.mycursor.execute(f"SELECT * FROM Dividend")
+        self.mycursor.execute(f"SELECT * FROM {DIV_TBN}")
 
-        df = pd.DataFrame(self.mycursor.fetchall(), columns=['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Stock_Splits'])
-        df.set_index('Date',inplace=True)
+        df = pd.DataFrame(self.mycursor.fetchall(), columns=['Year', 'Dividends'])
+        df.set_index('Year',inplace=True)
         return df
 
-    def price_history_export_to_sql(self):
-        tbn = 'Price'
+    def price_history_export_to_sql(self, start_date=None, end_date=None):
         try:
-            #prices = yf.Ticker(self.symbol).history(period='max')
-            prices = web.DataReader(self.symbol, 'yahoo')
+            prices = web.DataReader(self.symbol, 'yahoo', start_date, end_date)
         except:
             return None
 
         prices.reset_index(inplace=True)
         self.mycursor.execute(f"USE {self.symbol}")
-        self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {tbn} (Date datetime, High float, Low float, Open float, Close float, Volume float, Adj_Close float)")
+        self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {PRICE_TBN} (Date datetime, High float, Low float, Open float, Close float, Volume float, Adj_Close float)")
         self.db.commit()
 
-        prices.to_sql(name=tbn, con=self.engine, if_exists='replace', index=False)
+        prices.to_sql(name=PRICE_TBN, con=self.engine, if_exists='replace', index=False)
 
-    def price_history_import_to_df(self):
+    def price_history_import_to_df(self, start_date=None, end_date=None):
         self.mycursor.execute(f"USE {self.symbol}")
-        self.mycursor.execute(f"SELECT * FROM Price")
-
+        self.mycursor.execute(f"SELECT * FROM {PRICE_TBN}")
         df = pd.DataFrame(self.mycursor.fetchall(), columns=['Date', 'High', 'Low', 'Open', 'Close', 'Volume', 'Adj_Close'])
         df.set_index('Date',inplace=True)
         return df
 
 if __name__ == '__main__':
-    aapl = db_master('aapl', fmp_api)
-    aapl.price_history_export_to_sql()
-    df = aapl.price_history_import_to_df()
-    # print(df)
-
-    aapl.dividend_history_export_to_sql()
-    div = aapl.dividend_history_import_to_df()
-    print(div)
-
-    # abc = db_master('abc', fmp_api)
-
+    pass
