@@ -20,6 +20,7 @@ with open('./credentials/pi_db_server.txt', 'r') as fp:
 FMP_API_KEYS = open("./credentials/fmp_api.txt", 'r').read()
 DIV_TBN = 'Annual_Dividends'
 PRICE_TBN = 'Price'
+FR_TBN = 'Financial_Ratios'
 
 class db_master:
 
@@ -43,24 +44,24 @@ class db_master:
         connstr = 'mysql+mysqlconnector://{usr}:{pwd}@{hst}:{prt}/{dbn}'
         self.engine = sqlalchemy.create_engine(connstr.format(**creds))
 
-    def income_statement(self, period: str, limit: int):
-        if period.upper() == 'Y':
-            annual = requests.get(f"https://financialmodelingprep.com/api/v3/income-statement/{self.symbol}?limit={limit}&apikey={self.key}").json()
-            return annual
+    # def income_statement(self, period: str, limit: int):
+    #     if period.upper() == 'Y':
+    #         annual = requests.get(f"https://financialmodelingprep.com/api/v3/income-statement/{self.symbol}?limit={limit}&apikey={self.key}").json()
+    #         return annual
 
-            #annual = requests.get(f'https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={key}')
-        if period.upper() == 'Q':
-            quarter = requests.get(f"https://financialmodelingprep.com/api/v3/income-statement/{self.symbol}?period=quarter&limit={limit}&apikey={self.key}").json()
-            return quarter
+    #         #annual = requests.get(f'https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={key}')
+    #     if period.upper() == 'Q':
+    #         quarter = requests.get(f"https://financialmodelingprep.com/api/v3/income-statement/{self.symbol}?period=quarter&limit={limit}&apikey={self.key}").json()
+    #         return quarter
 
-        return None
+    #     return None
 
-    def financial_ratios(self, limit: int):
+    def upload_financial_ratios_to_sql(self):
         self.mycursor.execute(f"USE {self.symbol}")
-        self.mycursor.execute("CREATE TABLE IF NOT EXISTS Financial_Ratios (Date VARCHAR(100) NOT NULL, Ratio VARCHAR(255) NOT NULL, Value float)")
+        self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {FR_TBN} (Date VARCHAR(100) NOT NULL, Ratio VARCHAR(255) NOT NULL, Value float)")
         self.db.commit()
 
-        financial_growth = requests.get(f'https://financialmodelingprep.com/api/v3/financial-growth/{self.symbol}?period=quarter&limit={limit}&apikey={self.key}').json()[0]
+        financial_growth = requests.get(f'https://financialmodelingprep.com/api/v3/financial-growth/{self.symbol}?period=quarter&apikey={self.key}').json()[0]
         financial_ratios = requests.get(f'https://financialmodelingprep.com/api/v3/ratios-ttm/{self.symbol}?apikey={self.key}').json()[0]
 
         vals = []
@@ -77,8 +78,16 @@ class db_master:
             val = financial_ratios.get(k)
             vals.append((date,k,val))
 
-        self.mycursor.executemany("INSERT INTO Financial_Ratios (Date, Ratio, Value) VALUES (%s,%s,%s)", vals)
+        self.mycursor.executemany(f"INSERT INTO {FR_TBN} (Date, Ratio, Value) VALUES (%s,%s,%s)", vals)
         self.db.commit()
+
+    def download_financial_ratios(self, symbol: str):
+        self.mycursor.execute(f"USE {self.symbol}")
+        self.mycursor.execute(f"SELECT * FROM {FR_TBN}")
+
+        df = pd.DataFrame(self.mycursor.fetchall(), columns=['Date', 'Ratio', 'Value'])
+        df.set_index('Ratio',inplace=True)
+        return df
 
     def dividend_history_export_to_sql(self):
         try:
