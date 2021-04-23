@@ -19,6 +19,7 @@ def get_historical_annual_dividends(symbol):
 
 def calcualte_avg_dividend_growth(symbol: str, period=None) -> float:
     annual_div = get_historical_annual_dividends(symbol)
+    print(annual_div)
     changes = annual_div.pct_change()
 
     if period:
@@ -30,12 +31,12 @@ def calcualte_avg_dividend_growth(symbol: str, period=None) -> float:
 
 def calculate_current_dividend_yield(symbol: str):
     div = get_historical_annual_dividends(symbol)
-    latest_div = div['Dividends'][-1]
+    latest_div = div['Dividends'].iloc[-1]
     curr_price = get_current_price(symbol)
     return latest_div/curr_price
 
 if __name__ == '__main__':
-    ch = calcualte_avg_dividend_growth('MMM',10)
+    ch = calcualte_avg_dividend_growth('CAT')
     print(ch)
 
 

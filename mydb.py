@@ -10,7 +10,14 @@ import pandas_datareader.data as web
 
 # https://financialmodelingprep.com/developer/docs
 
-with open('./credentials/pi_db_server.txt', 'r') as fp:
+# with open('./credentials/pi_db_server.txt', 'r') as fp:
+#     secret = fp.readlines()
+#     host_ip = secret[0].rstrip('\n')
+#     user_id = secret[1].rstrip('\n')
+#     pw = secret[2]
+#     fp.close()
+
+with open('./credentials/local_db.txt', 'r') as fp:
     secret = fp.readlines()
     host_ip = secret[0].rstrip('\n')
     user_id = secret[1].rstrip('\n')
@@ -18,9 +25,9 @@ with open('./credentials/pi_db_server.txt', 'r') as fp:
     fp.close()
 
 FMP_API_KEYS = open("./credentials/fmp_api.txt", 'r').read()
-DIV_TBN = 'Annual_Dividends'
-PRICE_TBN = 'Price'
-FR_TBN = 'Financial_Ratios'
+DIV_TBN = 'annual_dividends'
+PRICE_TBN = 'price'
+FR_TBN = 'financial_ratios'
 
 class db_master:
 
@@ -61,7 +68,7 @@ class db_master:
         self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {FR_TBN} (Date VARCHAR(100) NOT NULL, Ratio VARCHAR(255) NOT NULL, Value float)")
         self.db.commit()
 
-        financial_growth = requests.get(f'https://financialmodelingprep.com/api/v3/financial-growth/{self.symbol}?period=quarter&apikey={self.key}').json()[0]
+        financial_growth = requests.get(f'https://financialmodelingprep.com/api/v3/financial-growth/{self.symbol}?period=quarter&limit=40&apikey={self.key}').json()[0]
         financial_ratios = requests.get(f'https://financialmodelingprep.com/api/v3/ratios-ttm/{self.symbol}?apikey={self.key}').json()[0]
 
         vals = []
@@ -81,9 +88,13 @@ class db_master:
         self.mycursor.executemany(f"INSERT INTO {FR_TBN} (Date, Ratio, Value) VALUES (%s,%s,%s)", vals)
         self.db.commit()
 
-    def download_financial_ratios(self, symbol: str):
+    def download_financial_ratios(self):
         self.mycursor.execute(f"USE {self.symbol}")
-        self.mycursor.execute(f"SELECT * FROM {FR_TBN}")
+        try:
+            self.mycursor.execute(f"SELECT * FROM {FR_TBN}")
+        except:
+            self.upload_financial_ratios_to_sql()
+            self.mycursor.execute(f"SELECT * FROM {FR_TBN}")
 
         df = pd.DataFrame(self.mycursor.fetchall(), columns=['Date', 'Ratio', 'Value'])
         df.set_index('Ratio',inplace=True)
@@ -112,7 +123,11 @@ class db_master:
 
     def dividend_history_import_to_df(self):
         self.mycursor.execute(f"USE {self.symbol}")
-        self.mycursor.execute(f"SELECT * FROM {DIV_TBN}")
+        try:
+            self.mycursor.execute(f"SELECT * FROM {DIV_TBN}")
+        except:
+            self.dividend_history_export_to_sql()
+            self.mycursor.execute(f"SELECT * FROM {DIV_TBN}")
 
         df = pd.DataFrame(self.mycursor.fetchall(), columns=['Year', 'Dividends'])
         df.set_index('Year',inplace=True)
@@ -138,5 +153,33 @@ class db_master:
         df.set_index('Date',inplace=True)
         return df
 
+    def drop_all_databases(self):
+
+        self.mycursor.execute("SHOW DATABASES")
+        excluded = ['sys', 'information_schema', 'performance_schema', 'mysql']
+        db_names = []
+
+        for name in self.mycursor:
+            if name[0] not in excluded:
+                db_names.append(name[0])
+
+        for name in db_names:
+            self.mycursor.execute(f"DROP DATABASE {name}")
+            self.db.commit()
+
 if __name__ == '__main__':
-    pass
+    aapl = db_master('NKE')
+    aapl.drop_all_databases()
+    # div = aapl.dividend_history_import_to_df()
+    # #aapl.upload_financial_ratios_to_sql()
+    # fr = aapl.download_financial_ratios()
+
+
+
+
+
+    # aapl.price_history_export_to_sql()
+    # price = aapl.price_history_import_to_df()
+    # print(price)
+    # print(div)
+    # print(fr)
