@@ -10,20 +10,19 @@ import pandas_datareader.data as web
 
 # https://financialmodelingprep.com/developer/docs
 
-# with open('./credentials/pi_db_server.txt', 'r') as fp:
-#     secret = fp.readlines()
-#     host_ip = secret[0].rstrip('\n')
-#     #print(host_ip)
-#     user_id = secret[1].rstrip('\n')
-#     pw = secret[2]
-#     fp.close()
-
-with open('./credentials/local_db.txt', 'r') as fp:
+with open('./credentials/pi_db_server.txt', 'r') as fp:
     secret = fp.readlines()
     host_ip = secret[0].rstrip('\n')
     user_id = secret[1].rstrip('\n')
     pw = secret[2]
     fp.close()
+
+# with open('./credentials/local_db.txt', 'r') as fp:
+#     secret = fp.readlines()
+#     host_ip = secret[0].rstrip('\n')
+#     user_id = secret[1].rstrip('\n')
+#     pw = secret[2]
+#     fp.close()
 
 FMP_API_KEYS = open("./credentials/fmp_api.txt", 'r').read()
 DIV_TBN = 'annual_dividends'
@@ -34,7 +33,6 @@ class db_master:
 
     def __init__(self, symbol):
         self.key = FMP_API_KEYS
-        #print(type(host_ip))
         self.db = mysql.connector.connect(
             host = host_ip,
             user = user_id,
@@ -173,8 +171,7 @@ class db_master:
 
 if __name__ == '__main__':
     aapl = db_master('NKE')
-    aapl.drop_all_databases()
-    #aapl.dividend_history_export_to_sql()
+    aapl.dividend_history_export_to_sql()
     # div = aapl.dividend_history_import_to_df()
     # #aapl.upload_financial_ratios_to_sql()
     # fr = aapl.download_financial_ratios()
