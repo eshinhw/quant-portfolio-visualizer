@@ -135,8 +135,10 @@ class db_master:
         df.set_index('Year',inplace=True)
         return df
 
-    def price_history_export_to_sql(self, start_date=None, end_date=None):
+    def price_history_export_to_sql(self):
         try:
+            start_date = dt.datetime(1970,1,1)
+            end_date = dt.datetime.today()
             prices = web.DataReader(self.symbol, 'yahoo', start_date, end_date)
         except:
             return None
@@ -171,6 +173,7 @@ class db_master:
 
 if __name__ == '__main__':
     aapl = db_master('NKE')
+    aapl.drop_all_databases()
     #aapl.dividend_history_export_to_sql()
     # div = aapl.dividend_history_import_to_df()
     # #aapl.upload_financial_ratios_to_sql()
