@@ -38,7 +38,7 @@ class db_master:
             user = user_id,
             passwd = pw
         )
-        self.symbol = symbol.upper()
+        self.symbol = symbol.lower()
         self.mycursor = self.db.cursor()
         self.mycursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.symbol}")
         self.db.commit()
@@ -67,9 +67,11 @@ class db_master:
         self.mycursor.execute(f"USE {self.symbol}")
         self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {FR_TBN} (Date VARCHAR(100) NOT NULL, Ratio VARCHAR(255) NOT NULL, Value float)")
         self.db.commit()
-
-        financial_growth = requests.get(f'https://financialmodelingprep.com/api/v3/financial-growth/{self.symbol}?period=quarter&limit=40&apikey={self.key}').json()[0]
-        financial_ratios = requests.get(f'https://financialmodelingprep.com/api/v3/ratios-ttm/{self.symbol}?apikey={self.key}').json()[0]
+        try:
+            financial_growth = requests.get(f'https://financialmodelingprep.com/api/v3/financial-growth/{self.symbol.upper()}?period=quarter&limit=40&apikey={self.key}').json()[0]
+            financial_ratios = requests.get(f'https://financialmodelingprep.com/api/v3/ratios-ttm/{self.symbol.upper()}?apikey={self.key}').json()[0]
+        except:
+            return None
 
         vals = []
         date = financial_growth.get('date')
@@ -88,7 +90,7 @@ class db_master:
         self.mycursor.executemany(f"INSERT INTO {FR_TBN} (Date, Ratio, Value) VALUES (%s,%s,%s)", vals)
         self.db.commit()
 
-    def download_financial_ratios(self):
+    def download_financial_ratios_to_df(self):
         self.mycursor.execute(f"USE {self.symbol}")
         try:
             self.mycursor.execute(f"SELECT * FROM {FR_TBN}")
@@ -100,7 +102,7 @@ class db_master:
         df.set_index('Ratio',inplace=True)
         return df
 
-    def dividend_history_export_to_sql(self):
+    def upload_dividend_history_to_sql(self):
         try:
             data = yf.Ticker(self.symbol).history(period='max')
         except:
@@ -121,19 +123,19 @@ class db_master:
 
         annual_div.to_sql(name=DIV_TBN, con=self.engine, if_exists='replace', index=False)
 
-    def dividend_history_import_to_df(self):
+    def download_dividend_history_to_df(self):
         self.mycursor.execute(f"USE {self.symbol}")
         try:
             self.mycursor.execute(f"SELECT * FROM {DIV_TBN}")
         except:
-            self.dividend_history_export_to_sql()
+            self.upload_dividend_history_to_sql()
             self.mycursor.execute(f"SELECT * FROM {DIV_TBN}")
 
         df = pd.DataFrame(self.mycursor.fetchall(), columns=['Year', 'Dividends'])
         df.set_index('Year',inplace=True)
         return df
 
-    def price_history_export_to_sql(self):
+    def upload_price_history_to_sql(self):
         try:
             start_date = dt.datetime(1970,1,1)
             end_date = dt.datetime.today()
@@ -148,9 +150,13 @@ class db_master:
 
         prices.to_sql(name=PRICE_TBN, con=self.engine, if_exists='replace', index=False)
 
-    def price_history_import_to_df(self, start_date=None, end_date=None):
+    def download_price_history_to_df(self, start_date=None, end_date=None):
         self.mycursor.execute(f"USE {self.symbol}")
-        self.mycursor.execute(f"SELECT * FROM {PRICE_TBN}")
+        try:
+            self.mycursor.execute(f"SELECT * FROM {PRICE_TBN}")
+        except:
+            self.upload_price_history_to_sql()
+            self.mycursor.execute(f"SELECT * FROM {PRICE_TBN}")
         df = pd.DataFrame(self.mycursor.fetchall(), columns=['Date', 'High', 'Low', 'Open', 'Close', 'Volume', 'Adj_Close'])
         df.set_index('Date',inplace=True)
         return df
@@ -170,18 +176,12 @@ class db_master:
             self.db.commit()
 
 if __name__ == '__main__':
-    aapl = db_master('NKE')
-    aapl.dividend_history_export_to_sql()
-    # div = aapl.dividend_history_import_to_df()
-    # #aapl.upload_financial_ratios_to_sql()
-    # fr = aapl.download_financial_ratios()
+    aapl = db_master('cat')
+    # aapl.drop_all_databases()
+    div = aapl.download_dividend_history_to_df()
+    fr = aapl.download_financial_ratios_to_df()
+    price = aapl.download_price_history_to_df()
 
-
-
-
-
-    # aapl.price_history_export_to_sql()
-    # price = aapl.price_history_import_to_df()
-    # print(price)
-    # print(div)
-    # print(fr)
+    print(price)
+    print(div)
+    print(fr)
