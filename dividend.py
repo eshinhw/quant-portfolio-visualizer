@@ -11,15 +11,14 @@ import pandas_datareader.data as web
 def get_historical_annual_dividends(symbol):
     db = db_master(symbol)
     try:
-        div = db.dividend_history_import_to_df()
+        div = db.download_dividend_history_to_df()
     except:
-        db.dividend_history_export_to_sql()
-        div = db.dividend_history_import_to_df()
+        db.upload_dividend_history_to_sql()
+        div = db.download_dividend_history_to_df()
     return div
 
 def calcualte_avg_dividend_growth(symbol: str, period=None) -> float:
     annual_div = get_historical_annual_dividends(symbol)
-    print(annual_div)
     changes = annual_div.pct_change()
 
     if period:
