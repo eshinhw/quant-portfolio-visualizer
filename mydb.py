@@ -140,6 +140,7 @@ class db_master:
             start_date = dt.datetime(1970,1,1)
             end_date = dt.datetime.today()
             prices = web.DataReader(self.symbol, 'yahoo', start_date, end_date)
+            print(prices)
         except:
             return None
 
@@ -176,12 +177,16 @@ class db_master:
             self.db.commit()
 
 if __name__ == '__main__':
-    aapl = db_master('cat')
-    # aapl.drop_all_databases()
-    div = aapl.download_dividend_history_to_df()
-    fr = aapl.download_financial_ratios_to_df()
-    price = aapl.download_price_history_to_df()
+    aapl = db_master('axp')
+    aapl.drop_all_databases()
+    # div = aapl.download_dividend_history_to_df()
+    # fr = aapl.download_financial_ratios_to_df()
+    # price = aapl.download_price_history_to_df()
 
-    print(price)
-    print(div)
-    print(fr)
+    # print(price)
+    # print(div)
+    # print(fr)
+
+
+    # financial_growth = requests.get(f'https://financialmodelingprep.com/api/v3/financial-growth/MSFT?period=quarter&limit=40&apikey={FMP_API_KEYS}').json()
+    # print(financial_growth)
