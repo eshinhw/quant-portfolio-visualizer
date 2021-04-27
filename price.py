@@ -1,3 +1,5 @@
+import json
+import requests
 import numpy as np
 import pandas as pd
 import yfinance as yf
@@ -45,6 +47,8 @@ def calculate_prev_max_high(symbol: str, period: int):
     df["High_" + str(period)] = df["High"].shift(1).rolling(window=period).max()
     return df["High_" + str(period)].iloc[-1]
 
+
+
 # def calculate_periodic_returns(symbol, period):
 #     monthly_prices = get_historical_monthly_prices(symbol)
 #     ret = []
@@ -85,27 +89,4 @@ def calculate_prev_max_high(symbol: str, period: int):
 #     return np.mean(df.iloc[:,1]) / np.std(df.iloc[:,1]) * np.sqrt(252)
 
 if __name__ == '__main__':
-    x = calculate_prev_max_high('aapl', 252)
-    print(x)
-    y = calculate_prev_min_low('aapl', 252)
-    print(y)
-    z = calculate_prev_min_low('aapl', 20)
-    print(f"{z} 1 month")
-
-    z = calculate_prev_min_low('aapl', 40)
-    print(f"{z} 2m")
-
-    z = calculate_prev_min_low('aapl', 60)
-    print(f"{z} 3m")
-
-    z = calculate_prev_min_low('aapl', 120)
-
-    print(f"{z} 6m")
-    z = calculate_prev_min_low('aapl', 180)
-
-    print(f"{z} 9m")
-    print("=====")
-
-    print(x * 0.9)
-    print(x * 0.8)
-    print(x * 0.7)
+    pass

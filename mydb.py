@@ -28,6 +28,7 @@ FMP_API_KEYS = open("./credentials/fmp_api.txt", 'r').read()
 DIV_TBN = 'annual_dividends'
 PRICE_TBN = 'price'
 FR_TBN = 'financial_ratios'
+MARKET_CAP_TBN = 'market_cap'
 
 class db_master:
 
@@ -62,6 +63,19 @@ class db_master:
     #         return quarter
 
     #     return None
+    def upload_price_history_to_sql(self):
+        try:
+            start_date = dt.datetime(1970,1,1)
+            end_date = dt.datetime.today()
+            prices = web.DataReader(self.symbol, 'yahoo', start_date, end_date)
+        except:
+            return None
+
+        prices.reset_index(inplace=True)
+        self.mycursor.execute(f"USE {self.symbol}")
+        self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {PRICE_TBN} (Date datetime, High float, Low float, Open float, Close float, Volume float, Adj_Close float)")
+        self.db.commit()
+        prices.to_sql(name=PRICE_TBN, con=self.engine, if_exists='replace', index=False)
 
     def upload_financial_ratios_to_sql(self):
         self.mycursor.execute(f"USE {self.symbol}")
@@ -90,18 +104,6 @@ class db_master:
         self.mycursor.executemany(f"INSERT INTO {FR_TBN} (Date, Ratio, Value) VALUES (%s,%s,%s)", vals)
         self.db.commit()
 
-    def download_financial_ratios_to_df(self):
-        self.mycursor.execute(f"USE {self.symbol}")
-        try:
-            self.mycursor.execute(f"SELECT * FROM {FR_TBN}")
-        except:
-            self.upload_financial_ratios_to_sql()
-            self.mycursor.execute(f"SELECT * FROM {FR_TBN}")
-
-        df = pd.DataFrame(self.mycursor.fetchall(), columns=['Date', 'Ratio', 'Value'])
-        df.set_index('Ratio',inplace=True)
-        return df
-
     def upload_dividend_history_to_sql(self):
         try:
             data = yf.Ticker(self.symbol).history(period='max')
@@ -123,6 +125,18 @@ class db_master:
 
         annual_div.to_sql(name=DIV_TBN, con=self.engine, if_exists='replace', index=False)
 
+    def download_financial_ratios_to_df(self):
+        self.mycursor.execute(f"USE {self.symbol}")
+        try:
+            self.mycursor.execute(f"SELECT * FROM {FR_TBN}")
+        except:
+            self.upload_financial_ratios_to_sql()
+            self.mycursor.execute(f"SELECT * FROM {FR_TBN}")
+
+        df = pd.DataFrame(self.mycursor.fetchall(), columns=['Date', 'Ratio', 'Value'])
+        df.set_index('Ratio',inplace=True)
+        return df
+
     def download_dividend_history_to_df(self):
         self.mycursor.execute(f"USE {self.symbol}")
         try:
@@ -134,22 +148,6 @@ class db_master:
         df = pd.DataFrame(self.mycursor.fetchall(), columns=['Year', 'Dividends'])
         df.set_index('Year',inplace=True)
         return df
-
-    def upload_price_history_to_sql(self):
-        try:
-            start_date = dt.datetime(1970,1,1)
-            end_date = dt.datetime.today()
-            prices = web.DataReader(self.symbol, 'yahoo', start_date, end_date)
-            print(prices)
-        except:
-            return None
-
-        prices.reset_index(inplace=True)
-        self.mycursor.execute(f"USE {self.symbol}")
-        self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {PRICE_TBN} (Date datetime, High float, Low float, Open float, Close float, Volume float, Adj_Close float)")
-        self.db.commit()
-
-        prices.to_sql(name=PRICE_TBN, con=self.engine, if_exists='replace', index=False)
 
     def download_price_history_to_df(self, start_date=None, end_date=None):
         self.mycursor.execute(f"USE {self.symbol}")
@@ -179,14 +177,3 @@ class db_master:
 if __name__ == '__main__':
     aapl = db_master('axp')
     aapl.drop_all_databases()
-    # div = aapl.download_dividend_history_to_df()
-    # fr = aapl.download_financial_ratios_to_df()
-    # price = aapl.download_price_history_to_df()
-
-    # print(price)
-    # print(div)
-    # print(fr)
-
-
-    # financial_growth = requests.get(f'https://financialmodelingprep.com/api/v3/financial-growth/MSFT?period=quarter&limit=40&apikey={FMP_API_KEYS}').json()
-    # print(financial_growth)
