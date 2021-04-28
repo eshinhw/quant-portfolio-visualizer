@@ -111,19 +111,20 @@ class db_master:
             return None
 
         div = data[data['Dividends'] > 0.01]
-        first_year = div.index[0].year
-        last_year = div.index[-1].year
-        data = {'Year': [], 'Dividends': []}
-        for year in range(first_year,last_year):
-            div_sum = div[div.index.year == year]['Dividends'].sum()
-            data['Year'].append(year)
-            data['Dividends'].append(div_sum)
-        annual_div = pd.DataFrame(data)
-        self.mycursor.execute(f"USE {self.symbol}")
-        self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {DIV_TBN} (Year VARCHAR(20), Dividends float)")
-        self.db.commit()
+        if not div.empty:
+            first_year = div.index[0].year
+            last_year = div.index[-1].year
+            data = {'Year': [], 'Dividends': []}
+            for year in range(first_year,last_year):
+                div_sum = div[div.index.year == year]['Dividends'].sum()
+                data['Year'].append(year)
+                data['Dividends'].append(div_sum)
+            annual_div = pd.DataFrame(data)
+            self.mycursor.execute(f"USE {self.symbol}")
+            self.mycursor.execute(f"CREATE TABLE IF NOT EXISTS {DIV_TBN} (Year VARCHAR(20), Dividends float)")
+            self.db.commit()
 
-        annual_div.to_sql(name=DIV_TBN, con=self.engine, if_exists='replace', index=False)
+            annual_div.to_sql(name=DIV_TBN, con=self.engine, if_exists='replace', index=False)
 
     def download_financial_ratios_to_df(self):
         self.mycursor.execute(f"USE {self.symbol}")
