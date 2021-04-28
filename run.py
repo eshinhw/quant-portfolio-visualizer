@@ -24,7 +24,7 @@ def iterate_df():
 
 
     for symbol in list(df.index):
-        high = calculate_prev_max_high(symbol,365)
+        high = calculate_prev_max_high(symbol,252)
         curr_price = get_current_price(symbol)
         # print(f"high: {high}, current_price: {curr_price}")
         df.loc[symbol,'12M_High'] = high
@@ -35,7 +35,6 @@ def iterate_df():
         drop_15 = df.loc[symbol,'15%_Drop']
         drop_30 = df.loc[symbol,'30%_Drop']
         drop_50 = df.loc[symbol,'50%_Drop']
-        print(df)
         if curr_price < drop_15 and curr_price > drop_30:
             subject = f"15% DROP PRICE ALERT - {symbol}"
             contents = f"{symbol} has dropped more than 15% from 52W High. It's time to consider buying some shares of it."
@@ -48,6 +47,8 @@ def iterate_df():
             subject = f"50% DROP PRICE ALERT - {symbol}"
             contents = f"{symbol} has dropped more than 50% from 52W High. Definitely panic market!"
             auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
+
+    print(df)
 
 
 ##############################################################################
@@ -62,12 +63,8 @@ if __name__ == '__main__':
         EMAIL_PASSWORD = secret[1]
         fp.close()
 
-    run_num = 0
-
     while True:
         iterate_df()
-        run_num += 1
-        print(f"check runtime: {run_num}")
-        time.sleep(43200)
+        time.sleep(1800)
 
 
