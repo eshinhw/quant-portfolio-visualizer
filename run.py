@@ -19,40 +19,53 @@ def get_current_price(symbol: str) -> float:
     return prices['Adj Close'].iloc[-1]
 
 def iterate_df():
-    df = pd.read_csv('./export_df_rpi.csv')
+    df = pd.read_csv('./qualified_df.csv')
     df.set_index('Symbol', inplace=True)
 
+    op1 = ('15%', 0.85)
+    op2 = ('20%', 0.80)
+    op3 = ('30%', 0.70)
+    op4 = ('50%', 0.50)
+    count = 0
     for symbol in list(df.index):
-        high = calculate_prev_max_high(symbol,252)
-        curr_price = get_current_price(symbol)
+        count += 1
+        print(f"{symbol}: {count}/{len(list(df.index))}")
+        try:
+            high = calculate_prev_max_high(symbol,252)
+            curr_price = get_current_price(symbol)
+        except:
+            continue
         df.loc[symbol,'12M_High'] = high
         df.loc[symbol,'Current_Price'] = curr_price
-        df.loc[symbol,'10%_Drop'] = high * 0.90
-        df.loc[symbol,'20%_Drop'] = high * 0.80
-        df.loc[symbol,'30%_Drop'] = high * 0.70
-        df.loc[symbol,'50%_Drop'] = high * 0.5
-        drop_10 = df.loc[symbol,'10%_Drop']
-        drop_20 = df.loc[symbol,'20%_Drop']
-        drop_30 = df.loc[symbol,'30%_Drop']
-        drop_50 = df.loc[symbol,'50%_Drop']
-        if curr_price < drop_10 and curr_price > drop_20:
-            subject = f"10% DROP PRICE ALERT - {symbol}"
-            contents = f"{symbol} has dropped more than 10% from 52W High. It's time to consider buying some shares of it."
+        df.loc[symbol,f'{op1[0]}_Drop'] = high * op1[1]
+        df.loc[symbol,f'{op2[0]}_Drop'] = high * op2[1]
+        df.loc[symbol,f'{op3[0]}_Drop'] = high * op3[1]
+        df.loc[symbol,f'{op4[0]}_Drop'] = high * op4[1]
+        drop1 = df.loc[symbol,f'{op1[0]}_Drop']
+        drop2 = df.loc[symbol,f'{op2[0]}_Drop']
+        drop3 = df.loc[symbol,f'{op3[0]}_Drop']
+        drop4 = df.loc[symbol,f'{op4[0]}_Drop']
+        if curr_price < drop1 and curr_price > drop2:
+            subject = f"{op1[0]} DROP PRICE ALERT - {symbol}"
+            contents = f"{symbol} has dropped more than {op1[0]} from 52W High ({high}).\n Current Price: {curr_price} & Target: {drop1}"
             auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
-        elif curr_price < drop_20 and curr_price > drop_30:
-            subject = f"20% DROP PRICE ALERT - {symbol}"
-            contents = f"{symbol} has dropped more than 20% from 52W High. It's time to consider buying some shares of it."
+        elif curr_price < drop2 and curr_price > drop3:
+            subject = f"{op2[0]} DROP PRICE ALERT - {symbol}"
+            contents = f"{symbol} has dropped more than {op2[0]} from 52W High ({high}).\n Current Price: {curr_price} & Target: {drop2}"
             auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
-        elif curr_price < drop_30 and curr_price > drop_50:
-            subject = f"30% DROP PRICE ALERT - {symbol}"
-            contents = f"{symbol} has dropped more than 30% from 52W High. Should I buy more?"
+        elif curr_price < drop3 and curr_price > drop4:
+            subject = f"{op3[0]} DROP PRICE ALERT - {symbol}"
+            contents = f"{symbol} has dropped more than {op3[0]} from 52W High ({high}).\n Current Price: {curr_price} & Target: {drop3}"
             auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
-        elif curr_price < drop_50:
-            subject = f"50% DROP PRICE ALERT - {symbol}"
-            contents = f"{symbol} has dropped more than 50% from 52W High. Definitely panic market!"
+        elif curr_price < drop4:
+            subject = f"{op4[0]} DROP PRICE ALERT - {symbol}"
+            contents = f"{symbol} has dropped more than {op4[0]} from 52W High ({high}).\n Current Price: {curr_price} & Target: {drop4}"
             auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
 
     print(df)
+    subject = "DAILY PRICE CHECK COMPLETED!"
+    contents = "ALL THE STOCKS IN THE DATAFRAME HAVE BEEN CHECKED UP!"
+    auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
 
 
 ##############################################################################
@@ -67,12 +80,16 @@ if __name__ == '__main__':
         EMAIL_PASSWORD = secret[1]
         fp.close()
 
-    schedule.every().day.at("17:00").do(iterate_df)
+    schedule.every().day.at("17:35").do(iterate_df)
+
     seconds = 0
+
     while True:
         schedule.run_pending()
         seconds += 1
         print(f"seconds running: {seconds}")
         time.sleep(1)
+
+
 
 
