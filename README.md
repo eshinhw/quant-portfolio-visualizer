@@ -48,6 +48,10 @@ Certainly, more equity factors and financial ratios can be added further like ea
 
 ## Trading Strategy with Email Alert
 
+<p align="center">
+  <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/116454295-d1b18980-a82d-11eb-8073-bab4b32551e5.png">
+</p>
+
 How do we determine when to buy stocks? The model uses a simple logic to determine market timing. Since all the stocks selected above have positive long term trend which means they may continue to go up in the future. All we want to do is buy those stocks when they are traded at discount. It uses 52 Weeks High as a pivot to calculate 15% drop, 30% drop and 50% drop from the high. By applying this rule, it prevents chasing the market moves at new highs but wait for retracement to buy them at better prices. The percentage drops can be customized, and whenever current prices falls below those drop prices, it sends email alerts so I don't have to watch the market every time.
 
 ## Establishing My Own Database Server in Raspberry Pi
