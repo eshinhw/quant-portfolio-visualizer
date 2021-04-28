@@ -37,19 +37,7 @@ def calculate_current_dividend_yield(symbol: str):
 def exists_dividends(symbol: str):
     data = yf.Ticker(symbol).history(period='max')
     div = data[data['Dividends'] > 0.01]
-    # first_year = div.index[0].year
-    # last_year = div.index[-1].year
-    # data = {'Year': [], 'Dividends': []}
-    # for year in range(first_year,last_year):
-    #     div_sum = div[div.index.year == year]['Dividends'].sum()
-    #     data['Year'].append(year)
-    #     data['Dividends'].append(div_sum)
-    # annual_div = pd.DataFrame(data)
-    # print(annual_div)
-    # print(annual_div['Dividends'].is_monotonic)
-    #return div['Dividends'].is_monotonic_increasing
-
-    return not div.empty
+    return not div.empty or not 0 in div['Dividends'].values
 
 if __name__ == '__main__':
     pass

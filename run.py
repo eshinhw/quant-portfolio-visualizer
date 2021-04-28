@@ -27,15 +27,21 @@ def iterate_df():
         curr_price = get_current_price(symbol)
         df.loc[symbol,'12M_High'] = high
         df.loc[symbol,'Current_Price'] = curr_price
-        df.loc[symbol,'15%_Drop'] = high * 0.85
+        df.loc[symbol,'10%_Drop'] = high * 0.90
+        df.loc[symbol,'20%_Drop'] = high * 0.80
         df.loc[symbol,'30%_Drop'] = high * 0.70
         df.loc[symbol,'50%_Drop'] = high * 0.5
-        drop_15 = df.loc[symbol,'15%_Drop']
+        drop_10 = df.loc[symbol,'10%_Drop']
+        drop_20 = df.loc[symbol,'20%_Drop']
         drop_30 = df.loc[symbol,'30%_Drop']
         drop_50 = df.loc[symbol,'50%_Drop']
-        if curr_price < drop_15 and curr_price > drop_30:
-            subject = f"15% DROP PRICE ALERT - {symbol}"
-            contents = f"{symbol} has dropped more than 15% from 52W High. It's time to consider buying some shares of it."
+        if curr_price < drop_10 and curr_price > drop_20:
+            subject = f"10% DROP PRICE ALERT - {symbol}"
+            contents = f"{symbol} has dropped more than 10% from 52W High. It's time to consider buying some shares of it."
+            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
+        elif curr_price < drop_20 and curr_price > drop_30:
+            subject = f"20% DROP PRICE ALERT - {symbol}"
+            contents = f"{symbol} has dropped more than 20% from 52W High. It's time to consider buying some shares of it."
             auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
         elif curr_price < drop_30 and curr_price > drop_50:
             subject = f"30% DROP PRICE ALERT - {symbol}"
@@ -46,7 +52,7 @@ def iterate_df():
             contents = f"{symbol} has dropped more than 50% from 52W High. Definitely panic market!"
             auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
 
-    # print(df)
+    print(df)
 
 
 ##############################################################################
@@ -61,10 +67,12 @@ if __name__ == '__main__':
         EMAIL_PASSWORD = secret[1]
         fp.close()
 
-    schedule.every().day.at("17:00").do(iterate_df())
-
+    schedule.every().day.at("17:00").do(iterate_df)
+    seconds = 0
     while True:
         schedule.run_pending()
+        seconds += 1
+        print(f"seconds running: {seconds}")
         time.sleep(1)
 
 
