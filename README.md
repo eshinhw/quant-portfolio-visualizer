@@ -24,13 +24,13 @@ Questrade is one of the investing brokers in Canada, and I have an investing acc
 
 # Quantitative Investing in Python
 
-On top of retrieving account data using Questrade API, another jupyter notebook called 'US Stock Data Analysis' uses quantitative ways of analyzing and filtering out stocks which satisfy certain quantified factor conditions. I believe that applying factor analysis to sort out individual stocks helps improve the overall performance and outperforms against the benchmark, S&P 500. 
-
-## Considering Factors
-
 <p align="center">
   <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/115498299-53f0eb00-a23b-11eb-95f3-2f69c4439350.png">
 </p>
+
+On top of retrieving account data using Questrade API, another jupyter notebook called 'US Stock Data Analysis' uses quantitative ways of analyzing and filtering out stocks which satisfy certain quantified factor conditions. I believe that applying factor analysis to sort out individual stocks helps improve the overall performance and outperforms against the benchmark, S&P 500. 
+
+## Considering Factors
 
 - 100 Billions Market Cap
 - Dividiend Payout History
