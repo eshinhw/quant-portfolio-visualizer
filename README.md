@@ -1,13 +1,7 @@
 # Questrade Portfolio Manager
 
 ## Introduction
-Questrade is one of the investing brokers in Canada, and I have an account with them that I want to keep track of regularly. 
-
-A jupyter notebook called 'Questrade Portfolio Manager' retrieves account information from Questrade API using a questrade wrapper called 'qtrade' and summarizes monthly activities, position changes and dividend income that I earned every month.
-
-Whenever I am curious of how my investing account is doing, all I need to do is just run this notebook to see the overall performance. In terms of security, qtrade wrapper automatically refreshes a security token, so I don't have to log in to the website to get a new token everytime I run the notebook.
-
-Below are a sample dataframe and visualizations I can create from the notebook.
+Questrade is one of the investing brokers in Canada, and I have an investing account with them that I want to keep track of regularly. A jupyter notebook called 'Questrade Portfolio Manager' retrieves account information using Questrade API called 'qtrade' and summarizes some useful information such as monthly account activities, position changes and dividend income that I earned every month. Whenever I want to know how my investing account is doing, all I need to do is just run this notebook from time to time. In terms of security, qtrade wrapper automatically refreshes a security token, so I don't have to log in to the website to get a new token everytime I run the notebook. Below are a sample dataframe and visualizations I can create from the notebook.
 
 ## Breakdown of Holdings
 
@@ -28,6 +22,17 @@ Below are a sample dataframe and visualizations I can create from the notebook.
 </p>
 
 # Quantitative Investing in Python
+On top of retrieving account data using Questrade API, another jupyter notebook called 'US Stock Data Analysis' uses quantitative ways of analyzing and filtering out stocks which satisfy certain quantified factor conditions. I believe that applying factor analysis to sort out individual stocks helps improve the overall performance and outperforms against the benchmark, S&P 500. 
+
+## Considering Factors
+- 100 Billions Market Cap
+- Dividiend Payout History
+- Dividend Growth
+- Historical Momentum
+- 12M Momentum
+
+My investing model only analyzes S&P 500, but only selects stocks which have more than 100 Billions market cap and have paid out dividends from the past. Some high growth stocks which have not paid dividends at all in the past are removed.
+
 
 ## Dividend Investing?
 
