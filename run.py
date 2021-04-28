@@ -1,5 +1,5 @@
 import time
-# import schedule
+import schedule
 import auto_email
 import pandas as pd
 import datetime as dt
@@ -22,11 +22,9 @@ def iterate_df():
     df = pd.read_csv('./export_df_rpi.csv')
     df.set_index('Symbol', inplace=True)
 
-
     for symbol in list(df.index):
         high = calculate_prev_max_high(symbol,252)
         curr_price = get_current_price(symbol)
-        # print(f"high: {high}, current_price: {curr_price}")
         df.loc[symbol,'12M_High'] = high
         df.loc[symbol,'Current_Price'] = curr_price
         df.loc[symbol,'15%_Drop'] = high * 0.85
@@ -48,7 +46,7 @@ def iterate_df():
             contents = f"{symbol} has dropped more than 50% from 52W High. Definitely panic market!"
             auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
 
-    print(df)
+    # print(df)
 
 
 ##############################################################################
@@ -63,8 +61,10 @@ if __name__ == '__main__':
         EMAIL_PASSWORD = secret[1]
         fp.close()
 
+    schedule.every().day.at("17:00").do(iterate_df())
+
     while True:
-        iterate_df()
-        time.sleep(1800)
+        schedule.run_pending()
+        time.sleep(1)
 
 
