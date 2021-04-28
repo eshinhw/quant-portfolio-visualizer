@@ -18,4 +18,7 @@ def sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents):
         smtp.send_message(msg)
 
 if __name__ == '__main__':
-    pass
+    EMAIL_ADDRESS = os.environ.get("GMAIL_ADDRESS")
+    EMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD")
+
+    sendEmail(EMAIL_ADDRESS,EMAIL_PASSWORD,'Hello','World')

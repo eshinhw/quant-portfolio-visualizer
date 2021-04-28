@@ -13,15 +13,11 @@ import numpy as np
 import pandas as pd
 import datetime as dt
 import matplotlib.pyplot as plt
-from qtrade import Questrade as qt
 import pandas_datareader.data as web
 ###############################################################################
 # GLOBAL VARIABLES
 WATCHLIST = ['O']
 MOMENTUM_PERIODS = [1,3,6,12,24,36]
-DIV_GROWTH_THRESHOLD = 0.2
-EMAIL_ADDRESS = os.environ.get("GMAIL_ADDRESS")
-EMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD")
 ###############################################################################
 
 if not os.path.exists('./sp500_100_billions_symbols.json'):
@@ -74,7 +70,7 @@ df = df.append(watchlist_data, ignore_index=True)
 df.set_index('Symbol', inplace=True)
 
 ###############################################################################
-# Dividend Growth and Dividend Yield
+# Financial Ratios Calculations
 ###############################################################################
 for symbol in list(df.index):
 
@@ -90,45 +86,16 @@ for symbol in list(df.index):
     except:
         df.loc[symbol, 'Dividend_Yield'] = np.nan
 
-for symbol in list(df.index):
     try:
         mom = momentum.calculate_equal_weight_momentum(symbol, MOMENTUM_PERIODS)
         df.loc[symbol,'Momentum'] = mom
     except:
         df.loc[symbol,'Momentum'] = np.nan
 
-###############################################################################
-# Dividend Growth > 20%
-###############################################################################
-df = df[df['Dividend_Growth'] >= DIV_GROWTH_THRESHOLD]
+df.to_csv(r'./export_df_rpi.csv')
 
-###############################################################################
-# ## Drawdowns From 52 Weeks High + Email Alert Setup
-###############################################################################
 
-for symbol in list(df.index):
-    high = price.calculate_prev_max_high(symbol,252)
-    curr_price = price.get_current_price(symbol)
-    df.loc[symbol,'12M_High'] = high
-    df.loc[symbol,'Current_Price'] = curr_price
-    df.loc[symbol,'15%_Drop'] = high * 0.85
-    df.loc[symbol,'30%_Drop'] = high * 0.70
-    df.loc[symbol,'50%_Drop'] = high * 0.5
-    drop_15 = df.loc[symbol,'15%_Drop']
-    drop_30 = df.loc[symbol,'30%_Drop']
-    drop_50 = df.loc[symbol,'50%_Drop']
-    if curr_price < drop_15 and curr_price > drop_30:
-        subject = f"15% DROP PRICE ALERT - {symbol}"
-        contents = f"{symbol} has dropped more than 15% from 52W High. It's time to consider buying some shares of it."
-        auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
-    elif curr_price < drop_30 and curr_price > drop_50:
-        subject = f"30% DROP PRICE ALERT - {symbol}"
-        contents = f"{symbol} has dropped more than 30% from 52W High. Should I buy more?"
-        auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
-    elif curr_price < drop_50:
-        subject = f"50% DROP PRICE ALERT - {symbol}"
-        contents = f"{symbol} has dropped more than 50% from 52W High. Definitely panic market!"
-        auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
+
 
 
 
