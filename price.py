@@ -44,6 +44,7 @@ def calculate_prev_min_low(symbol: str, period: int):
 
 def calculate_prev_max_high(symbol: str, period: int):
     df = get_historical_daily_prices(symbol)
+    print(df)
     df["High_" + str(period)] = df["High"].shift(1).rolling(window=period).max()
     return df["High_" + str(period)].iloc[-1]
 
@@ -89,4 +90,5 @@ def calculate_prev_max_high(symbol: str, period: int):
 #     return np.mean(df.iloc[:,1]) / np.std(df.iloc[:,1]) * np.sqrt(252)
 
 if __name__ == '__main__':
-    pass
+    x = calculate_prev_max_high('aapl', 365)
+    print(x)
