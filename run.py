@@ -1,6 +1,8 @@
 import price
 import auto_email
 import pandas as pd
+import datetime as dt
+import pandas_datareader.data as web
 
 with open('./credentials/gmail.txt', 'r') as fp:
     secret = fp.readlines()
@@ -16,13 +18,26 @@ df = pd.read_csv('./export_df_rpi.csv')
 df.set_index('Symbol', inplace=True)
 print(df)
 
+def calculate_prev_max_high(symbol: str, period: int):
+    start_date = dt.datetime().today() - dt.timedelta(days=period)
+    end_date = dt.datetime.today()
+    prices = web.DataReader(symbol, 'yahoo', start_date, end_date)
+    prices["High_" + str(period)] = prices["High"].shift(1).rolling(window=period).max()
+    return prices["High_" + str(period)].iloc[-1]
+
+def get_current_price(symbol: str) -> float:
+    start_date = dt.datetime().today() - dt.timedelta(days=4)
+    end_date = dt.datetime.today()
+    prices = web.DataReader(symbol, 'yahoo', start_date, end_date)
+    return prices['Adj_Close'][-1]
+
 ##############################################################################
 ## Drawdowns From 52 Weeks High + Email Alert Setup
 ##############################################################################
 
 for symbol in list(df.index):
-    high = price.calculate_prev_max_high(symbol,252)
-    curr_price = price.get_current_price(symbol)
+    high = calculate_prev_max_high(symbol,365)
+    curr_price = get_current_price(symbol)
     df.loc[symbol,'12M_High'] = high
     df.loc[symbol,'Current_Price'] = curr_price
     df.loc[symbol,'15%_Drop'] = high * 0.85
