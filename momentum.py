@@ -25,9 +25,11 @@ if __name__ == '__main__':
     data = {'Symbol': [], 'Momentum': []}
 
     for symbol in global_macro:
-        print(symbol)
         data['Symbol'].append(symbol)
         data['Momentum'].append(calculate_equal_weight_momentum(symbol, period))
     momentum_df = pd.DataFrame(data)
     momentum_df.set_index('Symbol')
     momentum_df
+
+
+

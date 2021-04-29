@@ -8,6 +8,7 @@ import yfinance as yf
 import mysql.connector
 import pandas_datareader.data as web
 
+
 # https://financialmodelingprep.com/developer/docs
 
 with open('./credentials/pi_db_server.txt', 'r') as fp:
@@ -16,6 +17,7 @@ with open('./credentials/pi_db_server.txt', 'r') as fp:
     user_id = secret[1].rstrip('\n')
     pw = secret[2]
     fp.close()
+
 
 # with open('./credentials/local_db.txt', 'r') as fp:
 #     secret = fp.readlines()
