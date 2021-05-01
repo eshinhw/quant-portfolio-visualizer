@@ -53,19 +53,19 @@ def iterate_df():
         if curr_price < drop1 and curr_price > drop2:
             subject = f"{op1[0]} DROP PRICE ALERT - {symbol}"
             contents = f"{symbol} has dropped more than {op1[0]} from 52W High ({high}).\n\nCurrent Price: {curr_price}\nTarget: {drop1}"
-            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, content)
+            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
         elif curr_price < drop2 and curr_price > drop3:
             subject = f"{op2[0]} DROP PRICE ALERT - {symbol}"
             contents = f"{symbol} has dropped more than {op2[0]} from 52W High ({high}).\n\nCurrent Price: {curr_price}\nTarget: {drop2}"
-            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, content)
+            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
         elif curr_price < drop3 and curr_price > drop4:
             subject = f"{op3[0]} DROP PRICE ALERT - {symbol}"
             contents = f"{symbol} has dropped more than {op3[0]} from 52W High ({high}).\n\nCurrent Price: {curr_price}\nTarget: {drop3}"
-            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, content)
+            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
         elif curr_price < drop4 and currPrice > drop5:
             subject = f"{op4[0]} DROP PRICE ALERT - {symbol}"
             contents = f"{symbol} has dropped more than {op4[0]} from 52W High ({high}).\n\nCurrent Price: {curr_price}\nTarget: {drop4}"
-            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, content)
+            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
         elif curr_price < drop5:
             subject = f"{op5[0]} DROP PRICE ALERT - {symbol}"
             contents = f"{symbol} has dropped more than {op5[0]} from 52W High ({high}).\n\nCurrent Price: {curr_price}\nTarget: {drop5}"
