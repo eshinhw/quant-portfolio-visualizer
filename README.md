@@ -46,11 +46,22 @@ Long term trend following strategy with wide stop and target. A breakout signal 
 ## Reversal Strategy (Turtle Soup by Linda Bradford-Raschke)
 
 <p align="center">
-  <img width="700" height="600" src="https://user-images.githubusercontent.com/41933169/116794213-4ccaa800-aa99-11eb-9405-0766a6a5999c.png">
+  <img width="500" height="500" src="https://user-images.githubusercontent.com/41933169/116794213-4ccaa800-aa99-11eb-9405-0766a6a5999c.png">
 </p>
 
 #### Strategy Overview
 
-Since original turtle trading system has about 30% of breakout success rate at key highs and lows, that means 70% of the time markets fail to break out key levels. We can reverse-engineer to bet against original turtles to capitalize 70% of false breakouts. 'Turtle Soup' strategy goes long at previous lows and goes short at previous highs, entering trades against original turtles.
+Since original turtle trading system has about 30% of breakout success rate at key highs and lows, that means 70% of the time markets fail to break out key levels. We can reverse-engineer to bet against original turtles to capitalize 70% of false breakouts. 'Turtle Soup' strategy goes long at previous lows and goes short at previous highs, expecting the markets to reverse.
 
-'Turtle Soup Plus One' can further improve the success rate by wating for one day at key ares until the daily candle completes to determine whether previous highs or lows are right places to enter. If the daily candle indicates that the highs or lows are not going to hold, it doesn't enter a trade. However, if the daily candle shows some sort of rejections at the level, we can enter a trade. 
+<p align="center">
+  <img width="900" height="450" src="https://user-images.githubusercontent.com/41933169/116794365-7df7a800-aa9a-11eb-9d3d-ad6392b33f10.png">
+</p>
+
+#### Pros
+
+- Testing the key levels doesn't require large stops which means risk reward ratio can be improved if the market moves in favour of our positions.
+
+
+#### Cons
+
+- The markets might move choppy around the key levels and we have no quantifiable information about how much the market actually behaves and reacts around the key levels. 
