@@ -57,6 +57,12 @@ Since original turtle trading system has about 30% of breakout success rate at k
   <img width="900" height="450" src="https://user-images.githubusercontent.com/41933169/116794365-7df7a800-aa9a-11eb-9d3d-ad6392b33f10.png">
 </p>
 
+#### Trading Rules
+
+- **Entry**: Long @ previous X days low and Short @ previous X days high
+- **Stop Loss**: Trailing stop to limit the downside risk
+- **Take Profit (Modified)**: Until the initial trailing stop is hit.
+
 #### Pros
 
 - Testing the key levels doesn't require large stops which means risk reward ratio can be improved if the market moves in favour of our positions.
