@@ -117,6 +117,7 @@ def construct_stock_df_to_csv():
             df.loc[symbol,'Momentum'] = np.nan
 
     df.to_csv(r'./stock_selection.csv')
+    print('export completed')
 
 
 

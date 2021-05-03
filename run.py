@@ -67,6 +67,7 @@ def iterate_df():
             send_contents(symbol, op4[0], high, curr_price, drop4)
         elif curr_price < drop5:
             send_contents(symbol, op5[0], high, curr_price, drop5)
+    print('end of iteration')
 
 ##############################################################################
 ## Drawdowns From 52 Weeks High + Email Alert Setup
@@ -92,8 +93,8 @@ if __name__ == '__main__':
     schedule.every().thursday.at("17:10").do(iterate_df)
     schedule.every().friday.at("17:10").do(iterate_df)
 
-    schedule.every().monday.at("14:57").do(construct_stock_df_to_csv)
-    schedule.every().monday.at("14:57").do(iterate_df)
+    schedule.every().monday.at("15:10").do(construct_stock_df_to_csv)
+    schedule.every().monday.at("14:10").do(iterate_df)
     # schedule.every().day.at("10:00").do(iterate_df)
     # schedule.every().day.at("15:00").do(iterate_df)
     # schedule.every().day.at("17:30").do(iterate_df)
