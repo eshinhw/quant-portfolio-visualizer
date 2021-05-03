@@ -36,7 +36,7 @@ def iterate_df():
     op5 = ('50%', 0.50)
 
     count = 0
-    print("PRICE DROP ALERT")
+    print("::::: INSERT PULLBACK PRICE DATA :::::")
     for symbol in list(df.index):
         count += 1
         print(f"{symbol}:\t{count}/{len(list(df.index))}")
@@ -82,30 +82,23 @@ if __name__ == '__main__':
         EMAIL_PASSWORD = secret[1]
         fp.close()
 
-    schedule.every().monday.at("17:00").do(construct_stock_df_to_csv)
-    schedule.every().tuesday.at("17:00").do(construct_stock_df_to_csv)
-    schedule.every().wednesday.at("17:00").do(construct_stock_df_to_csv)
-    schedule.every().thursday.at("17:00").do(construct_stock_df_to_csv)
-    schedule.every().friday.at("17:00").do(construct_stock_df_to_csv)
+    schedule.every().monday.at("13:00").do(construct_stock_df_to_csv)
+    schedule.every().tuesday.at("13:00").do(construct_stock_df_to_csv)
+    schedule.every().wednesday.at("13:00").do(construct_stock_df_to_csv)
+    schedule.every().thursday.at("13:00").do(construct_stock_df_to_csv)
+    schedule.every().friday.at("13:00").do(construct_stock_df_to_csv)
 
-    schedule.every().monday.at("17:10").do(iterate_df)
-    schedule.every().tuesday.at("17:10").do(iterate_df)
-    schedule.every().wednesday.at("17:10").do(iterate_df)
-    schedule.every().thursday.at("17:10").do(iterate_df)
-    schedule.every().friday.at("17:10").do(iterate_df)
+    schedule.every().monday.at("17:00").do(iterate_df)
+    schedule.every().tuesday.at("17:00").do(iterate_df)
+    schedule.every().wednesday.at("17:00").do(iterate_df)
+    schedule.every().thursday.at("17:00").do(iterate_df)
+    schedule.every().friday.at("17:00").do(iterate_df)
 
-    schedule.every().monday.at("18:11").do(construct_stock_df_to_csv)
-    schedule.every().monday.at("18:11").do(iterate_df)
-    # schedule.every().day.at("10:00").do(iterate_df)
-    # schedule.every().day.at("15:00").do(iterate_df)
-    # schedule.every().day.at("17:30").do(iterate_df)
-    # schedule.every().minute.do(iterate_df)
-    # seconds = 0
+    schedule.every().monday.at("18:40").do(construct_stock_df_to_csv)
+    schedule.every().monday.at("18:40").do(iterate_df)
 
     while True:
         schedule.run_pending()
-        # seconds += 1
-        # print(f"seconds running: {seconds}")
         time.sleep(1)
 
 

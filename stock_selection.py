@@ -7,12 +7,9 @@ import requests
 import momentum
 import pyticker
 import dividend
-# import questrade
-# import auto_email
 import numpy as np
 import pandas as pd
 import datetime as dt
-#import matplotlib.pyplot as plt
 import pandas_datareader.data as web
 
 ###############################################################################
@@ -32,12 +29,11 @@ def extract_from_sp500():
     data = {'Symbol': [], 'Market_Cap (B)': []}
 
     min_market_cap = MARKET_CAP_THRESHOLD
-
-    #count = 0
-
+    count = 0
+    print("::::: EXTRACT SYMBOLS FROM S&P 500 :::::")
     for symbol in sp500:
-        #count += 1
-        #print(f"{symbol}: {count}/{len(sp500)}")
+        count += 1
+
         try:
             market_cap = ratios.calculate_market_cap(symbol)
         except:
@@ -46,7 +42,9 @@ def extract_from_sp500():
         if market_cap >= min_market_cap and dividend.exists_dividends(symbol):
             data['Symbol'].append(symbol)
             data['Market_Cap (B)'].append(market_cap)
-            print(f"{symbol} has been added!")
+            print(f"{symbol}:\t{count}/{len(sp500)} => EXTRACTED!")
+        else:
+            print(f"{symbol}:\t{count}/{len(sp500)}")
 
     return data
 
@@ -81,9 +79,11 @@ def construct_stock_df_to_csv():
     # Update Watchlist
     ###############################################################################
     watchlist_data = {'Symbol': [], 'Market_Cap (B)': []}
-    print("Add Watchlist")
+    print("::::: INSERT ADDITIONAL STOCKS FROM WATCHLIST :::::")
+    count = 0
     for symbol in WATCHLIST:
-        print(symbol)
+        count += 1
+        print(f"{symbol}:\t{count}/{len(WATCHLIST)}")
         if len(WATCHLIST) == 1:
             watchlist_data['Symbol'] = symbol
             watchlist_data['Market_Cap (B)'] = ratios.calculate_market_cap(symbol)
@@ -98,9 +98,11 @@ def construct_stock_df_to_csv():
     ###############################################################################
     # Financial Ratios Calculations
     ###############################################################################
-    print("Financial Ratios")
+    print("::::: CALCULATE FINANCIAL RATIOS :::::")
+    count = 0
     for symbol in list(df.index):
-        print(symbol)
+        count += 1
+        print(f"{symbol}:\t{count}/{len(list(df.index))}")
         try:
             div_growth = dividend.calcualte_avg_dividend_growth(symbol,DIVIDEND_GROWTH_YRS_THRESHOLD)
             df.loc[symbol, 'Dividend_Growth'] = div_growth
@@ -121,9 +123,9 @@ def construct_stock_df_to_csv():
 
     df.dropna(inplace=True)
     df = df[(df['Dividend_Growth'] >= DIVIDEND_GROWTH_RATE_THRESHOLD) & (df['Momentum'] >= MOMENTUM_THRESHOLD)]
+    print('::::: FINAL DATAFRAME BEFORE EXPORT :::::')
     print(df)
     df.to_csv(r'./stock_selection.csv')
-    print('export completed')
 
 if __name__ == '__main__':
     construct_stock_df_to_csv()
