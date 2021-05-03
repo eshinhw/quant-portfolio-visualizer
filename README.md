@@ -32,11 +32,10 @@ On top of retrieving account data using Questrade API, another jupyter notebook 
 
 ## Considering Factors
 
-- 100 Billions Market Cap
-- Dividiend Payout History
-- Dividend Growth
-- Historical Momentum
-- 12M Momentum
+- Minimum Market Cap
+- No Dividend Cut History
+- Minimum Dividend Growth Rate
+- Strong Historical Momentum
 
 My investing model only analyzes S&P 500, but only selects stocks which have more than 100 Billions market cap and have paid out dividends from the past. Some high growth stocks which have not paid dividends at all in the past are removed. I can manually add mid or small cap stocks if I wish, but the model only looks for large-cap stocks with dividend history.
 
