@@ -1,5 +1,5 @@
-import pandas as pd
 import momentum
+import pandas as pd
 from pytickersymbols import PyTickerSymbols
 # https://pypi.org/project/pytickersymbols/
 
