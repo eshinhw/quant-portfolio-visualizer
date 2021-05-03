@@ -4,8 +4,8 @@ import auto_email
 import pandas as pd
 import datetime as dt
 import pandas_datareader.data as web
+from stock_selection import construct_stock_df_to_csv
 
-BOUGHT = {}
 
 def calculate_prev_max_high(symbol: str, period: int):
     start_date = dt.datetime(1970,1,1)
@@ -80,12 +80,20 @@ if __name__ == '__main__':
         EMAIL_PASSWORD = secret[1]
         fp.close()
 
-    schedule.every().monday.at("17:00").do(iterate_df)
-    schedule.every().tuesday.at("17:00").do(iterate_df)
-    schedule.every().wednesday.at("17:00").do(iterate_df)
-    schedule.every().thursday.at("17:00").do(iterate_df)
-    schedule.every().friday.at("17:00").do(iterate_df)
+    schedule.every().monday.at("17:00").do(construct_stock_df_to_csv)
+    schedule.every().tuesday.at("17:00").do(construct_stock_df_to_csv)
+    schedule.every().wednesday.at("17:00").do(construct_stock_df_to_csv)
+    schedule.every().thursday.at("17:00").do(construct_stock_df_to_csv)
+    schedule.every().friday.at("17:00").do(construct_stock_df_to_csv)
 
+    schedule.every().monday.at("17:10").do(iterate_df)
+    schedule.every().tuesday.at("17:10").do(iterate_df)
+    schedule.every().wednesday.at("17:10").do(iterate_df)
+    schedule.every().thursday.at("17:10").do(iterate_df)
+    schedule.every().friday.at("17:10").do(iterate_df)
+
+    schedule.every().monday.at("14:43").do(construct_stock_df_to_csv)
+    schedule.every().monday.at("14:43").do(iterate_df)
     # schedule.every().day.at("10:00").do(iterate_df)
     # schedule.every().day.at("15:00").do(iterate_df)
     # schedule.every().day.at("17:30").do(iterate_df)
