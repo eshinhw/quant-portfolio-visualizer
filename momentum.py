@@ -3,7 +3,6 @@ import pandas as pd
 import datetime as dt
 import yfinance as yf
 from typing import List
-import matplotlib.pyplot as plt
 import pandas_datareader.data as web
 from price import get_historical_monthly_prices
 
