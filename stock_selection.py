@@ -20,6 +20,9 @@ import pandas_datareader.data as web
 WATCHLIST = ['O']
 MOMENTUM_PERIODS = [3,6,12,24,36,48,60,72,84,96,108,120]
 MARKET_CAP_THRESHOLD = 200
+DIVIDEND_GROWTH_YRS_THRESHOLD = 10
+DIVIDEND_GROWTH_RATE_THRESHOLD = 0.10
+MOMENTUM_THRESHOLD = 1
 ###############################################################################
 
 def extract_from_sp500():
@@ -99,7 +102,7 @@ def construct_stock_df_to_csv():
     for symbol in list(df.index):
         print(symbol)
         try:
-            div_growth = dividend.calcualte_avg_dividend_growth(symbol,10)
+            div_growth = dividend.calcualte_avg_dividend_growth(symbol,DIVIDEND_GROWTH_YRS_THRESHOLD)
             df.loc[symbol, 'Dividend_Growth'] = div_growth
         except:
             df.loc[symbol, 'Dividend_Growth'] = np.nan
@@ -117,6 +120,7 @@ def construct_stock_df_to_csv():
             df.loc[symbol,'Momentum'] = np.nan
 
     df.dropna(inplace=True)
+    df = df[(df['Dividend_Growth'] >= DIVIDEND_GROWTH_RATE_THRESHOLD) & (df['Momentum'] >= MOMENTUM_THRESHOLD)]
     print(df)
     df.to_csv(r'./stock_selection.csv')
     print('export completed')
