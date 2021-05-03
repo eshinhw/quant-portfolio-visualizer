@@ -94,7 +94,7 @@ if __name__ == '__main__':
     schedule.every().friday.at("17:10").do(iterate_df)
 
     schedule.every().monday.at("15:10").do(construct_stock_df_to_csv)
-    schedule.every().monday.at("14:10").do(iterate_df)
+    schedule.every().monday.at("15:40").do(iterate_df)
     # schedule.every().day.at("10:00").do(iterate_df)
     # schedule.every().day.at("15:00").do(iterate_df)
     # schedule.every().day.at("17:30").do(iterate_df)

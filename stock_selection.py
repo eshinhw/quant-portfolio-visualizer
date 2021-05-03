@@ -30,11 +30,11 @@ def extract_from_sp500():
 
     min_market_cap = MARKET_CAP_THRESHOLD
 
-    count = 0
+    #count = 0
 
     for symbol in sp500:
-        count += 1
-        print(f"{symbol}: {count}/{len(sp500)}")
+        #count += 1
+        #print(f"{symbol}: {count}/{len(sp500)}")
         try:
             market_cap = ratios.calculate_market_cap(symbol)
         except:
@@ -50,16 +50,13 @@ def extract_from_sp500():
 
 
 def compare_symbol_list():
-
+    new_data = extract_from_sp500()
     if not os.path.exists('./symbols_selected_from_sp500.json'):
-        data = extract_from_sp500()
         with open('./symbols_selected_from_sp500.json', 'w') as fp:
-            json.dump(data,fp)
+            json.dump(new_data,fp)
     else:
         with open('./symbols_selected_from_sp500.json', 'r') as fp:
             loaded_data = json.load(fp)
-        new_data = extract_from_sp500()
-
         if not (loaded_data == new_data):
             with open('./symbols_selected_from_sp500.json', 'w') as fp:
                 json.dump(new_data,fp)
@@ -115,9 +112,12 @@ def construct_stock_df_to_csv():
             df.loc[symbol,'Momentum'] = mom
         except:
             df.loc[symbol,'Momentum'] = np.nan
-
+    print(df)
     df.to_csv(r'./stock_selection.csv')
     print('export completed')
+
+if __name__ == '__main__':
+    construct_stock_df_to_csv()
 
 
 

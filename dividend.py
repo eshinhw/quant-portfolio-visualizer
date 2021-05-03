@@ -37,7 +37,10 @@ def calculate_current_dividend_yield(symbol: str):
 def exists_dividends(symbol: str):
     data = yf.Ticker(symbol).history(period='max')
     div = data[data['Dividends'] > 0.01]
-    return not div.empty or not 0 in div['Dividends'].values
+    # print(div)
+    # print(not div.empty)
+    # print(not 0 in div['Dividends'].values)
+    return (not div.empty) and (not 0 in div['Dividends'].values)
 
 if __name__ == '__main__':
     pass
