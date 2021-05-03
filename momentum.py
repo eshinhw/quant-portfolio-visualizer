@@ -13,23 +13,28 @@ def calculate_equal_weight_momentum(symbol: str, periods: List[int], start_date=
     ret = []
     monthly_prices = get_historical_monthly_prices(symbol)
     for period in periods:
+        #print(period)
         monthly_returns = monthly_prices.apply(lambda x: x/x.shift(period) - 1, axis=0)
         monthly_returns = monthly_returns.rename(columns={'Adj_Close': 'Returns'})
+        #print(monthly_returns['Returns'].iloc[-1])
         ret.append(monthly_returns['Returns'].iloc[-1])
+    #print(ret)
     return sum(ret) / len(ret)
 
 if __name__ == '__main__':
-    global_macro = ['SPY', 'QQQ', 'TLT', 'IEF', 'GLD', 'DBC']
-    period = [1,3,6,12,24,36,48,60]
+    # global_macro = ['SPY', 'QQQ', 'TLT', 'IEF', 'GLD', 'DBC']
+    period = [3,6,12,24,36,48,60,72,84,96,108,120]
 
-    data = {'Symbol': [], 'Momentum': []}
+    calculate_equal_weight_momentum('abbv', period)
 
-    for symbol in global_macro:
-        data['Symbol'].append(symbol)
-        data['Momentum'].append(calculate_equal_weight_momentum(symbol, period))
-    momentum_df = pd.DataFrame(data)
-    momentum_df.set_index('Symbol')
-    momentum_df
+    # data = {'Symbol': [], 'Momentum': []}
+
+    # for symbol in global_macro:
+    #     data['Symbol'].append(symbol)
+    #     data['Momentum'].append(calculate_equal_weight_momentum(symbol, period))
+    # momentum_df = pd.DataFrame(data)
+    # momentum_df.set_index('Symbol')
+    # momentum_df
 
 
 

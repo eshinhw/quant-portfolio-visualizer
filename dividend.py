@@ -23,9 +23,16 @@ def calcualte_avg_dividend_growth(symbol: str, period=None) -> float:
 
     if period:
         changes = changes.tail(period)
-        return changes['Dividends'].mean()
+        if changes['Dividends'].mean() == float('inf'):
+            return np.nan
+        else:
+            return changes['Dividends'].mean()
     else:
-        return changes['Dividends'].mean()
+        if changes['Dividends'].mean() == float('inf'):
+            return np.nan
+        else:
+            return changes['Dividends'].mean()
+
 
 
 def calculate_current_dividend_yield(symbol: str):

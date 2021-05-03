@@ -78,7 +78,9 @@ def construct_stock_df_to_csv():
     # Update Watchlist
     ###############################################################################
     watchlist_data = {'Symbol': [], 'Market_Cap (B)': []}
+    print("Add Watchlist")
     for symbol in WATCHLIST:
+        print(symbol)
         if len(WATCHLIST) == 1:
             watchlist_data['Symbol'] = symbol
             watchlist_data['Market_Cap (B)'] = ratios.calculate_market_cap(symbol)
@@ -93,8 +95,9 @@ def construct_stock_df_to_csv():
     ###############################################################################
     # Financial Ratios Calculations
     ###############################################################################
+    print("Financial Ratios")
     for symbol in list(df.index):
-
+        print(symbol)
         try:
             div_growth = dividend.calcualte_avg_dividend_growth(symbol,10)
             df.loc[symbol, 'Dividend_Growth'] = div_growth
@@ -112,6 +115,8 @@ def construct_stock_df_to_csv():
             df.loc[symbol,'Momentum'] = mom
         except:
             df.loc[symbol,'Momentum'] = np.nan
+
+    df.dropna(inplace=True)
     print(df)
     df.to_csv(r'./stock_selection.csv')
     print('export completed')
