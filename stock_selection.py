@@ -93,7 +93,7 @@ for symbol in list(df.index):
     except:
         df.loc[symbol,'Momentum'] = np.nan
 
-df.to_csv(r'./export_df_rpi.csv')
+df.to_csv(r'./stock_selection.csv')
 
 
 

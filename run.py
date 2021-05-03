@@ -26,7 +26,7 @@ def send_contents(symbol, percentage, prev_high, current, target):
     auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
 
 def iterate_df():
-    df = pd.read_csv('./qualified_df.csv')
+    df = pd.read_csv('./stock_selection.csv')
     df.set_index('Symbol', inplace=True)
 
     op1 = ('10%', 0.90)
