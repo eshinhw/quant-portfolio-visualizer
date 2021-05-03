@@ -5,6 +5,8 @@ import pandas as pd
 import datetime as dt
 import pandas_datareader.data as web
 
+BOUGHT = {}
+
 def calculate_prev_max_high(symbol: str, period: int):
     start_date = dt.datetime(1970,1,1)
     end_date = dt.datetime.today()
@@ -17,6 +19,11 @@ def get_current_price(symbol: str) -> float:
     end_date = dt.datetime.today()
     prices = web.DataReader(symbol, 'yahoo', start_date, end_date)
     return prices['Adj Close'].iloc[-1]
+
+def send_contents(symbol, percentage, prev_high, current, target):
+    subject = f"{symbol} PRICE ALERT"
+    contents = f"{symbol} has dropped more than {percentage} from 52W High ({prev_high}).\n\nCurrent Price: {current}\nTarget: {target}"
+    auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
 
 def iterate_df():
     df = pd.read_csv('./qualified_df.csv')
@@ -51,25 +58,15 @@ def iterate_df():
         drop4 = df.loc[symbol,f'{op4[0]}_Drop']
         drop5 = df.loc[symbol,f'{op5[0]}_Drop']
         if curr_price < drop1 and curr_price > drop2:
-            subject = f"{op1[0]} DROP PRICE ALERT - {symbol}"
-            contents = f"{symbol} has dropped more than {op1[0]} from 52W High ({high}).\n\nCurrent Price: {curr_price}\nTarget: {drop1}"
-            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
+            send_contents(symbol, op1[0], high, curr_price, drop1)
         elif curr_price < drop2 and curr_price > drop3:
-            subject = f"{op2[0]} DROP PRICE ALERT - {symbol}"
-            contents = f"{symbol} has dropped more than {op2[0]} from 52W High ({high}).\n\nCurrent Price: {curr_price}\nTarget: {drop2}"
-            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
+            send_contents(symbol, op2[0], high, curr_price, drop2)
         elif curr_price < drop3 and curr_price > drop4:
-            subject = f"{op3[0]} DROP PRICE ALERT - {symbol}"
-            contents = f"{symbol} has dropped more than {op3[0]} from 52W High ({high}).\n\nCurrent Price: {curr_price}\nTarget: {drop3}"
-            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
+            send_contents(symbol, op3[0], high, curr_price, drop3)
         elif curr_price < drop4 and currPrice > drop5:
-            subject = f"{op4[0]} DROP PRICE ALERT - {symbol}"
-            contents = f"{symbol} has dropped more than {op4[0]} from 52W High ({high}).\n\nCurrent Price: {curr_price}\nTarget: {drop4}"
-            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
+            send_contents(symbol, op4[0], high, curr_price, drop4)
         elif curr_price < drop5:
-            subject = f"{op5[0]} DROP PRICE ALERT - {symbol}"
-            contents = f"{symbol} has dropped more than {op5[0]} from 52W High ({high}).\n\nCurrent Price: {curr_price}\nTarget: {drop5}"
-            auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
+            send_contents(symbol, op5[0], high, curr_price, drop5)
 
 ##############################################################################
 ## Drawdowns From 52 Weeks High + Email Alert Setup
@@ -83,13 +80,17 @@ if __name__ == '__main__':
         EMAIL_PASSWORD = secret[1]
         fp.close()
 
-    schedule.every().day.at("10:00").do(iterate_df)
-    schedule.every().day.at("15:00").do(iterate_df)
-    schedule.every().day.at("17:30").do(iterate_df)
+    schedule.every().monday.at("17:00").do(iterate_df)
+    schedule.every().tuesday.at("17:00").do(iterate_df)
+    schedule.every().wednesday.at("17:00").do(iterate_df)
+    schedule.every().thursday.at("17:00").do(iterate_df)
+    schedule.every().friday.at("17:00").do(iterate_df)
+
+    # schedule.every().day.at("10:00").do(iterate_df)
+    # schedule.every().day.at("15:00").do(iterate_df)
+    # schedule.every().day.at("17:30").do(iterate_df)
     # schedule.every().minute.do(iterate_df)
     # seconds = 0
-
-
 
     while True:
         schedule.run_pending()
