@@ -11,7 +11,7 @@ Questrade is one of the investing brokers in Canada, and I have an investing acc
 </p>
 
 <p align="center">
-Breakdown of Holdings
+<Breakdown of Holdings>
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@ Breakdown of Holdings
 </p>
 
 <p align="center">
-Monthly Dividend Income
+<Monthly Dividend Income>
 </p>
 
 <p align="center">
@@ -27,7 +27,7 @@ Monthly Dividend Income
 </p>
 
 <p align="center">
-Holding Positions Summary
+<Holding Positions Summary>
 </p>
 
 ## Quantitative Model for Stock Selection
