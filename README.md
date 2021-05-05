@@ -43,22 +43,17 @@ On top of retrieving account data using Questrade API, another jupyter notebook 
 - Minimum Market Cap
 - No Dividend Cut History
 - Minimum Dividend Growth Rate
-- Strong Historical Momentum
+- Long Term Trend Analysis based on Historical Momentum
 
-My investing model only analyzes S&P 500, but only selects stocks which have more than 100 Billions market cap and have paid out dividends from the past. Some high growth stocks which have not paid dividends at all in the past are removed. I can manually add mid or small cap stocks if I wish, but the model only looks for large-cap stocks with dividend history.
-
-Next, it calculates average dividend growth rate of certain periods (10 years by default) to sort out companies which have increased their dividend payments over time. 
-
-Lastly, it calculates long term momentum with the average of ranges from 3 months to 10 years to analyze historical long term trend of stocks. Also, 12M momentum might be useful for rebalancing.
-
-Certainly, more equity factors and financial ratios can be added further like earnings or balance sheet ratios to further sort out companies.
+My quantitative stock selection model looks at the stocks in S&P 500 as a baseline. Out of 500 stocks in the S&P 500 index, the model sorts out the companies which satisfy minimum market cap size and have paid dividends consecutively over a certain periods of years. The next step is to calculate historical dividend growth rate and historical long term momentum to select the companies which have high dividend growth rate and historical uptrend price movements. The model assumes that these companies are reliable companies we can buy as a dividend growth investor who looks for both dividend growth and capital appreciation at the same time.
 
 ### Stock Price Email Alert
 
 <p align="center">
   <img width="1000" height="500" src="https://user-images.githubusercontent.com/41933169/117089862-bf02ed00-ad24-11eb-8398-58be02b00342.png">
 </p
-  
+
+Once we have a list of companies from S&P 500 
 How do we determine when to buy stocks? The model uses a simple logic to determine market timing. Since all the stocks selected above have positive long term trend which means they may continue to go up in the future. All we want to do is buy those stocks when they are traded at discount. It uses 52 Weeks High as a pivot to calculate 15% drop, 30% drop and 50% drop from the high. By applying this rule, it prevents chasing the market moves at new highs but wait for retracement to buy them at better prices. The percentage drops can be customized, and whenever current prices falls below those drop prices, it sends email alerts so I don't have to watch the market every time.
 
 I use raspberry pi to run the alert script 24/7 which updates current prices of the stocks in dataframe, compare them with drop prices and send an email alert whenever current price of any stock falls below any of drop prices.
