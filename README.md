@@ -36,6 +36,14 @@ Holding Positions Summary
   <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/115498299-53f0eb00-a23b-11eb-95f3-2f69c4439350.png">
 </p>
 
+### Model Assumptions
+
+I've developed a quantitative model which finds a list of stocks from S&P 500 which have high historical dividend growth rate and strong historical price momentum at the same time. I believe that these two factors are important for long term dividend investors who are looking to enjoy both growth in dividends and asset prices. Some of the matured companies such as AT&T have high dividend yield of 6.50% but very low performance in terms of growth in asset price.
+
+<p align="center">
+  <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/117091006-f030ec80-ad27-11eb-8fe5-0919d4cdbccf.png">
+</p>
+
 On top of retrieving account data using Questrade API, another jupyter notebook called 'US Stock Data Analysis' uses quantitative ways of analyzing and filtering out stocks which satisfy certain quantified factor conditions. I believe that applying factor analysis to sort out individual stocks helps improve the overall performance and outperforms against the benchmark, S&P 500. 
 
 ### Considering Factors
