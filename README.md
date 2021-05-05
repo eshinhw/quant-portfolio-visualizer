@@ -4,7 +4,7 @@
 
 Questrade is one of the investing brokers in Canada, and I have an investing account with them that I want to keep track of regularly. A jupyter notebook called 'Questrade Portfolio Manager' retrieves account information using Questrade API called 'qtrade' and summarizes some useful information such as monthly account activities, position changes and dividend income that I earned every month. Whenever I want to know how my investing account is doing, all I need to do is just run this notebook from time to time. In terms of security, qtrade wrapper automatically refreshes a security token, so I don't have to log in to the website to get a new token everytime I run the notebook. Below are a sample dataframe and visualizations I can create from the notebook.
 
-## Account Summary
+## Visualizations on Account Activities
 
 <p align="center">
   <img width="600" height="600" src="https://user-images.githubusercontent.com/41933169/112911987-84be8400-90c4-11eb-94cf-b3c9836887f5.png">
@@ -38,7 +38,7 @@ Holding Positions Summary
 
 On top of retrieving account data using Questrade API, another jupyter notebook called 'US Stock Data Analysis' uses quantitative ways of analyzing and filtering out stocks which satisfy certain quantified factor conditions. I believe that applying factor analysis to sort out individual stocks helps improve the overall performance and outperforms against the benchmark, S&P 500. 
 
-#### Considering Factors
+### Considering Factors
 
 - Minimum Market Cap
 - No Dividend Cut History
@@ -53,7 +53,7 @@ Lastly, it calculates long term momentum with the average of ranges from 3 month
 
 Certainly, more equity factors and financial ratios can be added further like earnings or balance sheet ratios to further sort out companies.
 
-#### Stock Price Email Alert
+### Stock Price Email Alert
 
 <p align="center">
   <img width="1000" height="500" src="https://user-images.githubusercontent.com/41933169/117089862-bf02ed00-ad24-11eb-8398-58be02b00342.png">
@@ -63,7 +63,7 @@ How do we determine when to buy stocks? The model uses a simple logic to determi
 
 I use raspberry pi to run the alert script 24/7 which updates current prices of the stocks in dataframe, compare them with drop prices and send an email alert whenever current price of any stock falls below any of drop prices.
 
-#### Establishing My Own Database Server in Raspberry Pi
+### Establishing My Own Database Server in Raspberry Pi
 
 I practice using SQL database to store price and dividend data collected from yahoo finance into remote database server in raspberry pi which runs 24/7.
 
