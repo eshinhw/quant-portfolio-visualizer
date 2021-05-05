@@ -32,8 +32,6 @@ Holding Positions Summary
 
 ## Quantitative Model for Stock Selection
 
-
-
 ### Model Assumptions
 
 I've developed a quantitative model which finds a list of stocks from S&P 500 which have high historical dividend growth rate and strong historical price momentum at the same time. I believe that these two factors are important for long term dividend investors who are looking to enjoy both growth in dividends and asset prices. 
@@ -54,7 +52,9 @@ In comparison, Johnson&Johnson is a company which has been paying dividends cons
   <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/115498299-53f0eb00-a23b-11eb-95f3-2f69c4439350.png">
 </p>
 
-### Considering Factors
+The dividend history for Johnson&Johnson looks very stable and steady as well.
+
+### Factors to be Considered
 
 - Minimum Market Cap
 - No Dividend Cut History
