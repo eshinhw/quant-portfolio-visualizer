@@ -1,4 +1,4 @@
-# Questrade Portfolio Manager
+# Quantitative Dividend Portfolio Manager
 
 ## Introduction
 
