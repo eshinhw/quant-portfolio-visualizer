@@ -34,7 +34,7 @@ Holding Positions Summary
 
 ### Model Assumptions
 
-I've developed a quantitative model which finds a list of stocks from S&P 500 which have high historical dividend growth rate and strong historical price momentum at the same time. I believe that these two factors are important for long term dividend investors who are looking to enjoy both growth in dividends and asset prices. 
+I've developed a quantitative model which finds a list of stocks from S&P 500 which have high historical dividend growth rate and strong historical price momentum at the same time. I believe that these two factors can be useful fundamental factors for long term dividend investors who are looking to achieve dividend growth and capital appreciation simultaneously. 
 
 <p align="center">
   <img width="700" height="400" src="https://user-images.githubusercontent.com/41933169/117091006-f030ec80-ad27-11eb-8fe5-0919d4cdbccf.png">
@@ -61,7 +61,7 @@ The dividend history for Johnson&Johnson looks very stable and steady as well.
 - Minimum Dividend Growth Rate
 - Long Term Trend Analysis based on Historical Momentum
 
-My quantitative stock selection model looks at the stocks in S&P 500 as a baseline. Out of 500 stocks in the S&P 500 index, the model sorts out the companies which satisfy minimum market cap size and have paid dividends consecutively over a certain periods of years. The next step is to calculate historical dividend growth rate and historical long term momentum to select the companies which have high dividend growth rate and historical uptrend price movements. The model assumes that these companies are reliable companies we can buy as a dividend growth investor who looks for both dividend growth and capital appreciation at the same time.
+Out of 500 stocks in the S&P 500 index, the model sorts out the companies which satisfy minimum market cap size and have paid dividends consecutively over a certain periods of years. The next step is to calculate historical dividend growth rate and historical long term momentum to select the companies which have high dividend growth rate and historical uptrend price movements. The model assumes that these companies are reliable companies we can buy as a dividend growth investor who looks for both dividend growth and capital appreciation at the same time.
 
 ### Stock Price Email Alert
 
@@ -69,14 +69,13 @@ My quantitative stock selection model looks at the stocks in S&P 500 as a baseli
   <img width="1000" height="500" src="https://user-images.githubusercontent.com/41933169/117089862-bf02ed00-ad24-11eb-8398-58be02b00342.png">
 </p
 
-Once we have a list of companies from S&P 500 
-How do we determine when to buy stocks? The model uses a simple logic to determine market timing. Since all the stocks selected above have positive long term trend which means they may continue to go up in the future. All we want to do is buy those stocks when they are traded at discount. It uses 52 Weeks High as a pivot to calculate 15% drop, 30% drop and 50% drop from the high. By applying this rule, it prevents chasing the market moves at new highs but wait for retracement to buy them at better prices. The percentage drops can be customized, and whenever current prices falls below those drop prices, it sends email alerts so I don't have to watch the market every time.
+Once we have a list of companies from S&P 500 which satisfy dividend growth and momentum criteria, we don't go straight to buy them. The key idea here is that we wait for the stocks to fall below certain price levels before we consider buying them. We don't want to buy them all time highs but rather wait for the market to correct and buy them when they are relatively cheap. In summary, we want to buy fundamentally strong companies which have had high dividend growth rate and been in uptrend for a long time when they are relatively cheap and discounted. 
 
-I use raspberry pi to run the alert script 24/7 which updates current prices of the stocks in dataframe, compare them with drop prices and send an email alert whenever current price of any stock falls below any of drop prices.
+In order to buy them when they are cheap, do we have to sit in front of the charts and look at the prices every day? This is very unproductive thing to do and my email alert script can help with this. I use raspberry pi to run the alert script 24/7 which updates current prices of the stocks in dataframe, compare them with drop prices and send an email alert whenever current price of any stock falls below any of drop prices.
 
-### Establishing My Own Database Server in Raspberry Pi
+### Set Up My Own Database Server in Raspberry Pi (For Practice)
 
-I practice using SQL database to store price and dividend data collected from yahoo finance into remote database server in raspberry pi which runs 24/7.
+I practice using SQL database to store price and dividend data collected from yahoo finance into remote database server in raspberry pi which runs 24/7. Working with SQL database is not perfectly done and there are many more improvements that can be made here in terms of database design such as collecting data from API calls, querying data from the database and updating values in the database.
 
 <p align="center">
   <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/115794877-d0e7a600-a39c-11eb-83aa-192d74b15222.png">
