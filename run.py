@@ -70,6 +70,9 @@ def iterate_df():
     print(df)
     print('end of iteration')
 
+
+
+
 ##############################################################################
 ## Drawdowns From 52 Weeks High + Email Alert Setup
 ##############################################################################
@@ -82,20 +85,39 @@ if __name__ == '__main__':
         EMAIL_PASSWORD = secret[1]
         fp.close()
 
-    schedule.every().monday.at("17:00").do(construct_stock_df_to_csv)
-    schedule.every().tuesday.at("17:00").do(construct_stock_df_to_csv)
-    schedule.every().wednesday.at("17:00").do(construct_stock_df_to_csv)
-    schedule.every().thursday.at("17:00").do(construct_stock_df_to_csv)
-    schedule.every().friday.at("17:00").do(construct_stock_df_to_csv)
+    afternoon = '13:00'
+    afternoon_check = '13:15'
+    evening = '17:00'
+    evening_check = '17:15'
 
-    schedule.every().monday.at("17:15").do(iterate_df)
-    schedule.every().tuesday.at("17:15").do(iterate_df)
-    schedule.every().wednesday.at("17:15").do(iterate_df)
-    schedule.every().thursday.at("17:15").do(iterate_df)
-    schedule.every().friday.at("17:15").do(iterate_df)
+    schedule.every().monday.at(afternoon).do(construct_stock_df_to_csv)
+    schedule.every().tuesday.at(afternoon).do(construct_stock_df_to_csv)
+    schedule.every().wednesday.at(afternoon).do(construct_stock_df_to_csv)
+    schedule.every().thursday.at(afternoon).do(construct_stock_df_to_csv)
+    schedule.every().friday.at(afternoon).do(construct_stock_df_to_csv)
 
-    # schedule.every().monday.at("18:40").do(construct_stock_df_to_csv)
-    # schedule.every().monday.at("18:40").do(iterate_df)
+
+    schedule.every().monday.at(afternoon_check).do(iterate_df)
+    schedule.every().tuesday.at(afternoon_check).do(iterate_df)
+    schedule.every().wednesday.at(afternoon_check).do(iterate_df)
+    schedule.every().thursday.at(afternoon_check).do(iterate_df)
+    schedule.every().friday.at(afternoon_check).do(iterate_df)
+
+    schedule.every().monday.at(evening).do(construct_stock_df_to_csv)
+    schedule.every().tuesday.at(evening).do(construct_stock_df_to_csv)
+    schedule.every().wednesday.at(evening).do(construct_stock_df_to_csv)
+    schedule.every().thursday.at(evening).do(construct_stock_df_to_csv)
+    schedule.every().friday.at(evening).do(construct_stock_df_to_csv)
+
+
+    schedule.every().monday.at(evening_check).do(iterate_df)
+    schedule.every().tuesday.at(evening_check).do(iterate_df)
+    schedule.every().wednesday.at(evening_check).do(iterate_df)
+    schedule.every().thursday.at(evening_check).do(iterate_df)
+    schedule.every().friday.at(evening_check).do(iterate_df)
+
+    schedule.every().sunday.at("19:05").do(construct_stock_df_to_csv)
+    schedule.every().sunday.at("19:05").do(iterate_df)
 
     while True:
         schedule.run_pending()
