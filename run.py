@@ -20,12 +20,21 @@ def get_current_price(symbol: str) -> float:
     prices = web.DataReader(symbol, 'yahoo', start_date, end_date)
     return prices['Adj Close'].iloc[-1]
 
-def send_contents(symbol, percentage, prev_high, current, target):
-    subject = f"{symbol} PRICE ALERT"
-    contents = f"{symbol} has dropped more than {percentage} from 52W High ({prev_high}).\n\nCurrent Price: {current}\nTarget: {target}"
+def send_contents(alert_list):
+    subject = f"STOCK PRICE ALERT"
+    contents = ""
+    for data in alert_list:
+        symbol = data[0]
+        percentage = data[1]
+        prev_high = data[2]
+        current = data[3]
+        target = data[4]
+        contents += f"{symbol} has dropped more than {percentage} from 52W High ({prev_high}).\n\nCurrent Price: {current}\nTarget: {target}\n"
+
     auto_email.sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents)
 
 def iterate_df():
+    alert_list = []
     df = pd.read_csv('./stock_selection.csv')
     df.set_index('Symbol', inplace=True)
 
@@ -58,17 +67,25 @@ def iterate_df():
         drop4 = df.loc[symbol,f'{op4[0]}_Drop']
         drop5 = df.loc[symbol,f'{op5[0]}_Drop']
         if curr_price < drop1 and curr_price > drop2:
+            alert_list.append((symbol, op1[0], high, curr_price, drop1))
             send_contents(symbol, op1[0], high, curr_price, drop1)
         elif curr_price < drop2 and curr_price > drop3:
+            alert_list.append((symbol, op2[0], high, curr_price, drop2))
             send_contents(symbol, op2[0], high, curr_price, drop2)
         elif curr_price < drop3 and curr_price > drop4:
+            alert_list.append((symbol, op3[0], high, curr_price, drop3))
             send_contents(symbol, op3[0], high, curr_price, drop3)
         elif curr_price < drop4 and currPrice > drop5:
+            alert_list.append((symbol, op4[0], high, curr_price, drop4))
             send_contents(symbol, op4[0], high, curr_price, drop4)
         elif curr_price < drop5:
+            alert_list.append((symbol, op5[0], high, curr_price, drop5))
             send_contents(symbol, op5[0], high, curr_price, drop5)
     print(df)
     print('end of iteration')
+
+    if not alert_list:
+        send_contents()
 
 
 
