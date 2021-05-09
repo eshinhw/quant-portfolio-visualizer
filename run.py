@@ -68,24 +68,19 @@ def iterate_df():
         drop5 = df.loc[symbol,f'{op5[0]}_Drop']
         if curr_price < drop1 and curr_price > drop2:
             alert_list.append((symbol, op1[0], high, curr_price, drop1))
-            send_contents(symbol, op1[0], high, curr_price, drop1)
         elif curr_price < drop2 and curr_price > drop3:
             alert_list.append((symbol, op2[0], high, curr_price, drop2))
-            send_contents(symbol, op2[0], high, curr_price, drop2)
         elif curr_price < drop3 and curr_price > drop4:
             alert_list.append((symbol, op3[0], high, curr_price, drop3))
-            send_contents(symbol, op3[0], high, curr_price, drop3)
         elif curr_price < drop4 and currPrice > drop5:
             alert_list.append((symbol, op4[0], high, curr_price, drop4))
-            send_contents(symbol, op4[0], high, curr_price, drop4)
         elif curr_price < drop5:
             alert_list.append((symbol, op5[0], high, curr_price, drop5))
-            send_contents(symbol, op5[0], high, curr_price, drop5)
     print(df)
     print('end of iteration')
 
     if not alert_list:
-        send_contents()
+        send_contents(alert_list)
 
 
 
