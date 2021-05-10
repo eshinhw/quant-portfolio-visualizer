@@ -79,7 +79,8 @@ def iterate_df():
     print(df)
     print('end of iteration')
 
-    if not alert_list:
+    if len(alert_list) > 0:
+        print("alert_list is not empty!")
         send_contents(alert_list)
 
 
@@ -128,12 +129,12 @@ if __name__ == '__main__':
     schedule.every().thursday.at(evening_check).do(iterate_df)
     schedule.every().friday.at(evening_check).do(iterate_df)
 
-    schedule.every().sunday.at("19:05").do(construct_stock_df_to_csv)
-    schedule.every().sunday.at("19:05").do(iterate_df)
+    schedule.every().sunday.at("20:20").do(construct_stock_df_to_csv)
+    schedule.every().sunday.at("20:25").do(iterate_df)
 
     while True:
         schedule.run_pending()
-        time.sleep(1)
+        #time.sleep(1)
 
 
 
