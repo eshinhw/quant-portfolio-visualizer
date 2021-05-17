@@ -11,6 +11,7 @@ from pytickersymbols import PyTickerSymbols
 START_DATE = dt.datetime(1970,1,1)
 END_DATE = dt.datetime.today()
 MOMENTUM_PERIODS = [12,36,60]
+FMP_API = secret.FMP_API_KEYS
 
 """
 GET list of S&P 500 symbols (Pyticker)
@@ -24,9 +25,8 @@ def get_sp500_symbols(index: str) -> Dict:
     except:
         print('index not valid')
         return
-    #print(sp500[0]['industries'][0])
+
     for record in sp500:
-        # print(record)
         symbol = record['symbol']
         try:
             sector = record['industries'][0]
@@ -44,6 +44,8 @@ def get_sp500_symbols(index: str) -> Dict:
 CALCULATE historical momentum (yahoo finance)
 1. calculate historical monthly prices for each stock
 2. momentum: Average of previous months in MOMENTUM_PERIODS
+
+Statistical Distribution for reasonable thresholds
 """
 
 def get_daily_prices(symbol, start_date=None, end_date=None):
@@ -79,35 +81,43 @@ GET dividend data (financialmodelingprep API)
 3. Dividend Payout
 """
 
-# api = secret.FMP_API_KEYS
+def get_dividend_data(symbol: str):
+
+    growth = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?period=quarter&limit=4&apikey={FMP_API}").json()
+    print(growth)
+
 
 # sp500 = requests.get(f'https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={api}').json()
 
 if __name__ == '__main__':
 
-    # If you already have json file saved on local dir,
+    # If you already have json file saved on local dir, execute remaining codes for momentum and dividend
     if os.path.exists('./sp500_data.json'):
         fp = open('./sp500_data.json', 'r')
         sp500 = json.load(fp)
 
-        print(sp500)
+        #print(sp500)
 
         high_momentum = []
 
         for symbol in sp500.keys():
             mom = sp500[symbol]['momentum']
-            if mom > 2:
+            if mom > 3:
                 high_momentum.append(symbol)
 
-        print(high_momentum)
+        for symbol in high_momentum:
+
+            get_dividend_data(symbol)
+            break
 
 
+
+    # If you don't have json file on your local dir,
+    # get symbol data first and save it as sp500_data.json on the same dir
     else:
         sp500 = get_sp500_symbols('S&P 500')
         sp500_symbols = list(sp500.keys())
         count = 0
-
-        # Historical Momentum
         for symbol in sp500_symbols:
             count += 1
             print(f"{count}/{len(sp500_symbols)}")
