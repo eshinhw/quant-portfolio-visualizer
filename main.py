@@ -10,10 +10,10 @@ from pytickersymbols import PyTickerSymbols
 
 START_DATE = dt.datetime(1970,1,1)
 END_DATE = dt.datetime.today()
-MOMENTUM_PERIOD = [12,36,60]
+MOMENTUM_PERIODS = [12,36,60]
 
 """
-GET list of S&P 500 symbols (financialmodelingprep API)
+GET list of S&P 500 symbols (Pyticker)
 """
 
 def get_sp500_symbols(index: str) -> Dict:
@@ -43,14 +43,14 @@ def get_sp500_symbols(index: str) -> Dict:
 """
 CALCULATE historical momentum (yahoo finance)
 1. calculate historical monthly prices for each stock
-2. momentum: Average of 12, 36, 60 months
+2. momentum: Average of previous months in MOMENTUM_PERIODS
 """
 
-def get_prices(symbol, start_date=None, end_date=None):
+def get_daily_prices(symbol, start_date=None, end_date=None):
     return web.DataReader(symbol, 'yahoo', start_date, end_date)
 
 def get_historical_monthly_prices(symbol: str, start_date=None, end_date=None):
-    prices = web.DataReader(symbol, 'yahoo', start_date, end_date)
+    prices = get_daily_prices(symbol, start_date, end_date)
     prices.dropna(inplace=True)
     prices.reset_index(inplace=True)
     prices = prices[['Date', 'Adj Close']]
@@ -84,27 +84,43 @@ GET dividend data (financialmodelingprep API)
 # sp500 = requests.get(f'https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={api}').json()
 
 if __name__ == '__main__':
-    #print(get_prices('SSE'))
 
-    # print(get_historical_monthly_prices('MMM', START_DATE, END_DATE))
-
-    # print(calculate_equal_weight_momentum('AAPL', MOMENTUM_PERIOD, START_DATE, END_DATE))
     if os.path.exists('./sp500_data.json'):
         with open('./sp500_data.json', 'r') as fp:
             sp500 = json.load(fp)
 
+        print(sp500)
+
+        high_momentum = []
+
+        for symbol in sp500.keys():
+            mom = sp500[symbol]['momentum']
+            if mom > 0.50:
+                high_momentum.append(symbol)
+
+        print(high_momentum)
+
+
     else:
         sp500 = get_sp500_symbols('S&P 500')
         sp500_symbols = list(sp500.keys())
+        count = 0
 
         # Historical Momentum
         for symbol in sp500_symbols:
-            print(symbol)
+            count += 1
+            print(f"{count}/{len(sp500_symbols)}")
             try:
-                sp500[symbol]['momentum'] = calculate_equal_weight_momentum(symbol, MOMENTUM_PERIOD, START_DATE, END_DATE)
+                sp500[symbol]['momentum'] = calculate_equal_weight_momentum(symbol, MOMENTUM_PERIODS, START_DATE, END_DATE)
             except KeyError as e:
-                print(e)
+                print(f"{symbol}: ({type(e).__name__}) {e}")
                 sp500[symbol]['momentum'] = -1
+                continue
+            except Exception as e:
+                print(f"{symbol}: ({type(e).__name__}) {e}")
+                sp500[symbol]['momentum'] = -1
+                continue
+
 
         with open('./sp500_data.json', 'w') as fp:
             json.dump(sp500, fp)
