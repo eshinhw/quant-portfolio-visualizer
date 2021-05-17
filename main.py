@@ -85,9 +85,10 @@ GET dividend data (financialmodelingprep API)
 
 if __name__ == '__main__':
 
+    # If you already have json file saved on local dir,
     if os.path.exists('./sp500_data.json'):
-        with open('./sp500_data.json', 'r') as fp:
-            sp500 = json.load(fp)
+        fp = open('./sp500_data.json', 'r')
+        sp500 = json.load(fp)
 
         print(sp500)
 
@@ -95,7 +96,7 @@ if __name__ == '__main__':
 
         for symbol in sp500.keys():
             mom = sp500[symbol]['momentum']
-            if mom > 0.50:
+            if mom > 2:
                 high_momentum.append(symbol)
 
         print(high_momentum)
@@ -120,7 +121,6 @@ if __name__ == '__main__':
                 print(f"{symbol}: ({type(e).__name__}) {e}")
                 sp500[symbol]['momentum'] = -1
                 continue
-
 
         with open('./sp500_data.json', 'w') as fp:
             json.dump(sp500, fp)
