@@ -13,7 +13,9 @@ END_DATE = dt.datetime.today()
 MOMENTUM_PERIODS = [12,36,60]
 FMP_API = secret.FMP_API_KEYS
 
+
 """
+I can do lots of quantamental analysis using financial modeling prep API which I will subscribe.
 GET list of S&P 500 symbols (Pyticker)
 """
 
