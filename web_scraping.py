@@ -3,9 +3,18 @@ from bs4 import BeautifulSoup
 
 url = "https://seekingalpha.com/symbol/JPM/dividends/scorecard"
 
+session = requests.Session()
+
+headers = {'User-Agent': 'Mozilla/5.0'} #(Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'}
+
+# resp = session.get(url, headers=headers)
+
+# print(resp)
 
 
-with open(url, 'r') as html_file:
-    content = html_file.read()
-    soup = BeautifulSoup(content, 'lxml')
-    print(soup.prettify())
+
+# print(requests.get(url, headers=headers))
+
+r = requests.get(url, proxies={'http':'50.207.31.221:80'}).text
+
+print(r)

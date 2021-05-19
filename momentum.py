@@ -14,7 +14,7 @@ def calculate_equal_weight_momentum(symbol: str, periods: List[int], start_date=
     for period in periods:
         #print(period)
         monthly_returns = monthly_prices.apply(lambda x: x/x.shift(period) - 1, axis=0)
-        monthly_returns = monthly_returns.rename(columns={'Adj_Close': 'Returns'})
+        monthly_returns = monthly_returns.rename(columns={'Adj Close': 'Returns'})
         #print(monthly_returns['Returns'].iloc[-1])
         ret.append(monthly_returns['Returns'].iloc[-1])
     #print(ret)
