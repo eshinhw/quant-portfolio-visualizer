@@ -56,7 +56,7 @@ def get_daily_prices(symbol, start_date=None, end_date=None):
     return web.DataReader(symbol, "yahoo", start_date, end_date)
 
 
-def get_historical_monthly_prices(symbol: str, start_date=None, end_date=None):
+def get_historical_monthly_prices(symbol: str, start_date, end_date):
     prices = get_daily_prices(symbol, start_date, end_date)
     prices.dropna(inplace=True)
     prices.reset_index(inplace=True)
@@ -71,7 +71,7 @@ def get_historical_monthly_prices(symbol: str, start_date=None, end_date=None):
     return monthly_prices[:-1]
 
 
-def calculate_equal_weight_momentum(symbol: str, periods: List[int], start_date=None, end_date=None):
+def calculate_equal_weight_momentum(symbol: str, periods: List[int], start_date, end_date):
     ret = []
     monthly_prices = get_historical_monthly_prices(symbol, start_date, end_date)
     for period in periods:
@@ -88,87 +88,94 @@ GET dividend data (financialmodelingprep API)
 3. Dividend Payout
 """
 
+def fmp_datareader():
 
-def fmp_datareader(symbols: List[str]):
-
+    sp500 = requests.get(f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API}").json()
     data = {
         "Symbol": [],
         "Market_Cap": [],
-        "Dividend_Yield": [],
-        "Dividend_Per_Share": [],
         "ROE": [],
-        "Net_Profit_Margin": [],
         "FiveY_Revenue_Growth": [],
         "FiveY_NetIncome_Growth": [],
         "FiveY_Div_Per_Share_Growth": [],
     }
     count = 0
-    for symbol in symbols:
+    for stock in sp500:
         count += 1
-        print(f"{count}/{len(symbols)}")
-        data['Symbol'].append(symbol)
-
-        market_cap = requests.get(f"https://financialmodelingprep.com/api/v3/market-capitalization/{symbol.upper()}?apikey={FMP_API}").json()[0]['marketCap']
-        data['Market_Cap'].append(market_cap)
-
-        ratios = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API}").json()[0]
-        data['Dividend_Yield'].append(ratios['dividendYieldTTM'])
-        data['Dividend_Per_Share'].append(ratios['dividendPerShareTTM'])
-        data['ROE'].append(ratios['returnOnEquityTTM'])
-        data['Net_Profit_Margin'].append(ratios['netProfitMarginTTM'])
-        #print(ratios)
-
+        print(f"{count}/{len(sp500)}")
+        symbol = stock['symbol']
+        print(symbol)
         growth = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?limit=20&apikey={FMP_API}").json()[0]
-        #print(growth)
+        div_growth = growth['fiveYDividendperShareGrowthPerShare']
+        #print(div_growth)
 
-        data["FiveY_Revenue_Growth"].append(growth['fiveYRevenueGrowthPerShare'])
-        data["FiveY_NetIncome_Growth"].append(growth['fiveYNetIncomeGrowthPerShare'])
-        data["FiveY_Div_Per_Share_Growth"].append(growth['fiveYDividendperShareGrowthPerShare'])
+        mom = calculate_equal_weight_momentum(symbol, MOMENTUM_PERIODS, START_DATE, END_DATE)
+        #print(mom)
+
+        if div_growth > 0.1 and mom > 1:
+
+            print(f"{symbol} SELECTED!")
+
+            ratios = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API}").json()[0]
+            market_cap = requests.get(f"https://financialmodelingprep.com/api/v3/market-capitalization/{symbol.upper()}?apikey={FMP_API}").json()[0]['marketCap']
+
+            data['Symbol'].append(symbol)
+            data['Market_Cap'].append(market_cap)
+            data['ROE'].append(ratios['returnOnEquityTTM'])
+            data["FiveY_Revenue_Growth"].append(growth['fiveYRevenueGrowthPerShare'])
+            data["FiveY_NetIncome_Growth"].append(growth['fiveYNetIncomeGrowthPerShare'])
+            data["FiveY_Div_Per_Share_Growth"].append(growth['fiveYDividendperShareGrowthPerShare'])
 
     df = pd.DataFrame(data)
     return df
 
 
+
+
 if __name__ == "__main__":
 
-    # If you already have json file saved on local dir, execute remaining codes for momentum and dividend
-    if os.path.exists("./sp500_data.json"):
-        fp = open("./sp500_data.json", "r")
-        sp500 = json.load(fp)
+    df = fmp_datareader()
+    print(df)
 
-        high_momentum = []
+    #print(calculate_equal_weight_momentum('MMM', MOMENTUM_PERIODS, START_DATE, END_DATE))
 
-        for symbol in sp500.keys():
-            mom = sp500[symbol]["momentum"]
-            if mom > 2:
-                high_momentum.append(symbol)
+    # # If you already have json file saved on local dir, execute remaining codes for momentum and dividend
+    # if os.path.exists("./sp500_data.json"):
+    #     fp = open("./sp500_data.json", "r")
+    #     sp500 = json.load(fp)
+
+    #     high_momentum = []
+
+    #     for symbol in sp500.keys():
+    #         mom = sp500[symbol]["momentum"]
+    #         if mom > 2:
+    #             high_momentum.append(symbol)
 
 
-        df = fmp_datareader(high_momentum)
-        print(df)
+    #     df = fmp_datareader(high_momentum)
+    #     print(df)
 
 
-    # If you don't have json file on your local dir,
-    # get symbol data first and save it as sp500_data.json on the same dir
-    else:
-        sp500 = get_sp500_symbols("S&P 500")
-        sp500_symbols = list(sp500.keys())
-        count = 0
-        for symbol in sp500_symbols:
-            count += 1
-            print(f"{count}/{len(sp500_symbols)}")
-            try:
-                sp500[symbol]["momentum"] = calculate_equal_weight_momentum(
-                    symbol, MOMENTUM_PERIODS, START_DATE, END_DATE
-                )
-            except KeyError as e:
-                print(f"{symbol}: ({type(e).__name__}) {e}")
-                sp500[symbol]["momentum"] = -1
-                continue
-            except Exception as e:
-                print(f"{symbol}: ({type(e).__name__}) {e}")
-                sp500[symbol]["momentum"] = -1
-                continue
+    # # If you don't have json file on your local dir,
+    # # get symbol data first and save it as sp500_data.json on the same dir
+    # else:
+    #     # sp500 = get_sp500_symbols("S&P 500")
+    #     # sp500_symbols = list(sp500.keys())
+    #     # count = 0
+    #     # for symbol in sp500_symbols:
+    #     #     count += 1
+    #     #     print(f"{count}/{len(sp500_symbols)}")
+    #     #     try:
+    #     #         sp500[symbol]["momentum"] = calculate_equal_weight_momentum(
+    #     #             symbol, MOMENTUM_PERIODS, START_DATE, END_DATE
+    #     #         )
+    #     #     except KeyError as e:
+    #     #         print(f"{symbol}: ({type(e).__name__}) {e}")
+    #     #         sp500[symbol]["momentum"] = -1
+    #     #         continue
+    #     #     except Exception as e:
+    #     #         print(f"{symbol}: ({type(e).__name__}) {e}")
+    #     #         sp500[symbol]["momentum"] = -1
+    #     #         continue
 
-        with open("./sp500_data.json", "w") as fp:
-            json.dump(sp500, fp)
+
