@@ -88,6 +88,8 @@ def get_dividend_data(symbol: str):
     growth = requests.get(f"https://financialmodelingprep.com/api/v3/income-statement-growth/{symbol}?apikey={FMP_API}&limit=40").json()
     print(growth)
 
+    return growth
+
 def get_market_cap(symbol: str):
 
     market_cap = requests.get(f"https://financialmodelingprep.com/api/v3/market-capitalization/{symbol.upper()}?apikey={FMP_API}").json()
