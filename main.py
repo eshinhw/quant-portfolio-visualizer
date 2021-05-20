@@ -65,13 +65,17 @@ def get_historical_monthly_prices(symbol: str, start_date, end_date):
     month_list = prices["STD_YM"].unique()
     monthly_prices = pd.DataFrame()
     for m in month_list:
-        monthly_prices = monthly_prices.append(prices[prices["STD_YM"] == m].iloc[-1, :])
+        monthly_prices = monthly_prices.append(
+            prices[prices["STD_YM"] == m].iloc[-1, :]
+        )
     monthly_prices = monthly_prices.drop(columns=["STD_YM"], axis=1)
     monthly_prices.set_index("Date", inplace=True)
     return monthly_prices[:-1]
 
 
-def calculate_equal_weight_momentum(symbol: str, periods: List[int], start_date, end_date):
+def calculate_equal_weight_momentum(
+    symbol: str, periods: List[int], start_date, end_date
+):
     ret = []
     monthly_prices = get_historical_monthly_prices(symbol, start_date, end_date)
     for period in periods:
@@ -88,9 +92,43 @@ GET dividend data (financialmodelingprep API)
 3. Dividend Payout
 """
 
+
+def dividend_paying_stocks():
+
+    div_paying_stocks = []
+    sp500 = requests.get(f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API}").json()
+
+    count = 0
+    for stock in sp500:
+        count += 1
+        print(f"{count}/{len(sp500)}")
+        symbol = stock["symbol"]
+        ratios = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API}").json()[0]
+        div_yield = ratios["dividendYieldTTM"]
+
+        if div_yield:
+            print(f"{symbol} ADDED!")
+            div_paying_stocks.append(symbol)
+
+    with open("./div_stocks_sp500.json", "w") as fp:
+        json.dump(div_paying_stocks, fp)
+
+def dividend_growth(symbols: List[str]):
+    growth = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?limit=20&apikey={FMP_API}").json()[0]
+    div_growth = growth['fiveYDividendperShareGrowthPerShare']
+
+def high_momentum(symbols: List[str]):
+    pass
+
+def profitability(symbols: List[str]):
+    pass
+
+
 def fmp_datareader():
 
-    sp500 = requests.get(f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API}").json()
+    sp500 = requests.get(
+        f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API}"
+    ).json()
     data = {
         "Symbol": [],
         "Market_Cap": [],
@@ -103,41 +141,55 @@ def fmp_datareader():
     for stock in sp500:
         count += 1
         print(f"{count}/{len(sp500)}")
-        symbol = stock['symbol']
+        symbol = stock["symbol"]
         print(symbol)
-        growth = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?limit=20&apikey={FMP_API}").json()[0]
-        div_growth = growth['fiveYDividendperShareGrowthPerShare']
-        #print(div_growth)
+        growth = requests.get(
+            f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?limit=20&apikey={FMP_API}"
+        ).json()[0]
+        div_growth = growth["fiveYDividendperShareGrowthPerShare"]
+        # print(div_growth)
 
-        mom = calculate_equal_weight_momentum(symbol, MOMENTUM_PERIODS, START_DATE, END_DATE)
-        #print(mom)
+        mom = calculate_equal_weight_momentum(
+            symbol, MOMENTUM_PERIODS, START_DATE, END_DATE
+        )
+        # print(mom)
 
         if div_growth > 0.1 and mom > 1:
 
             print(f"{symbol} SELECTED!")
 
-            ratios = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API}").json()[0]
-            market_cap = requests.get(f"https://financialmodelingprep.com/api/v3/market-capitalization/{symbol.upper()}?apikey={FMP_API}").json()[0]['marketCap']
+            ratios = requests.get(
+                f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API}"
+            ).json()[0]
+            market_cap = requests.get(
+                f"https://financialmodelingprep.com/api/v3/market-capitalization/{symbol.upper()}?apikey={FMP_API}"
+            ).json()[0]["marketCap"]
 
-            data['Symbol'].append(symbol)
-            data['Market_Cap'].append(market_cap)
-            data['ROE'].append(ratios['returnOnEquityTTM'])
-            data["FiveY_Revenue_Growth"].append(growth['fiveYRevenueGrowthPerShare'])
-            data["FiveY_NetIncome_Growth"].append(growth['fiveYNetIncomeGrowthPerShare'])
-            data["FiveY_Div_Per_Share_Growth"].append(growth['fiveYDividendperShareGrowthPerShare'])
+            data["Symbol"].append(symbol)
+            data["Market_Cap"].append(market_cap)
+            data["ROE"].append(ratios["returnOnEquityTTM"])
+            data["FiveY_Revenue_Growth"].append(growth["fiveYRevenueGrowthPerShare"])
+            data["FiveY_NetIncome_Growth"].append(
+                growth["fiveYNetIncomeGrowthPerShare"]
+            )
+            data["FiveY_Div_Per_Share_Growth"].append(
+                growth["fiveYDividendperShareGrowthPerShare"]
+            )
 
     df = pd.DataFrame(data)
     return df
 
 
-
-
 if __name__ == "__main__":
 
-    df = fmp_datareader()
-    print(df)
+    # df = fmp_datareader()
+    # print(df)
 
-    #print(calculate_equal_weight_momentum('MMM', MOMENTUM_PERIODS, START_DATE, END_DATE))
+    #dividend_paying_stocks()
+    with open('./div_stocks_sp500.json', 'r') as fp:
+        data = json.load(fp)
+    print(data)
+    # print(calculate_equal_weight_momentum('MMM', MOMENTUM_PERIODS, START_DATE, END_DATE))
 
     # # If you already have json file saved on local dir, execute remaining codes for momentum and dividend
     # if os.path.exists("./sp500_data.json"):
@@ -151,10 +203,8 @@ if __name__ == "__main__":
     #         if mom > 2:
     #             high_momentum.append(symbol)
 
-
     #     df = fmp_datareader(high_momentum)
     #     print(df)
-
 
     # # If you don't have json file on your local dir,
     # # get symbol data first and save it as sp500_data.json on the same dir
@@ -177,5 +227,3 @@ if __name__ == "__main__":
     #     #         print(f"{symbol}: ({type(e).__name__}) {e}")
     #     #         sp500[symbol]["momentum"] = -1
     #     #         continue
-
-
