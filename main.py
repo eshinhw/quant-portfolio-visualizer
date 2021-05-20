@@ -92,7 +92,7 @@ def get_market_cap(symbol: str):
 
     market_cap = requests.get(f"https://financialmodelingprep.com/api/v3/market-capitalization/{symbol.upper()}?apikey={FMP_API}").json()
     print(market_cap)
-
+    print()
     return market_cap
 
 
