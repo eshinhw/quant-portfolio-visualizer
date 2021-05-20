@@ -85,14 +85,23 @@ GET dividend data (financialmodelingprep API)
 
 def get_dividend_data(symbol: str):
 
-    growth = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?period=quarter&limit=4&apikey={FMP_API}").json()
+    growth = requests.get(f"https://financialmodelingprep.com/api/v3/income-statement-growth/{symbol}?apikey={FMP_API}&limit=40").json()
     print(growth)
+
+def get_market_cap(symbol: str):
+
+    market_cap = requests.get(f"https://financialmodelingprep.com/api/v3/market-capitalization/{symbol.upper()}?apikey={FMP_API}").json()
+    print(market_cap)
+
 
 
 # sp500 = requests.get(f'https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={api}').json()
 
 if __name__ == '__main__':
 
+    #get_dividend_data('JNJ')
+
+    get_market_cap('jnj')
     # If you already have json file saved on local dir, execute remaining codes for momentum and dividend
     if os.path.exists('./sp500_data.json'):
         fp = open('./sp500_data.json', 'r')
@@ -107,10 +116,10 @@ if __name__ == '__main__':
             if mom > 3:
                 high_momentum.append(symbol)
 
-        for symbol in high_momentum:
+        # for symbol in high_momentum:
 
-            get_dividend_data(symbol)
-            break
+        #     get_dividend_data(symbol)
+        #     break
 
 
 
