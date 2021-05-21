@@ -189,6 +189,7 @@ if __name__ == "__main__":
     with open('./div_stocks_sp500.json', 'r') as fp:
         data = json.load(fp)
     print(data)
+    print()
     # print(calculate_equal_weight_momentum('MMM', MOMENTUM_PERIODS, START_DATE, END_DATE))
 
     # # If you already have json file saved on local dir, execute remaining codes for momentum and dividend
