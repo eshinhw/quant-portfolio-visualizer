@@ -1,6 +1,7 @@
 import json
 import secret
 import requests
+import pprint
 import mysql.connector
 
 
@@ -15,7 +16,7 @@ mydb = mysql.connector.connect(
     database="fmp"
 )
 
-# mycursor = mydb.cursor()
+mycursor = mydb.cursor()
 
 # mycursor.execute("CREATE DATABASE IF NOT EXISTS fmp")
 
@@ -26,13 +27,34 @@ mydb = mysql.connector.connect(
 
 # mycursor.execute("ALTER TABLE company_profile ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY")
 
+# mycursor.execute("ALTER TABLE company_profile ADD COLUMN numEmployees INT")
+
 def company_profile(symbol: str):
 
     data = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={API_KEY}").json()
-    print(data)
+    data = data[0]
+    pprint.pprint(data)
+
+    name = data['companyName']
+    symbol = data['symbol']
+    exchange = data['exchangeShortName']
+    sector = data['sector']
+    industry = data['industry']
+    marketCap = data['mktCap']
+    numEmployees = data['fullTimeEmployees']
+
+    sql = "INSERT INTO company_profile (name, symbol, exchange, sector, industry, marketCap, numEmployees) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    val = (name, symbol, exchange, sector, industry, float(marketCap), int(numEmployees))
+
+    mycursor.execute(sql,val)
+
+    mydb.commit()
+
 
 
 if __name__ == '__main__':
+
+    mycursor.execute("ALTER TABLE company_profile MODIFY COLUMN marketCap float")
 
     company_profile('aapl')
 
