@@ -1,3 +1,4 @@
+import os
 import json
 import secret
 import pprint
@@ -5,7 +6,7 @@ import requests
 import mysql.connector
 
 
-API_KEY = secret.FMP_API_KEYS
+FMP_API_KEY = secret.FMP_API_KEYS
 DB_PW = secret.DB_PASSWORDD
 
 class fmp:
@@ -18,8 +19,29 @@ class fmp:
 
         self.mycursor = self.mydb.cursor()
         self.mycursor.execute("CREATE DATABASE IF NOT EXISTS fmp")
-        self.mycursor.execute(f"USE fmp")
+        self.mycursor.execute("USE fmp")
 
+    def sp500_symbol_list(self):
+
+        if os.path.exists('./sp500_symbols.json'):
+            fp = open("./sp500_symbols.json", "r")
+            data = json.load(fp)
+            print(len(data['symbols']))
+            return data['symbols']
+
+        out_dict = {}
+        symbols = []
+        sp500 = requests.get(f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API_KEY}").json()
+
+        for data in sp500:
+            symbols.append(data['symbol'])
+
+        out_dict['symbols'] = symbols
+
+        with open('./sp500_symbols.json', 'w') as fp:
+            json.dump(out_dict, fp)
+
+        return symbols
 
     def company_profile(self, symbol: str):
 
@@ -32,7 +54,7 @@ class fmp:
         industry VARCHAR(255), \
         marketCap int)""")
 
-        data = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol.upper()}?apikey={API_KEY}").json()[0]
+        data = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol.upper()}?apikey={FMP_API_KEY}").json()[0]
         #pprint.pprint(data)
 
         name = data['companyName']
@@ -63,7 +85,7 @@ class fmp:
             per float,
             roe float)""")
 
-        data = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={API_KEY}").json()[0]
+        data = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}").json()[0]
         #pprint.pprint(data)
 
         div_yield = data['dividendYieldTTM']
@@ -92,7 +114,7 @@ class fmp:
 
     def growth(self, symbol: str):
 
-        data = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol.upper()}?period=quarter&limit=20&apikey={API_KEY}").json()[0]
+        data = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol.upper()}?period=quarter&limit=20&apikey={FMP_API_KEY}").json()[0]
 
         pprint.pprint(data)
         self.mycursor.execute("""CREATE TABLE IF NOT EXISTS growth (\
@@ -139,9 +161,6 @@ class fmp:
             self.mydb.commit()
 
 
-# def sql_add_column():
-
-
 # mycursor.execute("ALTER TABLE company_profile ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY")
 
 # mycursor.execute("ALTER TABLE company_profile ADD COLUMN numEmployees INT")
@@ -160,6 +179,9 @@ if __name__ == '__main__':
 
     myfmp = fmp()
 
-    myfmp.growth('AAPL')
+    symbols = myfmp.sp500_symbol_list()
+
+    for symbol in symbols:
+
 
 
