@@ -78,11 +78,51 @@ class fmp:
         (symbol, div_yield, curr_ratio, div_per_share, gross_profit_margin, per, roe) \
         VALUES (%s, %s, %s, %s, %s, %s, %s)"""
 
-        val = (symbol, float(div_yield), float(curr_ratio), float(div_per_share), float(gross_profit_margin), float(per), float(roe))
+        val = (
+            symbol,
+            float(div_yield),
+            float(curr_ratio),
+            float(div_per_share),
+            float(gross_profit_margin),
+            float(per),
+            float(roe))
 
         self.mycursor.execute(sql,val)
         self.mydb.commit()
 
+    def growth(self, symbol: str):
+
+        data = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol.upper()}?period=quarter&limit=20&apikey={API_KEY}").json()[0]
+
+        pprint.pprint(data)
+        self.mycursor.execute("""CREATE TABLE IF NOT EXISTS growth (\
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            symbol VARCHAR(255),
+            date VARCHAR(255),
+            gross_profit_margin float,
+            eps_growth float,
+            fcf_growth float,
+            dps_fiveY_growth float,
+            netIncome_per_share_fiveY_growth float,
+            revenue_per_share_fiveY_growth float)""")
+
+        sql = """
+        INSERT INTO growth \
+        (symbol, date, gross_profit_margin, eps_growth, fcf_growth, dps_fiveY_growth, netIncome_per_share_fiveY_growth, revenue_per_share_fiveY_growth) \
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        date = data['date']
+        gross_profit_margin = data['grossProfitGrowth']
+        eps_growth = data['epsgrowth']
+        fcf_growth = data['freeCashFlowGrowth']
+        dps_fiveY_growth = data['fiveYDividendperShareGrowthPerShare']
+        netIncome_per_share_fiveY_growth = data['fiveYNetIncomeGrowthPerShare']
+        revenue_per_share_fiveY_growth = data['fiveYRevenueGrowthPerShare']
+
+        val = (symbol, date, float(gross_profit_margin), float(eps_growth), float(fcf_growth), float(dps_fiveY_growth), float(netIncome_per_share_fiveY_growth), float(revenue_per_share_fiveY_growth))
+
+        self.mycursor.execute(sql,val)
+        self.mydb.commit()
 
     def drop_all_databases(self):
 
@@ -96,7 +136,7 @@ class fmp:
 
         for name in db_names:
             self.mycursor.execute(f"DROP DATABASE {name}")
-            self.db.commit()
+            self.mydb.commit()
 
 
 # def sql_add_column():
@@ -116,6 +156,10 @@ if __name__ == '__main__':
 
     myfmp = fmp()
 
-    myfmp.ratio_ttm('AAPL')
+    myfmp.drop_all_databases()
+
+    myfmp = fmp()
+
+    myfmp.growth('AAPL')
 
 
