@@ -183,5 +183,7 @@ if __name__ == '__main__':
 
     for symbol in symbols:
 
+        print(symbol)
+
 
 
