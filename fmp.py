@@ -1,16 +1,15 @@
 import os
-import math
 import json
 import secret
 import pprint
 import requests
+import pandas as pd
 import mysql.connector
 from typing import List
-
+from pandas.core.frame import DataFrame
 
 FMP_API_KEY = secret.FMP_API_KEYS
 DB_PW = secret.DB_PASSWORDD
-NaN = -9999999
 
 class fmp:
     def __init__(self) -> None:
@@ -24,7 +23,7 @@ class fmp:
         self.mycursor.execute("CREATE DATABASE IF NOT EXISTS fmp")
         self.mycursor.execute("USE fmp")
 
-    def load_sp500_symbol_list(self):
+    def load_sp500_symbol_list(self) -> List[str]:
 
         if os.path.exists('./sp500_symbols.json'):
             fp = open("./sp500_symbols.json", "r")
@@ -46,7 +45,7 @@ class fmp:
 
         return symbols
 
-    def company_profile(self, symbol: str):
+    def company_profile(self, symbol: str) -> None:
 
         self.mycursor.execute("""CREATE TABLE IF NOT EXISTS company_profile (\
         id INT AUTO_INCREMENT PRIMARY KEY, \
@@ -77,7 +76,7 @@ class fmp:
         self.mycursor.execute(sql,val)
         self.mydb.commit()
 
-    def ratios(self, symbol: str):
+    def ratios(self, symbol: str) -> None:
         self.mycursor.execute("""CREATE TABLE IF NOT EXISTS ratios (\
             id INT AUTO_INCREMENT PRIMARY KEY,
             symbol VARCHAR(255),
@@ -125,21 +124,19 @@ class fmp:
         self.mycursor.execute(sql,val)
         self.mydb.commit()
 
-    def load_columns_from_table(self, tb_name: str, col_name: str or List[str]):
-        data = []
+    def load_dataframe_from_table(self, tb_name: str, col_name: str or List[str]) -> DataFrame:
         if type(col_name) is str:
             self.mycursor.execute(f"SELECT {col_name} FROM {tb_name}")
-            for record in self.mycursor:
-                data.append(record[0])
-            return data
+            df = pd.DataFrame(self.mycursor.fetchall(), columns=[col_name])
+            return df
         else:
             combined_col = ', '.join(col_name)
             self.mycursor.execute(f"SELECT {combined_col} FROM {tb_name}")
-            for record in self.mycursor:
-                data.append(record)
-            return data
+            df = pd.DataFrame(self.mycursor.fetchall(), columns=col_name)
+            return df
 
-    def drop_all_databases(self):
+
+    def drop_all_databases(self) -> None:
 
         self.mycursor.execute("SHOW DATABASES")
         excluded = ['sys', 'information_schema', 'performance_schema', 'mysql']
@@ -180,7 +177,7 @@ if __name__ == '__main__':
     #     myfmp.ratios(symbol)
     #     print(f"{symbol}: ratio completed")
 
-    x = myfmp.load_columns_from_table('ratios', 'eps_growth')
+    x = myfmp.load_dataframe_from_table('ratios', ['symbol','div_yield','eps_growth'])
     print(x)
 
 
