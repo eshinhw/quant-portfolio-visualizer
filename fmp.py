@@ -129,15 +129,15 @@ class fmp:
         data = []
         if type(col_name) is str:
             self.mycursor.execute(f"SELECT {col_name} FROM {tb_name}")
+            for record in self.mycursor:
+                data.append(record[0])
+            return data
         else:
             combined_col = ', '.join(col_name)
             self.mycursor.execute(f"SELECT {combined_col} FROM {tb_name}")
-
-        for record in self.mycursor:
-            data.append(record)
-
-        return data
-
+            for record in self.mycursor:
+                data.append(record)
+            return data
 
     def drop_all_databases(self):
 
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     #     myfmp.ratios(symbol)
     #     print(f"{symbol}: ratio completed")
 
-    x = myfmp.load_columns_from_table('ratios', ['symbol', 'eps_growth'])
+    x = myfmp.load_columns_from_table('ratios', 'eps_growth')
     print(x)
 
 
