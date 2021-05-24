@@ -5,6 +5,7 @@ import secret
 import pprint
 import requests
 import mysql.connector
+from typing import List
 
 
 FMP_API_KEY = secret.FMP_API_KEYS
@@ -124,6 +125,20 @@ class fmp:
         self.mycursor.execute(sql,val)
         self.mydb.commit()
 
+    def load_columns_from_table(self, tb_name: str, col_name: str or List[str]):
+        data = []
+        if type(col_name) is str:
+            self.mycursor.execute(f"SELECT {col_name} FROM {tb_name}")
+        else:
+            combined_col = ', '.join(col_name)
+            self.mycursor.execute(f"SELECT {combined_col} FROM {tb_name}")
+
+        for record in self.mycursor:
+            data.append(record)
+
+        return data
+
+
     def drop_all_databases(self):
 
         self.mycursor.execute("SHOW DATABASES")
@@ -157,14 +172,16 @@ if __name__ == '__main__':
 
     myfmp = fmp()
 
-    symbols = myfmp.load_sp500_symbol_list()
+    # symbols = myfmp.load_sp500_symbol_list()
 
-    for symbol in symbols:
-        myfmp.company_profile(symbol)
-        print(f"{symbol}: profile completed")
-        myfmp.ratios(symbol)
-        print(f"{symbol}: ratio completed")
+    # for symbol in symbols:
+    #     myfmp.company_profile(symbol)
+    #     print(f"{symbol}: profile completed")
+    #     myfmp.ratios(symbol)
+    #     print(f"{symbol}: ratio completed")
 
+    x = myfmp.load_columns_from_table('ratios', ['symbol', 'eps_growth'])
+    print(x)
 
 
 
