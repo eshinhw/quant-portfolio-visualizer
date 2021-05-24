@@ -9,14 +9,13 @@ from typing import List
 from pandas.core.frame import DataFrame
 
 FMP_API_KEY = secret.FMP_API_KEYS
-DB_PW = secret.DB_PASSWORDD
 
 class fmp:
     def __init__(self) -> None:
         self.mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password=DB_PW
+            host=secret.DB_HOST,
+            user=secret.DB_USER,
+            password=secret.DB_PASSWORD
         )
 
         self.mycursor = self.mydb.cursor()
@@ -56,8 +55,10 @@ class fmp:
         industry VARCHAR(255), \
         marketCap float,
         numEmployees int)""")
-
-        data = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol.upper()}?apikey={FMP_API_KEY}").json()[0]
+        try:
+            data = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol.upper()}?apikey={FMP_API_KEY}").json()[0]
+        except:
+            return
 
         name = data['companyName']
         symbol = data['symbol']
@@ -87,8 +88,10 @@ class fmp:
             div_yield float,
             div_per_share float,
             dps_fiveY_growth float)""")
-
-        ratio_ttm = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol.upper()}?apikey={FMP_API_KEY}").json()[0]
+        try:
+            ratio_ttm = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol.upper()}?apikey={FMP_API_KEY}").json()[0]
+        except:
+            return
 
         div_yield = ratio_ttm['dividendYieldTTM']
         if not div_yield: return
@@ -124,7 +127,7 @@ class fmp:
         self.mycursor.execute(sql,val)
         self.mydb.commit()
 
-    def load_dataframe_from_table(self, tb_name: str, col_name: str or List[str]) -> DataFrame:
+    def load_dataframe_from_dbtable(self, tb_name: str, col_name: str or List[str]) -> DataFrame:
         if type(col_name) is str:
             self.mycursor.execute(f"SELECT {col_name} FROM {tb_name}")
             df = pd.DataFrame(self.mycursor.fetchall(), columns=[col_name])
@@ -134,6 +137,12 @@ class fmp:
             self.mycursor.execute(f"SELECT {combined_col} FROM {tb_name}")
             df = pd.DataFrame(self.mycursor.fetchall(), columns=col_name)
             return df
+
+    def add_column_into_dbtable(self, tb_name: str, val: str):
+        self.mycursor.execute(f"ALTER TABLE {tb_name} ADD COLUMN {val}")
+
+    def modify_column_type(self, tb_name: str, col_name: str, new_type: str):
+        self.mycursor.execute(f"ALTER TABLE {tb_name} MODIFY COLUMN {col_name} {new_type}")
 
 
     def drop_all_databases(self) -> None:
@@ -150,17 +159,6 @@ class fmp:
             self.mycursor.execute(f"DROP DATABASE {name}")
             self.mydb.commit()
 
-
-# mycursor.execute("ALTER TABLE company_profile ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY")
-
-# mycursor.execute("ALTER TABLE company_profile ADD COLUMN numEmployees INT")
-
-# mycursor.execute("ALTER TABLE company_profile MODIFY COLUMN marketCap float")
-
-
-
-
-
 if __name__ == '__main__':
 
     # myfmp = fmp()
@@ -169,15 +167,15 @@ if __name__ == '__main__':
 
     myfmp = fmp()
 
-    # symbols = myfmp.load_sp500_symbol_list()
+    symbols = myfmp.load_sp500_symbol_list()
 
-    # for symbol in symbols:
-    #     myfmp.company_profile(symbol)
-    #     print(f"{symbol}: profile completed")
-    #     myfmp.ratios(symbol)
-    #     print(f"{symbol}: ratio completed")
+    for symbol in symbols:
+        myfmp.company_profile(symbol)
+        print(f"{symbol}: profile completed")
+        myfmp.ratios(symbol)
+        print(f"{symbol}: ratio completed")
 
-    x = myfmp.load_dataframe_from_table('ratios', ['symbol','div_yield','eps_growth'])
+    x = myfmp.load_dataframe_from_dbtable(tb_name='ratios', col_name=['symbol','div_yield','eps_growth'])
     print(x)
 
 
