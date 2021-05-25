@@ -3,6 +3,7 @@ import json
 import credentials
 import pprint
 import requests
+from sqlalchemy import create_engine
 import pandas as pd
 import mysql.connector
 from typing import List
@@ -44,43 +45,17 @@ class fmp:
 
         return symbols
 
-    def company_profile(self, symbol: str) -> None:
-
-        self.mycursor.execute("""CREATE TABLE IF NOT EXISTS company_profile (\
-        id INT AUTO_INCREMENT PRIMARY KEY, \
-        name VARCHAR(255), \
-        symbol VARCHAR(20), \
-        exchange VARCHAR(255), \
-        sector VARCHAR(255), \
-        industry VARCHAR(255), \
-        marketCap float,
-        numEmployees int)""")
-        try:
-            data = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol.upper()}?apikey={FMP_API_KEY}").json()[0]
-        except:
-            return
-
-        name = data['companyName']
-        symbol = data['symbol']
-        exchange = data['exchangeShortName']
-        sector = data['sector']
-        industry = data['industry']
-        marketCap = data['mktCap']
-        numEmployees = data['fullTimeEmployees']
-
-        sql = """
-        INSERT INTO company_profile \
-        (name, symbol, exchange, sector, industry, marketCap, numEmployees) \
-        VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-        val = (name, symbol, exchange, sector, industry, float(marketCap), int(numEmployees))
-
-        self.mycursor.execute(sql,val)
-        self.mydb.commit()
-
-    def ratios(self, symbol: str) -> None:
-        self.mycursor.execute("""CREATE TABLE IF NOT EXISTS ratios (\
+    def financials(self, symbol: str) -> None:
+        symbol = symbol.upper()
+        self.mycursor.execute("""CREATE TABLE IF NOT EXISTS financials (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            symbol VARCHAR(255),
+            name VARCHAR(255),
+            symbol VARCHAR(20),
+            exchange VARCHAR(255),
+            sector VARCHAR(255),
+            industry VARCHAR(255),
+            marketCap float,
+            numEmployees int,
             revenue_per_share_fiveY_growth float,
             gross_profit_margin float,
             roe float,
@@ -89,7 +64,7 @@ class fmp:
             div_per_share float,
             dps_fiveY_growth float)""")
         try:
-            ratio_ttm = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol.upper()}?apikey={FMP_API_KEY}").json()[0]
+            ratio_ttm = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}").json()[0]
         except:
             return
 
@@ -99,8 +74,10 @@ class fmp:
         if not div_per_share: return
         gross_profit_margin = ratio_ttm['grossProfitMarginTTM']
         roe = ratio_ttm['returnOnEquityTTM']
-
-        growth = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol.upper()}?period=quarter&limit=20&apikey={FMP_API_KEY}").json()[0]
+        try:
+            growth = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?period=quarter&limit=20&apikey={FMP_API_KEY}").json()[0]
+        except:
+            return
 
         eps_growth = growth['epsgrowth']
         if eps_growth <= 0: return
@@ -108,14 +85,44 @@ class fmp:
         if dps_fiveY_growth <= 0: return
         revenue_per_share_fiveY_growth = growth['fiveYRevenueGrowthPerShare']
         if revenue_per_share_fiveY_growth <= 0: return
+        try:
+            profile = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={FMP_API_KEY}").json()[0]
+        except:
+            return
+
+        name = profile['companyName']
+        exchange = profile['exchangeShortName']
+        sector = profile['sector']
+        industry = profile['industry']
+        marketCap = profile['mktCap']
+        numEmployees = profile['fullTimeEmployees']
 
         sql = """
-        INSERT INTO ratios \
-        (symbol, revenue_per_share_fiveY_growth, gross_profit_margin, roe, eps_growth, div_yield, div_per_share, dps_fiveY_growth) \
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
+        INSERT INTO financials (\
+        name,
+        symbol,
+        exchange,
+        sector,
+        industry,
+        marketCap,
+        numEmployees,
+        revenue_per_share_fiveY_growth,
+        gross_profit_margin,
+        roe,
+        eps_growth,
+        div_yield,
+        div_per_share,
+        dps_fiveY_growth) \
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
         val = (
+            name,
             symbol,
+            exchange,
+            sector,
+            industry,
+            float(marketCap),
+            int(numEmployees),
             float(revenue_per_share_fiveY_growth),
             float(gross_profit_margin),
             float(roe),
@@ -127,16 +134,11 @@ class fmp:
         self.mycursor.execute(sql,val)
         self.mydb.commit()
 
-    def load_dataframe_from_dbtable(self, tb_name: str, col_name: str or List[str]) -> DataFrame:
-        if type(col_name) is str:
-            self.mycursor.execute(f"SELECT {col_name} FROM {tb_name}")
-            df = pd.DataFrame(self.mycursor.fetchall(), columns=[col_name])
-            return df
-        else:
-            combined_col = ', '.join(col_name)
-            self.mycursor.execute(f"SELECT {combined_col} FROM {tb_name}")
-            df = pd.DataFrame(self.mycursor.fetchall(), columns=col_name)
-            return df
+    def load_dataframe_from_dbtable(self, db_name: str, tb_name: str) -> DataFrame:
+        dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/{db_name}')
+        dbcon.connect()
+        df = pd.read_sql_table(tb_name, dbcon)
+        return df
 
     def add_column_into_dbtable(self, tb_name: str, val: str):
         self.mycursor.execute(f"ALTER TABLE {tb_name} ADD COLUMN {val}")
@@ -167,16 +169,16 @@ if __name__ == '__main__':
 
     myfmp = fmp()
 
-    symbols = myfmp.load_sp500_symbol_list()
+    # symbols = myfmp.load_sp500_symbol_list()[:5]
+    # count = 0
+    # for symbol in symbols:
+    #     count += 1
+    #     myfmp.financials(symbol)
+    #     print(f"{count}/{len(symbols)}")
 
-    for symbol in symbols:
-        myfmp.company_profile(symbol)
-        print(f"{symbol}: profile completed")
-        myfmp.ratios(symbol)
-        print(f"{symbol}: ratio completed")
+    df = myfmp.load_dataframe_from_dbtable('fmp', 'financials')
+    print(df)
 
-    x = myfmp.load_dataframe_from_dbtable(tb_name='ratios', col_name=['symbol','div_yield','eps_growth'])
-    print(x)
 
 
 
