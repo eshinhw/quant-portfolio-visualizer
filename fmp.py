@@ -1,6 +1,6 @@
 import os
 import json
-import secret
+import credentials
 import pprint
 import requests
 import pandas as pd
@@ -8,14 +8,14 @@ import mysql.connector
 from typing import List
 from pandas.core.frame import DataFrame
 
-FMP_API_KEY = secret.FMP_API_KEYS
+FMP_API_KEY = credentials.FMP_API_KEYS
 
 class fmp:
     def __init__(self) -> None:
         self.mydb = mysql.connector.connect(
-            host=secret.DB_HOST,
-            user=secret.DB_USER,
-            password=secret.DB_PASSWORD
+            host=credentials.DB_HOST,
+            user=credentials.DB_USER,
+            password=credentials.DB_PASSWORD
         )
 
         self.mycursor = self.mydb.cursor()
