@@ -1,12 +1,12 @@
 import os
 import json
-import credentials
 import pprint
 import requests
-from sqlalchemy import create_engine
+import credentials
 import pandas as pd
 import mysql.connector
 from typing import List
+from sqlalchemy import create_engine
 from pandas.core.frame import DataFrame
 
 FMP_API_KEY = credentials.FMP_API_KEYS
@@ -148,7 +148,6 @@ class fmp:
 
 
     def drop_all_databases(self) -> None:
-
         self.mycursor.execute("SHOW DATABASES")
         excluded = ['sys', 'information_schema', 'performance_schema', 'mysql']
         db_names = []
