@@ -7,6 +7,7 @@ import pandas as pd
 import mysql.connector
 from typing import List
 from sqlalchemy import create_engine
+from price import calculate_momentum
 from pandas.core.frame import DataFrame
 
 FMP_API_KEY = credentials.FMP_API_KEYS
@@ -203,7 +204,37 @@ class fmp:
             float(dps_fiveY_growth),
             symbol)
 
+        self.mycursor.execute(sql,val)
+        self.mydb.commit()
 
+    def create_momentum(self, symbol:str):
+        symbol = symbol.upper()
+        self.mycursor.execute("""
+            CREATE TABLE IF NOT EXISTS momentum (
+                symbol VARCHAR(20) PRIMARY KEY,
+                1M float,
+                3M float,
+                6M float,
+                1Y float,
+                3Y float,
+                5Y float,
+                10Y float
+            )""")
+
+        sql = """
+            INSERT INTO momentum (
+                symbol,
+                1M,
+                3M,
+                6M,
+                1Y,
+                3Y,
+                5Y,
+                10Y
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
+
+        val = calculate_momentum(symbol, [1,3,6,12,36,60,120])
         self.mycursor.execute(sql,val)
         self.mydb.commit()
 
@@ -234,14 +265,14 @@ class fmp:
 
 if __name__ == '__main__':
 
-    # myfmp = fmp()
 
-    # myfmp.drop_all_databases()
 
     myfmp = fmp()
 
-    myfmp.update_financials('MMM')
+    myfmp.drop_all_databases()
 
+    #myfmp.update_financials('MMM')
+    # myfmp.create_momentum('MMM')
     # symbols = myfmp.load_sp500_symbol_list()[:5]
     # count = 0
     # for symbol in symbols:
