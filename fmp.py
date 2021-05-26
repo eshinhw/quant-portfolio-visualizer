@@ -45,24 +45,25 @@ class fmp:
 
         return symbols
 
-    def financials(self, symbol: str) -> None:
+    def create_financials(self, symbol: str) -> None:
         symbol = symbol.upper()
-        self.mycursor.execute("""CREATE TABLE IF NOT EXISTS financials (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(255),
-            symbol VARCHAR(20),
-            exchange VARCHAR(255),
-            sector VARCHAR(255),
-            industry VARCHAR(255),
-            marketCap float,
-            numEmployees int,
-            revenue_per_share_fiveY_growth float,
-            gross_profit_margin float,
-            roe float,
-            eps_growth float,
-            div_yield float,
-            div_per_share float,
-            dps_fiveY_growth float)""")
+        self.mycursor.execute("""
+            CREATE TABLE IF NOT EXISTS financials (
+                symbol VARCHAR(20) PRIMARY KEY,
+                name VARCHAR(255),
+                exchange VARCHAR(255),
+                sector VARCHAR(255),
+                industry VARCHAR(255),
+                marketCap float,
+                numEmployees int,
+                revenue_per_share_fiveY_growth float,
+                gross_profit_margin float,
+                roe float,
+                eps_growth float,
+                div_yield float,
+                div_per_share float,
+                dps_fiveY_growth float
+            )""")
         try:
             ratio_ttm = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}").json()[0]
         except:
@@ -98,26 +99,27 @@ class fmp:
         numEmployees = profile['fullTimeEmployees']
 
         sql = """
-        INSERT INTO financials (\
-        name,
-        symbol,
-        exchange,
-        sector,
-        industry,
-        marketCap,
-        numEmployees,
-        revenue_per_share_fiveY_growth,
-        gross_profit_margin,
-        roe,
-        eps_growth,
-        div_yield,
-        div_per_share,
-        dps_fiveY_growth) \
+        INSERT INTO financials (
+            symbol,
+            name,
+            exchange,
+            sector,
+            industry,
+            marketCap,
+            numEmployees,
+            revenue_per_share_fiveY_growth,
+            gross_profit_margin,
+            roe,
+            eps_growth,
+            div_yield,
+            div_per_share,
+            dps_fiveY_growth
+        )
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
         val = (
-            name,
             symbol,
+            name,
             exchange,
             sector,
             industry,
@@ -134,9 +136,79 @@ class fmp:
         self.mycursor.execute(sql,val)
         self.mydb.commit()
 
+    def update_financials(self, symbol: str):
+        symbol = symbol.upper()
+
+        try:
+            ratio_ttm = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}").json()[0]
+        except:
+            return
+
+        div_yield = ratio_ttm['dividendYieldTTM']
+        div_per_share = ratio_ttm['dividendPerShareTTM']
+        gross_profit_margin = ratio_ttm['grossProfitMarginTTM']
+        roe = ratio_ttm['returnOnEquityTTM']
+        try:
+            growth = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?period=quarter&limit=20&apikey={FMP_API_KEY}").json()[0]
+        except:
+            return
+
+        eps_growth = growth['epsgrowth']
+        dps_fiveY_growth = growth['fiveYDividendperShareGrowthPerShare']
+        revenue_per_share_fiveY_growth = growth['fiveYRevenueGrowthPerShare']
+        try:
+            profile = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={FMP_API_KEY}").json()[0]
+        except:
+            return
+
+        name = profile['companyName']
+        exchange = profile['exchangeShortName']
+        sector = profile['sector']
+        industry = profile['industry']
+        marketCap = profile['mktCap']
+        numEmployees = profile['fullTimeEmployees']
+
+        sql="""
+            UPDATE financials
+            SET
+                name = %s,
+                exchange = %s,
+                sector = %s,
+                industry = %s,
+                marketCap = %s,
+                numEmployees = %s,
+                revenue_per_share_fiveY_growth = %s,
+                gross_profit_margin = %s,
+                roe = %s,
+                eps_growth = %s,
+                div_yield = %s,
+                div_per_share = %s,
+                dps_fiveY_growth = %s
+            WHERE
+                symbol = %s
+            """
+        val=(
+            name,
+            exchange,
+            sector,
+            industry,
+            float(marketCap),
+            int(numEmployees),
+            float(revenue_per_share_fiveY_growth),
+            float(gross_profit_margin),
+            float(roe),
+            float(eps_growth),
+            float(div_yield),
+            float(div_per_share),
+            float(dps_fiveY_growth),
+            symbol)
+
+
+        self.mycursor.execute(sql,val)
+        self.mydb.commit()
+
     def load_dataframe_from_dbtable(self, db_name: str, tb_name: str) -> DataFrame:
-        dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/{db_name}')
-        dbcon.connect()
+        dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/{db_name}').connect()
         df = pd.read_sql_table(tb_name, dbcon)
         return df
 
@@ -168,15 +240,17 @@ if __name__ == '__main__':
 
     myfmp = fmp()
 
+    myfmp.update_financials('MMM')
+
     # symbols = myfmp.load_sp500_symbol_list()[:5]
     # count = 0
     # for symbol in symbols:
     #     count += 1
-    #     myfmp.financials(symbol)
+    #     myfmp.create_financials(symbol)
     #     print(f"{count}/{len(symbols)}")
 
-    df = myfmp.load_dataframe_from_dbtable('fmp', 'financials')
-    print(df)
+    # df = myfmp.load_dataframe_from_dbtable('fmp', 'financials')
+    # print(df)
 
 
 
