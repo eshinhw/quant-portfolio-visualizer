@@ -41,5 +41,5 @@ def calculate_momentum(symbol: str, periods: List[int]):
         monthly_returns = monthly_prices.apply(lambda x: x / x.shift(period) - 1, axis=0)
         monthly_returns = monthly_returns.rename(columns={"Adj Close": "Returns"})
         ret.append(float(monthly_returns['Returns'][-1]))
-    return tuple(ret)
+    return ret
 

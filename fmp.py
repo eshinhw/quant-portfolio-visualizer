@@ -11,6 +11,7 @@ from price import calculate_momentum
 from pandas.core.frame import DataFrame
 
 FMP_API_KEY = credentials.FMP_API_KEYS
+MOMENTUMS = [1,3,6,12,36,60,120]
 
 class fmp:
     def __init__(self) -> None:
@@ -100,7 +101,7 @@ class fmp:
         numEmployees = profile['fullTimeEmployees']
 
         sql = """
-        INSERT INTO financials (
+        INSERT IGNORE INTO financials (
             symbol,
             name,
             exchange,
@@ -139,7 +140,6 @@ class fmp:
 
     def update_financials(self, symbol: str):
         symbol = symbol.upper()
-
         try:
             ratio_ttm = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}").json()[0]
         except:
@@ -190,7 +190,7 @@ class fmp:
             """
         val=(
             name,
-            exchange,
+            'KOREA',
             sector,
             industry,
             float(marketCap),
@@ -222,7 +222,7 @@ class fmp:
             )""")
 
         sql = """
-            INSERT INTO momentum (
+            INSERT IGNORE INTO momentum (
                 symbol,
                 1M,
                 3M,
@@ -234,9 +234,31 @@ class fmp:
             )
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
 
-        val = calculate_momentum(symbol, [1,3,6,12,36,60,120])
+        val = tuple(calculate_momentum(symbol, MOMENTUMS))
         self.mycursor.execute(sql,val)
         self.mydb.commit()
+
+    def update_momentum(self, symbol: str):
+        symbol = symbol.upper()
+
+        sql = """
+        UPDATE momentum
+        SET
+            symbol = %s,
+            1M = %s,
+            3M = %s,
+            6M = %s,
+            1Y = %s,
+            3Y = %s,
+            5Y = %s,
+            10Y = %s
+        WHERE
+            symbol = %s
+        """
+        val = tuple(calculate_momentum(symbol, MOMENTUMS) + [symbol])
+        self.mycursor.execute(sql,val)
+        self.mydb.commit()
+
 
     def load_dataframe_from_dbtable(self, db_name: str, tb_name: str) -> DataFrame:
         dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/{db_name}').connect()
@@ -269,9 +291,13 @@ if __name__ == '__main__':
 
     myfmp = fmp()
 
-    myfmp.drop_all_databases()
+    #myfmp.create_financials('MMM')
+    # myfmp.update_financials('MMM')
+    myfmp.create_momentum('MMM')
+    myfmp.update_momentum('MMM')
+    # myfmp.drop_all_databases()
 
-    #myfmp.update_financials('MMM')
+
     # myfmp.create_momentum('MMM')
     # symbols = myfmp.load_sp500_symbol_list()[:5]
     # count = 0
