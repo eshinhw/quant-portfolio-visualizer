@@ -30,7 +30,6 @@ class fmp:
         if os.path.exists('./sp500_symbols.json'):
             fp = open("./sp500_symbols.json", "r")
             data = json.load(fp)
-            print(len(data['symbols']))
             return data['symbols']
 
         out_dict = {}
@@ -290,24 +289,15 @@ if __name__ == '__main__':
 
 
     myfmp = fmp()
+    #myfmp.drop_all_databases()
 
-    #myfmp.create_financials('MMM')
-    # myfmp.update_financials('MMM')
-    myfmp.create_momentum('MMM')
-    myfmp.update_momentum('MMM')
-    # myfmp.drop_all_databases()
+    symbols = myfmp.load_sp500_symbol_list()
+    count = 0
+    for symbol in symbols:
+        count += 1
+        myfmp.create_financials(symbol)
+        print(f"{count}/{len(symbols)}")
 
-
-    # myfmp.create_momentum('MMM')
-    # symbols = myfmp.load_sp500_symbol_list()[:5]
-    # count = 0
-    # for symbol in symbols:
-    #     count += 1
-    #     myfmp.create_financials(symbol)
-    #     print(f"{count}/{len(symbols)}")
-
-    # df = myfmp.load_dataframe_from_dbtable('fmp', 'financials')
-    # print(df)
 
 
 
