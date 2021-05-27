@@ -190,7 +190,7 @@ class fmp:
             """
         val=(
             name,
-            'KOREA',
+            exchange,
             sector,
             industry,
             float(marketCap),
@@ -260,9 +260,9 @@ class fmp:
         self.mydb.commit()
 
 
-    def load_dataframe_from_dbtable(self, db_name: str, tb_name: str) -> DataFrame:
-        dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/{db_name}').connect()
-        df = pd.read_sql_table(tb_name, dbcon)
+    def load_financials(self) -> DataFrame:
+        dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/fmp').connect()
+        df = pd.read_sql_table('financials', dbcon)
         return df
 
     def add_column_into_dbtable(self, tb_name: str, val: str):
