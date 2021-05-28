@@ -264,6 +264,11 @@ class fmp:
         df = pd.read_sql_table('financials', dbcon)
         return df
 
+    def load_momentum(self) -> DataFrame:
+        dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/fmp').connect()
+        df = pd.read_sql_table('momentum', dbcon)
+        return df
+
     def add_column_into_dbtable(self, tb_name: str, val: str):
         self.mycursor.execute(f"ALTER TABLE {tb_name} ADD COLUMN {val}")
 
@@ -292,11 +297,16 @@ if __name__ == '__main__':
     #myfmp.drop_all_databases()
 
     symbols = myfmp.load_sp500_symbol_list()
+
+    # for symbol in symbols:
+    #     count += 1
+    #     myfmp.create_financials(symbol)
+    #     print(f"{count}/{len(symbols)}")
     count = 0
     for symbol in symbols:
-        count += 1
-        myfmp.create_financials(symbol)
+        myfmp.create_momentum(symbol)
         print(f"{count}/{len(symbols)}")
+
 
 
 
