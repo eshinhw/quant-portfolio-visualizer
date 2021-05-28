@@ -1,5 +1,5 @@
 import pandas as pd
-from fmp import fmp
+from fmp_db import fmp
 
 
 db = fmp()
