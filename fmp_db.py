@@ -13,21 +13,25 @@ from pandas.core.frame import DataFrame
 FMP_API_KEY = credentials.FMP_API_KEYS
 MOMENTUMS = [1,3,6,12,36,60,120]
 
-class fmp:
+class fmp():
     def __init__(self) -> None:
-        self.mydb = mysql.connector.connect(
-            host=credentials.DB_HOST,
-            user=credentials.DB_USER,
-            password=credentials.DB_PASSWORD
-        )
+        try:
+            self.mydb = mysql.connector.connect(
+                host=credentials.DB_HOST,
+                user=credentials.DB_USER,
+                password=credentials.DB_PASSWORD
+            )
 
-        self.mycursor = self.mydb.cursor()
-        self.mycursor.execute("CREATE DATABASE IF NOT EXISTS fmp")
-        self.mycursor.execute("USE fmp")
+            self.mycursor = self.mydb.cursor()
+            self.mycursor.execute("CREATE DATABASE IF NOT EXISTS fmp")
+            self.mycursor.execute("USE fmp")
+        except Exception as e:
+            print(e)
 
     def load_sp500_symbol_list(self) -> List[str]:
 
         if os.path.exists('./sp500_symbols.json'):
+            print('if correct')
             fp = open("./sp500_symbols.json", "r")
             data = json.load(fp)
             return data['symbols']
@@ -35,8 +39,10 @@ class fmp:
         out_dict = {}
         symbols = []
         sp500 = requests.get(f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API_KEY}").json()
-
+        count = 0
         for data in sp500:
+            count += 1
+            print(count)
             symbols.append(data['symbol'])
 
         out_dict['symbols'] = symbols
@@ -289,23 +295,25 @@ class fmp:
             self.mycursor.execute(f"DROP DATABASE {name}")
             self.mydb.commit()
 
-if __name__ == '__main__':
 
+print('hello?')
 
-
-    myfmp = fmp()
-    #myfmp.drop_all_databases()
-
-    symbols = myfmp.load_sp500_symbol_list()
-
-    # for symbol in symbols:
-    #     count += 1
-    #     myfmp.create_financials(symbol)
-    #     print(f"{count}/{len(symbols)}")
-    count = 0
-    for symbol in symbols:
-        myfmp.create_momentum(symbol)
-        print(f"{count}/{len(symbols)}")
+print("wow?")
+myfmp = fmp()
+#myfmp.drop_all_databases()
+print('here?')
+symbols = myfmp.load_sp500_symbol_list()
+print('hello??!')
+# for symbol in symbols:
+#     count += 1
+#     myfmp.create_financials(symbol)
+#     print(f"{count}/{len(symbols)}")
+count = 0
+for symbol in symbols:
+    print('for loop?')
+    count += 1
+    myfmp.create_momentum(symbol)
+    print(f"{count}/{len(symbols)}")
 
 
 
