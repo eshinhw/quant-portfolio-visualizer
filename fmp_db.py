@@ -40,7 +40,6 @@ class fmp():
         symbols = []
         sp500 = requests.get(f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API_KEY}").json()
         for data in sp500:
-            count += 1
             symbols.append(data['symbol'])
 
         out_dict['symbols'] = symbols
