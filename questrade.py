@@ -11,7 +11,6 @@ from qtrade import Questrade as qt
 import pandas_datareader.data as web
 
 class qbot:
-
     def __init__(self) -> None:
         if os.path.exists("./access_token.yml"):
             try:
@@ -23,7 +22,7 @@ class qbot:
             code = credentials.QUESTRADE_API_CODE
             self.qtrade = qt(access_code=code)
 
-        self.acctID = self.qtrade.get_account_id()[0]
+        self.acctID = self.qtrade.get_account_id()
 
     def get_acct_positions(self):
         return self.qtrade.get_account_positions(self.acctID[0])
@@ -35,7 +34,7 @@ class qbot:
         token = self.qtrade.access_token
         token_type = token['token_type']
         access_token = token['access_token']
-        url = token['api_server'] + '/v1/accounts/' + self.acctID + '/balances'
+        url = token['api_server'] + '/v1/accounts/' + self.acctID[0] + '/balances'
         bal = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
         data = {'Currency': [], 'Cash': [], 'Market_Value': [], 'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
 
