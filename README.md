@@ -1,4 +1,4 @@
-# Quantitative Dividend Portfolio Manager
+# Automated Quantitative Investing with Questrade API
 
 ## Introduction
 
