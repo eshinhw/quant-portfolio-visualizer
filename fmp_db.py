@@ -48,6 +48,10 @@ class fmp:
 
         return symbols
 
+    def get_current_price(self, symbol: str):
+        price = requests.get(f"https://financialmodelingprep.com/api/v3/quote-short/{symbol.upper()}?apikey={FMP_API_KEY}").json()
+        return price[0]['price']
+
     def create_financials(self, symbol: str) -> None:
         symbol = symbol.upper()
         self.mycursor.execute("""
