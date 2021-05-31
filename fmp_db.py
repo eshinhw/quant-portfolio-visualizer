@@ -11,9 +11,9 @@ from price import calculate_momentum
 from pandas.core.frame import DataFrame
 
 FMP_API_KEY = credentials.FMP_API_KEYS
-MOMENTUMS = [1,3,6,12,36,60,120]
+MOMENTUMS = [3,6,12,36,60]
 
-class fmp():
+class fmp:
     def __init__(self) -> None:
         try:
             self.mydb = mysql.connector.connect(
@@ -21,7 +21,6 @@ class fmp():
                 user=credentials.DB_USER,
                 password=credentials.DB_PASSWORD
             )
-
             self.mycursor = self.mydb.cursor()
             self.mycursor.execute("CREATE DATABASE IF NOT EXISTS fmp")
             self.mycursor.execute("USE fmp")
@@ -74,9 +73,9 @@ class fmp():
             return
 
         div_yield = ratio_ttm['dividendYieldTTM']
-        if not div_yield: return
+        if not div_yield: div_yield = -1
         div_per_share = ratio_ttm['dividendPerShareTTM']
-        if not div_per_share: return
+        if not div_per_share: div_per_share = -1
         gross_profit_margin = ratio_ttm['grossProfitMarginTTM']
         roe = ratio_ttm['returnOnEquityTTM']
         try:
@@ -85,11 +84,8 @@ class fmp():
             return
 
         eps_growth = growth['epsgrowth']
-        if eps_growth <= 0: return
         dps_fiveY_growth = growth['fiveYDividendperShareGrowthPerShare']
-        if dps_fiveY_growth <= 0: return
         revenue_per_share_fiveY_growth = growth['fiveYRevenueGrowthPerShare']
-        if revenue_per_share_fiveY_growth <= 0: return
         try:
             profile = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={FMP_API_KEY}").json()[0]
         except:
@@ -261,7 +257,6 @@ class fmp():
         self.mycursor.execute(sql,val)
         self.mydb.commit()
 
-
     def load_financials(self) -> DataFrame:
         dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/fmp').connect()
         df = pd.read_sql_table('financials', dbcon)
@@ -280,9 +275,13 @@ class fmp():
 
 
     def drop_all_databases(self) -> None:
+        print("start")
         self.mycursor.execute("SHOW DATABASES")
+        print(list(self.mycursor))
         excluded = ['sys', 'information_schema', 'performance_schema', 'mysql']
         db_names = []
+
+        print('before for loop')
 
         for name in self.mycursor:
             if name[0] not in excluded:
@@ -293,24 +292,24 @@ class fmp():
             self.mydb.commit()
 
 
-print('hello?')
+if __name__ == '__main__':
 
-print("wow?")
-myfmp = fmp()
-#myfmp.drop_all_databases()
-print('here?')
-symbols = myfmp.load_sp500_symbol_list()
-print('hello??!')
-# for symbol in symbols:
-#     count += 1
-#     myfmp.create_financials(symbol)
-#     print(f"{count}/{len(symbols)}")
-count = 0
-for symbol in symbols:
-    print('for loop?')
-    count += 1
-    myfmp.create_momentum(symbol)
-    print(f"{count}/{len(symbols)}")
+    myfmp = fmp()
+    # myfmp.drop_all_databases()
+    symbols = myfmp.load_sp500_symbol_list()
+    count = 0
+    for symbol in symbols:
+        count += 1
+        myfmp.create_financials(symbol)
+        print(f"{count}/{len(symbols)}")
+
+
+    # count = 0
+    # for symbol in symbols:
+    #     print('for loop?')
+    #     count += 1
+    #     myfmp.create_momentum(symbol)
+    #     print(f"{count}/{len(symbols)}")
 
 
 
