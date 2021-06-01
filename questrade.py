@@ -22,7 +22,9 @@ class qbot:
             code = credentials.QUESTRADE_API_CODE
             self.qtrade = qt(access_code=code)
 
-        self.acctID = self.qtrade.get_account_id()
+        print(self.qtrade.access_code)
+
+        # self.acctID = self.qtrade.get_account_id()
 
     def get_acct_positions(self):
         return self.qtrade.get_account_positions(self.acctID[0])
@@ -151,4 +153,4 @@ def calculate_shares(symbol: str, weight: float, currency: str):
 if __name__ == '__main__':
 
     q = qbot()
-    print(q.get_balance())
+    print(q.get_acct_positions())
