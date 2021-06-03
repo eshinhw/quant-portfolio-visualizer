@@ -16,15 +16,14 @@ class qbot:
             try:
                 self.qtrade = qt(token_yaml="./access_token.yml")
             except:
-                self.qtrade = qt()
+                code = credentials.QUESTRADE_API_CODE
+                self.qtrade = qt(access_code=code)
                 self.qtrade.refresh_access_token(from_yaml=True)
         else:
             code = credentials.QUESTRADE_API_CODE
             self.qtrade = qt(access_code=code)
 
-        print(self.qtrade.access_code)
-
-        # self.acctID = self.qtrade.get_account_id()
+        self.acctID = self.qtrade.get_account_id()
 
     def get_acct_positions(self):
         return self.qtrade.get_account_positions(self.acctID[0])
@@ -118,7 +117,7 @@ class qbot:
         for date in dateList:
             start = date[0]
             end = date[1]
-            activities = self.qtrade.get_account_activities(self.acctID, start, end)
+            activities = self.qtrade.get_account_activities(self.acctID[0], start, end)
             monthly_div = 0
             for activity in activities:
                 if activity['type'] == 'Dividends':
@@ -133,16 +132,7 @@ class qbot:
 
         return monthly_div_df
 
-def color_negative_red(value):
 
-    if value < 0:
-        color = 'red'
-    elif value > 0:
-        color = 'green'
-    else:
-        color = 'black'
-
-    return 'color: %s' % color
 
 def calculate_shares(symbol: str, weight: float, currency: str):
     total_equity = qbot.get_usd_total_equity()
