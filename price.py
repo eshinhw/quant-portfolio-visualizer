@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import datetime as dt
 from typing import List
@@ -40,6 +41,10 @@ def calculate_momentum(symbol: str, periods: List[int]):
     for period in periods:
         monthly_returns = monthly_prices.apply(lambda x: x / x.shift(period) - 1, axis=0)
         monthly_returns = monthly_returns.rename(columns={"Adj Close": "Returns"})
-        ret.append(float(monthly_returns['Returns'][-1]))
+        mom = float(monthly_returns['Returns'][-1])
+        if mom == np.nan:
+            mom = float('-inf')
+        print(mom)
+        ret.append(mom)
     return ret
 
