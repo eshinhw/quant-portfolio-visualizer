@@ -4,7 +4,6 @@ import auto_email
 import pandas as pd
 import datetime as dt
 import pandas_datareader.data as web
-from stock_selection import construct_stock_df_to_csv
 
 
 def calculate_prev_max_high(symbol: str, period: int):
