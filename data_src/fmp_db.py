@@ -12,6 +12,7 @@ from pandas.core.frame import DataFrame
 
 FMP_API_KEY = credentials.FMP_API_KEYS
 MOMENTUMS = [3,6,12,36,60]
+SP500_SYMBOL_PATH = './data_src/sp500_symbols.json'
 
 class fmp:
     def __init__(self) -> None:
@@ -29,8 +30,8 @@ class fmp:
 
     def load_sp500_symbol_list(self) -> List[str]:
 
-        if os.path.exists('./sp500_symbols.json'):
-            fp = open("./sp500_symbols.json", "r")
+        if os.path.exists(SP500_SYMBOL_PATH):
+            fp = open(SP500_SYMBOL_PATH, "r")
             data = json.load(fp)
             return data['symbols']
 
@@ -42,7 +43,7 @@ class fmp:
 
         out_dict['symbols'] = symbols
 
-        with open('./sp500_symbols.json', 'w') as fp:
+        with open(SP500_SYMBOL_PATH, 'w') as fp:
             json.dump(out_dict, fp)
 
         return symbols
