@@ -30,7 +30,6 @@ class fmp:
     def load_sp500_symbol_list(self) -> List[str]:
 
         if os.path.exists('./sp500_symbols.json'):
-            print('if correct')
             fp = open("./sp500_symbols.json", "r")
             data = json.load(fp)
             return data['symbols']
@@ -48,9 +47,23 @@ class fmp:
 
         return symbols
 
+    def get_symbols_from_db(self):
+        self.mycursor.execute('SELECT symbol from financials')
+        res = self.mycursor.fetchall()
+        symbols = [data[0] for data in res]
+        return symbols
+
     def get_current_price(self, symbol: str):
         price = requests.get(f"https://financialmodelingprep.com/api/v3/quote-short/{symbol.upper()}?apikey={FMP_API_KEY}").json()
         return price[0]['price']
+
+    def table_exists(self, table_name: str):
+        self.mycursor.execute("SHOW TABLES")
+        result = self.mycursor.fetchall()
+        for tb in result:
+            if table_name in tb:
+                return 1
+        return 0
 
     def create_financials(self, symbol: str) -> None:
         symbol = symbol.upper()
@@ -209,67 +222,67 @@ class fmp:
         self.mycursor.execute(sql,val)
         self.mydb.commit()
 
-    def create_momentum(self, symbol:str):
-        symbol = symbol.upper()
-        self.mycursor.execute("""
-            CREATE TABLE IF NOT EXISTS momentum (
-                symbol VARCHAR(20) PRIMARY KEY,
-                1M float,
-                3M float,
-                6M float,
-                1Y float,
-                3Y float,
-                5Y float,
-                10Y float
-            )""")
+    # def create_momentum(self, symbol:str):
+    #     symbol = symbol.upper()
+    #     self.mycursor.execute("""
+    #         CREATE TABLE IF NOT EXISTS momentum (
+    #             symbol VARCHAR(20) PRIMARY KEY,
+    #             1M float,
+    #             3M float,
+    #             6M float,
+    #             1Y float,
+    #             3Y float,
+    #             5Y float,
+    #             10Y float
+    #         )""")
 
-        sql = """
-            INSERT IGNORE INTO momentum (
-                symbol,
-                1M,
-                3M,
-                6M,
-                1Y,
-                3Y,
-                5Y,
-                10Y
-            )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
+    #     sql = """
+    #         INSERT IGNORE INTO momentum (
+    #             symbol,
+    #             1M,
+    #             3M,
+    #             6M,
+    #             1Y,
+    #             3Y,
+    #             5Y,
+    #             10Y
+    #         )
+    #         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
 
-        val = tuple(calculate_momentum(symbol, MOMENTUMS))
-        self.mycursor.execute(sql,val)
-        self.mydb.commit()
+    #     val = tuple(calculate_momentum(symbol, MOMENTUMS))
+    #     self.mycursor.execute(sql,val)
+    #     self.mydb.commit()
 
-    def update_momentum(self, symbol: str):
-        symbol = symbol.upper()
+    # def update_momentum(self, symbol: str):
+    #     symbol = symbol.upper()
 
-        sql = """
-        UPDATE momentum
-        SET
-            symbol = %s,
-            1M = %s,
-            3M = %s,
-            6M = %s,
-            1Y = %s,
-            3Y = %s,
-            5Y = %s,
-            10Y = %s
-        WHERE
-            symbol = %s
-        """
-        val = tuple(calculate_momentum(symbol, MOMENTUMS) + [symbol])
-        self.mycursor.execute(sql,val)
-        self.mydb.commit()
+    #     sql = """
+    #     UPDATE momentum
+    #     SET
+    #         symbol = %s,
+    #         1M = %s,
+    #         3M = %s,
+    #         6M = %s,
+    #         1Y = %s,
+    #         3Y = %s,
+    #         5Y = %s,
+    #         10Y = %s
+    #     WHERE
+    #         symbol = %s
+    #     """
+    #     val = tuple(calculate_momentum(symbol, MOMENTUMS) + [symbol])
+    #     self.mycursor.execute(sql,val)
+    #     self.mydb.commit()
 
     def load_financials(self) -> DataFrame:
         dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/fmp').connect()
         df = pd.read_sql_table('financials', dbcon)
         return df
 
-    def load_momentum(self) -> DataFrame:
-        dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/fmp').connect()
-        df = pd.read_sql_table('momentum', dbcon)
-        return df
+    # def load_momentum(self) -> DataFrame:
+    #     dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/fmp').connect()
+    #     df = pd.read_sql_table('momentum', dbcon)
+    #     return df
 
     def add_column_into_dbtable(self, tb_name: str, val: str):
         self.mycursor.execute(f"ALTER TABLE {tb_name} ADD COLUMN {val}")
@@ -279,13 +292,10 @@ class fmp:
 
 
     def drop_all_databases(self) -> None:
-        print("start")
         self.mycursor.execute("SHOW DATABASES")
         print(list(self.mycursor))
         excluded = ['sys', 'information_schema', 'performance_schema', 'mysql']
         db_names = []
-
-        print('before for loop')
 
         for name in self.mycursor:
             if name[0] not in excluded:
@@ -299,22 +309,24 @@ class fmp:
 if __name__ == '__main__':
 
     myfmp = fmp()
-    # myfmp.drop_all_databases()
-    symbols = myfmp.load_sp500_symbol_list()
-    count = 0
-    for symbol in symbols:
-        count += 1
-        myfmp.create_financials(symbol)
-        print(f"{count}/{len(symbols)}")
-
-
+    # symbols = myfmp.load_sp500_symbol_list()
     # count = 0
-    # for symbol in symbols:
-    #     print('for loop?')
-    #     count += 1
-    #     myfmp.create_momentum(symbol)
-    #     print(f"{count}/{len(symbols)}")
+    # if myfmp.table_exists('financials'):
+    #     # update
+    #     for symbol in symbols:
+    #         count += 1
+    #         myfmp.update_financials(symbol)
+    #         print(f"{count}/{len(symbols)}")
+    # else:
+    #     # create and insert initial data
+    #     for symbol in symbols:
+    #         count += 1
+    #         myfmp.create_financials(symbol)
+    #         print(f"{count}/{len(symbols)}")
 
+    # myfmp.drop_all_databases()
+
+    myfmp.get_symbols_from_db()
 
 
 
