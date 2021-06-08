@@ -62,8 +62,8 @@ class fmp:
         result = self.mycursor.fetchall()
         for tb in result:
             if table_name in tb:
-                return 1
-        return 0
+                return True
+        return False
 
     def create_financials(self, symbol: str) -> None:
         symbol = symbol.upper()
@@ -90,9 +90,9 @@ class fmp:
             return
 
         div_yield = ratio_ttm['dividendYieldTTM']
-        if not div_yield: div_yield = -1
+        if not div_yield: return
         div_per_share = ratio_ttm['dividendPerShareTTM']
-        if not div_per_share: div_per_share = -1
+        if not div_per_share: return
         gross_profit_margin = ratio_ttm['grossProfitMarginTTM']
         roe = ratio_ttm['returnOnEquityTTM']
         try:
@@ -222,67 +222,10 @@ class fmp:
         self.mycursor.execute(sql,val)
         self.mydb.commit()
 
-    # def create_momentum(self, symbol:str):
-    #     symbol = symbol.upper()
-    #     self.mycursor.execute("""
-    #         CREATE TABLE IF NOT EXISTS momentum (
-    #             symbol VARCHAR(20) PRIMARY KEY,
-    #             1M float,
-    #             3M float,
-    #             6M float,
-    #             1Y float,
-    #             3Y float,
-    #             5Y float,
-    #             10Y float
-    #         )""")
-
-    #     sql = """
-    #         INSERT IGNORE INTO momentum (
-    #             symbol,
-    #             1M,
-    #             3M,
-    #             6M,
-    #             1Y,
-    #             3Y,
-    #             5Y,
-    #             10Y
-    #         )
-    #         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
-
-    #     val = tuple(calculate_momentum(symbol, MOMENTUMS))
-    #     self.mycursor.execute(sql,val)
-    #     self.mydb.commit()
-
-    # def update_momentum(self, symbol: str):
-    #     symbol = symbol.upper()
-
-    #     sql = """
-    #     UPDATE momentum
-    #     SET
-    #         symbol = %s,
-    #         1M = %s,
-    #         3M = %s,
-    #         6M = %s,
-    #         1Y = %s,
-    #         3Y = %s,
-    #         5Y = %s,
-    #         10Y = %s
-    #     WHERE
-    #         symbol = %s
-    #     """
-    #     val = tuple(calculate_momentum(symbol, MOMENTUMS) + [symbol])
-    #     self.mycursor.execute(sql,val)
-    #     self.mydb.commit()
-
     def load_financials(self) -> DataFrame:
         dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/fmp').connect()
         df = pd.read_sql_table('financials', dbcon)
         return df
-
-    # def load_momentum(self) -> DataFrame:
-    #     dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/fmp').connect()
-    #     df = pd.read_sql_table('momentum', dbcon)
-    #     return df
 
     def add_column_into_dbtable(self, tb_name: str, val: str):
         self.mycursor.execute(f"ALTER TABLE {tb_name} ADD COLUMN {val}")
@@ -293,7 +236,6 @@ class fmp:
 
     def drop_all_databases(self) -> None:
         self.mycursor.execute("SHOW DATABASES")
-        print(list(self.mycursor))
         excluded = ['sys', 'information_schema', 'performance_schema', 'mysql']
         db_names = []
 
@@ -308,25 +250,38 @@ class fmp:
 
 if __name__ == '__main__':
 
+
+    print("1: delete database")
+    print("2: update database")
+    print("3: exit")
+    val = int(input("Enter what you want to do: "))
+
     myfmp = fmp()
-    # symbols = myfmp.load_sp500_symbol_list()
-    # count = 0
-    # if myfmp.table_exists('financials'):
-    #     # update
-    #     for symbol in symbols:
-    #         count += 1
-    #         myfmp.update_financials(symbol)
-    #         print(f"{count}/{len(symbols)}")
-    # else:
-    #     # create and insert initial data
-    #     for symbol in symbols:
-    #         count += 1
-    #         myfmp.create_financials(symbol)
-    #         print(f"{count}/{len(symbols)}")
 
-    # myfmp.drop_all_databases()
+    if val == 1:
+        myfmp.drop_all_databases()
+    if val == 2:
+        count = 0
+        print(myfmp.table_exists('financials'))
+        if myfmp.table_exists('financials'):
+            # update
+            symbols = myfmp.get_symbols_from_db()
+            for symbol in symbols:
+                count += 1
+                print(f"{symbol} {count}/{len(symbols)}")
+                myfmp.update_financials(symbol)
 
-    myfmp.get_symbols_from_db()
+        else:
+            # create and insert initial data
+            symbols = myfmp.load_sp500_symbol_list()
+            for symbol in symbols:
+                count += 1
+                print(f"{symbol} {count}/{len(symbols)}")
+                myfmp.create_financials(symbol)
+
+    if val == 3:
+        exit
+
 
 
 
