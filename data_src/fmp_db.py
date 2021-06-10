@@ -7,7 +7,7 @@ import pandas as pd
 import mysql.connector
 from typing import List
 from sqlalchemy import create_engine
-from price import calculate_momentum
+from data_src.price import calculate_momentum
 from pandas.core.frame import DataFrame
 
 FMP_API_KEY = credentials.FMP_API_KEYS
