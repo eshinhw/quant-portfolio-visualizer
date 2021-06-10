@@ -1,4 +1,4 @@
-from fmp_db import fmp
+from data_src.fmp_db import fmp
 
 # update table in database
 
