@@ -1,6 +1,6 @@
 import os
 import math
-import price
+import data_src.price
 import requests
 import credentials
 import numpy as np
