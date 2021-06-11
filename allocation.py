@@ -35,10 +35,22 @@ print(amount_per_stock * numStocks)
 
 print(qbot.get_positions())
 
+
+
 """
 equity * stock weight = total market value in stock
 
 total market value in stock / 15 stocks = market value for each stock
 
 unused portion of stock = total market value in stock - current market value
+
+BUY RULES
+
+15% from recent high = 0.3%
+25% from recent high = 0.3%
+50% from recent high = 0.4%
+
+WHEN TO SELL
+
+
 """
