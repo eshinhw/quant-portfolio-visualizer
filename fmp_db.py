@@ -37,10 +37,11 @@ class fmp:
         if delta.days > expire_day:
             os.remove(SP500_SYMBOL_PATH)
             self.load_sp500_symbol_list()
+            self.drop_all_databases()
 
     def load_sp500_symbol_list(self) -> List[str]:
-
         if os.path.exists(SP500_SYMBOL_PATH):
+            self.check_file_age(30)
             fp = open(SP500_SYMBOL_PATH, "r")
             data = json.load(fp)
             return data['symbols']
@@ -262,28 +263,28 @@ class fmp:
 if __name__ == '__main__':
 
     myfmp = fmp()
-    myfmp.load_sp500_symbol_list()
-    myfmp.check_file_age()
+    # myfmp.load_sp500_symbol_list()
+    # myfmp.check_file_age()
 
-    # count = 0
-    # # print(myfmp.table_exists('financials'))
-    # if myfmp.table_exists('financials'):
-    #     # update
-    #     symbols = myfmp.get_symbols_from_db()
-    #     for symbol in symbols:
-    #         count += 1
-    #         print(f"{symbol} {count}/{len(symbols)}")
-    #         myfmp.update_financials(symbol)
-    #         print("table update completed!")
+    count = 0
+    # print(myfmp.table_exists('financials'))
+    if myfmp.table_exists('financials'):
+        # update
+        symbols = myfmp.get_symbols_from_db()
+        for symbol in symbols:
+            count += 1
+            print(f"{symbol} {count}/{len(symbols)}")
+            myfmp.update_financials(symbol)
+            print("table update completed!")
 
-    # else:
-    #     # create and insert initial data
-    #     symbols = myfmp.load_sp500_symbol_list()
-    #     for symbol in symbols:
-    #         count += 1
-    #         print(f"{symbol} {count}/{len(symbols)}")
-    #         myfmp.create_financials(symbol)
-    #         print("table created successfully")
+    else:
+        # create and insert initial data
+        symbols = myfmp.load_sp500_symbol_list()
+        for symbol in symbols:
+            count += 1
+            print(f"{symbol} {count}/{len(symbols)}")
+            myfmp.create_financials(symbol)
+            print("table created successfully")
 
 
     # print("1: delete database")
