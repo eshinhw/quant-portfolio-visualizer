@@ -1,12 +1,13 @@
 import os
 import price
 import smtplib
+import credentials
 import pandas as pd
 from fmp_db import fmp
 from email.message import EmailMessage
 
-EMAIL_ADDRESS = os.environ.get("GMAIL_ADDRESS")
-EMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD")
+EMAIL_ADDRESS = credentials.GMAIL_ADDRESS
+EMAIL_PASSWORD = credentials.GMAIL_PW
 
 def sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents):
     msg = EmailMessage()
@@ -54,11 +55,12 @@ mom_data = {
 }
 
 count = 0
-
+email_contents = ""
 for symbol in list(df_final['symbol']):
     count += 1
     print(f"{symbol} \t {count} / {len(list(df_final['symbol']))}")
-    currPrice = db.get_current_price(symbol)
+    currPrice = 10
+    #currPrice = db.get_current_price(symbol)
     high = price.calculate_prev_max_high(symbol, 260)
     d1 = high * 0.85
     d2 = high * 0.75
@@ -69,35 +71,33 @@ for symbol in list(df_final['symbol']):
     m12 = price.calculate_prev_min_low(symbol, 360)
 
     msg = ""
+    msg += f"{symbol}: "
 
     if currPrice > high:
         increase = (currPrice - high)/high * 100
-        msg = f"{symbol}: New High {increase}"
-        print(f"{symbol}: New High {increase}")
-        sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, symbol, msg)
+        msg += f"New High ({increase}) "
+        #print(f"{symbol}: New High {increase}")
         continue
     if currPrice < m3:
         print(f'{symbol} \t 90D_support')
-        msg += symbol + " 90D_Support /"
+        msg += "90D_Support / "
     if currPrice < m6:
         print(f'{symbol} \t 180D_support')
-        msg += " 180D_Support /"
+        msg += "180D_Support / "
     if currPrice < m12:
         print(f'{symbol} \t 360D_support')
-        msg += " 360D_Support /"
+        msg += "360D_Support / "
     if currPrice < d1:
         print(f'{symbol} \t 15%_Discount')
-        msg += " 15%_Discount /"
+        msg += "15%_Discount / "
     if currPrice < d2:
         print(f'{symbol} \t 25%_Discount')
-        msg += " 25%_Discount /"
+        msg += "25%_Discount / "
     if currPrice < d3:
         print(f'{symbol} \t 40%_Discount')
-        msg += " 40%_Discount /"
+        msg += "40%_Discount / "
 
-    if msg != "":
-        print(msg)
-        sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, symbol, msg)
+    email_contents += msg.strip() + '\n\n'
 
     mom_data['symbol'].append(symbol)
     mom_data['currentPrice'].append(currPrice)
@@ -108,6 +108,8 @@ for symbol in list(df_final['symbol']):
     mom_data['90D_support'].append(m3)
     mom_data['180D_support'].append(m6)
     mom_data['360D_support'].append(m12)
+
+sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, symbol, email_contents)
 
 mom_df = pd.DataFrame(mom_data)
 mom_df.set_index('symbol', inplace=True)
