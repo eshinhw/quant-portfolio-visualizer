@@ -57,7 +57,7 @@ count = 0
 
 for symbol in list(df_final['symbol']):
     count += 1
-    print(f"{count} / {len(list(df_final['symbol']))}")
+    print(f"{symbol} \t {count} / {len(list(df_final['symbol']))}")
     currPrice = db.get_current_price(symbol)
     high = price.calculate_prev_max_high(symbol, 260)
     d1 = high * 0.85
@@ -67,6 +67,37 @@ for symbol in list(df_final['symbol']):
     m3 = price.calculate_prev_min_low(symbol, 90)
     m6 = price.calculate_prev_min_low(symbol, 180)
     m12 = price.calculate_prev_min_low(symbol, 360)
+
+    msg = ""
+
+    if currPrice > high:
+        increase = (currPrice - high)/high * 100
+        msg = f"{symbol}: New High {increase}"
+        print(f"{symbol}: New High {increase}")
+        sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, symbol, msg)
+        continue
+    if currPrice < m3:
+        print(f'{symbol} \t 90D_support')
+        msg += symbol + " 90D_Support /"
+    if currPrice < m6:
+        print(f'{symbol} \t 180D_support')
+        msg += " 180D_Support /"
+    if currPrice < m12:
+        print(f'{symbol} \t 360D_support')
+        msg += " 360D_Support /"
+    if currPrice < d1:
+        print(f'{symbol} \t 15%_Discount')
+        msg += " 15%_Discount /"
+    if currPrice < d2:
+        print(f'{symbol} \t 25%_Discount')
+        msg += " 25%_Discount /"
+    if currPrice < d3:
+        print(f'{symbol} \t 40%_Discount')
+        msg += " 40%_Discount /"
+
+    if msg != "":
+        print(msg)
+        sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, symbol, msg)
 
     mom_data['symbol'].append(symbol)
     mom_data['currentPrice'].append(currPrice)
@@ -78,36 +109,7 @@ for symbol in list(df_final['symbol']):
     mom_data['180D_support'].append(m6)
     mom_data['360D_support'].append(m12)
 
-
 mom_df = pd.DataFrame(mom_data)
 mom_df.set_index('symbol', inplace=True)
 
-
-for symbol in list(mom_df.index):
-    msg = ""
-    currPrice = mom_df.loc[symbol,'currentPrice']
-    if currPrice > mom_df.loc[symbol,'52W_high']:
-        print(symbol, " making new high")
-    elif currPrice < mom_df.loc[symbol,'90D_support']:
-        print(f'{symbol} \t 90D_support')
-        msg += symbol + " 90D_Support /"
-    elif currPrice < mom_df.loc[symbol, '180D_support']:
-        print(f'{symbol} \t 180D_support')
-        msg += " 180D_Support /"
-    elif currPrice < mom_df.loc[symbol, '360D_support']:
-        print(f'{symbol} \t 360D_support')
-        msg += " 360D_Support /"
-    elif currPrice < mom_df.loc[symbol, '15%_discount']:
-        print(f'{symbol} \t 15%_Discount')
-        msg += " 15%_Discount /"
-    elif currPrice < mom_df.loc[symbol, '25%_discount']:
-        print(f'{symbol} \t 25%_Discount')
-        msg += " 25%_Discount /"
-    elif currPrice < mom_df.loc[symbol, '40%_discount']:
-        print(f'{symbol} \t 40%_Discount')
-        msg += " 40%_Discount /"
-
-    if msg != "":
-        print("message exists")
-        sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, symbol, msg)
 

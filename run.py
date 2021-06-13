@@ -5,7 +5,6 @@ import pandas as pd
 import datetime as dt
 import pandas_datareader.data as web
 
-
 def calculate_prev_max_high(symbol: str, period: int):
     start_date = dt.datetime(1970,1,1)
     end_date = dt.datetime.today()
