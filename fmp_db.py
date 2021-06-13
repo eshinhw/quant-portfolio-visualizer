@@ -1,18 +1,19 @@
 import os
 import json
 import pprint
+import datetime
 import requests
 import credentials
 import pandas as pd
 import mysql.connector
 from typing import List
 from sqlalchemy import create_engine
-from price import calculate_momentum
+# from price import calculate_momentum
 from pandas.core.frame import DataFrame
 
 FMP_API_KEY = credentials.FMP_API_KEYS
 MOMENTUMS = [3,6,12,36,60]
-SP500_SYMBOL_PATH = './data_src/sp500_symbols.json'
+SP500_SYMBOL_PATH = './sp500_symbols.json'
 
 class fmp:
     def __init__(self) -> None:
@@ -27,6 +28,15 @@ class fmp:
             self.mycursor.execute("USE fmp")
         except Exception as e:
             print(e)
+
+    def check_file_age(self, expire_day):
+        timestamp = os.stat(SP500_SYMBOL_PATH).st_ctime
+        createtime = datetime.datetime.fromtimestamp(timestamp)
+        now = datetime.datetime.now()
+        delta = now - createtime
+        if delta.days > expire_day:
+            os.remove(SP500_SYMBOL_PATH)
+            self.load_sp500_symbol_list()
 
     def load_sp500_symbol_list(self) -> List[str]:
 
@@ -251,37 +261,61 @@ class fmp:
 
 if __name__ == '__main__':
 
-
-    print("1: delete database")
-    print("2: update database")
-    print("3: exit")
-    val = int(input("Enter what you want to do: "))
-
     myfmp = fmp()
+    myfmp.load_sp500_symbol_list()
+    myfmp.check_file_age()
 
-    if val == 1:
-        myfmp.drop_all_databases()
-    if val == 2:
-        count = 0
-        print(myfmp.table_exists('financials'))
-        if myfmp.table_exists('financials'):
-            # update
-            symbols = myfmp.get_symbols_from_db()
-            for symbol in symbols:
-                count += 1
-                print(f"{symbol} {count}/{len(symbols)}")
-                myfmp.update_financials(symbol)
+    # count = 0
+    # # print(myfmp.table_exists('financials'))
+    # if myfmp.table_exists('financials'):
+    #     # update
+    #     symbols = myfmp.get_symbols_from_db()
+    #     for symbol in symbols:
+    #         count += 1
+    #         print(f"{symbol} {count}/{len(symbols)}")
+    #         myfmp.update_financials(symbol)
+    #         print("table update completed!")
 
-        else:
-            # create and insert initial data
-            symbols = myfmp.load_sp500_symbol_list()
-            for symbol in symbols:
-                count += 1
-                print(f"{symbol} {count}/{len(symbols)}")
-                myfmp.create_financials(symbol)
+    # else:
+    #     # create and insert initial data
+    #     symbols = myfmp.load_sp500_symbol_list()
+    #     for symbol in symbols:
+    #         count += 1
+    #         print(f"{symbol} {count}/{len(symbols)}")
+    #         myfmp.create_financials(symbol)
+    #         print("table created successfully")
 
-    if val == 3:
-        exit
+
+    # print("1: delete database")
+    # print("2: update database")
+    # print("3: exit")
+    # val = int(input("Enter what you want to do: "))
+
+    # myfmp = fmp()
+
+    # if val == 1:
+    #     myfmp.drop_all_databases()
+    # if val == 2:
+    #     count = 0
+    #     print(myfmp.table_exists('financials'))
+    #     if myfmp.table_exists('financials'):
+    #         # update
+    #         symbols = myfmp.get_symbols_from_db()
+    #         for symbol in symbols:
+    #             count += 1
+    #             print(f"{symbol} {count}/{len(symbols)}")
+    #             myfmp.update_financials(symbol)
+
+    #     else:
+    #         # create and insert initial data
+    #         symbols = myfmp.load_sp500_symbol_list()
+    #         for symbol in symbols:
+    #             count += 1
+    #             print(f"{symbol} {count}/{len(symbols)}")
+    #             myfmp.create_financials(symbol)
+
+    # if val == 3:
+    #     exit
 
 
 
