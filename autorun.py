@@ -2,9 +2,7 @@ import os
 import price
 import smtplib
 import pandas as pd
-import datetime as dt
 from fmp_db import fmp
-import pandas_datareader.data as web
 from email.message import EmailMessage
 
 EMAIL_ADDRESS = os.environ.get("GMAIL_ADDRESS")
@@ -45,7 +43,7 @@ df_final = df[div_conds]
 
 mom_data = {
     'symbol': [],
-    'recent90D_high': [],
+    '52W_high': [],
     'currentPrice': [],
     '15%_discount': [],
     '25%_discount': [],
@@ -55,11 +53,13 @@ mom_data = {
     '360D_support': []
 }
 
+count = 0
 
 for symbol in list(df_final['symbol']):
-    print(symbol)
+    count += 1
+    print(f"{count} / {len(list(df_final['symbol']))}")
     currPrice = db.get_current_price(symbol)
-    high = price.calculate_prev_max_high(symbol, 90)
+    high = price.calculate_prev_max_high(symbol, 260)
     d1 = high * 0.85
     d2 = high * 0.75
     d3 = high * 0.60
@@ -70,7 +70,7 @@ for symbol in list(df_final['symbol']):
 
     mom_data['symbol'].append(symbol)
     mom_data['currentPrice'].append(currPrice)
-    mom_data['recent90D_high'].append(high)
+    mom_data['52W_high'].append(high)
     mom_data['15%_discount'].append(d1)
     mom_data['25%_discount'].append(d2)
     mom_data['40%_discount'].append(d3)
@@ -82,12 +82,13 @@ for symbol in list(df_final['symbol']):
 mom_df = pd.DataFrame(mom_data)
 mom_df.set_index('symbol', inplace=True)
 
-buyList = []
 
 for symbol in list(mom_df.index):
     msg = ""
     currPrice = mom_df.loc[symbol,'currentPrice']
-    if currPrice < mom_df.loc[symbol,'90D_support']:
+    if currPrice > mom_df.loc[symbol,'52W_high']:
+        print(symbol, " making new high")
+    elif currPrice < mom_df.loc[symbol,'90D_support']:
         print(f'{symbol} \t 90D_support')
         msg += symbol + " 90D_Support /"
     elif currPrice < mom_df.loc[symbol, '180D_support']:
@@ -105,8 +106,6 @@ for symbol in list(mom_df.index):
     elif currPrice < mom_df.loc[symbol, '40%_discount']:
         print(f'{symbol} \t 40%_Discount')
         msg += " 40%_Discount /"
-    else:
-        print(f'{symbol} \t still expensive.. be patient!')
 
     if msg != "":
         print("message exists")
