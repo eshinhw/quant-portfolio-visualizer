@@ -14,14 +14,17 @@ from pandas.core.frame import DataFrame
 FMP_API_KEY = credentials.FMP_API_KEYS
 MOMENTUMS = [3,6,12,36,60]
 SP500_SYMBOL_PATH = './sp500_symbols.json'
+DB_HOST = credentials.RASP_PI_DB_HOST
+DB_USER = credentials.RASP_PI_DB_USER
+DB_PW = credentials.RASP_PI_DB_PW
 
 class fmp:
     def __init__(self) -> None:
         try:
             self.mydb = mysql.connector.connect(
-                host=credentials.DB_HOST,
-                user=credentials.DB_USER,
-                password=credentials.DB_PASSWORD
+                host=DB_HOST,
+                user=DB_USER,
+                password=DB_PW
             )
             self.mycursor = self.mydb.cursor()
             self.mycursor.execute("CREATE DATABASE IF NOT EXISTS fmp")
@@ -235,7 +238,7 @@ class fmp:
         self.mydb.commit()
 
     def load_financials(self) -> DataFrame:
-        dbcon = create_engine(f'mysql://{credentials.DB_USER}:{credentials.DB_PASSWORD}@{credentials.DB_HOST}/fmp').connect()
+        dbcon = create_engine(f'mysql://{DB_USER}:{DB_PW}@{DB_HOST}/fmp').connect()
         df = pd.read_sql_table('financials', dbcon)
         return df
 
@@ -267,7 +270,6 @@ if __name__ == '__main__':
     # myfmp.check_file_age()
 
     count = 0
-    # print(myfmp.table_exists('financials'))
     if myfmp.table_exists('financials'):
         # update
         symbols = myfmp.get_symbols_from_db()
@@ -275,7 +277,7 @@ if __name__ == '__main__':
             count += 1
             print(f"{symbol} {count}/{len(symbols)}")
             myfmp.update_financials(symbol)
-            print("table update completed!")
+        print("table update completed!")
 
     else:
         # create and insert initial data
@@ -284,7 +286,7 @@ if __name__ == '__main__':
             count += 1
             print(f"{symbol} {count}/{len(symbols)}")
             myfmp.create_financials(symbol)
-            print("table created successfully")
+        print("table created successfully")
 
 
     # print("1: delete database")

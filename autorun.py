@@ -59,8 +59,8 @@ email_contents = ""
 for symbol in list(df_final['symbol']):
     count += 1
     print(f"{symbol} \t {count} / {len(list(df_final['symbol']))}")
-    currPrice = 10
-    #currPrice = db.get_current_price(symbol)
+    # currPrice = 10
+    currPrice = db.get_current_price(symbol)
     high = price.calculate_prev_max_high(symbol, 260)
     d1 = high * 0.85
     d2 = high * 0.75
@@ -75,27 +75,26 @@ for symbol in list(df_final['symbol']):
 
     if currPrice > high:
         increase = (currPrice - high)/high * 100
-        msg += f"New High ({increase}) "
-        #print(f"{symbol}: New High {increase}")
+        msg += f"Making New High ({increase}) "
         continue
     if currPrice < m3:
         print(f'{symbol} \t 90D_support')
-        msg += "90D_Support / "
+        msg += f"90D_Support ({m3}) | "
     if currPrice < m6:
         print(f'{symbol} \t 180D_support')
-        msg += "180D_Support / "
+        msg += f"180D_Support ({m6}) | "
     if currPrice < m12:
         print(f'{symbol} \t 360D_support')
-        msg += "360D_Support / "
+        msg += f"360D_Support ({m12}) | "
     if currPrice < d1:
         print(f'{symbol} \t 15%_Discount')
-        msg += "15%_Discount / "
+        msg += f"15%_Discount ({d1}) | "
     if currPrice < d2:
         print(f'{symbol} \t 25%_Discount')
-        msg += "25%_Discount / "
+        msg += f"25%_Discount ({d2}) | "
     if currPrice < d3:
         print(f'{symbol} \t 40%_Discount')
-        msg += "40%_Discount / "
+        msg += f"40%_Discount ({d3}) | "
 
     email_contents += msg.strip() + '\n\n'
 
