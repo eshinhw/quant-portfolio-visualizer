@@ -69,7 +69,7 @@ The main source of financial data for the model is Financial Modeling Prep API (
 
 All types of automated tasks are run through raspberry pi with **crontab** which allows us to execute python scripts at scheduled times. 
 
-### Daily Stock Update
+### Daily Stock Update Email Alert
 
 <p align="center">
   <img width="1000" height="500" src="https://user-images.githubusercontent.com/41933169/121985878-94fd0b80-cd63-11eb-944f-248f8d69e4a4.png">
