@@ -1,4 +1,4 @@
-# Automated Quantitative Investing with Questrade API
+# Automated Quantitative Investing with Financial Modeling Prep API and Questrade API
 
 ## Introduction
 
