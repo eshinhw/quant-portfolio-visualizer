@@ -60,6 +60,9 @@ print(df_final)
 price_data = {
     'Symbol': [],
     'Name': [],
+    'Exchange': [],
+    'Sector': [],
+    'Industry': [],
     '52W High': [],
     'Current Price': [],
     'Change (%)': []
@@ -81,6 +84,10 @@ for symbol in list(df_final['symbol']):
         discount = (currPrice - high)/high * 100
         if discount < -15:
             price_data['Symbol'].append(symbol)
+            price_data['Name'].append(symbol)
+            price_data['Exchange'].append(symbol)
+            price_data['Sector'].append(symbol)
+            price_data['Industry'].append(symbol)
             price_data['52W High'].append(high)
             price_data['Current Price'].append(currPrice)
             price_data['Change (%)'].append(discount)
