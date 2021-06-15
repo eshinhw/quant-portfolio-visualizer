@@ -1,8 +1,8 @@
-# Automated Quantitative Investing with Financial Modeling Prep API and Questrade API
+# Automated Quantitative Investing
 
 ## Introduction
 
-Questrade is one of the investing brokers in Canada, and I have an investing account with them that I want to keep track of regularly. A jupyter notebook called 'Questrade Portfolio Manager' retrieves account information using Questrade API called 'qtrade' and summarizes some useful information such as monthly account activities, position changes and dividend income that I earned every month. Whenever I want to know how my investing account is doing, all I need to do is just run this notebook from time to time. In terms of security, qtrade wrapper automatically refreshes a security token, so I don't have to log in to the website to get a new token everytime I run the notebook. Below are a sample dataframe and visualizations I can create from the notebook.
+Questrade is one of the investing brokers in Canada, and I have an investing account with them that I want to keep track of regularly. A jupyter notebook called 'Questrade Portfolio Manager' retrieves account information using Questrade API wrapper called 'qtrade' and summarizes updated information such as monthly account activities, position changes and dividend income that I earned every month. Whenever I want to know how my investing account is doing, all I need to do is just run this notebook from time to time. In terms of security, qtrade wrapper automatically refreshes a security token, so I don't have to log in to the website to get a new token everytime I run the notebook. Below are a sample dataframe and visualizations I can create from the notebook.
 
 ## Visualizations on Account Activities
 
