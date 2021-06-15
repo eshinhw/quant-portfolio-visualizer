@@ -15,7 +15,7 @@ def sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents):
     msg['Subject'] = subject
     msg['From'] = EMAIL_ADDRESS
     msg['To'] = EMAIL_ADDRESS
-    msg.set_content(contents)
+    #msg.set_content(contents)
 
     msg.add_alternative("""\
         <!DOCTYPE html>
@@ -70,9 +70,9 @@ price_data = {
 
 count = 0
 email_contents = ""
-for symbol in list(df_final['symbol']):
+for symbol in list(df_final.index):
     count += 1
-    print(f"{symbol} \t {count} / {len(list(df_final['symbol']))}")
+    print(f"{symbol} \t {count} / {len(list(df_final.index))}")
     currPrice = round(db.get_current_price(symbol),2)
     high = round(price.calculate_prev_max_high(symbol, 260),2)
     name = df_final.loc[symbol, 'name']
@@ -82,22 +82,23 @@ for symbol in list(df_final['symbol']):
 
     if currPrice < high:
         discount = (currPrice - high)/high * 100
-        if discount < -15:
+        if discount < -10:
             price_data['Symbol'].append(symbol)
-            price_data['Name'].append(symbol)
-            price_data['Exchange'].append(symbol)
-            price_data['Sector'].append(symbol)
-            price_data['Industry'].append(symbol)
+            price_data['Name'].append(name)
+            price_data['Exchange'].append(exchange)
+            price_data['Sector'].append(sector)
+            price_data['Industry'].append(industry)
             price_data['52W High'].append(high)
             price_data['Current Price'].append(currPrice)
             price_data['Change (%)'].append(discount)
 
 mom_df = pd.DataFrame(price_data)
 mom_df.set_index('Symbol', inplace=True)
+mom_df.sort_values(by='Change (%)', ascending=True, inplace=True)
 
-today = dt.datetime.today()
+today = str(dt.datetime.today().strftime('%Y-%b-%d'))
 
-sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, "Daily Stock Update " + str(today), mom_df.to_html())
+sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, f"Daily Stock Update ({today})", mom_df.to_html())
 
 
 
