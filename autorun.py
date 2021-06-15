@@ -3,6 +3,7 @@ import price
 import smtplib
 import credentials
 import pandas as pd
+import datetime as dt
 from fmp_db import fmp
 from email.message import EmailMessage
 
@@ -15,6 +16,15 @@ def sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents):
     msg['From'] = EMAIL_ADDRESS
     msg['To'] = EMAIL_ADDRESS
     msg.set_content(contents)
+
+    msg.add_alternative("""\
+        <!DOCTYPE html>
+        <html>
+            <body>
+                {0}
+            </body>
+        </html>
+    """.format(contents), subtype='html')
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
         smtp.send_message(msg)
@@ -22,6 +32,7 @@ def sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents):
 
 db = fmp()
 df = db.load_financials()
+print(df)
 df['marketCap'] = df['marketCap']/100000000
 
 # ## Minimum Fundamental Ratio Requirements
@@ -41,17 +52,17 @@ df = df[conditions]
 div_conds = (df['dps_fiveY_growth'] > minDPSGrowth) & (df['div_yield'] > minDivYield)
 df_final = df[div_conds]
 
+df_final.set_index('symbol', inplace=True)
 
-mom_data = {
-    'symbol': [],
-    '52W_high': [],
-    'currentPrice': [],
-    '15%_discount': [],
-    '25%_discount': [],
-    '40%_discount': [],
-    '90D_support': [],
-    '180D_support': [],
-    '360D_support': []
+print(df_final)
+
+
+price_data = {
+    'Symbol': [],
+    'Name': [],
+    '52W High': [],
+    'Current Price': [],
+    'Change (%)': []
 }
 
 count = 0
@@ -59,58 +70,28 @@ email_contents = ""
 for symbol in list(df_final['symbol']):
     count += 1
     print(f"{symbol} \t {count} / {len(list(df_final['symbol']))}")
-    # currPrice = 10
-    currPrice = db.get_current_price(symbol)
-    high = price.calculate_prev_max_high(symbol, 260)
-    d1 = high * 0.85
-    d2 = high * 0.75
-    d3 = high * 0.60
+    currPrice = round(db.get_current_price(symbol),2)
+    high = round(price.calculate_prev_max_high(symbol, 260),2)
+    name = df_final.loc[symbol, 'name']
+    exchange = df_final.loc[symbol, 'exchange']
+    sector = df_final.loc[symbol, 'sector']
+    industry = df_final.loc[symbol, 'industry']
 
-    m3 = price.calculate_prev_min_low(symbol, 90)
-    m6 = price.calculate_prev_min_low(symbol, 180)
-    m12 = price.calculate_prev_min_low(symbol, 360)
+    if currPrice < high:
+        discount = (currPrice - high)/high * 100
+        if discount < -15:
+            price_data['Symbol'].append(symbol)
+            price_data['52W High'].append(high)
+            price_data['Current Price'].append(currPrice)
+            price_data['Change (%)'].append(discount)
 
-    msg = ""
-    msg += f"{symbol}: "
+mom_df = pd.DataFrame(price_data)
+mom_df.set_index('Symbol', inplace=True)
 
-    if currPrice > high:
-        increase = (currPrice - high)/high * 100
-        msg += f"Making New High ({increase}) "
-        continue
-    if currPrice < m3:
-        print(f'{symbol} \t 90D_support')
-        msg += f"90D_Support ({m3}) | "
-    if currPrice < m6:
-        print(f'{symbol} \t 180D_support')
-        msg += f"180D_Support ({m6}) | "
-    if currPrice < m12:
-        print(f'{symbol} \t 360D_support')
-        msg += f"360D_Support ({m12}) | "
-    if currPrice < d1:
-        print(f'{symbol} \t 15%_Discount')
-        msg += f"15%_Discount ({d1}) | "
-    if currPrice < d2:
-        print(f'{symbol} \t 25%_Discount')
-        msg += f"25%_Discount ({d2}) | "
-    if currPrice < d3:
-        print(f'{symbol} \t 40%_Discount')
-        msg += f"40%_Discount ({d3}) | "
+today = dt.datetime.today()
 
-    email_contents += msg.strip() + '\n\n'
+sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, "Daily Stock Update " + str(today), mom_df.to_html())
 
-    mom_data['symbol'].append(symbol)
-    mom_data['currentPrice'].append(currPrice)
-    mom_data['52W_high'].append(high)
-    mom_data['15%_discount'].append(d1)
-    mom_data['25%_discount'].append(d2)
-    mom_data['40%_discount'].append(d3)
-    mom_data['90D_support'].append(m3)
-    mom_data['180D_support'].append(m6)
-    mom_data['360D_support'].append(m12)
 
-sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, symbol, email_contents)
-
-mom_df = pd.DataFrame(mom_data)
-mom_df.set_index('symbol', inplace=True)
 
 
