@@ -16,9 +16,10 @@ class qbot:
             try:
                 self.qtrade = qt(token_yaml="./access_token.yml")
             except:
+                os.remove("./access_token.yml")
                 code = credentials.QUESTRADE_API_CODE
                 self.qtrade = qt(access_code=code)
-                self.qtrade.refresh_access_token(from_yaml=True)
+                # self.qtrade.refresh_access_token(from_yaml=True)
         else:
             code = credentials.QUESTRADE_API_CODE
             self.qtrade = qt(access_code=code)
