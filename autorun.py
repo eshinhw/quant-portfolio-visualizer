@@ -37,13 +37,13 @@ df['marketCap'] = df['marketCap']/100000000
 
 # ## Minimum Fundamental Ratio Requirements
 
-minMktCap = 1000
+minMktCap = 10
 minRevGrowth = 0.3
 minGPMargin = 0.2
 minEPSGrowth = 0.1
 minROE = 0.2
 minDPSGrowth = 0.1
-minDivYield = 0
+minDivYield = 0.02
 
 
 df = df[df['marketCap'] > minMktCap]
@@ -65,7 +65,8 @@ price_data = {
     'Industry': [],
     '52W High': [],
     'Current Price': [],
-    'Change (%)': []
+    'Change (%)': [],
+    'Dividend Yield': []
 }
 
 count = 0
@@ -79,6 +80,7 @@ for symbol in list(df_final.index):
     exchange = df_final.loc[symbol, 'exchange']
     sector = df_final.loc[symbol, 'sector']
     industry = df_final.loc[symbol, 'industry']
+    div_yield = df_final.loc[symbol, 'div_yield']
 
     if currPrice < high:
         discount = (currPrice - high)/high * 100
@@ -91,10 +93,11 @@ for symbol in list(df_final.index):
             price_data['52W High'].append(high)
             price_data['Current Price'].append(currPrice)
             price_data['Change (%)'].append(discount)
+            price_data['Dividend Yield'].append(div_yield)
 
 mom_df = pd.DataFrame(price_data)
 mom_df.set_index('Symbol', inplace=True)
-mom_df.sort_values(by='Change (%)', ascending=True, inplace=True)
+mom_df.sort_values(by='Dividend Yield', ascending=False, inplace=True)
 
 today = str(dt.datetime.today().strftime('%Y-%b-%d'))
 
