@@ -15,7 +15,7 @@ def sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents):
     msg['Subject'] = subject
     msg['From'] = EMAIL_ADDRESS
     msg['To'] = EMAIL_ADDRESS
-    #msg.set_content(contents)
+    msg.set_content(contents)
 
     msg.add_alternative("""\
         <!DOCTYPE html>
