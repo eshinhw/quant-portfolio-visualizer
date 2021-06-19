@@ -25,7 +25,6 @@ class qbot:
 
         # else:
         self.qtrade = qt(access_code=code)
-
         self.acctID = self.qtrade.get_account_id()
 
     def get_acct_positions(self):
