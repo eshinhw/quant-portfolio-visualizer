@@ -15,16 +15,18 @@ def sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents):
     msg['Subject'] = subject
     msg['From'] = EMAIL_ADDRESS
     msg['To'] = EMAIL_ADDRESS
-    msg.set_content(contents)
+    # msg.set_content("hello?")
 
-    msg.add_alternative("""\
+    msg.add_alternative(f"""\
+
         <!DOCTYPE html>
         <html>
             <body>
-                {0}
+                <h1>Watchlist Update</h1>
+                {contents}
             </body>
         </html>
-    """.format(contents), subtype='html')
+    """, subtype='html')
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
         smtp.send_message(msg)
@@ -38,7 +40,7 @@ df['marketCap'] = df['marketCap']/100000000
 # ## Minimum Fundamental Ratio Requirements
 
 minMktCap = 10
-minRevGrowth = 0.3
+minRevGrowth = 0.5
 minGPMargin = 0.2
 minEPSGrowth = 0.1
 minROE = 0.2
