@@ -1,6 +1,7 @@
 import os
 import math
 import price
+import pprint
 import requests
 import credentials
 import numpy as np
@@ -28,6 +29,7 @@ class qbot:
             self.qtrade = qt(access_code=code)
 
         self.acctID = self.qtrade.get_account_id()
+        self.bal = self.get_balance()
 
     def get_acct_positions(self):
         return self.qtrade.get_account_positions(self.acctID[0])
@@ -41,7 +43,7 @@ class qbot:
         access_token = token['access_token']
         url = token['api_server'] + '/v1/accounts/' + self.acctID[0] + '/balances'
         bal = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
-        print(bal)
+        pprint.pprint(bal)
         data = {'Currency': [], 'Cash': [], 'Market_Value': [], 'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
 
         for x in bal['perCurrencyBalances']:
@@ -57,13 +59,25 @@ class qbot:
         return df
 
     def get_usd_total_equity(self):
-        bal = self.get_balance()
-        return bal.loc['USD','Total_Equity']
+        return self.bal.loc['USD','Total_Equity']
+
+    def get_usd_total_mv(self):
+        return self.bal.loc['USD', 'Market_Value']
 
     def get_cad_total_equity(self):
-        bal = self.get_balance()
-        return bal.loc['CAD','Total_Equity']
+        return self.bal.loc['CAD','Total_Equity']
 
+    def get_cad_total_mv(self):
+        return self.bal.loc['CAD', 'Market_Value']
+
+    def get_usd_total_cost(self):
+        positions = self.get_acct_positions()
+        total_cost = 0
+        for pos in positions:
+            curr_cost = pos['totalCost']
+            total_cost += curr_cost
+
+        return total_cost
 
     def get_positions(self):
         position_data = {
@@ -75,8 +89,8 @@ class qbot:
             'Return (%)': [],
             'Portfolio (%)': []
         }
+        total_market_value = self.get_usd_total_mv()
         total_costs = 0
-        total_market_value = 0
         for account in self.acctID:
             positions = self.qtrade.get_account_positions(account)
             for position in positions:
@@ -88,7 +102,6 @@ class qbot:
                 cost = position['totalCost']
                 change = round(100 * (cmv - cost) / cost, 2)
 
-                total_market_value = total_market_value + cmv
                 total_costs = total_costs + cost
                 position_data['Symbol'].append(symbol)
                 position_data['Description'].append(description)
@@ -96,11 +109,10 @@ class qbot:
                 position_data['Quantities'].append(qty)
                 position_data['Market Value'].append(cmv)
                 position_data['Return (%)'].append(change)
+                position_data['Portfolio (%)'].append(round(100 * (cmv / total_market_value),2))
 
         portfolio = pd.DataFrame(position_data)
         portfolio.set_index('Symbol', inplace=True)
-        total_equity = self.get_usd_total_equity()
-        portfolio['%Portfolio'] = [round(100 * (x / total_equity), 2) for x in portfolio['Market Value']]
         return portfolio
 
     def get_dividend_income(self):
@@ -149,4 +161,4 @@ def calculate_shares(symbol: str, weight: float, currency: str):
 if __name__ == '__main__':
 
     q = qbot()
-    print(q.get_acct_positions())
+    q.get_usd_total_cost()
