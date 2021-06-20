@@ -15,8 +15,10 @@ class qbot:
         code = credentials.QUESTRADE_API_CODE
 
         if os.path.exists("./access_token.yml"):
-            self.qtrade = qt(token_yaml="./access_token.yml")
-            if self.qtrade == None:
+            try:
+                self.qtrade = qt(token_yaml="./access_token.yml")
+                self.acctID = self.qtrade.get_account_id()
+            except:
                 try:
                     self.qtrade.refresh_access_token(from_yaml=True)
                 except:
@@ -39,6 +41,7 @@ class qbot:
         access_token = token['access_token']
         url = token['api_server'] + '/v1/accounts/' + self.acctID[0] + '/balances'
         bal = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
+        print(bal)
         data = {'Currency': [], 'Cash': [], 'Market_Value': [], 'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
 
         for x in bal['perCurrencyBalances']:
@@ -69,7 +72,8 @@ class qbot:
             'Currency': [],
             'Quantities': [],
             'Market Value': [],
-            'Gain/Loss (%)': []
+            'Return (%)': [],
+            'Portfolio (%)': []
         }
         total_costs = 0
         total_market_value = 0
@@ -91,7 +95,7 @@ class qbot:
                 position_data['Currency'].append(currency)
                 position_data['Quantities'].append(qty)
                 position_data['Market Value'].append(cmv)
-                position_data['Gain/Loss (%)'].append(change)
+                position_data['Return (%)'].append(change)
 
         portfolio = pd.DataFrame(position_data)
         portfolio.set_index('Symbol', inplace=True)
