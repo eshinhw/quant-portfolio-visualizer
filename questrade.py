@@ -13,18 +13,18 @@ import pandas_datareader.data as web
 class qbot:
     def __init__(self) -> None:
         code = credentials.QUESTRADE_API_CODE
-        # if os.path.exists("./access_token.yml"):
-        #     try:
-        #         self.qtrade = qt(token_yaml="./access_token.yml")
-        #     except:
-        #         try:
-        #             self.qtrade.refresh_access_token(from_yaml=True)
-        #         except:
-        #             os.remove("./access_token.yml")
-        #             self.qtrade = qt(access_code=code)
 
-        # else:
-        self.qtrade = qt(access_code=code)
+        if os.path.exists("./access_token.yml"):
+            self.qtrade = qt(token_yaml="./access_token.yml")
+            if self.qtrade == None:
+                try:
+                    self.qtrade.refresh_access_token(from_yaml=True)
+                except:
+                    os.remove("./access_token.yml")
+                    self.qtrade = qt(access_code=code)
+        else:
+            self.qtrade = qt(access_code=code)
+
         self.acctID = self.qtrade.get_account_id()
 
     def get_acct_positions(self):
