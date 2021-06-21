@@ -1,6 +1,5 @@
 import os
 import math
-import price
 import pprint
 import requests
 import credentials
@@ -9,10 +8,9 @@ import pandas as pd
 import datetime as dt
 import matplotlib.pyplot as plt
 from qtrade import Questrade as qt
-import pandas_datareader.data as web
 
 class qbot:
-    def __init__(self) -> None:
+    def __init__(self, account_num: int) -> None:
         code = credentials.QUESTRADE_API_CODE
 
         if os.path.exists("./access_token.yml"):
@@ -28,11 +26,11 @@ class qbot:
         else:
             self.qtrade = qt(access_code=code)
 
-        self.acctID = self.qtrade.get_account_id()
+        self.acctID = account_num
         self.bal = self.get_balance()
 
     def get_acct_positions(self):
-        return self.qtrade.get_account_positions(self.acctID[0])
+        return self.qtrade.get_account_positions(self.acctID)
 
     def get_ticker_info(self, symbol: str):
         return self.qtrade.ticker_information(symbol)
@@ -41,7 +39,7 @@ class qbot:
         token = self.qtrade.access_token
         token_type = token['token_type']
         access_token = token['access_token']
-        url = token['api_server'] + '/v1/accounts/' + self.acctID[0] + '/balances'
+        url = token['api_server'] + '/v1/accounts/' + str(self.acctID) + '/balances'
         bal = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
         pprint.pprint(bal)
         data = {'Currency': [], 'Cash': [], 'Market_Value': [], 'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
@@ -76,10 +74,9 @@ class qbot:
         for pos in positions:
             curr_cost = pos['totalCost']
             total_cost += curr_cost
-
         return total_cost
 
-    def get_positions(self):
+    def get_investment_summary(self):
         position_data = {
             'Symbol': [],
             'Description': [],
@@ -91,25 +88,24 @@ class qbot:
         }
         total_market_value = self.get_usd_total_mv()
         total_costs = 0
-        for account in self.acctID:
-            positions = self.qtrade.get_account_positions(account)
-            for position in positions:
-                symbol = position['symbol']
-                description = self.qtrade.ticker_information(symbol)['description']
-                qty = position['openQuantity']
-                cmv = position['currentMarketValue']
-                currency = self.qtrade.ticker_information(symbol)['currency']
-                cost = position['totalCost']
-                change = round(100 * (cmv - cost) / cost, 2)
+        positions = self.qtrade.get_account_positions(self.acctID)
+        for position in positions:
+            symbol = position['symbol']
+            description = self.qtrade.ticker_information(symbol)['description']
+            qty = position['openQuantity']
+            cmv = position['currentMarketValue']
+            currency = self.qtrade.ticker_information(symbol)['currency']
+            cost = position['totalCost']
+            change = round(100 * (cmv - cost) / cost, 2)
 
-                total_costs = total_costs + cost
-                position_data['Symbol'].append(symbol)
-                position_data['Description'].append(description)
-                position_data['Currency'].append(currency)
-                position_data['Quantities'].append(qty)
-                position_data['Market Value'].append(cmv)
-                position_data['Return (%)'].append(change)
-                position_data['Portfolio (%)'].append(round(100 * (cmv / total_market_value),2))
+            total_costs = total_costs + cost
+            position_data['Symbol'].append(symbol)
+            position_data['Description'].append(description)
+            position_data['Currency'].append(currency)
+            position_data['Quantities'].append(qty)
+            position_data['Market Value'].append(cmv)
+            position_data['Return (%)'].append(change)
+            position_data['Portfolio (%)'].append(round(100 * (cmv / total_market_value),2))
 
         portfolio = pd.DataFrame(position_data)
         portfolio.set_index('Symbol', inplace=True)
@@ -150,6 +146,23 @@ class qbot:
 
         return monthly_div_df
 
+    def calculate_portfolio_return(self):
+        total_mv = self.get_usd_total_mv()
+        total_cost = self.get_usd_total_cost()
+        m1 = round(100 * (total_mv - total_cost) / total_cost, 2)
+
+        investment = self.get_investment_summary()
+
+        m2 = 0
+        for symbol in investment.index:
+
+            ret = investment.loc[symbol, 'Return (%)']
+            port = investment.loc[symbol, 'Portfolio (%)'] / 100
+
+            m2 += ret * port
+
+        print(m1, m2)
+
 
 
 def calculate_shares(symbol: str, weight: float, currency: str):
@@ -160,5 +173,6 @@ def calculate_shares(symbol: str, weight: float, currency: str):
 
 if __name__ == '__main__':
 
-    q = qbot()
-    q.get_usd_total_cost()
+    q = qbot(credentials.QUESTRADE_ACCOUNT_NUM)
+    print(q.get_investment_summary())
+    print(q.calculate_portfolio_return())
