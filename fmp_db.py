@@ -17,9 +17,14 @@ SP500_SYMBOL_PATH = './sp500_symbols.json'
 DB_HOST = credentials.RASP_PI_DB_HOST
 DB_USER = credentials.RASP_PI_DB_USER
 DB_PW = credentials.RASP_PI_DB_PW
+SP500_THRESHOLD_DAY = 90
 
 class fmp:
     def __init__(self) -> None:
+        """
+        establishes database connection and selects FMP database for use.
+
+        """
         try:
             self.mydb = mysql.connector.connect(
                 host=DB_HOST,
@@ -33,18 +38,28 @@ class fmp:
             print(e)
 
     def check_file_age(self, expire_day):
-        timestamp = os.stat(SP500_SYMBOL_PATH).st_ctime
-        createtime = datetime.datetime.fromtimestamp(timestamp)
-        now = datetime.datetime.now()
-        delta = now - createtime
-        if delta.days > expire_day:
-            os.remove(SP500_SYMBOL_PATH)
-            self.load_sp500_symbol_list()
-            self.drop_all_databases()
+        """
+        checks the age of S&P 500 symbol list.
+        if it's older than SP500_THRESHOLD_DAY, get the new list to update new dividend stocks.
+
+        """
+        if os.path.exists(SP500_SYMBOL_PATH):
+            timestamp = os.stat(SP500_SYMBOL_PATH).st_ctime
+            createtime = datetime.datetime.fromtimestamp(timestamp)
+            now = datetime.datetime.now()
+            delta = now - createtime
+            if delta.days > expire_day:
+                os.remove(SP500_SYMBOL_PATH)
+                self.load_sp500_symbol_list()
+                self.drop_all_databases()
 
     def load_sp500_symbol_list(self) -> List[str]:
+        """
+        loads the stock symbols in S&P 500.
+
+        """
+        self.check_file_age(SP500_THRESHOLD_DAY)
         if os.path.exists(SP500_SYMBOL_PATH):
-            self.check_file_age(30)
             fp = open(SP500_SYMBOL_PATH, "r")
             data = json.load(fp)
             return data['symbols']
@@ -63,16 +78,28 @@ class fmp:
         return symbols
 
     def get_symbols_from_db(self):
+        """
+        retrieves the symbols that are currently in the database.
+
+        """
         self.mycursor.execute('SELECT symbol from financials')
         res = self.mycursor.fetchall()
         symbols = [data[0] for data in res]
         return symbols
 
     def get_current_price(self, symbol: str):
+        """
+        gets the current price of symbol.
+
+        """
         price = requests.get(f"https://financialmodelingprep.com/api/v3/quote-short/{symbol.upper()}?apikey={FMP_API_KEY}").json()
         return price[0]['price']
 
     def table_exists(self, table_name: str):
+        """
+        checks whether table_name is in the database.
+
+        """
         self.mycursor.execute("SHOW TABLES")
         result = self.mycursor.fetchall()
         for tb in result:
@@ -268,7 +295,7 @@ class fmp:
 
     def drop_all_databases(self) -> None:
         """
-        erases all databases.
+        DANGER! erases all databases and wipes out all data.
 
         """
         self.mycursor.execute("SHOW DATABASES")
