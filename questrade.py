@@ -6,6 +6,7 @@ import credentials
 import numpy as np
 import pandas as pd
 import datetime as dt
+from momentum import get_daily_prices
 import matplotlib.pyplot as plt
 from qtrade import Questrade as qt
 
@@ -168,7 +169,7 @@ class qbot:
 def calculate_shares(symbol: str, weight: float, currency: str):
     total_equity = qbot.get_usd_total_equity()
     amount = total_equity * weight
-    curr_price = price.get_current_price(symbol)
+    curr_price = get_daily_prices(symbol)
     return (amount, math.floor(amount / curr_price))
 
 if __name__ == '__main__':
