@@ -81,6 +81,14 @@ class fmp:
         return False
 
     def create_financials(self, symbol: str) -> None:
+        """
+        creates a table containing financial data for analysis.
+
+        - Basic information about a stock: symbol, name, sector, industry, exchange, market capitalization, number of employees
+        - Profitability ratios: average revenue growth for the past five years, gross profit margin, ROE, EPS growth
+        - Dividend ratios: dividend yield, DPS, average DPS growth for the past five years
+
+        """
         symbol = symbol.upper()
         self.mycursor.execute("""
             CREATE TABLE IF NOT EXISTS financials (
@@ -169,6 +177,11 @@ class fmp:
         self.mydb.commit()
 
     def update_financials(self, symbol: str):
+        """
+        updates the data of the table periodically to store most updated data.
+
+        """
+
         symbol = symbol.upper()
         try:
             ratio_ttm = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}").json()[0]
@@ -238,6 +251,10 @@ class fmp:
         self.mydb.commit()
 
     def load_financials(self) -> DataFrame:
+        """
+        exports the table as dataframe for analysis.
+
+        """
         dbcon = create_engine(f'mysql://{DB_USER}:{DB_PW}@{DB_HOST}/fmp').connect()
         df = pd.read_sql_table('financials', dbcon)
         return df
@@ -250,6 +267,10 @@ class fmp:
 
 
     def drop_all_databases(self) -> None:
+        """
+        erases all databases.
+
+        """
         self.mycursor.execute("SHOW DATABASES")
         excluded = ['sys', 'information_schema', 'performance_schema', 'mysql']
         db_names = []
