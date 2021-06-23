@@ -11,6 +11,7 @@ print(df)
 df['marketCap'] = df['marketCap']/100000000
 
 # ## Minimum Fundamental Ratio Requirements
+# Filtering Conditions
 
 minMktCap = 10
 minRevGrowth = 0.5
