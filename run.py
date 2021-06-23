@@ -2,8 +2,9 @@ import credentials
 import pandas as pd
 import datetime as dt
 from fmp_db import fmp
-from utilities import calculate_prev_max_high, sendEmail
 from questrade import qbot
+from utilities import calculate_prev_max_high, sendEmail
+
 qt = qbot(credentials.QUESTRADE_ACCOUNT_NUM)
 
 # 1,000,000,000 = 1 Billions
@@ -14,21 +15,21 @@ df['marketCap'] = df['marketCap']/1000000000
 # ## Minimum Fundamental Ratio Requirements
 # Filtering Conditions
 
-filters = {'Market Cap (B)': 1,
+filters = {'Market Cap': 1,
            'Revenue Growth': 0.5,
            'Gross Profit Margin': 0.2,
            'EPS Growth': 0.1,
            'ROE': 0.2,
-           '5Y DPS Growth': 0.1,
+           '5 Years Average DPS Growth': 0.1,
            'Dividend Yield': 0.02
            }
 
-conditions = (df['marketCap'] > filters['Market Cap (B)']) & \
+conditions = (df['marketCap'] > filters['Market Cap']) & \
             (df['revenue_per_share_fiveY_growth'] > filters['Revenue Growth']) & \
             (df['gross_profit_margin'] > filters['Gross Profit Margin'])& \
             (df['eps_growth'] > filters['EPS Growth'])& \
             (df['roe'] > filters['ROE']) & \
-            (df['dps_fiveY_growth'] > filters['5Y DPS Growth']) & \
+            (df['dps_fiveY_growth'] > filters['5 Years Average DPS Growth']) & \
             (df['div_yield'] > filters['Dividend Yield'])
 
 df = df[conditions]
@@ -83,12 +84,10 @@ today = str(dt.datetime.today().strftime('%Y-%b-%d'))
 filtersToEmail = ""
 
 for key, val in filters.items():
-    if key == 'Market Cap (B)':
+    if key == 'Market Cap':
         filtersToEmail += f'&#9656; {key}: {val} Billion(s) <br>'
     else:
         filtersToEmail += f'&#9656; {key}: {val * 100} % <br>'
-
-print(filtersToEmail)
 
 sendEmail(f"Daily Portfolio Update ({today})", curr_pos = qt.get_investment_summary().to_html(),filters=filtersToEmail, watchlist = mom_df.to_html())
 

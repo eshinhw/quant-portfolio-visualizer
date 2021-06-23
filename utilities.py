@@ -63,14 +63,14 @@ def sendEmail(subject, curr_pos, filters, watchlist):
         <!DOCTYPE html>
         <html>
             <body>
+                <p> Hello Investors,<br> Below is the daily summary of your portfolio and updated stock watchlist.<br> Have a good evening :) </p>
                 <h1> Current Portfolio Summary </h1>
                 {curr_pos}
                 <h1> Stock Watchlist Update </h1>
-                <h3> Conditional Filters Used </h3>
+                <h3> Conditional Filters </h3>
                 {filters}
                 <br>
                 {watchlist}
-
             </body>
         </html>
     """, subtype='html')

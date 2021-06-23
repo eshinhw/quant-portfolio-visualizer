@@ -5,9 +5,8 @@ import requests
 import credentials
 import pandas as pd
 import datetime as dt
-from qtrade import Questrade as qt
+from qtrade import Questrade
 from utilities import get_daily_prices
-
 
 class qbot:
     def __init__(self, account_num: int) -> None:
@@ -15,16 +14,16 @@ class qbot:
 
         if os.path.exists("./access_token.yml"):
             try:
-                self.qtrade = qt(token_yaml="./access_token.yml")
+                self.qtrade = Questrade(token_yaml="./access_token.yml")
                 self.acctID = self.qtrade.get_account_id()
             except:
                 try:
                     self.qtrade.refresh_access_token(from_yaml=True)
                 except:
                     os.remove("./access_token.yml")
-                    self.qtrade = qt(access_code=code)
+                    self.qtrade = Questrade(access_code=code)
         else:
-            self.qtrade = qt(access_code=code)
+            self.qtrade = Questrade(access_code=code)
 
         self.acctID = account_num
         self.bal = self.get_balance()
@@ -109,6 +108,7 @@ class qbot:
 
         portfolio = pd.DataFrame(position_data)
         portfolio.set_index('Symbol', inplace=True)
+        portfolio.index.name = None
         return portfolio
 
     def get_dividend_income(self):
@@ -162,8 +162,6 @@ class qbot:
             m2 += ret * port
 
         print(m1, m2)
-
-
 
 def calculate_shares(symbol: str, weight: float, currency: str):
     total_equity = qbot.get_usd_total_equity()
