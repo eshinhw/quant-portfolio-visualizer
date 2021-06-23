@@ -51,7 +51,7 @@ def calculate_momentum(symbol: str, periods: List[int]):
         ret.append(mom)
     return ret
 
-def sendEmail(subject, contents):
+def sendEmail(subject, curr_pos, watchlist):
     msg = EmailMessage()
     msg['Subject'] = subject
     msg['From'] = credentials.GMAIL_ADDRESS
@@ -63,8 +63,10 @@ def sendEmail(subject, contents):
         <!DOCTYPE html>
         <html>
             <body>
-                <h1>Watchlist Update</h1>
-                {contents}
+                <h1> Current Portfolio Summary </h1>
+                {curr_pos}
+                <h1> Watchlist Update </h1>
+                {watchlist}
             </body>
         </html>
     """, subtype='html')
