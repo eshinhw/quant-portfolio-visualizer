@@ -1,37 +1,39 @@
-import os
 import credentials
 import pandas as pd
 import datetime as dt
 from fmp_db import fmp
 from utilities import calculate_prev_max_high, sendEmail
+from questrade import qbot
+qt = qbot(credentials.QUESTRADE_ACCOUNT_NUM)
 
+# 1,000,000,000 = 1 Billions
 db = fmp()
 df = db.load_financials()
-print(df)
-df['marketCap'] = df['marketCap']/100000000
+df['marketCap'] = df['marketCap']/1000000000
 
 # ## Minimum Fundamental Ratio Requirements
 # Filtering Conditions
 
-minMktCap = 10
-minRevGrowth = 0.5
-minGPMargin = 0.2
-minEPSGrowth = 0.1
-minROE = 0.2
-minDPSGrowth = 0.1
-minDivYield = 0.02
+filters = {'Market Cap (B)': 1,
+           'Revenue Growth': 0.5,
+           'Gross Profit Margin': 0.2,
+           'EPS Growth': 0.1,
+           'ROE': 0.2,
+           '5Y DPS Growth': 0.1,
+           'Dividend Yield': 0.02
+           }
 
+conditions = (df['marketCap'] > filters['Market Cap (B)']) & \
+            (df['revenue_per_share_fiveY_growth'] > filters['Revenue Growth']) & \
+            (df['gross_profit_margin'] > filters['Gross Profit Margin'])& \
+            (df['eps_growth'] > filters['EPS Growth'])& \
+            (df['roe'] > filters['ROE']) & \
+            (df['dps_fiveY_growth'] > filters['5Y DPS Growth']) & \
+            (df['div_yield'] > filters['Dividend Yield'])
 
-df = df[df['marketCap'] > minMktCap]
-conditions = (df['revenue_per_share_fiveY_growth'] > minRevGrowth) & (df['gross_profit_margin'] > minGPMargin) & (df['eps_growth'] > minEPSGrowth) & (df['roe'] > minROE)
 df = df[conditions]
-div_conds = (df['dps_fiveY_growth'] > minDPSGrowth) & (df['div_yield'] > minDivYield)
-df_final = df[div_conds]
-
-df_final.set_index('symbol', inplace=True)
-
-print(df_final)
-
+df.set_index('symbol', inplace=True)
+print(df)
 
 price_data = {
     'Symbol': [],
@@ -47,16 +49,16 @@ price_data = {
 
 count = 0
 email_contents = ""
-for symbol in list(df_final.index):
+for symbol in list(df.index):
     count += 1
-    print(f"{symbol} \t {count} / {len(list(df_final.index))}")
+    print(f"{symbol} \t {count} / {len(list(df.index))}")
     currPrice = round(db.get_current_price(symbol),2)
     high = round(calculate_prev_max_high(symbol, 260),2)
-    name = df_final.loc[symbol, 'name']
-    exchange = df_final.loc[symbol, 'exchange']
-    sector = df_final.loc[symbol, 'sector']
-    industry = df_final.loc[symbol, 'industry']
-    div_yield = df_final.loc[symbol, 'div_yield']
+    name = df.loc[symbol, 'name']
+    exchange = df.loc[symbol, 'exchange']
+    sector = df.loc[symbol, 'sector']
+    industry = df.loc[symbol, 'industry']
+    div_yield = df.loc[symbol, 'div_yield']
 
     if currPrice < high:
         discount = (currPrice - high)/high * 100
@@ -73,11 +75,22 @@ for symbol in list(df_final.index):
 
 mom_df = pd.DataFrame(price_data)
 mom_df.set_index('Symbol', inplace=True)
+mom_df.index.name = None
 mom_df.sort_values(by='Dividend Yield', ascending=False, inplace=True)
 
 today = str(dt.datetime.today().strftime('%Y-%b-%d'))
 
-sendEmail(f"Daily Stock Update ({today})", mom_df.to_html())
+filtersToEmail = ""
+
+for key, val in filters.items():
+    if key == 'Market Cap (B)':
+        filtersToEmail += f'&#9656; {key}: {val} Billion(s) <br>'
+    else:
+        filtersToEmail += f'&#9656; {key}: {val * 100} % <br>'
+
+print(filtersToEmail)
+
+sendEmail(f"Daily Portfolio Update ({today})", curr_pos = qt.get_investment_summary().to_html(),filters=filtersToEmail, watchlist = mom_df.to_html())
 
 
 
