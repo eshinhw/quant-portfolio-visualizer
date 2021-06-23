@@ -9,8 +9,6 @@ from email.message import EmailMessage
 
 START_DATE = dt.datetime(1970, 1, 1)
 END_DATE = dt.datetime.today()
-EMAIL_ADDRESS = credentials.GMAIL_ADDRESS
-EMAIL_PASSWORD = credentials.GMAIL_PW
 
 def get_daily_prices(symbol):
     return web.DataReader(symbol, "yahoo", START_DATE, END_DATE)
@@ -53,11 +51,11 @@ def calculate_momentum(symbol: str, periods: List[int]):
         ret.append(mom)
     return ret
 
-def sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents):
+def sendEmail(subject, contents):
     msg = EmailMessage()
     msg['Subject'] = subject
-    msg['From'] = EMAIL_ADDRESS
-    msg['To'] = EMAIL_ADDRESS
+    msg['From'] = credentials.GMAIL_ADDRESS
+    msg['To'] = credentials.GMAIL_ADDRESS
     # msg.set_content("hello?")
 
     msg.add_alternative(f"""\
@@ -71,5 +69,5 @@ def sendEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, subject, contents):
         </html>
     """, subtype='html')
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        smtp.login(credentials.GMAIL_ADDRESS, credentials.GMAIL_PW)
         smtp.send_message(msg)
