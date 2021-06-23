@@ -1,4 +1,4 @@
-# Quantitative Stock Investing
+# Quantitative Investor
 
 ## Introduction
 
