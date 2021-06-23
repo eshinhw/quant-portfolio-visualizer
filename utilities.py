@@ -1,9 +1,9 @@
+import smtplib
 import credentials
 import numpy as np
 import pandas as pd
 import datetime as dt
 from typing import List
-import smtplib
 import pandas_datareader.data as web
 from email.message import EmailMessage
 

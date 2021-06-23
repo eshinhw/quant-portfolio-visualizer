@@ -6,7 +6,7 @@ import credentials
 import numpy as np
 import pandas as pd
 import datetime as dt
-from momentum import get_daily_prices
+from utilities import get_daily_prices
 import matplotlib.pyplot as plt
 from qtrade import Questrade as qt
 
