@@ -3,12 +3,11 @@ import math
 import pprint
 import requests
 import credentials
-import numpy as np
 import pandas as pd
 import datetime as dt
-from utilities import get_daily_prices
-import matplotlib.pyplot as plt
 from qtrade import Questrade as qt
+from utilities import get_daily_prices
+
 
 class qbot:
     def __init__(self, account_num: int) -> None:
