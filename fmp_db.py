@@ -162,7 +162,7 @@ class fmp:
         exchange = profile['exchangeShortName']
         sector = profile['sector']
         industry = profile['industry']
-        marketCap = profile['mktCap']
+        marketCap = profile['mktCap']/1000000000
         numEmployees = profile['fullTimeEmployees']
 
         sql = """
@@ -236,7 +236,7 @@ class fmp:
         exchange = profile['exchangeShortName']
         sector = profile['sector']
         industry = profile['industry']
-        marketCap = profile['mktCap']
+        marketCap = profile['mktCap']/1000000000
         numEmployees = profile['fullTimeEmployees']
 
         sql="""

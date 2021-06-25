@@ -7,18 +7,16 @@ from utilities import calculate_prev_max_high, sendEmail
 
 qt = qbot(credentials.QUESTRADE_ACCOUNT_NUM)
 
-# 1,000,000,000 = 1 Billions
 db = fmp()
 df = db.load_financials()
-df['marketCap'] = df['marketCap']/1000000000
 
 # ## Minimum Fundamental Ratio Requirements
 # Filtering Conditions
 
 filters = {'Market Cap': 1,
-           'Revenue Growth': 0.5,
+           'Revenue Growth': 0.3,
            'Gross Profit Margin': 0.2,
-           'EPS Growth': 0.1,
+           'EPS Growth': 0.15,
            'ROE': 0.2,
            '5 Years Average DPS Growth': 0.1,
            'Dividend Yield': 0.02
@@ -34,7 +32,6 @@ conditions = (df['marketCap'] > filters['Market Cap']) & \
 
 df = df[conditions]
 df.set_index('symbol', inplace=True)
-print(df)
 
 price_data = {
     'Symbol': [],
@@ -42,11 +39,13 @@ price_data = {
     'Exchange': [],
     'Sector': [],
     'Industry': [],
+    'Dividend Yield': [],
     '52W High': [],
     'Current Price': [],
-    'Change (%)': [],
-    'Dividend Yield': []
+    'Change (%)': []
 }
+
+discount_pct = -10
 
 count = 0
 email_contents = ""
@@ -63,16 +62,16 @@ for symbol in list(df.index):
 
     if currPrice < high:
         discount = (currPrice - high)/high * 100
-        if discount < -10:
+        if discount < discount_pct:
             price_data['Symbol'].append(symbol)
             price_data['Name'].append(name)
             price_data['Exchange'].append(exchange)
             price_data['Sector'].append(sector)
             price_data['Industry'].append(industry)
+            price_data['Dividend Yield'].append(div_yield)
             price_data['52W High'].append(high)
             price_data['Current Price'].append(currPrice)
             price_data['Change (%)'].append(discount)
-            price_data['Dividend Yield'].append(div_yield)
 
 mom_df = pd.DataFrame(price_data)
 mom_df.set_index('Symbol', inplace=True)
