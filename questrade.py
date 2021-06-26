@@ -1,6 +1,7 @@
 import os
 import math
 import pprint
+import platform
 import requests
 import credentials
 import pandas as pd
@@ -8,22 +9,27 @@ import datetime as dt
 from qtrade import Questrade
 from utilities import get_daily_prices
 
+ACCESS_TOKEN_DIR = {'Windows': "./access_token.yml",
+                    'Linux': "/home/pi/Desktop/quant-investing/access_token.yml"}
+
 class qbot:
     def __init__(self, account_num: int) -> None:
         code = credentials.QUESTRADE_API_CODE
 
-        if os.path.exists("./access_token.yml"):
+        sys = platform.system()
+        if os.path.exists(ACCESS_TOKEN_DIR[sys]):
             try:
-                self.qtrade = Questrade(token_yaml="./access_token.yml")
+                self.qtrade = Questrade(token_yaml=ACCESS_TOKEN_DIR[sys])
                 self.acctID = self.qtrade.get_account_id()
             except:
-                try:
-                    self.qtrade.refresh_access_token(from_yaml=True)
-                except:
-                    os.remove("./access_token.yml")
-                    self.qtrade = Questrade(access_code=code)
+                # try:
+                self.qtrade.refresh_access_token(from_yaml=True)
+                # except:
+                #     os.remove("./access_token.yml")
+                #     self.qtrade = Questrade(access_code=code)
         else:
             self.qtrade = Questrade(access_code=code)
+
 
         self.acctID = account_num
         self.bal = self.get_balance()

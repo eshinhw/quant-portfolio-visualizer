@@ -48,7 +48,7 @@ price_data = {
 discount_pct = -10
 
 count = 0
-email_contents = ""
+
 for symbol in list(df.index):
     count += 1
     print(f"{symbol} \t {count} / {len(list(df.index))}")
@@ -88,8 +88,14 @@ for key, val in filters.items():
     else:
         filtersToEmail += f'&#9656; {key}: {val * 100} % <br>'
 
+with open('./hello.txt', 'w') as fd:
+    fd.write("it's working?")
+    fd.close()
+
 sendEmail(f"Daily Portfolio Update ({today})", curr_pos = qt.get_investment_summary().to_html(),filters=filtersToEmail, watchlist = mom_df.to_html())
 
-
+with open('./hello.txt', 'a') as fd:
+    fd.write("End of file")
+    fd.close()
 
 
