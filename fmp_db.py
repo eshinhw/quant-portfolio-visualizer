@@ -1,10 +1,10 @@
 import os
 import json
 import pprint
-import datetime
 import requests
 import credentials
 import pandas as pd
+import datetime as dt
 import mysql.connector
 from typing import List
 from sqlalchemy import create_engine
@@ -316,6 +316,7 @@ if __name__ == '__main__':
     myfmp = fmp()
     # myfmp.load_sp500_symbol_list()
     # myfmp.check_file_age()
+    today = str(dt.datetime.today().strftime('%Y-%b-%d'))
 
     count = 0
     if myfmp.table_exists('financials'):
@@ -325,7 +326,7 @@ if __name__ == '__main__':
             count += 1
             print(f"{symbol} {count}/{len(symbols)}")
             myfmp.update_financials(symbol)
-        print("table update completed!")
+        print(f"{today}: table update completed!")
 
     else:
         # create and insert initial data
@@ -334,7 +335,7 @@ if __name__ == '__main__':
             count += 1
             print(f"{symbol} {count}/{len(symbols)}")
             myfmp.create_financials(symbol)
-        print("table created successfully")
+        print(f"{today}: table created successfully!")
 
 
     # print("1: delete database")
