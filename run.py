@@ -5,6 +5,8 @@ from fmp_db import fmp
 from questrade import qbot
 from utilities import calculate_prev_max_high, sendEmail
 
+print(f"{dt.datetime.now()}: Beginning of Run File")
+
 qt = qbot(credentials.QUESTRADE_ACCOUNT_NUM)
 
 db = fmp()
@@ -90,7 +92,7 @@ for key, val in filters.items():
 
 sendEmail(f"Daily Portfolio Update ({today})", curr_pos = qt.get_investment_summary().to_html(),filters=filtersToEmail, watchlist = mom_df.to_html())
 
-print(f"{today}: End of Run File")
+print(f"{dt.datetime.now()}: End of Run File")
 
 
 

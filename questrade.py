@@ -21,6 +21,7 @@ class qbot:
             try:
                 self.qtrade = Questrade(token_yaml=ACCESS_TOKEN_DIR[sys])
                 self.acctID = self.qtrade.get_account_id()
+                assert self.acctID == account_num
             except:
                 try:
                     self.qtrade.refresh_access_token(from_yaml=True)
