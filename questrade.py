@@ -22,11 +22,10 @@ class qbot:
                 self.qtrade = Questrade(token_yaml=ACCESS_TOKEN_DIR[sys])
                 self.acctID = self.qtrade.get_account_id()
             except:
-                # try:
-                self.qtrade.refresh_access_token(from_yaml=True)
-                # except:
-                #     os.remove("./access_token.yml")
-                #     self.qtrade = Questrade(access_code=code)
+                try:
+                    self.qtrade.refresh_access_token(from_yaml=True)
+                except:
+                    self.qtrade = Questrade(access_code=code)
         else:
             self.qtrade = Questrade(access_code=code)
 
@@ -177,5 +176,5 @@ def calculate_shares(symbol: str, weight: float, currency: str):
 if __name__ == '__main__':
 
     q = qbot(credentials.QUESTRADE_ACCOUNT_NUM)
-    print(q.get_investment_summary())
-    print(q.calculate_portfolio_return())
+    # print(q.get_investment_summary())
+    # print(q.calculate_portfolio_return())
