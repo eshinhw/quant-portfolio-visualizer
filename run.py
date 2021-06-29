@@ -90,6 +90,7 @@ for key, val in filters.items():
 
 sendEmail(f"Daily Portfolio Update ({today})", curr_pos = qt.get_investment_summary().to_html(),filters=filtersToEmail, watchlist = mom_df.to_html())
 
+print(f"{today}: End of Run File")
 
 
 
