@@ -318,24 +318,26 @@ if __name__ == '__main__':
     # myfmp.check_file_age()
     today = str(dt.datetime.today().strftime('%Y-%b-%d'))
 
-    count = 0
-    if myfmp.table_exists('financials'):
-        # update
-        symbols = myfmp.get_symbols_from_db()
-        for symbol in symbols:
-            count += 1
-            print(f"{symbol} {count}/{len(symbols)}")
-            myfmp.update_financials(symbol)
-        print(f"{today}: table update completed!")
+    # count = 0
+    # if myfmp.table_exists('financials'):
+    #     # update
+    #     symbols = myfmp.get_symbols_from_db()
+    #     for symbol in symbols:
+    #         count += 1
+    #         print(f"{symbol} {count}/{len(symbols)}")
+    #         myfmp.update_financials(symbol)
+    #     print(f"{today}: table update completed!")
 
-    else:
-        # create and insert initial data
-        symbols = myfmp.load_sp500_symbol_list()
-        for symbol in symbols:
-            count += 1
-            print(f"{symbol} {count}/{len(symbols)}")
-            myfmp.create_financials(symbol)
-        print(f"{today}: table created successfully!")
+    # else:
+    #     # create and insert initial data
+    #     symbols = myfmp.load_sp500_symbol_list()
+    #     for symbol in symbols:
+    #         count += 1
+    #         print(f"{symbol} {count}/{len(symbols)}")
+    #         myfmp.create_financials(symbol)
+    #     print(f"{today}: table created successfully!")
+
+    print(myfmp.load_financials().to_csv(path_or_buf="./financials.csv"))
 
 
     # print("1: delete database")
