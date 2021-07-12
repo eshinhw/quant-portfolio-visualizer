@@ -3,3 +3,6 @@ __pycache__
 access_token.yml
 credentials.py
 sp500_symbols.json
+.Rproj.user
+.Rhistory
+quant-investing.Rproj
