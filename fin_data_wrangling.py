@@ -1,6 +1,8 @@
 import requests
 import credentials
 import pandas as pd
+import yfinance as yf
+import pandas_datareader.data as web
 
 FMP_API_KEY = credentials.FMP_API_KEYS
 
@@ -8,34 +10,10 @@ def sp500_symbols():
     symbols = []
     sp500 = requests.get(f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API_KEY}").json()
 
-    # print(sp500)
     for data in sp500:
         symbols.append(data['symbol'])
 
-    print(symbols)
-    # out_dict['symbols'] = symbols
-
-    # with open(SP500_SYMBOL_PATH, 'w') as fp:
-    #     json.dump(out_dict, fp)
-
     return symbols
-
-def historical_prices():
-
-    symbols = sp500_symbols()
-
-    prices = {'symbol': [],
-            'Close': [],
-            'Volume': []}
-
-    for symbol in symbols[:2]:
-        price = requests.get(f"https://financialmodelingprep.com/api/v3/quote-short/{symbol.upper()}?apikey={FMP_API_KEY}").json()
-        prices['symbol'].append(price[0]['symbol'])
-        prices['Close'].append(price[0]['price'])
-        prices['Volume'].append(price[0]['volume'])
-
-    df_prices = pd.DataFrame(prices)
-    df_prices.to_csv('./data/prices.csv')
 
 def financials():
 
@@ -81,12 +59,8 @@ def financials():
         financials_data['Revenue_Growth'].append(growth['fiveYRevenueGrowthPerShare'])
 
         df_financials = pd.DataFrame(financials_data)
+
         df_financials.to_csv('./data/financials.csv')
-
-
-
-
-
 
 
 if __name__ == "__main__":
@@ -94,4 +68,4 @@ if __name__ == "__main__":
 
     historical_prices()
 
-    financials()
+    # financials()
