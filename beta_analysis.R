@@ -25,6 +25,8 @@ ri = ret[, 1]
 reg = lm(ri ~ rm)
 summary(reg)
 
+reg
+
 plot(as.numeric(rm), as.numeric(ri), pch = 4, cex = 0.3, 
      xlab = "SPY BENCHMARK", ylab = "AAPL",
      xlim = c(-0.02, 0.02), ylim = c(-0.02, 0.02))
