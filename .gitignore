@@ -7,3 +7,4 @@ sp500_symbols.json
 .Rhistory
 quant-investing.Rproj
 data
+.RData
