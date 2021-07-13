@@ -1,8 +1,8 @@
 import requests
 import credentials
 import pandas as pd
-import yfinance as yf
-import pandas_datareader.data as web
+# import yfinance as yf
+# import pandas_datareader.data as web
 
 FMP_API_KEY = credentials.FMP_API_KEYS
 
@@ -34,7 +34,10 @@ def financials():
                        'DPS_Growth': []
                        }
 
-    for symbol in symbols[:2]:
+    count = 0
+    for symbol in symbols:
+        count += 1
+        print(f"{symbol}: {count}/{len(symbols)}")
 
         financials_data['symbol'].append(symbol)
 
@@ -64,8 +67,6 @@ def financials():
 
 
 if __name__ == "__main__":
-    # sp500_symbols()
 
-    historical_prices()
 
-    # financials()
+    financials()
