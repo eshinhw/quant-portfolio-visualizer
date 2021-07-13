@@ -1,4 +1,4 @@
-# Quantitative Investor
+# Quantitative Investing with Python and R
 
 ## Introduction
 
