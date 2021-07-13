@@ -8,45 +8,7 @@ library(quantmod)
 library(PerformanceAnalytics)
 
 
-
-financials <- read.csv('./data/financials.csv')
-
-
-
-threshold <- nrow(financials) * 0.05
-threshold
-
-invest_roe <- rank(-financials$ROE) <= threshold
-invest_roe
-
-high_roe <- financials[invest_roe, ] %>% 
-  select('symbol') %>% 
-  glimpse(.)
-
-high_roe
-
-
-symbols <- financials$symbol
-
-
-
-symbols
-tryCatch(
-  
-  expr = {
-    prices <- map(symbols, function(x) Ad(get(x)))
-    prices <- reduce(prices,merge)
-    colnames(prices) <- symbols
-  },
-  error = function(e) {
-    print(e)
-  }
-    
-    
-    
-  )
-
-
+glimpse(fin)
 
 tail(prices)
 
