@@ -5,6 +5,7 @@ library(stringr)
 library(ggplot2)
 library(magrittr)
 library(quantmod)
+library(tidyquant)
 library(PerformanceAnalytics)
 
 fin <- read.csv('./data/financials.csv')
@@ -25,12 +26,12 @@ boxplot(fin$Revenue_Growth)
 
 # remove outliers for DPS growth
 boxplot(fin$DPS_Growth)$stats
-fin$DPS_Growth <- ifelse(fin$DPS_Growth < boxplot(fin$DPS_Growth)$stats[2,1], NA, fin$DPS_Growth)
+fin$DPS_Growth <- ifelse(fin$DPS_Growth < boxplot(fin$DPS_Growth)$stats[2,1] | fin$DPS_Growth > boxplot(fin$DPS_Growth)$stats[5,1], NA, fin$DPS_Growth)
 fin <- fin %>% filter(!is.na(fin$DPS_Growth))
 
 # remove outliers for EPS growth
 boxplot(fin$EPS_Growth)$stats
-fin$EPS_Growth <- ifelse(fin$EPS_Growth < boxplot(fin$EPS_Growth)$stats[3,1], NA, fin$EPS_Growth)
+fin$EPS_Growth <- ifelse(fin$EPS_Growth < boxplot(fin$EPS_Growth)$stats[3,1] | fin$EPS_Growth > boxplot(fin$EPS_Growth)$stats[5,1], NA, fin$EPS_Growth)
 fin <- fin %>% filter(!is.na(fin$EPS_Growth))
 
 # remove outliers for ROE
@@ -42,3 +43,21 @@ fin <- fin %>% filter(!is.na(fin$ROE))
 boxplot(fin$GPMargin)$stats
 fin$GPMargin <- ifelse(fin$GPMargin < boxplot(fin$GPMargin)$stats[2,1], NA, fin$GPMargin)
 fin <- fin %>% filter(!is.na(fin$GPMargin))
+
+# rank financial factors
+
+glimpse(fin)
+summary(fin)
+
+# get historical prices
+
+GetMySymbols <- function(x) {
+  getSymbols(x, src='yahoo', from='2018-01-01', to=Sys.Date(), auto.assign=FALSE)
+}
+
+tickers <- fin$symbol
+
+adj_prices <- map(tickers, GetMySymbols) %>% map(Ad) %>% reduce(merge.xts)
+
+tail(adj_prices)
+
