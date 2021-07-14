@@ -49,15 +49,3 @@ fin <- fin %>% filter(!is.na(fin$GPMargin))
 glimpse(fin)
 summary(fin)
 
-# get historical prices
-
-GetMySymbols <- function(x) {
-  getSymbols(x, src='yahoo', from='2018-01-01', to=Sys.Date(), auto.assign=FALSE)
-}
-
-tickers <- fin$symbol
-
-adj_prices <- map(tickers, GetMySymbols) %>% map(Ad) %>% reduce(merge.xts)
-
-tail(adj_prices)
-
