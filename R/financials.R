@@ -49,3 +49,16 @@ fin <- fin %>% filter(!is.na(fin$GPMargin))
 glimpse(fin)
 summary(fin)
 
+GetMySymbols <- function(x) {
+  getSymbols(x, src='yahoo', from='2018-01-01', to=Sys.Date(), auto.assign=FALSE)
+}
+
+tickers <- fin$symbol
+
+adj_prices <- map(tickers, GetMySymbols) %>% map(Ad) %>% reduce(merge.xts)
+
+ret <- Return.calculate(adj_prices)
+
+ret_12m <- ret %>% xts::last(252)
+ret_12m
+
