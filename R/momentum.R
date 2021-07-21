@@ -15,7 +15,7 @@ GetMySymbols <- function(x) {
   getSymbols(x, src='yahoo', from='2018-01-01', to=Sys.Date(), auto.assign=FALSE)
 }
 
-tickers <- fin$symbol
+tickers <- processed_fin$symbol
 
 adj_prices <- map(tickers, GetMySymbols) %>% map(Ad) %>% reduce(merge.xts)
 
@@ -31,7 +31,9 @@ ret_12m[rank(-ret_12m) <= 15]
 invest_mom = rank(-ret_12m) <= 15
 invest_mom
 
-mom_stocks <- fin[invest_mom,] %>% select(symbol) %>% mutate('12M_return' = round(ret_12m[invest_mom], 4))
+mom_stocks <- processed_fin[invest_mom,] %>% select(symbol) %>% mutate('Ymom' = round(ret_12m[invest_mom], 4)) 
+class(mom_stocks)
+mom_stocks %>% arrange(desc(Ymom))
 
 glimpse(mom_stocks)
 

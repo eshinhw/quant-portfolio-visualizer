@@ -21,12 +21,12 @@ remove_lower_outliers <- function(factor) {
 }
 
 # remove outliers for dividend yield
-fin <- remove_lower_outliers(fin$DivYield)
-fin <- remove_lower_outliers(fin$Revenue_Growth)
-fin <- remove_lower_outliers(fin$DPS_Growth)
-fin <- remove_lower_outliers(fin$ROE)
-fin <- remove_lower_outliers(fin$GPMargin)
+processed_fin <- remove_lower_outliers(fin$DivYield)
+processed_fin <- remove_lower_outliers(fin$Revenue_Growth)
+processed_fin <- remove_lower_outliers(fin$DPS_Growth)
+processed_fin <- remove_lower_outliers(fin$ROE)
+processed_fin <- remove_lower_outliers(fin$GPMargin)
 
-glimpse(fin)
-summary(fin)
+glimpse(processed_fin)
+summary(processed_fin)
 
