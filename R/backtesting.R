@@ -24,7 +24,7 @@ portfolio = Return.portfolio(R = rets,
                              verbose = TRUE)
 
 portfolios = cbind(rets, portfolio$returns) %>%
-  setNames(c('주식', '채권', '60대 40'))
+  setNames(c('SPY', 'TLT', 'Portfolio'))
 
 charts.PerformanceSummary(portfolios,
-                          main = '60대 40 포트폴리오')
+                          main = '60Equities 40Bonds Portfolio')
