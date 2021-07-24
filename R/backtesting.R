@@ -17,6 +17,8 @@ rets
 
 cor(rets)
 
+corr
+
 
 portfolio = Return.portfolio(R = rets,
                              weights = c(0.6, 0.4),
@@ -28,3 +30,4 @@ portfolios = cbind(rets, portfolio$returns) %>%
 
 charts.PerformanceSummary(portfolios,
                           main = '60Equities 40Bonds Portfolio')
+
