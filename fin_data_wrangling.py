@@ -26,6 +26,14 @@ def dow_symbols():
 
 def financials(symbols):
 
+    if len(symbols) < 50:
+        fname = 'dow'
+    elif len(symbols) < 300:
+        fname = 'nasdaq'
+    else:
+        fname = 'sp500'
+
+
     financials_data = {'symbol': [],
                        'name': [],
                        'exchange': [],
@@ -70,11 +78,11 @@ def financials(symbols):
 
         df_financials = pd.DataFrame(financials_data)
 
-        df_financials.to_csv('./R/data/financials.csv')
+        df_financials.to_csv(f'./R/data/{fname}_financials.csv')
 
 
 if __name__ == "__main__":
 
     sp500 = sp500_symbols()
     dow = dow_symbols()
-    financials()
+    financials(dow)
