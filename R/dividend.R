@@ -22,7 +22,29 @@ tickers <- high_quality$symbol
 
 adj_prices <- map(tickers, GetMySymbols) %>% map(Ad) %>% reduce(merge.xts)
 
-ret_3m <- Return.calculate(adj_prices) %>% xts::last(60) %>% 
+# ret_3m <- Return.calculate(adj_prices) %>% xts::last(60) %>% 
+#   sapply(., function(x) {prod(1+x) - 1})
+# 
+# ret_6m <- Return.calculate(adj_prices) %>% xts::last(120) %>% 
+#   sapply(., function(x) {prod(1+x) - 1})
+
+ret_12m <- Return.calculate(adj_prices) %>% xts::last(252) %>% 
   sapply(., function(x) {prod(1+x) - 1})
 
-ret_12m = ret 
+# ret_bind <- cbind(ret_3m, ret_6m, ret_12m) %>% data.frame()
+
+
+
+# factor_mom <- ret_bind %>%
+#   mutate_all(list(~min_rank(desc(.)))) %>%
+#   mutate_all(list(~scale(.))) %>% 
+#   rowSums()
+# 
+# factor_mom <- factor_mom %>%  data.frame()
+
+
+
+factor_mom %>% 
+  data.frame() %>%
+  ggplot(aes(x = `.`)) +
+  geom_histogram()
