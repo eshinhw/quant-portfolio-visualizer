@@ -9,14 +9,7 @@ library(tidyquant)
 library(PerformanceAnalytics)
 
 fin <- read.csv('./data/dow_financials.csv')
-print(fin)
 
+# Dividend Stock + Remove negative revenue and dividend growth stocks
 
-# Dividend Stocks in Dow Jones
-
-dividend <- fin %>% filter(!is.na(DivYield))
-print(dividend)
-
-# Remove negative revenue and dividend growth stocks
-
-positive_revGrowth <- dividend %>% filter(Revenue_Growth > 0 | DPS_Growth > 0)
+high_quality <- fin %>% filter(!is.na(DivYield)) %>% filter(Revenue_Growth > 0 & DPS_Growth > 0 & ROE > 0 & EPS_Growth > 0)
