@@ -15,9 +15,16 @@ def sp500_symbols():
 
     return symbols
 
-def financials():
+def dow_symbols():
+    symbols = []
+    dow = requests.get(f"https://financialmodelingprep.com/api/v3/dowjones_constituent?apikey={FMP_API_KEY}").json()
 
-    symbols = sp500_symbols()
+    for data in dow:
+        symbols.append(data['symbol'])
+
+    return symbols
+
+def financials(symbols):
 
     financials_data = {'symbol': [],
                        'name': [],
@@ -63,10 +70,11 @@ def financials():
 
         df_financials = pd.DataFrame(financials_data)
 
-        df_financials.to_csv('./data/financials.csv')
+        df_financials.to_csv('./R/data/financials.csv')
 
 
 if __name__ == "__main__":
 
-
+    sp500 = sp500_symbols()
+    dow = dow_symbols()
     financials()
