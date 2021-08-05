@@ -16,13 +16,19 @@ high_quality <- fin %>% filter(!is.na(DivYield)) %>% filter(Revenue_Growth > 0 &
 
 div <- high_quality %>% select(symbol, name, DPS_Growth)
 
-div <- div %>% mutate(DPSGrowth_rank = rank(desc(DPS_Growth)))
+div <- div %>% mutate(DPSGrowth_rank = rank(DPS_Growth)) %>% arrange(desc(DPSGrowth_rank))
+
+# median <- boxplot(div$DPS_Growth)$stat[3,1]
+
+# div <- div %>% filter(div$DPS_Growth > median)
 
 GetMySymbols <- function(x) {
   getSymbols(x, src='yahoo', from='2018-01-01', to=Sys.Date(), auto.assign=FALSE)
 }
 
-tickers <- high_quality$symbol
+tickers <- div$symbol
+
+print(tickers)
 
 adj_prices <- map(tickers, GetMySymbols) %>% map(Ad) %>% reduce(merge.xts)
 
@@ -35,9 +41,24 @@ adj_prices <- map(tickers, GetMySymbols) %>% map(Ad) %>% reduce(merge.xts)
 ret_12m <- Return.calculate(adj_prices) %>% xts::last(252) %>% 
   sapply(., function(x) {prod(1+x) - 1})
 
-ret_12m <- ret_12m %>% mutate(rank = rank(.)) %>% arrange(desc(rank))
+def_ret_12m <- ret_12m %>% data.frame()
 
-# ret_bind <- cbind(ret_3m, ret_6m, ret_12m) %>% data.frame()
+df <- cbind(symbol = rownames(def_ret_12m), def_ret_12m)
+rownames(df) <- 1:nrow(df)
+
+
+df$symbol <- sub(".Adjusted", "", df$symbol)
+
+df <- rename(df, ret_12m = .)
+
+combined <- left_join(df,div, by='symbol')
+
+col_order <- c('symbol', 'name', 'DPS_Growth', 'ret_12m', 'DPSGrowth_rank')
+
+combined <- combined[, col_order]
+
+combined <- combined %>% mutate(mom_rank = rank(ret_12m)) %>% mutate(total_rank = DPSGrowth_rank + mom_rank) %>% arrange(desc(total_rank))
+
 
 
 
