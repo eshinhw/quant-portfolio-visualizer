@@ -61,16 +61,6 @@ combined <- combined %>% mutate(mom_rank = rank(ret_12m)) %>% mutate(total_rank 
 
 
 
-
-# factor_mom <- ret_bind %>%
-#   mutate_all(list(~min_rank(desc(.)))) %>%
-#   mutate_all(list(~scale(.))) %>% 
-#   rowSums()
-# 
-# factor_mom <- factor_mom %>%  data.frame()
-
-
-
 factor_mom %>% 
   data.frame() %>%
   ggplot(aes(x = `.`)) +
