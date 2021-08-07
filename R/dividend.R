@@ -57,7 +57,7 @@ col_order <- c('symbol', 'name', 'DPS_Growth', 'ret_12m', 'DPSGrowth_rank')
 
 combined <- combined[, col_order]
 
-combined <- combined %>% mutate(mom_rank = rank(ret_12m)) %>% mutate(total_rank = DPSGrowth_rank + mom_rank) %>% arrange(desc(total_rank))
+combined_data <- combined %>% mutate(mom_rank = rank(ret_12m)) %>% mutate(total_rank = DPSGrowth_rank + mom_rank) %>% arrange(desc(total_rank))
 
 
 
