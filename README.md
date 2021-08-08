@@ -78,3 +78,7 @@ All types of automated tasks are run through raspberry pi with **crontab** which
 Every weekday at 5:30pm after the market closes, the list of stocks is sent through email into my inbox. The stocks in the list are considered cheap as their stock prices have fallen more than certain predetermined discount threshold. Looking through the list, I can make purchases if I think current prices relative previous highs are attractive.
 
 The automated email alert system eliminates the manual process of checking the stock prices every day to decide whether they are traded at discount or not. 
+
+### Financial Data Analysis in R
+
+I've recently found coding resources for financial data analysis and quantitative investing in R.
