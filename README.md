@@ -81,4 +81,4 @@ The automated email alert system eliminates the manual process of checking the s
 
 ### Financial Data Analysis in R
 
-I've recently found coding resources for financial data analysis and quantitative investing in R.
+I've recently found coding resources for financial data analysis and quantitative investing in R. There are many useful libraries in R which help perform financial data analysis.
