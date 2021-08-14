@@ -1,4 +1,4 @@
-# Quantitative Investing with Python and R
+# Quantitative Investing in Python and R
 
 ## Introduction
 
@@ -62,22 +62,6 @@ The dividend history for Johnson&Johnson looks very stable and steady as well.
 - Long Term Trend Analysis based on Historical Momentum
 
 Out of 500 stocks in the S&P 500 index, the model sorts out the companies which satisfy minimum market cap size and have paid dividends consecutively over a certain periods of years. The next step is to calculate historical dividend growth rate and historical long term momentum to select the companies which have high dividend growth rate and historical uptrend price movements. The model assumes that these companies are reliable companies we can buy as a dividend growth investor who looks for both dividend growth and capital appreciation at the same time.
-
-### MySQL Database for Historical Financial Data
-
-The main source of financial data for the model is Financial Modeling Prep API (https://financialmodelingprep.com/developer/docs/). They have well-organized financial data which I can directly request through API calls. The data that I collect from the API are sorted and stored in local MySQL database. I've written basic SQL scripts to handle the data. Regularly, the data in the database is updated to stay updated and most of analysis work start from loading the data from the database as well. 
-
-All types of automated tasks are run through raspberry pi with **crontab** which allows us to execute python scripts at scheduled times. 
-
-### Daily Stock Update Email Alert
-
-<p align="center">
-  <img width="1000" height="500" src="https://user-images.githubusercontent.com/41933169/121985878-94fd0b80-cd63-11eb-944f-248f8d69e4a4.png">
-</p>
-
-Every weekday at 5:30pm after the market closes, the list of stocks is sent through email into my inbox. The stocks in the list are considered cheap as their stock prices have fallen more than certain predetermined discount threshold. Looking through the list, I can make purchases if I think current prices relative previous highs are attractive.
-
-The automated email alert system eliminates the manual process of checking the stock prices every day to decide whether they are traded at discount or not. 
 
 ### Financial Data Analysis in R
 
