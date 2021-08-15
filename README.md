@@ -66,3 +66,8 @@ Out of 500 stocks in the S&P 500 index, the model sorts out the companies which 
 ### Financial Data Analysis in R
 
 I've recently found coding resources for financial data analysis and quantitative investing in R. There are many useful libraries in R which help perform financial data analysis.
+
+Final Table Format
+
+| Symbol | Company Name | 52W High | Current Price | Discount % | 
+| ------ | -------------| -------- | ------------- | -----------|
