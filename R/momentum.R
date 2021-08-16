@@ -12,10 +12,10 @@ fin <- read.csv('./data/financials.csv')
 # get historical prices
 
 GetMySymbols <- function(x) {
-  getSymbols(x, src='yahoo', from='2018-01-01', to=Sys.Date(), auto.assign=FALSE)
+  getSymbols(x, src='yahoo', from='2015-01-01', to=Sys.Date(), auto.assign=FALSE)
 }
 
-tickers <- processed_fin$symbol
+tickers <- fin$symbol
 
 adj_prices <- map(tickers, GetMySymbols) %>% map(Ad) %>% reduce(merge.xts)
 
@@ -30,6 +30,8 @@ ret_12m = Return.calculate(adj_prices) %>% xts::last(252) %>% sapply(., function
 ret_24m = Return.calculate(adj_prices) %>% xts::last(378) %>% sapply(., function(x) {
   prod(1+x) - 1
 })
+
+m24 <- rank(-ret_24m)
 
 
 
