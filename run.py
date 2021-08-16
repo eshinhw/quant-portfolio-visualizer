@@ -1,7 +1,7 @@
 import credentials
 import pandas as pd
 import datetime as dt
-from fmp_db import fmp
+from fmpDB import fmp
 from questrade import qbot
 from utilities import calculate_prev_max_high, sendEmail
 
