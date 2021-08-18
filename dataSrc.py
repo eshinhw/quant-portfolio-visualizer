@@ -76,9 +76,11 @@ def financials(symbols):
         financials_data['EPS_Growth'].append(growth['epsgrowth'])
         financials_data['Revenue_Growth'].append(growth['fiveYRevenueGrowthPerShare'])
 
-        df_financials = pd.DataFrame(financials_data)
+    df_financials = pd.DataFrame(financials_data)
 
-        df_financials.to_csv(f'./R/data/{fname}_financials.csv')
+    # df_financials.to_csv(f'./R/data/{fname}_financials.csv')
+
+    return df_financials
 
 
 if __name__ == "__main__":

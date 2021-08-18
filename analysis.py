@@ -1,7 +1,13 @@
 import pandas as pd
 import utilities
+from dataSrc import sp500_symbols, dow_symbols, financials
 
-df = pd.read_csv('./R/data/dow_financials.csv')
+# df = pd.read_csv('./R/data/dow_financials.csv')
+
+# sp500 = sp500_symbols()
+dowTickers = dow_symbols()
+
+df = financials(dowTickers)
 
 df = df.dropna()
 
