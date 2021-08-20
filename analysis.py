@@ -30,8 +30,6 @@ dow_tickers = dataSrc.dow_symbols()
 df = dataSrc.financials(dow_tickers)
 
 
-# In[6]:
-
 
 # df = pd.read_csv('./R/data/dow_financials.csv')
 # df = df.drop(['Unnamed: 0'], axis=1)
@@ -96,16 +94,16 @@ for symbol in watchlist['symbol']:
     currentPrice = utilities.get_current_price(symbol)
     high = utilities.calculate_prev_max_high(symbol, 252)
     discount_pct = (currentPrice - high) / high
-    
+
     currentPrices.append(currentPrice)
     highs.append(high)
     discounts.append(discount_pct)
-    
+
 
 watchlist['CurrentPrice'] = currentPrices
 watchlist['52W_High'] = highs
 watchlist['Discount%'] = discounts
-    
+
 
 
 # In[20]:
