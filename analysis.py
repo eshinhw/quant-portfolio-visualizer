@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import dataSrc
-import utilities
 import pandas as pd
 
+import dataSrc
+import utilities
 
 # Retrieve symbols and financials
 
@@ -23,7 +23,14 @@ df = dataSrc.financials(dow_tickers)
 # df = df.dropna()
 
 
-conditions = (df['Revenue_Growth'] > 0) &             (df['GPMargin'] > 0)&             (df['EPS_Growth'] > 0)&             (df['ROE'] > 0) &             (df['DPS_Growth'] > 0) &             (df['DivYield'] > 0)
+conditions = (
+    (df["Revenue_Growth"] > 0)
+    & (df["GPMargin"] > 0)
+    & (df["EPS_Growth"] > 0)
+    & (df["ROE"] > 0)
+    & (df["DPS_Growth"] > 0)
+    & (df["DivYield"] > 0)
+)
 df = df[conditions]
 
 
@@ -31,7 +38,7 @@ df = df[conditions]
 # Average momentum of prev 6M, 12M and 24M
 
 mom_list = []
-for symbol in df['symbol']:
+for symbol in df["symbol"]:
     print(symbol)
     m12_momentum = utilities.calculate_hist_momentum(symbol, 252)
     m24_momentum = utilities.calculate_hist_momentum(symbol, 504)
@@ -39,21 +46,17 @@ for symbol in df['symbol']:
     avg_momentum = (m12_momentum + m24_momentum + m36_momentum) / 3
     mom_list.append(avg_momentum)
 
-df['momentum'] = mom_list
-df
+df["momentum"] = mom_list
 
-
-df['mom_rank'] = df['momentum'].rank()
-df = df.sort_values(by=['mom_rank'], ascending=False)
+df["mom_rank"] = df["momentum"].rank()
+df = df.sort_values(by=["mom_rank"], ascending=False)
 # numRows = df.shape[0]
 # numCols = df.shape[1]
 # top10 = df.copy()
-df = df[df['momentum'] > 0]
+df = df[df["momentum"] > 0]
 
 
-watchlist = df[['symbol','name']].copy()
-watchlist
-
+watchlist = df[["symbol", "name"]].copy()
 
 # Update current prices, 52W High and Discount %
 
@@ -61,7 +64,7 @@ currentPrices = []
 highs = []
 discounts = []
 
-for symbol in watchlist['symbol']:
+for symbol in watchlist["symbol"]:
     print(symbol)
     currentPrice = utilities.get_current_price(symbol)
     high = utilities.calculate_prev_max_high(symbol, 252)
@@ -72,20 +75,12 @@ for symbol in watchlist['symbol']:
     discounts.append(discount_pct)
 
 
-watchlist['CurrentPrice'] = currentPrices
-watchlist['52W_High'] = highs
-watchlist['Discount%'] = discounts
+watchlist["CurrentPrice"] = currentPrices
+watchlist["52W_High"] = highs
+watchlist["Discount%"] = discounts
 
 
-
-watchlist = watchlist.sort_values(by='Discount%')
+watchlist = watchlist.sort_values(by="Discount%")
 
 
 watchlist
-
-
-
-
-
-
-
