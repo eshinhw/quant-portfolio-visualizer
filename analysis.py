@@ -1,26 +1,21 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import dataSrc
 import utilities
 import pandas as pd
-
-
-# In[2]:
 
 
 # Retrieve symbols and financials
 
 sp500_tickers = dataSrc.sp500_symbols()
 dow_tickers = dataSrc.dow_symbols()
+
+
 # sp500_financials = dataSrc.financials(sp500_tickers)
 
 
 df = dataSrc.financials(dow_tickers)
-
 
 
 # df = pd.read_csv('./R/data/dow_financials.csv')
@@ -28,11 +23,8 @@ df = dataSrc.financials(dow_tickers)
 # df = df.dropna()
 
 
-
 conditions = (df['Revenue_Growth'] > 0) &             (df['GPMargin'] > 0)&             (df['EPS_Growth'] > 0)&             (df['ROE'] > 0) &             (df['DPS_Growth'] > 0) &             (df['DivYield'] > 0)
 df = df[conditions]
-
-
 
 
 # Compute historical momentum
@@ -51,9 +43,6 @@ df['momentum'] = mom_list
 df
 
 
-# In[17]:
-
-
 df['mom_rank'] = df['momentum'].rank()
 df = df.sort_values(by=['mom_rank'], ascending=False)
 # numRows = df.shape[0]
@@ -62,14 +51,8 @@ df = df.sort_values(by=['mom_rank'], ascending=False)
 df = df[df['momentum'] > 0]
 
 
-# In[18]:
-
-
 watchlist = df[['symbol','name']].copy()
 watchlist
-
-
-# In[19]:
 
 
 # Update current prices, 52W High and Discount %
@@ -95,25 +78,13 @@ watchlist['Discount%'] = discounts
 
 
 
-# In[20]:
-
-
 watchlist = watchlist.sort_values(by='Discount%')
-
-
-# In[21]:
 
 
 watchlist
 
 
-# In[ ]:
 
-
-
-
-
-# In[ ]:
 
 
 
