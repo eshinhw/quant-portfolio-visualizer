@@ -16,15 +16,7 @@ import pandas as pd
 
 sp500_tickers = dataSrc.sp500_symbols()
 dow_tickers = dataSrc.dow_symbols()
-
-
-# In[3]:
-
-
 # sp500_financials = dataSrc.financials(sp500_tickers)
-
-
-# In[4]:
 
 
 df = dataSrc.financials(dow_tickers)
@@ -36,14 +28,11 @@ df = dataSrc.financials(dow_tickers)
 # df = df.dropna()
 
 
-# In[7]:
-
 
 conditions = (df['Revenue_Growth'] > 0) &             (df['GPMargin'] > 0)&             (df['EPS_Growth'] > 0)&             (df['ROE'] > 0) &             (df['DPS_Growth'] > 0) &             (df['DivYield'] > 0)
 df = df[conditions]
 
 
-# In[9]:
 
 
 # Compute historical momentum
