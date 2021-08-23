@@ -109,3 +109,6 @@ def sendEmail(subject, curr_pos, filters, watchlist):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(credentials.GMAIL_ADDRESS, credentials.GMAIL_PW)
         smtp.send_message(msg)
+
+if __name__ == '__main__':
+    print(calculate_prev_max_high('MSFT', 252))
