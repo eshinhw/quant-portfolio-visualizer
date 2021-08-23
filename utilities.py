@@ -44,7 +44,8 @@ def calculate_prev_min_low(symbol: str, period: int):
 
 def calculate_prev_max_high(symbol: str, period: int):
     df = get_daily_prices(symbol)
-    df["High_" + str(period)] = df["High"].shift(1).rolling(window=period).max()
+    #df["High_" + str(period)] = df["High"].shift(1).rolling(window=period).max()
+    df["High_" + str(period)] = df["High"].rolling(window=period).max()
     return df["High_" + str(period)].iloc[-1]
 
 def calculate_hist_momentum(symbol: str, period: int):
