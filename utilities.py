@@ -39,7 +39,7 @@ def get_daily_prices(symbol):
 
 def calculate_prev_min_low(symbol: str, period: int):
     df = get_daily_prices(symbol)
-    df["Low_" + str(period)] = df["Low"].shift(1).rolling(window=period).min()
+    df["Low_" + str(period)] = df["Low"].rolling(window=period).min()
     return df["Low_" + str(period)].iloc[-1]
 
 def calculate_prev_max_high(symbol: str, period: int):
