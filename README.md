@@ -31,7 +31,7 @@ Even with high dividend yield, we can't expect high price appreciation.
   <img width="700" height="400" src="https://user-images.githubusercontent.com/41933169/117091006-f030ec80-ad27-11eb-8fe5-0919d4cdbccf.png">
 </p>
 
-### Financial Factors
+### Financial Data and Ratios Used
 
 - Market Cap (B)
 - Revenue Growth
