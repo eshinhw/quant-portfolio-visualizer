@@ -1,80 +1,94 @@
-import requests
-import credentials
 import pandas as pd
-# import yfinance as yf
-# import pandas_datareader.data as web
+import requests
+
+import credentials
 
 FMP_API_KEY = credentials.FMP_API_KEYS
 
+
 def sp500_symbols():
     symbols = []
-    sp500 = requests.get(f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API_KEY}").json()
+    sp500 = requests.get(
+        f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API_KEY}"
+    ).json()
 
     for data in sp500:
-        symbols.append(data['symbol'])
+        symbols.append(data["symbol"])
 
     return symbols
+
 
 def dow_symbols():
     symbols = []
-    dow = requests.get(f"https://financialmodelingprep.com/api/v3/dowjones_constituent?apikey={FMP_API_KEY}").json()
+    dow = requests.get(
+        f"https://financialmodelingprep.com/api/v3/dowjones_constituent?apikey={FMP_API_KEY}"
+    ).json()
 
     for data in dow:
-        symbols.append(data['symbol'])
+        symbols.append(data["symbol"])
 
     return symbols
 
-def financials(symbols):
+
+def extract_financials(symbols):
 
     if len(symbols) < 50:
-        fname = 'dow'
+        fname = "dow"
     elif len(symbols) < 300:
-        fname = 'nasdaq'
+        fname = "nasdaq"
     else:
-        fname = 'sp500'
+        fname = "sp500"
 
-
-    financials_data = {'symbol': [],
-                       'name': [],
-                       'exchange': [],
-                       'sector': [],
-                       'industry': [],
-                       'marketCap(B)': [],
-                       'Revenue_Growth': [],
-                       'ROE': [],
-                       'GPMargin': [],
-                       'EPS_Growth': [],
-                       'DivYield': [],
-                       'DPS': [],
-                       'DPS_Growth': []
-                       }
+    financials_data = {
+        "symbol": [],
+        "name": [],
+        "exchange": [],
+        "sector": [],
+        "industry": [],
+        "marketCap(B)": [],
+        "Revenue_Growth": [],
+        "ROE": [],
+        "GPMargin": [],
+        "EPS_Growth": [],
+        "DivYield": [],
+        "DPS": [],
+        "DPS_Growth": [],
+    }
 
     count = 0
     for symbol in symbols:
         count += 1
         print(f"{symbol}: {count}/{len(symbols)}")
 
-        financials_data['symbol'].append(symbol)
+        financials_data["symbol"].append(symbol)
 
         try:
-            profile = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={FMP_API_KEY}").json()[0]
-            ratio_ttm = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}").json()[0]
-            growth = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?period=quarter&limit=20&apikey={FMP_API_KEY}").json()[0]
+            profile = requests.get(
+                f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={FMP_API_KEY}"
+            ).json()[0]
+            ratio_ttm = requests.get(
+                f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}"
+            ).json()[0]
+            growth = requests.get(
+                f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?period=quarter&limit=20&apikey={FMP_API_KEY}"
+            ).json()[0]
         except:
             continue
 
-        financials_data['name'].append(profile['companyName'])
-        financials_data['exchange'].append(profile['exchangeShortName'])
-        financials_data['sector'].append(profile['sector'])
-        financials_data['industry'].append(profile['industry'])
-        financials_data['marketCap(B)'].append(profile['mktCap']/1000000000)
-        financials_data['DivYield'].append(ratio_ttm['dividendYieldTTM'])
-        financials_data['DPS'].append(ratio_ttm['dividendPerShareTTM'])
-        financials_data['DPS_Growth'].append(growth['fiveYDividendperShareGrowthPerShare'])
-        financials_data['ROE'].append(ratio_ttm['returnOnEquityTTM'])
-        financials_data['GPMargin'].append(ratio_ttm['grossProfitMarginTTM'])
-        financials_data['EPS_Growth'].append(growth['epsgrowth'])
-        financials_data['Revenue_Growth'].append(growth['fiveYRevenueGrowthPerShare'])
+        financials_data["name"].append(profile["companyName"])
+        financials_data["exchange"].append(profile["exchangeShortName"])
+        financials_data["sector"].append(profile["sector"])
+        financials_data["industry"].append(profile["industry"])
+        financials_data["marketCap(B)"].append(profile["mktCap"] / 1000000000)
+        financials_data["DivYield"].append(ratio_ttm["dividendYieldTTM"])
+        financials_data["DPS"].append(ratio_ttm["dividendPerShareTTM"])
+        financials_data["DPS_Growth"].append(
+            growth["fiveYDividendperShareGrowthPerShare"]
+        )
+        financials_data["ROE"].append(ratio_ttm["returnOnEquityTTM"])
+        financials_data["GPMargin"].append(ratio_ttm["grossProfitMarginTTM"])
+        financials_data["EPS_Growth"].append(growth["epsgrowth"])
+        financials_data["Revenue_Growth"].append(growth["fiveYRevenueGrowthPerShare"])
 
     df_financials = pd.DataFrame(financials_data)
 
@@ -87,4 +101,4 @@ if __name__ == "__main__":
 
     sp500 = sp500_symbols()
     dow = dow_symbols()
-    financials(dow)
+    extract_financials(dow)

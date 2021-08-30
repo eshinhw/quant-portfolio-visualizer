@@ -1,15 +1,17 @@
-import os
-import json
-import pprint
-import requests
-import credentials
-import pandas as pd
 import datetime as dt
-import mysql.connector
+import json
+import os
+import pprint
 from typing import List
-from sqlalchemy import create_engine
+
+import mysql.connector
+import pandas as pd
+import requests
 # from price import calculate_momentum
 from pandas.core.frame import DataFrame
+from sqlalchemy import create_engine
+
+import credentials
 
 FMP_API_KEY = credentials.FMP_API_KEYS
 MOMENTUMS = [3,6,12,36,60]
