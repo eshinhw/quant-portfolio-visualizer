@@ -30,11 +30,11 @@ Monthly Dividend Income
 Holding Positions Summary
 </p>
 
-## Quantitative Stock Selection Model 
+## Quantitative Stock Selection Model
 
 ### Model Assumptions
 
-I've developed a quantitative model which finds a list of stocks from S&P 500 which have **high historical dividend growth rate** and **strong historical price momentum** at the same time. I believe that these two factors are useful fundamental measures for long term dividend investors who are looking to achieve dividend growth and capital appreciation simultaneously. 
+I've developed a quantitative model which finds a list of stocks from S&P 500 which have **high historical dividend growth rate** and **strong historical price momentum** at the same time. I believe that these two factors are useful fundamental measures for long term dividend investors who are looking to achieve dividend growth and capital appreciation simultaneously.
 
 <p align="center">
   <img width="700" height="400" src="https://user-images.githubusercontent.com/41933169/117091006-f030ec80-ad27-11eb-8fe5-0919d4cdbccf.png">
@@ -46,7 +46,7 @@ Some of the matured companies such as AT&T have high dividend yield of 6.50% whi
   <img width="700" height="400" src="https://user-images.githubusercontent.com/41933169/117091817-7d754080-ad2a-11eb-8f87-c2bf3afc0bb4.png">
 </p>
 
-In comparison, Johnson&Johnson is a company which has been paying dividends consecutively many decades, but more attractively, its price has been growing steadly over the long period. This is the company we want to invest in. 
+In comparison, Johnson&Johnson is a company which has been paying dividends consecutively many decades, but more attractively, its price has been growing steadly over the long period. This is the company we want to invest in.
 
 <p align="center">
   <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/115498299-53f0eb00-a23b-11eb-95f3-2f69c4439350.png">
@@ -69,5 +69,5 @@ I've recently found coding resources for financial data analysis and quantitativ
 
 Final Table Format
 
-| Symbol | Company Name | 52W High | Current Price | Discount % | 
+| Symbol | Company Name | 52W High | Current Price | Discount % |
 | ------ | -------------| -------- | ------------- | -----------|
