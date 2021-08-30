@@ -7,6 +7,7 @@ from typing import List
 import mysql.connector
 import pandas as pd
 import requests
+
 # from price import calculate_momentum
 from pandas.core.frame import DataFrame
 from sqlalchemy import create_engine
@@ -14,12 +15,13 @@ from sqlalchemy import create_engine
 import credentials
 
 FMP_API_KEY = credentials.FMP_API_KEYS
-MOMENTUMS = [3,6,12,36,60]
-SP500_SYMBOL_PATH = './sp500_symbols.json'
+MOMENTUMS = [3, 6, 12, 36, 60]
+SP500_SYMBOL_PATH = "./sp500_symbols.json"
 DB_HOST = credentials.RASP_PI_DB_HOST
 DB_USER = credentials.RASP_PI_DB_USER
 DB_PW = credentials.RASP_PI_DB_PW
 SP500_THRESHOLD_DAY = 90
+
 
 class fmp:
     def __init__(self) -> None:
@@ -29,9 +31,7 @@ class fmp:
         """
         try:
             self.mydb = mysql.connector.connect(
-                host=DB_HOST,
-                user=DB_USER,
-                password=DB_PW
+                host=DB_HOST, user=DB_USER, password=DB_PW
             )
             self.mycursor = self.mydb.cursor()
             self.mycursor.execute("CREATE DATABASE IF NOT EXISTS fmp")
@@ -64,17 +64,19 @@ class fmp:
         if os.path.exists(SP500_SYMBOL_PATH):
             fp = open(SP500_SYMBOL_PATH, "r")
             data = json.load(fp)
-            return data['symbols']
+            return data["symbols"]
 
         out_dict = {}
         symbols = []
-        sp500 = requests.get(f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API_KEY}").json()
+        sp500 = requests.get(
+            f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API_KEY}"
+        ).json()
         for data in sp500:
-            symbols.append(data['symbol'])
+            symbols.append(data["symbol"])
 
-        out_dict['symbols'] = symbols
+        out_dict["symbols"] = symbols
 
-        with open(SP500_SYMBOL_PATH, 'w') as fp:
+        with open(SP500_SYMBOL_PATH, "w") as fp:
             json.dump(out_dict, fp)
 
         return symbols
@@ -84,7 +86,7 @@ class fmp:
         retrieves the symbols that are currently in the database.
 
         """
-        self.mycursor.execute('SELECT symbol from financials')
+        self.mycursor.execute("SELECT symbol from financials")
         res = self.mycursor.fetchall()
         symbols = [data[0] for data in res]
         return symbols
@@ -94,8 +96,10 @@ class fmp:
         gets the current price of symbol.
 
         """
-        price = requests.get(f"https://financialmodelingprep.com/api/v3/quote-short/{symbol.upper()}?apikey={FMP_API_KEY}").json()
-        return price[0]['price']
+        price = requests.get(
+            f"https://financialmodelingprep.com/api/v3/quote-short/{symbol.upper()}?apikey={FMP_API_KEY}"
+        ).json()
+        return price[0]["price"]
 
     def table_exists(self, table_name: str):
         """
@@ -119,7 +123,8 @@ class fmp:
 
         """
         symbol = symbol.upper()
-        self.mycursor.execute("""
+        self.mycursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS financials (
                 symbol VARCHAR(20) PRIMARY KEY,
                 name VARCHAR(255),
@@ -135,37 +140,46 @@ class fmp:
                 div_yield float,
                 div_per_share float,
                 dps_fiveY_growth float
-            )""")
+            )"""
+        )
         try:
-            ratio_ttm = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}").json()[0]
+            ratio_ttm = requests.get(
+                f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}"
+            ).json()[0]
         except:
             return
 
-        div_yield = ratio_ttm['dividendYieldTTM']
-        if not div_yield: return
-        div_per_share = ratio_ttm['dividendPerShareTTM']
-        if not div_per_share: return
-        gross_profit_margin = ratio_ttm['grossProfitMarginTTM']
-        roe = ratio_ttm['returnOnEquityTTM']
+        div_yield = ratio_ttm["dividendYieldTTM"]
+        if not div_yield:
+            return
+        div_per_share = ratio_ttm["dividendPerShareTTM"]
+        if not div_per_share:
+            return
+        gross_profit_margin = ratio_ttm["grossProfitMarginTTM"]
+        roe = ratio_ttm["returnOnEquityTTM"]
         try:
-            growth = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?period=quarter&limit=20&apikey={FMP_API_KEY}").json()[0]
+            growth = requests.get(
+                f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?period=quarter&limit=20&apikey={FMP_API_KEY}"
+            ).json()[0]
         except:
             return
 
-        eps_growth = growth['epsgrowth']
-        dps_fiveY_growth = growth['fiveYDividendperShareGrowthPerShare']
-        revenue_per_share_fiveY_growth = growth['fiveYRevenueGrowthPerShare']
+        eps_growth = growth["epsgrowth"]
+        dps_fiveY_growth = growth["fiveYDividendperShareGrowthPerShare"]
+        revenue_per_share_fiveY_growth = growth["fiveYRevenueGrowthPerShare"]
         try:
-            profile = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={FMP_API_KEY}").json()[0]
+            profile = requests.get(
+                f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={FMP_API_KEY}"
+            ).json()[0]
         except:
             return
 
-        name = profile['companyName']
-        exchange = profile['exchangeShortName']
-        sector = profile['sector']
-        industry = profile['industry']
-        marketCap = profile['mktCap']/1000000000
-        numEmployees = profile['fullTimeEmployees']
+        name = profile["companyName"]
+        exchange = profile["exchangeShortName"]
+        sector = profile["sector"]
+        industry = profile["industry"]
+        marketCap = profile["mktCap"] / 1000000000
+        numEmployees = profile["fullTimeEmployees"]
 
         sql = """
         INSERT IGNORE INTO financials (
@@ -200,9 +214,10 @@ class fmp:
             float(eps_growth),
             float(div_yield),
             float(div_per_share),
-            float(dps_fiveY_growth))
+            float(dps_fiveY_growth),
+        )
 
-        self.mycursor.execute(sql,val)
+        self.mycursor.execute(sql, val)
         self.mydb.commit()
 
     def update_financials(self, symbol: str):
@@ -213,35 +228,41 @@ class fmp:
 
         symbol = symbol.upper()
         try:
-            ratio_ttm = requests.get(f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}").json()[0]
+            ratio_ttm = requests.get(
+                f"https://financialmodelingprep.com/api/v3/ratios-ttm/{symbol}?apikey={FMP_API_KEY}"
+            ).json()[0]
         except:
             return
 
-        div_yield = ratio_ttm['dividendYieldTTM']
-        div_per_share = ratio_ttm['dividendPerShareTTM']
-        gross_profit_margin = ratio_ttm['grossProfitMarginTTM']
-        roe = ratio_ttm['returnOnEquityTTM']
+        div_yield = ratio_ttm["dividendYieldTTM"]
+        div_per_share = ratio_ttm["dividendPerShareTTM"]
+        gross_profit_margin = ratio_ttm["grossProfitMarginTTM"]
+        roe = ratio_ttm["returnOnEquityTTM"]
         try:
-            growth = requests.get(f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?period=quarter&limit=20&apikey={FMP_API_KEY}").json()[0]
+            growth = requests.get(
+                f"https://financialmodelingprep.com/api/v3/financial-growth/{symbol}?period=quarter&limit=20&apikey={FMP_API_KEY}"
+            ).json()[0]
         except:
             return
 
-        eps_growth = growth['epsgrowth']
-        dps_fiveY_growth = growth['fiveYDividendperShareGrowthPerShare']
-        revenue_per_share_fiveY_growth = growth['fiveYRevenueGrowthPerShare']
+        eps_growth = growth["epsgrowth"]
+        dps_fiveY_growth = growth["fiveYDividendperShareGrowthPerShare"]
+        revenue_per_share_fiveY_growth = growth["fiveYRevenueGrowthPerShare"]
         try:
-            profile = requests.get(f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={FMP_API_KEY}").json()[0]
+            profile = requests.get(
+                f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={FMP_API_KEY}"
+            ).json()[0]
         except:
             return
 
-        name = profile['companyName']
-        exchange = profile['exchangeShortName']
-        sector = profile['sector']
-        industry = profile['industry']
-        marketCap = profile['mktCap']/1000000000
-        numEmployees = profile['fullTimeEmployees']
+        name = profile["companyName"]
+        exchange = profile["exchangeShortName"]
+        sector = profile["sector"]
+        industry = profile["industry"]
+        marketCap = profile["mktCap"] / 1000000000
+        numEmployees = profile["fullTimeEmployees"]
 
-        sql="""
+        sql = """
             UPDATE financials
             SET
                 name = %s,
@@ -260,7 +281,7 @@ class fmp:
             WHERE
                 symbol = %s
             """
-        val=(
+        val = (
             name,
             exchange,
             sector,
@@ -274,9 +295,10 @@ class fmp:
             float(div_yield),
             float(div_per_share),
             float(dps_fiveY_growth),
-            symbol)
+            symbol,
+        )
 
-        self.mycursor.execute(sql,val)
+        self.mycursor.execute(sql, val)
         self.mydb.commit()
 
     def load_financials(self) -> DataFrame:
@@ -284,16 +306,17 @@ class fmp:
         exports the table as dataframe for analysis.
 
         """
-        dbcon = create_engine(f'mysql://{DB_USER}:{DB_PW}@{DB_HOST}/fmp').connect()
-        df = pd.read_sql_table('financials', dbcon)
+        dbcon = create_engine(f"mysql://{DB_USER}:{DB_PW}@{DB_HOST}/fmp").connect()
+        df = pd.read_sql_table("financials", dbcon)
         return df
 
     def add_column_into_dbtable(self, tb_name: str, val: str):
         self.mycursor.execute(f"ALTER TABLE {tb_name} ADD COLUMN {val}")
 
     def modify_column_type(self, tb_name: str, col_name: str, new_type: str):
-        self.mycursor.execute(f"ALTER TABLE {tb_name} MODIFY COLUMN {col_name} {new_type}")
-
+        self.mycursor.execute(
+            f"ALTER TABLE {tb_name} MODIFY COLUMN {col_name} {new_type}"
+        )
 
     def drop_all_databases(self) -> None:
         """
@@ -301,7 +324,7 @@ class fmp:
 
         """
         self.mycursor.execute("SHOW DATABASES")
-        excluded = ['sys', 'information_schema', 'performance_schema', 'mysql']
+        excluded = ["sys", "information_schema", "performance_schema", "mysql"]
         db_names = []
 
         for name in self.mycursor:
@@ -313,12 +336,12 @@ class fmp:
             self.mydb.commit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     myfmp = fmp()
     # myfmp.load_sp500_symbol_list()
     # myfmp.check_file_age()
-    today = str(dt.datetime.today().strftime('%Y-%b-%d'))
+    today = str(dt.datetime.today().strftime("%Y-%b-%d"))
 
     # count = 0
     # if myfmp.table_exists('financials'):
@@ -340,7 +363,6 @@ if __name__ == '__main__':
     #     print(f"{today}: table created successfully!")
 
     print(myfmp.load_financials().to_csv(path_or_buf="./financials.csv"))
-
 
     # print("1: delete database")
     # print("2: update database")
@@ -372,10 +394,3 @@ if __name__ == '__main__':
 
     # if val == 3:
     #     exit
-
-
-
-
-
-
-
