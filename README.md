@@ -1,8 +1,9 @@
-# Quantitative Investing in Python and R
+# Quantitative Investing in Python
 
-## Introduction
+## Data Sources
 
-Questrade is one of the investing brokers in Canada, and I have an investing account with them that I want to keep track of regularly. A jupyter notebook called 'Questrade Portfolio Manager' retrieves account information using Questrade API wrapper called 'qtrade' and summarizes up-to-date information such as monthly account activities, position changes and dividend income that I earn every month. Whenever I want to know how my investing account is doing, all I need to do is just run this notebook from time to time. In terms of security, qtrade wrapper automatically refreshes a security token, so I don't have to log in to the website to get a new token everytime I run the notebook. Below are some of the sample visualizations from the notebook.
+- Financial Modelling Prep API
+- Questrade API
 
 ## Visualizations on Account Activities
 
@@ -30,7 +31,7 @@ Monthly Dividend Income
 Holding Positions Summary
 </p>
 
-## Quantitative Stock Selection Model
+## Data-Driven Stock Selection
 
 ### Model Assumptions
 
@@ -62,12 +63,3 @@ The dividend history for Johnson&Johnson looks very stable and steady as well.
 - Long Term Trend Analysis based on Historical Momentum
 
 Out of 500 stocks in the S&P 500 index, the model sorts out the companies which satisfy minimum market cap size and have paid dividends consecutively over a certain periods of years. The next step is to calculate historical dividend growth rate and historical long term momentum to select the companies which have high dividend growth rate and historical uptrend price movements. The model assumes that these companies are reliable companies we can buy as a dividend growth investor who looks for both dividend growth and capital appreciation at the same time.
-
-### Financial Data Analysis in R
-
-I've recently found coding resources for financial data analysis and quantitative investing in R. There are many useful libraries in R which help perform financial data analysis.
-
-Final Table Format
-
-| Symbol | Company Name | 52W High | Current Price | Discount % |
-| ------ | -------------| -------- | ------------- | -----------|
