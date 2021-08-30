@@ -151,69 +151,69 @@ def calculate_hist_momentum(symbol: str, period: int):
     ret = (currentPrice - prevPrice) / prevPrice
     return ret
 
-def get_historical_monthly_prices(symbol: str):
-    prices = get_daily_prices(symbol)
-    prices.dropna(inplace=True)
-    prices.reset_index(inplace=True)
-    prices = prices[["Date", "Close"]]
-    prices["STD_YM"] = prices["Date"].map(lambda x: dt.datetime.strftime(x, "%Y-%m"))
-    month_list = prices["STD_YM"].unique()
-    monthly_prices = pd.DataFrame()
-    for m in month_list:
-        monthly_prices = monthly_prices.append(
-            prices[prices["STD_YM"] == m].iloc[-1, :]
-        )
-    monthly_prices = monthly_prices.drop(columns=["STD_YM"], axis=1)
-    monthly_prices.set_index("Date", inplace=True)
-    return monthly_prices[:-1]
+# def get_historical_monthly_prices(symbol: str):
+#     prices = get_daily_prices(symbol)
+#     prices.dropna(inplace=True)
+#     prices.reset_index(inplace=True)
+#     prices = prices[["Date", "Close"]]
+#     prices["STD_YM"] = prices["Date"].map(lambda x: dt.datetime.strftime(x, "%Y-%m"))
+#     month_list = prices["STD_YM"].unique()
+#     monthly_prices = pd.DataFrame()
+#     for m in month_list:
+#         monthly_prices = monthly_prices.append(
+#             prices[prices["STD_YM"] == m].iloc[-1, :]
+#         )
+#     monthly_prices = monthly_prices.drop(columns=["STD_YM"], axis=1)
+#     monthly_prices.set_index("Date", inplace=True)
+#     return monthly_prices[:-1]
 
 
-def calculate_momentum(symbol: str, periods: List[int]):
-    ret = []
-    ret.append(symbol)
-    monthly_prices = get_historical_monthly_prices(symbol)
-    for period in periods:
-        monthly_returns = monthly_prices.apply(
-            lambda x: x / x.shift(period) - 1, axis=0
-        )
-        monthly_returns = monthly_returns.rename(columns={"Adj Close": "Returns"})
-        mom = float(monthly_returns["Returns"][-1])
-        if mom == np.nan:
-            mom = float("-inf")
-        ret.append(mom)
-    return ret
+# def calculate_momentum(symbol: str, periods: List[int]):
+#     ret = []
+#     ret.append(symbol)
+#     monthly_prices = get_historical_monthly_prices(symbol)
+#     for period in periods:
+#         monthly_returns = monthly_prices.apply(
+#             lambda x: x / x.shift(period) - 1, axis=0
+#         )
+#         monthly_returns = monthly_returns.rename(columns={"Adj Close": "Returns"})
+#         mom = float(monthly_returns["Returns"][-1])
+#         if mom == np.nan:
+#             mom = float("-inf")
+#         ret.append(mom)
+#     return ret
 
 
-def sendEmail(subject, curr_pos, filters, watchlist):
-    msg = EmailMessage()
-    msg["Subject"] = subject
-    msg["From"] = credentials.GMAIL_ADDRESS
-    msg["To"] = credentials.GMAIL_ADDRESS
-    # msg.set_content("hello?")
+# def sendEmail(subject, curr_pos, filters, watchlist):
+#     msg = EmailMessage()
+#     msg["Subject"] = subject
+#     msg["From"] = credentials.GMAIL_ADDRESS
+#     msg["To"] = credentials.GMAIL_ADDRESS
+#     # msg.set_content("hello?")
 
-    msg.add_alternative(
-        f"""\
+#     msg.add_alternative(
+#         f"""\
 
-        <!DOCTYPE html>
-        <html>
-            <body>
-                <p> Hello Investors,<br> Below is the daily summary of your portfolio and updated stock watchlist.<br> Have a good evening :) </p>
-                <h1> Portfolio Overview </h1>
-                <h3> Investment Summary </h3>
-                {curr_pos}
-                <h1> Watchlist - S&P500 Discounted Stocks </h1>
-                <h3> Conditional Filters </h3>
-                {filters}
-                <br>
-                {watchlist}
-            </body>
-        </html>
-    """,
-        subtype="html",
-    )
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login(credentials.GMAIL_ADDRESS, credentials.GMAIL_PW)
-        smtp.send_message(msg)
+#         <!DOCTYPE html>
+#         <html>
+#             <body>
+#                 <p> Hello Investors,<br> Below is the daily summary of your portfolio and updated stock watchlist.<br> Have a good evening :) </p>
+#                 <h1> Portfolio Overview </h1>
+#                 <h3> Investment Summary </h3>
+#                 {curr_pos}
+#                 <h1> Watchlist - S&P500 Discounted Stocks </h1>
+#                 <h3> Conditional Filters </h3>
+#                 {filters}
+#                 <br>
+#                 {watchlist}
+#             </body>
+#         </html>
+#     """,
+#         subtype="html",
+#     )
+#     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+#         smtp.login(credentials.GMAIL_ADDRESS, credentials.GMAIL_PW)
+#         smtp.send_message(msg)
 
 
 if __name__ == "__main__":
