@@ -13,7 +13,7 @@
 - High Dividend Growth Rate
 - Strong Historical Momentum (Historical Price Movement)
 
-##### Good Stock Example: Johnson&Johnson (JNJ)
+#### Good Stock Example: Johnson&Johnson (JNJ)
 
 <p align="center">
   <img width="700" height="400" src="https://user-images.githubusercontent.com/41933169/117091817-7d754080-ad2a-11eb-8f87-c2bf3afc0bb4.png">
@@ -23,7 +23,7 @@
   <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/115498299-53f0eb00-a23b-11eb-95f3-2f69c4439350.png">
 </p>
 
-##### Bad Stock Example: AT&T (T)
+#### Bad Stock Example: AT&T (T)
 
 Even with high dividend yield, we can't expect high price appreciation.
 
