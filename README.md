@@ -13,23 +13,19 @@
 - High Dividend Growth Rate
 - Strong Historical Momentum (Historical Price Movement)
 
-##### Good Stock
+##### Good Stock Example: Johnson&Johnson (JNJ)
 
 <p align="center">
   <img width="700" height="400" src="https://user-images.githubusercontent.com/41933169/117091817-7d754080-ad2a-11eb-8f87-c2bf3afc0bb4.png">
 </p>
 
-In comparison, Johnson&Johnson is a company which has been paying dividends consecutively many decades, but more attractively, its price has been growing steadly over the long period. This is the company we want to invest in.
-
 <p align="center">
   <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/115498299-53f0eb00-a23b-11eb-95f3-2f69c4439350.png">
 </p>
 
-The dividend history for Johnson&Johnson looks very stable and steady as well.
+##### Bad Stock Example: AT&T (T)
 
-
-
-##### Bad Stock
+Even with high dividend yield, we can't expect high price appreciation.
 
 <p align="center">
   <img width="700" height="400" src="https://user-images.githubusercontent.com/41933169/117091006-f030ec80-ad27-11eb-8fe5-0919d4cdbccf.png">
