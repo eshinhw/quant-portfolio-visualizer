@@ -112,7 +112,6 @@ def get_current_price(symbol):
     ).json()
     return data[0]["price"]
 
-
 def get_daily_prices(symbol):
     data = requests.get(
         f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={credentials.FMP_API_KEYS}"
