@@ -42,25 +42,7 @@ Even with high dividend yield, we can't expect high price appreciation.
 - DPS
 - DPS Growth
 
-I've developed a quantitative model which finds a list of stocks from S&P 500 which have **high historical dividend growth rate** and **strong historical price momentum** at the same time. I believe that these two factors are useful fundamental measures for long term dividend investors who are looking to achieve dividend growth and capital appreciation simultaneously.
-
-
-
-Some of the matured companies such as AT&T have high dividend yield of 6.50% which is attractive but in terms of capital growth, it's not attractive at all. AT&T's price chart above shows that the stock price has been in the range of $20 and $60 almost over the last 30 years. Investors who have been investing in AT&T may have collected some dividends, but there is a possibility that their unrealized capital loss might be bigger than the total dividends collected.
-
-
-
-### Factors to be Considered
-
-- Minimum Market Cap
-- No Dividend Cut History
-- Minimum Dividend Growth Rate
-- Long Term Trend Analysis based on Historical Momentum
-
-Out of 500 stocks in the S&P 500 index, the model sorts out the companies which satisfy minimum market cap size and have paid dividends consecutively over a certain periods of years. The next step is to calculate historical dividend growth rate and historical long term momentum to select the companies which have high dividend growth rate and historical uptrend price movements. The model assumes that these companies are reliable companies we can buy as a dividend growth investor who looks for both dividend growth and capital appreciation at the same time.
-
-
-## Visualizations on Account Activities
+## Data Visualizations
 
 <p align="center">
   <img width="600" height="600" src="https://user-images.githubusercontent.com/41933169/112911987-84be8400-90c4-11eb-94cf-b3c9836887f5.png">
