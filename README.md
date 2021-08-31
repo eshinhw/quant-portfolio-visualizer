@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Quantitative Stock Investing in Python
 
 ## Data Sources
@@ -69,7 +68,6 @@ Monthly Dividend Income
 Holding Positions Summary
 </p>
 
-=======
 # Quant Study Notebooks
 
 This repository contains a collection of notebooks specifically related to quantitative investing topics such as below.
