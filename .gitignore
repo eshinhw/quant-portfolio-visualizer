@@ -8,3 +8,4 @@ sp500_symbols.json
 quant-investing.Rproj
 .RData
 data
+fmpDB.py
