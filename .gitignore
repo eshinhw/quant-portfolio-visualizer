@@ -1,5 +1,6 @@
 __pycache__
 .ipynb_checkpoints
+<<<<<<< HEAD
 access_token.yml
 credentials.py
 sp500_symbols.json
@@ -9,3 +10,6 @@ quant-investing.Rproj
 .RData
 data
 fmpDB.py
+=======
+security_tokens/
+>>>>>>> notebooks/master
