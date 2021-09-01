@@ -10,8 +10,6 @@ from qtrade import Questrade
 
 import credentials
 
-
-
 class QuestradeBot:
     def __init__(self) -> None:
         TEMP_TOKEN = credentials.QUESTRADE_API_CODE
@@ -67,16 +65,20 @@ class QuestradeBot:
         return df
 
     def get_usd_total_equity(self):
-        return self.bal.loc['USD','Total_Equity']
+        balance = self.get_balance()
+        return balance.loc['USD','Total_Equity']
 
     def get_usd_total_mv(self):
-        return self.bal.loc['USD', 'Market_Value']
+        balance = self.get_balance()
+        return balance.loc['USD', 'Market_Value']
 
     def get_cad_total_equity(self):
-        return self.bal.loc['CAD','Total_Equity']
+        balance = self.get_balance()
+        return balance.loc['CAD','Total_Equity']
 
     def get_cad_total_mv(self):
-        return self.bal.loc['CAD', 'Market_Value']
+        balance = self.get_balance()
+        return balance.loc['CAD', 'Market_Value']
 
     def get_usd_total_cost(self):
         positions = self.get_acct_positions()
@@ -98,13 +100,13 @@ class QuestradeBot:
         }
         total_market_value = self.get_usd_total_mv()
         total_costs = 0
-        positions = self.qtrade.get_account_positions(self.acctID)
+        positions = self.Questrade.get_account_positions(self.acctID)
         for position in positions:
             symbol = position['symbol']
-            description = self.qtrade.ticker_information(symbol)['description']
+            description = self.Questrade.ticker_information(symbol)['description']
             qty = position['openQuantity']
             cmv = position['currentMarketValue']
-            currency = self.qtrade.ticker_information(symbol)['currency']
+            currency = self.Questrade.ticker_information(symbol)['currency']
             cost = position['totalCost']
             change = round(100 * (cmv - cost) / cost, 2)
 
