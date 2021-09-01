@@ -46,7 +46,7 @@ Even with high dividend yield, we can't expect high price appreciation.
 - DPS
 - DPS Growth
 
-## Portfolio Visualizations
+## Questrade Portfolio Performance Analysis Visualizations
 
 ### Holdings Summary
 
