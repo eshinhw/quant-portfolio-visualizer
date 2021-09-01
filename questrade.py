@@ -21,22 +21,20 @@ class QuestradeBot:
                 try:
                     self.Questrade.refresh_access_token(from_yaml=True)
                 except requests.HTTPError:
-                    print("IF BAD REQUEST: REFRESH QUESTRADE API TOKEN")
+                    print("ACCESS_TOKEN EXISTS BUT BAD REQUEST: REFRESH QUESTRADE API TOKEN")
                     os.remove("./access_token.yml")
-                    quit()
+
         else:
             try:
                 self.Questrade = Questrade(access_code=TEMP_TOKEN)
             except (requests.HTTPError, AssertionError):
-                print("ELSE BAD REQUEST: REFRESH QUESTRADE API TOKEN")
+                print("NO ACCESS_TOKEN AND BAD REQUEST: REFRESH QUESTRADE API TOKEN")
                 quit()
 
-        # print("end of conditionals")
         try:
             self.acctID = self.Questrade.get_account_id()[0]
         except:
-            print("INITIALIZATION FAILED")
-            quit()
+            print("INITIALIZATION FAILED - REFRESH QUESTRADE API TOKEN")
 
     def get_acct_positions(self):
         return self.Questrade.get_account_positions(self.acctID)
@@ -184,6 +182,6 @@ class QuestradeBot:
 
 if __name__ == '__main__':
 
-    q = QuestradeBot(credentials.QUESTRADE_ACCOUNT_NUM)
+    q = QuestradeBot()
     print(q.get_balance())
     # print(q.calculate_portfolio_return())
