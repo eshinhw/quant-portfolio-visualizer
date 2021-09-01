@@ -74,11 +74,16 @@ This repository also contains a collection of jupyter notebooks specifically rel
 ▶ Portfolio Optimization with PyPortfolioOpt Module<br>
 
 ### Demonstrations
-
+<p align="center">
 ![image](https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png)
-
+</p>
+<p align="center">
 ![image](https://user-images.githubusercontent.com/41933169/112768475-3d63c500-8fea-11eb-912b-15261c7bffef.png)
-
+</p>
+<p align="center">
 ![image](https://user-images.githubusercontent.com/41933169/112768890-3b026a80-8fec-11eb-919a-6f762719bed5.png)
-
+</p>
+  
+<p align="center">
 ![image](https://user-images.githubusercontent.com/41933169/112768897-481f5980-8fec-11eb-909a-0be331141ef5.png)
+</p>
