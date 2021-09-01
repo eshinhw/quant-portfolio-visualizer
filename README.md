@@ -1,4 +1,4 @@
-# Quantitative Stock Investing in Python
+# pyQuant
 
 ## Data Sources
 
