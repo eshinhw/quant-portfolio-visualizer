@@ -10,7 +10,7 @@ from qtrade import Questrade
 
 import credentials
 
-ACCESS_TOKEN_PATH = "../access_token.yml"
+ACCESS_TOKEN_PATH = "./access_token.yml"
 
 class QuestradeBot:
     def __init__(self, account_num: int) -> None:
@@ -19,21 +19,24 @@ class QuestradeBot:
         if os.path.exists(ACCESS_TOKEN_PATH):
             try:
                 self.Questrade = Questrade(token_yaml=ACCESS_TOKEN_PATH)
-                self.acctID = self.Questrade.get_account_id()
-                assert self.acctID == account_num
+                # self.acctID = self.Questrade.get_account_id()
+                # assert self.acctID == account_num
             except:
                 try:
                     self.Questrade.refresh_access_token(from_yaml=True)
-                except:
-                    print("REFRESH QUESTRADE API CODE")
-                    os.remove("../access_token.yml")
+                except requests.HTTPError:
+                    print("IF BAD REQUEST: REFRESH QUESTRADE API KEY")
+                    os.remove("./access_token.yml")
         else:
+            print(False)
             try:
                 self.Questrade = Questrade(access_code=code)
-                self.acctID = self.Questrade.get_account_id()
-                assert self.acctID == account_num
+                # self.acctID = self.Questrade.get_account_id()
+                # assert self.acctID == account_num
+            except requests.HTTPError:
+                print("ELSE BAD REQUEST: REFRESH QUESTRADE API KEY")
             except AssertionError:
-                print("REFRESH QUESTRADE API CODE")
+                print("REFRESH QUESTRADE API KEY")
 
     def get_acct_positions(self):
         return self.qtrade.get_account_positions(self.acctID)
@@ -177,6 +180,6 @@ def calculate_shares(symbol: str, weight: float, currency: str):
 
 if __name__ == '__main__':
 
-    q = qbot(credentials.QUESTRADE_ACCOUNT_NUM)
-    # print(q.get_investment_summary())
+    q = QuestradeBot(credentials.QUESTRADE_ACCOUNT_NUM)
+    print(q.get_investment_summary())
     # print(q.calculate_portfolio_return())
