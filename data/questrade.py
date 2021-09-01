@@ -1,38 +1,39 @@
-import os
-import math
-import pprint
-import platform
-import requests
-import credentials
-import pandas as pd
 import datetime as dt
+import math
+import os
+import platform
+import pprint
+
+import pandas as pd
+import requests
 from qtrade import Questrade
-from utilities import get_daily_prices
 
-ACCESS_TOKEN_DIR = {'Windows': "./access_token.yml",
-                    'Linux': "/home/pi/Desktop/quant-investing/access_token.yml"}
+import credentials
 
-class qbot:
+ACCESS_TOKEN_PATH = "../access_token.yml"
+
+class QuestradeBot:
     def __init__(self, account_num: int) -> None:
-        code = credentials.QUESTRADE_API_CODE
 
-        sys = platform.system()
-        if os.path.exists(ACCESS_TOKEN_DIR[sys]):
+        code = credentials.QUESTRADE_API_CODE
+        if os.path.exists(ACCESS_TOKEN_PATH):
             try:
-                self.qtrade = Questrade(token_yaml=ACCESS_TOKEN_DIR[sys])
-                self.acctID = self.qtrade.get_account_id()
+                self.Questrade = Questrade(token_yaml=ACCESS_TOKEN_PATH)
+                self.acctID = self.Questrade.get_account_id()
                 assert self.acctID == account_num
             except:
                 try:
-                    self.qtrade.refresh_access_token(from_yaml=True)
+                    self.Questrade.refresh_access_token(from_yaml=True)
                 except:
-                    self.qtrade = Questrade(access_code=code)
+                    print("REFRESH QUESTRADE API CODE")
+                    os.remove("../access_token.yml")
         else:
-            self.qtrade = Questrade(access_code=code)
-
-
-        self.acctID = account_num
-        self.bal = self.get_balance()
+            try:
+                self.Questrade = Questrade(access_code=code)
+                self.acctID = self.Questrade.get_account_id()
+                assert self.acctID == account_num
+            except AssertionError:
+                print("REFRESH QUESTRADE API CODE")
 
     def get_acct_positions(self):
         return self.qtrade.get_account_positions(self.acctID)
