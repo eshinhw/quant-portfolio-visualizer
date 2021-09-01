@@ -14,7 +14,6 @@ import credentials
 
 class QuestradeBot:
     def __init__(self) -> None:
-
         TEMP_TOKEN = credentials.QUESTRADE_API_CODE
         ACCESS_TOKEN_PATH = "./access_token.yml"
         if os.path.exists(ACCESS_TOKEN_PATH):
@@ -24,28 +23,28 @@ class QuestradeBot:
                 try:
                     self.Questrade.refresh_access_token(from_yaml=True)
                 except requests.HTTPError:
-                    print("IF BAD REQUEST: REFRESH QUESTRADE API KEY")
+                    print("IF BAD REQUEST: REFRESH QUESTRADE API TOKEN")
                     os.remove("./access_token.yml")
-
+                    quit()
         else:
             try:
                 self.Questrade = Questrade(access_code=TEMP_TOKEN)
             except (requests.HTTPError, AssertionError):
-                print("ELSE BAD REQUEST: REFRESH QUESTRADE API KEY")
+                print("ELSE BAD REQUEST: REFRESH QUESTRADE API TOKEN")
                 quit()
 
-        print("end of conditionals")
+        # print("end of conditionals")
         try:
             self.acctID = self.Questrade.get_account_id()[0]
-            print(self.acctID)
         except:
             print("INITIALIZATION FAILED")
+            quit()
 
     def get_acct_positions(self):
-        return self.qtrade.get_account_positions(self.acctID)
+        return self.Questrade.get_account_positions(self.acctID)
 
     def get_ticker_info(self, symbol: str):
-        return self.qtrade.ticker_information(symbol)
+        return self.Questrade.ticker_information(symbol)
 
     def get_balance(self):
         token = self.Questrade.access_token
@@ -143,7 +142,7 @@ class QuestradeBot:
         for date in dateList:
             start = date[0]
             end = date[1]
-            activities = self.qtrade.get_account_activities(self.acctID[0], start, end)
+            activities = self.Questrade.get_account_activities(self.acctID, start, end)
             monthly_div = 0
             for activity in activities:
                 if activity['type'] == 'Dividends':
@@ -175,11 +174,11 @@ class QuestradeBot:
 
         print(m1, m2)
 
-def calculate_shares(symbol: str, weight: float, currency: str):
-    total_equity = qbot.get_usd_total_equity()
-    amount = total_equity * weight
-    curr_price = get_daily_prices(symbol)
-    return (amount, math.floor(amount / curr_price))
+# def calculate_shares(symbol: str, weight: float, currency: str):
+#     total_equity = qbot.get_usd_total_equity()
+#     amount = total_equity * weight
+#     curr_price = get_daily_prices(symbol)
+#     return (amount, math.floor(amount / curr_price))
 
 if __name__ == '__main__':
 
