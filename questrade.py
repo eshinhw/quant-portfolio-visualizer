@@ -10,33 +10,36 @@ from qtrade import Questrade
 
 import credentials
 
-ACCESS_TOKEN_PATH = "./access_token.yml"
+
 
 class QuestradeBot:
-    def __init__(self, account_num: int) -> None:
+    def __init__(self) -> None:
 
-        code = credentials.QUESTRADE_API_CODE
+        TEMP_TOKEN = credentials.QUESTRADE_API_CODE
+        ACCESS_TOKEN_PATH = "./access_token.yml"
         if os.path.exists(ACCESS_TOKEN_PATH):
             try:
                 self.Questrade = Questrade(token_yaml=ACCESS_TOKEN_PATH)
-                # self.acctID = self.Questrade.get_account_id()
-                # assert self.acctID == account_num
             except:
                 try:
                     self.Questrade.refresh_access_token(from_yaml=True)
                 except requests.HTTPError:
                     print("IF BAD REQUEST: REFRESH QUESTRADE API KEY")
                     os.remove("./access_token.yml")
+
         else:
-            print(False)
             try:
-                self.Questrade = Questrade(access_code=code)
-                # self.acctID = self.Questrade.get_account_id()
-                # assert self.acctID == account_num
-            except requests.HTTPError:
+                self.Questrade = Questrade(access_code=TEMP_TOKEN)
+            except (requests.HTTPError, AssertionError):
                 print("ELSE BAD REQUEST: REFRESH QUESTRADE API KEY")
-            except AssertionError:
-                print("REFRESH QUESTRADE API KEY")
+                quit()
+
+        print("end of conditionals")
+        try:
+            self.acctID = self.Questrade.get_account_id()[0]
+            print(self.acctID)
+        except:
+            print("INITIALIZATION FAILED")
 
     def get_acct_positions(self):
         return self.qtrade.get_account_positions(self.acctID)
@@ -45,7 +48,7 @@ class QuestradeBot:
         return self.qtrade.ticker_information(symbol)
 
     def get_balance(self):
-        token = self.qtrade.access_token
+        token = self.Questrade.access_token
         token_type = token['token_type']
         access_token = token['access_token']
         url = token['api_server'] + '/v1/accounts/' + str(self.acctID) + '/balances'
@@ -181,5 +184,5 @@ def calculate_shares(symbol: str, weight: float, currency: str):
 if __name__ == '__main__':
 
     q = QuestradeBot(credentials.QUESTRADE_ACCOUNT_NUM)
-    print(q.get_investment_summary())
+    print(q.get_balance())
     # print(q.calculate_portfolio_return())
