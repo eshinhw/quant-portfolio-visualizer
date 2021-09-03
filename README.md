@@ -1,4 +1,4 @@
-# OANDA Forex Trader
+# FX Trading Bot
 
 ## Introduction
 
