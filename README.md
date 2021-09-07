@@ -73,7 +73,7 @@ This repository also contains a collection of jupyter notebooks specifically rel
 ▶ Performance Measures: Returns, Volatility, Sharpe Ratio and Maximum Drawdown<br>
 ▶ Portfolio Optimization with PyPortfolioOpt Module<br>
 
-### Visualizations
+### Data Visualizations
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
 </p>
