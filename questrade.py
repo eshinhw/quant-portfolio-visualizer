@@ -8,12 +8,9 @@ import pandas as pd
 import requests
 from qtrade import Questrade
 
-import credentials
-
 class QuestradeBot:
-    def __init__(self) -> None:
+    def __init__(self, token, accountNum) -> None:
 
-        TEMP_TOKEN = credentials.QUESTRADE_API_CODE
         ACCESS_TOKEN_PATH = "./access_token.yml"
 
         if os.path.exists(ACCESS_TOKEN_PATH):
@@ -28,15 +25,15 @@ class QuestradeBot:
 
         else:
             try:
-                self.Questrade = Questrade(access_code=TEMP_TOKEN)
-            except (requests.HTTPError, AssertionError):
+                self.Questrade = Questrade(access_code=token)
+                self.acctID = self.Questrade.get_account_id()[0]
+                assert self.acctID == accountNum
+            except requests.HTTPError:
                 print("PLEASE REFRESH QUESTRADE API TOKEN")
+                os.remove("./access_token.yml")
+            except AssertionError:
+                print("PLEASE CHECK THE ACCOUNT NUMBER")
 
-        try:
-            self.acctID = self.Questrade.get_account_id()[0]
-        except:
-            print("INITIALIZATION FAILED: REFRESH QUESTRADE API TOKEN")
-            os.remove("./access_token.yml")
 
     def get_acct_positions(self):
         return self.Questrade.get_account_positions(self.acctID)
