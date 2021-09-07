@@ -11,11 +11,12 @@ from qtrade import Questrade
 class QuestradeBot:
     def __init__(self, token, accountNum) -> None:
 
-        ACCESS_TOKEN_PATH = "./access_token.yml"
+        self.token = token
+        self.accountNum = accountNum
 
-        if os.path.exists(ACCESS_TOKEN_PATH):
+        if os.path.exists("./access_token.yml"):
             try:
-                self.Questrade = Questrade(token_yaml=ACCESS_TOKEN_PATH)
+                self.Questrade = Questrade(token_yaml="./access_token.yml")
             except:
                 try:
                     self.Questrade.refresh_access_token(from_yaml=True)
@@ -25,18 +26,13 @@ class QuestradeBot:
 
         else:
             try:
-                self.Questrade = Questrade(access_code=token)
-                self.acctID = self.Questrade.get_account_id()[0]
-                assert self.acctID == accountNum
+                self.Questrade = Questrade(access_code=self.token)
             except requests.HTTPError:
                 print("PLEASE REFRESH QUESTRADE API TOKEN")
                 os.remove("./access_token.yml")
-            except AssertionError:
-                print("PLEASE CHECK THE ACCOUNT NUMBER")
-
 
     def get_acct_positions(self):
-        return self.Questrade.get_account_positions(self.acctID)
+        return self.Questrade.get_account_positions(self.accountNum)
 
     def get_ticker_info(self, symbol: str):
         return self.Questrade.ticker_information(symbol)
@@ -45,7 +41,7 @@ class QuestradeBot:
         token = self.Questrade.access_token
         token_type = token['token_type']
         access_token = token['access_token']
-        url = token['api_server'] + '/v1/accounts/' + str(self.acctID) + '/balances'
+        url = token['api_server'] + '/v1/accounts/' + str(self.accountNum) + '/balances'
         bal = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
         data = {'Currency': [], 'Cash': [], 'Market_Value': [], 'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
 
@@ -97,7 +93,7 @@ class QuestradeBot:
         }
         total_market_value = self.get_usd_total_mv()
         total_costs = 0
-        positions = self.Questrade.get_account_positions(self.acctID)
+        positions = self.Questrade.get_account_positions(self.accountNum)
         for position in positions:
             symbol = position['symbol']
             description = self.Questrade.ticker_information(symbol)['description']
@@ -141,7 +137,7 @@ class QuestradeBot:
         for date in dateList:
             start = date[0]
             end = date[1]
-            activities = self.Questrade.get_account_activities(self.acctID, start, end)
+            activities = self.Questrade.get_account_activities(self.accountNum, start, end)
             monthly_div = 0
             for activity in activities:
                 if activity['type'] == 'Dividends':
