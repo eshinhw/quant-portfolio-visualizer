@@ -6,6 +6,7 @@ from typing import List
 import numpy as np
 import pandas as pd
 import requests
+import pprint
 
 import credentials
 
@@ -48,12 +49,12 @@ def extract_financials(symbols):
         fname = "sp500"
 
     financials_data = {
-        "symbol": [],
-        "name": [],
-        "exchange": [],
-        "sector": [],
-        "industry": [],
-        "marketCap(B)": [],
+        "Symbol": [],
+        "Name": [],
+        "Exchange": [],
+        "Sector": [],
+        "Industry": [],
+        "MarketCap(B)": [],
         "Revenue_Growth": [],
         "ROE": [],
         "GPMargin": [],
@@ -68,7 +69,7 @@ def extract_financials(symbols):
         count += 1
         print(f"{symbol}: {count}/{len(symbols)}")
 
-        financials_data["symbol"].append(symbol)
+        financials_data["Symbol"].append(symbol)
 
         try:
             profile = requests.get(
@@ -83,11 +84,11 @@ def extract_financials(symbols):
         except:
             continue
 
-        financials_data["name"].append(profile["companyName"])
-        financials_data["exchange"].append(profile["exchangeShortName"])
-        financials_data["sector"].append(profile["sector"])
-        financials_data["industry"].append(profile["industry"])
-        financials_data["marketCap(B)"].append(profile["mktCap"] / 1000000000)
+        financials_data["Name"].append(profile["companyName"])
+        financials_data["Exchange"].append(profile["exchangeShortName"])
+        financials_data["Sector"].append(profile["sector"])
+        financials_data["Industry"].append(profile["industry"])
+        financials_data["MarketCap(B)"].append(profile["mktCap"] / 1000000000)
         financials_data["DivYield"].append(ratio_ttm["dividendYieldTTM"])
         financials_data["DPS"].append(ratio_ttm["dividendPerShareTTM"])
         financials_data["DPS_Growth"].append(
@@ -218,6 +219,4 @@ def calculate_hist_momentum(symbol: str, period: int):
 
 if __name__ == "__main__":
 
-    sp500 = sp500_symbols()
-    dow = dow_symbols()
-    extract_financials(dow)
+    sp500_symbols()

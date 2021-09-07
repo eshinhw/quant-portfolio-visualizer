@@ -12,8 +12,10 @@ import credentials
 
 class QuestradeBot:
     def __init__(self) -> None:
+
         TEMP_TOKEN = credentials.QUESTRADE_API_CODE
         ACCESS_TOKEN_PATH = "./access_token.yml"
+
         if os.path.exists(ACCESS_TOKEN_PATH):
             try:
                 self.Questrade = Questrade(token_yaml=ACCESS_TOKEN_PATH)
@@ -21,20 +23,20 @@ class QuestradeBot:
                 try:
                     self.Questrade.refresh_access_token(from_yaml=True)
                 except requests.HTTPError:
-                    print("ACCESS_TOKEN EXISTS BUT BAD REQUEST: REFRESH QUESTRADE API TOKEN")
+                    print("access_token.yml FILE DOESN'T WORK: REFRESH QUESTRADE API TOKEN")
                     os.remove("./access_token.yml")
 
         else:
             try:
                 self.Questrade = Questrade(access_code=TEMP_TOKEN)
             except (requests.HTTPError, AssertionError):
-                print("NO ACCESS_TOKEN AND BAD REQUEST: REFRESH QUESTRADE API TOKEN")
-                quit()
+                print("PLEASE REFRESH QUESTRADE API TOKEN")
 
         try:
             self.acctID = self.Questrade.get_account_id()[0]
         except:
-            print("INITIALIZATION FAILED - REFRESH QUESTRADE API TOKEN")
+            print("INITIALIZATION FAILED: REFRESH QUESTRADE API TOKEN")
+            os.remove("./access_token.yml")
 
     def get_acct_positions(self):
         return self.Questrade.get_account_positions(self.acctID)
