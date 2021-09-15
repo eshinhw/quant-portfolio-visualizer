@@ -80,12 +80,10 @@ class QuestradeBot:
     def get_option_chains(self, symbol: str):
         # https://api01.iq.questrade.com/v1/symbols/9291/options
         token = self.Questrade.access_token
-        #print(token)
         token_type = token['token_type']
         access_token = token['access_token']
         sID = self.search_symbolID(symbol)
         url = token['api_server'] + '/v1/symbols/' + str(sID) + '/options'
-        print(url)
         resp = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
         return resp
 
