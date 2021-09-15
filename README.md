@@ -26,7 +26,7 @@ In this demonstration, only System 2 is implemented.
 
 #### Strategy Overview
 
-Since original turtle trading system has about 30% of breakout success rate at key highs and lows, that means 70% of the time markets fail to break out key levels. We can reverse-engineer to bet against original turtles to capitalize 70% of false breakouts. 'Turtle Soup' strategy goes long at previous lows and goes short at previous highs, expecting the markets to reverse.
+If original turtle trading system has about 30% of breakout success rate at key highs and lows, then 70% of the time, markets fail to break out pre-determined key levels. We can reverse-engineer to bet against original turtles to capitalize 70% of false breakouts. 'Turtle Soup' strategy goes long at previous lows and goes short at previous highs, expecting the markets to reverse.
 
 #### Trading Rules
 
