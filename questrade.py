@@ -19,7 +19,6 @@ class QuestradeBot:
 
         if os.path.exists("./access_token.yml"):
             # check expired
-
             modified = dt.datetime.fromtimestamp(os.path.getmtime("./access_token.yml"))
             now = dt.datetime.now()
 
@@ -68,10 +67,8 @@ class QuestradeBot:
     def search_symbolID(self, symbol: str):
         # https://api01.iq.questrade.com/v1/symbols/search?prefix=BMO
         token = self.Questrade.access_token
-        print(token)
         token_type = token['token_type']
         access_token = token['access_token']
-        # u = 'https://api01.iq.questrade.com/v1/AAPL/9291/options'
         url = token['api_server'] + '/v1/symbols/search?prefix=' + symbol
         resp = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
         symbolID = resp['symbols'][0]['symbolId']
@@ -83,7 +80,6 @@ class QuestradeBot:
         token_type = token['token_type']
         access_token = token['access_token']
         sID = self.search_symbolID(symbol)
-        print(type(sID))
         url = token['api_server'] + '/v1/symbols/' + str(sID) + '/options'
         resp = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
         return resp
@@ -99,6 +95,7 @@ class QuestradeBot:
 
     def create_option_chains(self, symbol, callID, putID):
         opt_chains = self.get_option_chains(symbol)
+        print(opt_chains['optionChain'][0])
 
 
     def get_usd_total_equity(self):
@@ -226,8 +223,9 @@ if __name__ == '__main__':
 
     q = QuestradeBot(token=token, accountNum=accountNum)
     #print(q.search_symbolID('AAPL'))
-    pprint.pprint(q.get_option_chains('AAPL')['optionChain'][0])
+    #pprint.pprint(q.get_option_chains('AAPL')['optionChain'])
     #pprint.pprint(q.get_option_chains('AAPL')[0])
-    q.get_id_details(37664695)
+    #q.get_id_details(37664695)
+    print(q.create_option_chains('AAPL', 1, 2))
     # q.get_balance()
     # print(q.calculate_portfolio_return())
