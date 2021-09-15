@@ -34,6 +34,14 @@
   <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/131683125-30857b47-5295-40f7-bd0d-274c04c1b22c.png">
 </p>
 
+<p align="center">
+  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768890-3b026a80-8fec-11eb-919a-6f762719bed5.png">
+</p>
+  
+<p align="center">
+  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768897-481f5980-8fec-11eb-909a-0be331141ef5.png">
+</p>
+
 #### Bad Stock Example: AT&T (T)
 
 Even with high dividend yield, we can't expect high price appreciation.
@@ -68,25 +76,16 @@ Even with high dividend yield, we can't expect high price appreciation.
 
 ## 4. Fixed Asset Allocation Portfolios Performance Comparison
 
+<p align="center">
+  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
+</p>
+
 ## 5. Performance Measures: Returns, Volatility, Sharpe Ratio and Maximum Drawdown
 
 ## 6. Portfolio Optimization with PyPortfolioOpt
 
 ## 7. Dual Momentum: GEM vs GBM
 
-### Data Visualizations
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
-</p>
-
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768475-3d63c500-8fea-11eb-912b-15261c7bffef.png">
-</p>
-
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768890-3b026a80-8fec-11eb-919a-6f762719bed5.png">
-</p>
-  
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768897-481f5980-8fec-11eb-909a-0be331141ef5.png">
 </p>
