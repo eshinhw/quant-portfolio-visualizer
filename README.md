@@ -13,6 +13,17 @@
 - High Dividend Growth Rate
 - Strong Historical Momentum (Historical Price Movement)
 
+### Financial Data and Ratios Used
+
+- Market Cap (B)
+- Revenue Growth
+- Return on Equity (ROE)
+- Gross Profit Margin
+- EPS Growth
+- Dividend Yield
+- DPS
+- DPS Growth
+
 #### Good Stock Example: Johnson&Johnson (JNJ)
 
 <p align="center">
@@ -35,16 +46,7 @@ Even with high dividend yield, we can't expect high price appreciation.
   <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/131682928-2e1e4e10-f84f-4bea-bd43-066ad01a7728.png">
 </p>
 
-### Financial Data and Ratios Used
 
-- Market Cap (B)
-- Revenue Growth
-- Return on Equity (ROE)
-- Gross Profit Margin
-- EPS Growth
-- Dividend Yield
-- DPS
-- DPS Growth
 
 ## Questrade Portfolio Performance Analysis Visualizations
 
