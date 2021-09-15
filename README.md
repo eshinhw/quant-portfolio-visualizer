@@ -1,6 +1,6 @@
 # pyQuant
 
-# Table of Contents
+## Table of Contents
 1. [Data Sources](#data-sources)
 2. [Quantitative Stock Selection](#quantitative-stock-selection)
 3. [Questrade Portfolio Performance Analysis](#questrade-portfolio-performance)
