@@ -19,19 +19,21 @@ class QuestradeBot:
 
         if os.path.exists("./access_token.yml"):
             # check expired
-            if os.path.getmtime("./access_token.yml") > 259200:
+
+            modified = dt.datetime.fromtimestamp(os.path.getmtime("./access_token.yml"))
+            now = dt.datetime.now()
+
+            fileAge = (now - modified).days
+
+            if fileAge > 3:
                 print("access_token.yml EXPIRED: REFRESH QUESTRADE API TOKEN")
                 os.remove("./access_token.yml")
             else:
                 # we can refresh token
-                try:
-                    self.Questrade = Questrade(token_yaml="./access_token.yml")
-                except:
-                    try:
-                        self.Questrade.refresh_access_token(from_yaml=True)
-                    except requests.HTTPError:
-                        os.remove("./access_token.yml")
-        else:
+                self.Questrade = Questrade(token_yaml="./access_token.yml")
+                self.Questrade.refresh_access_token(from_yaml=True)
+
+        if not (os.path.exists("./access_token.yml")):
             self.Questrade = Questrade(access_code=self.token)
 
     def get_acct_positions(self):
@@ -63,16 +65,39 @@ class QuestradeBot:
         df.set_index('Currency', inplace=True)
         return df
 
-    def get_option_chains(self, symbol: str):
-        # https://api01.iq.questrade.com/v1/symbols/9291/options
+    def search_symbolID(self, symbol: str):
+        # https://api01.iq.questrade.com/v1/symbols/search?prefix=BMO
         token = self.Questrade.access_token
         print(token)
         token_type = token['token_type']
         access_token = token['access_token']
-        u = 'https://api01.iq.questrade.com/v1/AAPL/9291/options'
-        url = token['api_server'] + '/v1/' + symbol + '/9291/options'
+        # u = 'https://api01.iq.questrade.com/v1/AAPL/9291/options'
+        url = token['api_server'] + '/v1/symbols/search?prefix=' + symbol
+        resp = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
+        symbolID = resp['symbols'][0]['symbolId']
+        return symbolID
+
+    def get_option_chains(self, symbol: str):
+        # https://api01.iq.questrade.com/v1/symbols/9291/options
+        token = self.Questrade.access_token
+        #print(token)
+        token_type = token['token_type']
+        access_token = token['access_token']
+        sID = self.search_symbolID(symbol)
+        url = token['api_server'] + '/v1/symbols/' + str(sID) + '/options'
         print(url)
-        bal = requests.get(u, headers={'Authorization': f'{token_type} {access_token}'}).json()
+        resp = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
+        return resp
+
+    def get_id_details(self, sID):
+
+        # v1/markets/quotes/
+        token = self.Questrade.access_token
+        print(token)
+        token_type = token['token_type']
+        access_token = token['access_token']
+        url = token['api_server'] + '/v1/markets/quotes/' + str(sID)
+        bal = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
         print(bal)
 
     def get_usd_total_equity(self):
@@ -199,6 +224,9 @@ if __name__ == '__main__':
     accountNum = credentials.QUESTRADE_ACCOUNT_NUM
 
     q = QuestradeBot(token=token, accountNum=accountNum)
-    print(q.get_option_chains('AAPL'))
-    q.get_balance()
+    #print(q.search_symbolID('AAPL'))
+    pprint.pprint(q.get_option_chains('AAPL')['optionChain'][0])
+    #pprint.pprint(q.get_option_chains('AAPL')[0])
+    q.get_id_details(37664695)
+    # q.get_balance()
     # print(q.calculate_portfolio_return())
