@@ -7,7 +7,6 @@ def sendEmail(subject, curr_pos, filters, watchlist):
     msg["Subject"] = subject
     msg["From"] = credentials.GMAIL_ADDRESS
     msg["To"] = credentials.GMAIL_ADDRESS
-    # msg.set_content("hello?")
 
     msg.add_alternative(
         f"""\
