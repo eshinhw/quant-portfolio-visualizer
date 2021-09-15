@@ -47,9 +47,6 @@ class QuestradeBot:
         access_token = token['access_token']
         url = token['api_server'] + '/v1/accounts/' + str(self.accountNum) + '/balances'
         bal = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
-        if bal == None:
-            return None
-        print(bal)
         data = {'Currency': [], 'Cash': [], 'Market_Value': [], 'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
 
         for x in bal['perCurrencyBalances']:
