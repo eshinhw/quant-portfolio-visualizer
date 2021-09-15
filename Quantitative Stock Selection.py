@@ -13,7 +13,7 @@
 #     name: python3
 # ---
 
-import fmp
+import fmp # fmp.py contains all helper functions working with FMP API for financial data
 import pandas as pd
 
 # # Dow Jones: select stocks which have positive 1Y, 2Y and 3Y momentum
@@ -41,13 +41,15 @@ conditions = ((df["Revenue_Growth"] > 0)
 
 df = df[conditions]
 
+print(df)
+
 # Compute historical momentum
 
 m12_momentums = []
 m24_momentums = []
 m36_momentums = []
 count = 0
-for symbol in df["symbol"]:
+for symbol in df["Symbol"]:
     count += 1
     m12_momentums.append(fmp.calculate_hist_momentum(symbol, 252))
     m24_momentums.append(fmp.calculate_hist_momentum(symbol, 504))
