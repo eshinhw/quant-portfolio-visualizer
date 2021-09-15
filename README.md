@@ -16,7 +16,7 @@ Long term trend following strategy with wide stop and target. A breakout signal 
 - **Stop Loss**: 2 x ATR
 - **Take Profit (Modified)**: either 2 x ATR or 20 days low for long and 20 days high for short (whichever is close to current price)
 
-#### Resources
+#### Source Resource
 
 - The Original Turtle Rules: https://bigpicture.typepad.com/comments/files/turtlerules.pdf
 
