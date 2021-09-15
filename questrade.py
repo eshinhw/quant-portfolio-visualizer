@@ -83,20 +83,23 @@ class QuestradeBot:
         token_type = token['token_type']
         access_token = token['access_token']
         sID = self.search_symbolID(symbol)
+        print(type(sID))
         url = token['api_server'] + '/v1/symbols/' + str(sID) + '/options'
         resp = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
         return resp
 
-    def get_id_details(self, sID):
-
+    def get_id_details(self, sID: int):
         # v1/markets/quotes/
         token = self.Questrade.access_token
-        print(token)
         token_type = token['token_type']
         access_token = token['access_token']
         url = token['api_server'] + '/v1/markets/quotes/' + str(sID)
-        bal = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
-        print(bal)
+        resp = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
+        return resp
+
+    def create_option_chains(self, symbol, callID, putID):
+        opt_chains = self.get_option_chains(symbol)
+
 
     def get_usd_total_equity(self):
         balance = self.get_balance()
