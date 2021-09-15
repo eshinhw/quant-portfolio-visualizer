@@ -1,8 +1,11 @@
 import datetime as dt
+from genericpath import getmtime
 import math
 import os
 import platform
 import pprint
+import credentials
+import time
 
 import pandas as pd
 import requests
@@ -15,21 +18,21 @@ class QuestradeBot:
         self.accountNum = accountNum
 
         if os.path.exists("./access_token.yml"):
-            try:
-                self.Questrade = Questrade(token_yaml="./access_token.yml")
-            except:
-                try:
-                    self.Questrade.refresh_access_token(from_yaml=True)
-                except requests.HTTPError:
-                    print("access_token.yml FILE DOESN'T WORK: REFRESH QUESTRADE API TOKEN")
-                    os.remove("./access_token.yml")
-
-        else:
-            try:
-                self.Questrade = Questrade(access_code=self.token)
-            except requests.HTTPError:
-                print("PLEASE REFRESH QUESTRADE API TOKEN")
+            # check expired
+            if os.path.getmtime("./access_token.yml") > 259200:
+                print("access_token.yml EXPIRED: REFRESH QUESTRADE API TOKEN")
                 os.remove("./access_token.yml")
+            else:
+                # we can refresh token
+                try:
+                    self.Questrade = Questrade(token_yaml="./access_token.yml")
+                except:
+                    try:
+                        self.Questrade.refresh_access_token(from_yaml=True)
+                    except requests.HTTPError:
+                        os.remove("./access_token.yml")
+        else:
+            self.Questrade = Questrade(access_code=self.token)
 
     def get_acct_positions(self):
         return self.Questrade.get_account_positions(self.accountNum)
@@ -43,6 +46,9 @@ class QuestradeBot:
         access_token = token['access_token']
         url = token['api_server'] + '/v1/accounts/' + str(self.accountNum) + '/balances'
         bal = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
+        if bal == None:
+            return None
+        print(bal)
         data = {'Currency': [], 'Cash': [], 'Market_Value': [], 'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
 
         for x in bal['perCurrencyBalances']:
@@ -56,6 +62,18 @@ class QuestradeBot:
         df = pd.DataFrame(data)
         df.set_index('Currency', inplace=True)
         return df
+
+    def get_option_chains(self, symbol: str):
+        # https://api01.iq.questrade.com/v1/symbols/9291/options
+        token = self.Questrade.access_token
+        print(token)
+        token_type = token['token_type']
+        access_token = token['access_token']
+        u = 'https://api01.iq.questrade.com/v1/AAPL/9291/options'
+        url = token['api_server'] + '/v1/' + symbol + '/9291/options'
+        print(url)
+        bal = requests.get(u, headers={'Authorization': f'{token_type} {access_token}'}).json()
+        print(bal)
 
     def get_usd_total_equity(self):
         balance = self.get_balance()
@@ -177,6 +195,10 @@ class QuestradeBot:
 
 if __name__ == '__main__':
 
-    q = QuestradeBot()
-    print(q.get_balance())
+    token = credentials.QUESTRADE_API_CODE
+    accountNum = credentials.QUESTRADE_ACCOUNT_NUM
+
+    q = QuestradeBot(token=token, accountNum=accountNum)
+    print(q.get_option_chains('AAPL'))
+    q.get_balance()
     # print(q.calculate_portfolio_return())
