@@ -5,7 +5,7 @@
 - Financial Modelling Prep API (https://financialmodelingprep.com/developer/docs/)
 - Questrade API (https://www.questrade.com/api)
 
-## Data-Driven Stock Selection
+## Quantitative Stock Selection
 
 ### Key Considerations
 
