@@ -21,9 +21,7 @@ class QuestradeBot:
             # check expired
             modified = dt.datetime.fromtimestamp(os.path.getmtime("./access_token.yml"))
             now = dt.datetime.now()
-
             fileAge = (now - modified).days
-
             if fileAge > 3:
                 print("access_token.yml EXPIRED: REFRESH QUESTRADE API TOKEN")
                 os.remove("./access_token.yml")
