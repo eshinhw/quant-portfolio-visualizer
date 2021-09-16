@@ -13,16 +13,22 @@
 #     name: python3
 # ---
 
+# # Quantitative Stock Selection
+
 import fmp # fmp.py contains all helper functions working with FMP API for financial data
 import pandas as pd
 
-# # Retrieve Dow Jones stock symbols and financial data 
+# ## 1. Retrieve Dow Jones stock symbols and financial data 
 
 # Retrieve symbols and financials
 dow_tickers = fmp.dow_symbols()
 df = fmp.extract_financials(dow_tickers)
 
-# # Filtering stocks based on criteria
+# ## 2. Filtering stocks based on financial ratio criteria
+
+# +
+# Conditions below indicate that we want the stocks which have positive
+# Revenue Growth, Gross Profit Margin, EPS Growth, ROE, DPS Growth and Dividend Yield
 
 conditions = ((df["Revenue_Growth"] > 0)
               & (df["GPMargin"] > 0)
@@ -32,23 +38,25 @@ conditions = ((df["Revenue_Growth"] > 0)
               & (df["DivYield"] > 0))
 df = df[conditions]
 df
+# -
 
 df.shape # there are 10 stocks which satisfy the financial ratio criteria
 
-# # Trend and Momentum analysis
+# ## 3. Trend and Momentum Analysis
 
-# Trend
+# In terms of analyzing historial prices, there are several measures we can choose. We can simply look at the relationship between current price and long term moving averages to see where the stock is located, calculate historical momentum to select positive momentum stocks or select the stocks which have outperformed the benchmark.
 
-# moving average - trend analysis
-# benchmark outperform stocks
+# ### 3-1. Select stocks which have outperformed against S&P 500
+
+# Since our goal is to outperform the benchmark index which is S&P 500, we can try to select stocks which have outperformed against the benchmark for alpha generation.
+
+# ### 3-2. Trend analysis using 200 MA
+
+# We can also look through the stocks which prices are above 200 MA.
+
+# ### 3-3. Momentum analysis using historical 1Y returns
 
 # +
-
-
-
-
-print(df)
-
 # Compute historical momentum
 
 m12_momentums = []
