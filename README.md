@@ -3,12 +3,13 @@
 ## Table of Contents
 1. [Data Sources](#data-sources)
 2. [Prerequisites: Basics of Quant Investing](#prerequisites)
-3. [Quantitative Stock Selection](#quantitative-stock-selection)
-4. [Questrade Portfolio Performance Analysis](#questrade-portfolio-performance)
-5. [Fixed Asset Allocation Portfolios Performance](#fixed-asset-allocations)
-6. [Performance Measures: Returns, Volatility, Sharpe Ratio and Maximum Drawdown](#performance-measures)
-7. [Portfolio Optimization with PyPortfolioOpt](#portfolio-optimization)
-8. [Dual Momentum: GEM vs GBM](#dual-momentum)
+3. [Questrade Portfolio Manager](#questrade-portfolio-performance)
+4. [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)
+5. [Dynamic Asset Allocation Strategies](#)
+6. [Quantitative Stock Selection](#quantitative-stock-selection)
+7. 
+8. 
+11. [Dual Momentum: GEM vs GBM](#dual-momentum)
 
 ## 1. Data Sources <a name="data-sources"></a>
 
