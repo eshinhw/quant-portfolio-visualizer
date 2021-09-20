@@ -16,7 +16,7 @@ Welcome to pyQuant! :)
 - Financial Modelling Prep API (https://financialmodelingprep.com/developer/docs/)
 - Questrade API (https://www.questrade.com/api)
 
-## Prerequisites <a name="prerequisites"></a>
+## Prerequisites: Basics of Quant Investing <a name="prerequisites"></a>
 
 Below is a collection of jupyter notebooks which touch upon the basics of quantitative investing and data analysis in Python Pandas.
 
