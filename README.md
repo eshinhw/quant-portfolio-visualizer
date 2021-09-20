@@ -20,10 +20,10 @@ Welcome to pyQuant! :)
 
 Below is a collection of jupyter notebooks which touch upon the basics of quantitative investing and data analysis in Python Pandas.
 
-- [Working with Pandas DataFrame](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Working%20with%20Pandas%20DataFrame.ipynb)
-- [Returns, Volatility and Sharpe Ratio of Stocks](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Returns,%20Volatility%20and%20Sharpe%20Ratio%20of%20Stocks.ipynb)
-- [Maximum Drawdown (MDD)](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Maximum%20Drawdown%20(MDD).ipynb)
-- [Portfolio Statistics and Optimizaion with PyPortfolioOpt](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Portfolio%20Statistics%20and%20Optimization%20with%20PyPortfolioOpt.ipynb)
+- [Working with Pandas DataFrame Notebook](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Working%20with%20Pandas%20DataFrame.ipynb)
+- [Returns, Volatility and Sharpe Ratio of Stocks Notebook](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Returns,%20Volatility%20and%20Sharpe%20Ratio%20of%20Stocks.ipynb)
+- [Maximum Drawdown (MDD) Notebook](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Maximum%20Drawdown%20(MDD).ipynb)
+- [Portfolio Statistics and Optimizaion with PyPortfolioOpt Notebook](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Portfolio%20Statistics%20and%20Optimization%20with%20PyPortfolioOpt.ipynb)
 
 ## Questrade Portfolio Manager <a name="questrade-portfolio-manager"></a>
 
@@ -62,8 +62,8 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 Below is a collection of jupyter notebooks for individual stock investing.
 
-- [Quantitative Stock Selection](https://github.com/eshinhw/pyQuant/blob/3c6e21a988f80f639c72bb4b522a1eea9301755b/Quantitative%20Stock%20Selection.ipynb)
-- [Historical Dividend Payout](https://github.com/eshinhw/pyQuant/blob/3c6e21a988f80f639c72bb4b522a1eea9301755b/Historical%20Dividend%20Payout.ipynb)
+- [Quantitative Stock Selection Notebook](https://github.com/eshinhw/pyQuant/blob/3c6e21a988f80f639c72bb4b522a1eea9301755b/Quantitative%20Stock%20Selection.ipynb)
+- [Historical Dividend Payout Notebook](https://github.com/eshinhw/pyQuant/blob/3c6e21a988f80f639c72bb4b522a1eea9301755b/Historical%20Dividend%20Payout.ipynb)
 
 ### Investment Goals
 
@@ -81,38 +81,6 @@ Below is a collection of jupyter notebooks for individual stock investing.
 - Dividend Yield
 - DPS
 - DPS Growth
-
-#### Good Stock Example: Johnson&Johnson (JNJ)
-
-<p align="center">
-  <img width="700" height="400" src="https://user-images.githubusercontent.com/41933169/117091817-7d754080-ad2a-11eb-8f87-c2bf3afc0bb4.png">
-</p>
-
-<p align="center">
-  <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/131683125-30857b47-5295-40f7-bd0d-274c04c1b22c.png">
-</p>
-
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768890-3b026a80-8fec-11eb-919a-6f762719bed5.png">
-</p>
-  
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768897-481f5980-8fec-11eb-909a-0be331141ef5.png">
-</p>
-
-#### Bad Stock Example: AT&T (T)
-
-Even with high dividend yield, we can't expect high price appreciation.
-
-<p align="center">
-  <img width="700" height="400" src="https://user-images.githubusercontent.com/41933169/117091006-f030ec80-ad27-11eb-8fe5-0919d4cdbccf.png">
-</p>
-
-<p align="center">
-  <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/131682928-2e1e4e10-f84f-4bea-bd43-066ad01a7728.png">
-</p>
-
-
 
 ## Dual Momentum: GEM vs GBM <a name="dual-momentum"></a>
 
