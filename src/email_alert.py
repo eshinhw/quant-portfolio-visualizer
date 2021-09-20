@@ -1,6 +1,6 @@
 import smtplib
 from email.message import EmailMessage
-import credentials
+import src.credentials
 
 def sendEmail(subject, curr_pos, filters, watchlist):
     msg = EmailMessage()
