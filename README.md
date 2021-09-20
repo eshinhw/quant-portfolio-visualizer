@@ -3,13 +3,13 @@
 Welcome to pyQuant! :)
 
 ## Table of Contents
-1. [Data Sources](#data-sources)
-2. [Prerequisites: Basics of Quant Investing](#prerequisites)
-3. [Questrade Portfolio Manager](#questrade-portfolio-manager)
-4. [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)
-5. [Dynamic Asset Allocation Portfolios](#dynamic-asset-allocations)
-6. [Individual Stock Investing](#individual-stock-investing)
-7. [Dual Momentum: GEM vs GBM](#dual-momentum)
+- [Data Sources](#data-sources)
+- [Prerequisites: Basics of Quant Investing](#prerequisites)
+- [Questrade Portfolio Manager](#questrade-portfolio-manager)
+- [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)- 
+- [Dynamic Asset Allocation Portfolios](#dynamic-asset-allocations)
+- [Individual Stock Investing](#individual-stock-investing)
+- [Dual Momentum: GEM vs GBM](#dual-momentum)
 
 ## 1. Data Sources <a name="data-sources"></a>
 
