@@ -60,6 +60,11 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## Individual Stock Investing <a name="individual-stock-investing"></a>
 
+Below is a collection of jupyter notebooks for individual stock investing.
+
+- [Quantitative Stock Selection](https://github.com/eshinhw/pyQuant/blob/3c6e21a988f80f639c72bb4b522a1eea9301755b/Quantitative%20Stock%20Selection.ipynb)
+- [Historical Dividend Payout](https://github.com/eshinhw/pyQuant/blob/3c6e21a988f80f639c72bb4b522a1eea9301755b/Historical%20Dividend%20Payout.ipynb)
+
 ### Investment Goals
 
 - Good Dividend History
