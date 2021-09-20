@@ -28,6 +28,8 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## 3. Questrade Portfolio Performance Analysis <a name="questrade-portfolio-manager"></a>
 
+[Questrade Portfolio Manager](https://github.com/eshinhw/pyQuant/blob/6506ee9852b765138d370f36ff82a40124c290d5/Questrade%20Portfolio%20Performance%20Analysis.ipynb)
+
 ### 3-1. Holdings Summary
 
 <p align="center">
