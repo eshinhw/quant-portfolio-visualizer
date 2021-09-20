@@ -25,9 +25,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 - [Maximum Drawdown (MDD)](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Maximum%20Drawdown%20(MDD).ipynb)
 - [Portfolio Statistics and Optimizaion with PyPortfolioOpt](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Portfolio%20Statistics%20and%20Optimization%20with%20PyPortfolioOpt.ipynb)
 
-## Questrade Portfolio Performance Analysis <a name="questrade-portfolio-manager"></a>
-
-[Questrade Portfolio Manager](https://github.com/eshinhw/pyQuant/blob/6506ee9852b765138d370f36ff82a40124c290d5/Questrade%20Portfolio%20Performance%20Analysis.ipynb)
+## Questrade Portfolio Manager <a name="questrade-portfolio-manager"></a>
 
 ### Portfolio Holdings
 
