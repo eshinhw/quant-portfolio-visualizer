@@ -6,29 +6,28 @@ Welcome to pyQuant! :)
 * [Data Sources](#data-sources)
 * [Prerequisites: Basics of Quant Investing](#prerequisites)
 * [Questrade Portfolio Manager](#questrade-portfolio-manager)
-* [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)- 
+* [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)
 * [Dynamic Asset Allocation Portfolios](#dynamic-asset-allocations)
 * [Individual Stock Investing](#individual-stock-investing)
 * [Dual Momentum: GEM vs GBM](#dual-momentum)
 
 ## Data Sources <a name="data-sources"></a>
 
-- Financial Modelling Prep API (https://financialmodelingprep.com/developer/docs/)
-- Questrade API (https://www.questrade.com/api)
+- [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
+- [Questrade API](https://www.questrade.com/api)
 
-## Prerequisites <a name="prerequisites"></a>
+## Prerequisites: Basics of Quant Investing <a name="prerequisites"></a>
 
 Below is a collection of jupyter notebooks which touch upon the basics of quantitative investing and data analysis in Python Pandas.
 
-- [Working with Pandas DataFrame]
-- [Returns, Volatility and Sharpe Ratio of Stocks]
-- [Maximum Drawdown (MDD)]
-- [Portfolio Statistics and Optimizaion]
-- [Portfolio Optimizer with PyPortfolioOpt]
+- [Working with Pandas DataFrame](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Working%20with%20Pandas%20DataFrame.ipynb)
+- [Returns, Volatility and Sharpe Ratio of Stocks](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Returns,%20Volatility%20and%20Sharpe%20Ratio%20of%20Stocks.ipynb)
+- [Maximum Drawdown (MDD)](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Maximum%20Drawdown%20(MDD).ipynb)
+- [Portfolio Statistics and Optimizaion with PyPortfolioOpt](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Portfolio%20Statistics%20and%20Optimization%20with%20PyPortfolioOpt.ipynb)
 
-## Questrade Portfolio Performance Analysis <a name="questrade-portfolio-manager"></a>
+## Questrade Portfolio Manager <a name="questrade-portfolio-manager"></a>
 
-[Questrade Portfolio Manager](https://github.com/eshinhw/pyQuant/blob/6506ee9852b765138d370f36ff82a40124c290d5/Questrade%20Portfolio%20Performance%20Analysis.ipynb)
+[Questrade Portfolio Manager Notebook](https://github.com/eshinhw/pyQuant/blob/ccba65e76ae5345621b854575527a24c8ec8cf89/Questrade%20Portfolio%20Performance%20Analysis.ipynb)
 
 ### Portfolio Holdings
 
@@ -48,21 +47,26 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## Fixed Asset Allocation Portfolios <a name="fixed-asset-allocation"></a>
 
+[Fixed Asset Allocation Portfolios Notebook](https://github.com/eshinhw/pyQuant/blob/5251ca2c01116efd9e15c5f77783ecd6e5be3f4c/Fixed%20Asset%20Allocation%20Portfolios.ipynb)
+
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
 </p>
 
-## Dynamic Asset Allocation Strategies <a name="dynamic-asset-allocations"></a>
+## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
+
+- VAA
+- DAA
 
 ## Individual Stock Investing <a name="individual-stock-investing"></a>
 
-### Key Considerations
+### Investment Goals
 
 - Good Dividend History
 - High Dividend Growth Rate
 - Strong Historical Momentum (Historical Price Movement)
 
-### Financial Data and Ratios Used
+### Financial Ratios Considered
 
 - Market Cap (B)
 - Revenue Growth
@@ -105,7 +109,9 @@ Even with high dividend yield, we can't expect high price appreciation.
 
 
 
-## 7. Dual Momentum: GEM vs GBM <a name="dual-momentum"></a>
+## Dual Momentum: GEM vs GBM <a name="dual-momentum"></a>
+
+[Dual Momentum Notebook](https://github.com/eshinhw/pyQuant/blob/f46470aeac879368ba8a6fe5666dc8ee3946b577/Global%20Equities%20Momentum%20(GEM)%20and%20Global%20Balanced%20Momentum%20(GBM).ipynb)
 
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768475-3d63c500-8fea-11eb-912b-15261c7bffef.png">
