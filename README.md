@@ -11,12 +11,12 @@ Welcome to pyQuant! :)
 - [Individual Stock Investing](#individual-stock-investing)
 - [Dual Momentum: GEM vs GBM](#dual-momentum)
 
-## 1. Data Sources <a name="data-sources"></a>
+## Data Sources <a name="data-sources"></a>
 
 - Financial Modelling Prep API (https://financialmodelingprep.com/developer/docs/)
 - Questrade API (https://www.questrade.com/api)
 
-## 2. Prerequisites <a name="prerequisites"></a>
+## Prerequisites <a name="prerequisites"></a>
 
 Below is a collection of jupyter notebooks which touch upon the basics of quantitative investing and data analysis in Python Pandas.
 
@@ -26,11 +26,11 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 - Portfolio Statistics and Optimizaion
 - Portfolio Optimizer with PyPortfolioOpt
 
-## 3. Questrade Portfolio Performance Analysis <a name="questrade-portfolio-manager"></a>
+## Questrade Portfolio Performance Analysis <a name="questrade-portfolio-manager"></a>
 
 [Questrade Portfolio Manager](https://github.com/eshinhw/pyQuant/blob/6506ee9852b765138d370f36ff82a40124c290d5/Questrade%20Portfolio%20Performance%20Analysis.ipynb)
 
-### 3-1. Holdings Summary
+### Portfolio Holdings
 
 <p align="center">
   <img width="600" height="600" src="https://user-images.githubusercontent.com/41933169/112911987-84be8400-90c4-11eb-94cf-b3c9836887f5.png">
@@ -40,21 +40,21 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
   <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/112912042-a15abc00-90c4-11eb-8098-4c1e84b4b433.png">
 </p>
 
-### 3-2. Monthly Dividend Income
+### Monthly Dividend Income
 
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112912007-90aa4600-90c4-11eb-9868-7e1939e89af2.png">
 </p>
 
-## 4. Fixed Asset Allocation Portfolios <a name="fixed-asset-allocation"></a>
+## Fixed Asset Allocation Portfolios <a name="fixed-asset-allocation"></a>
 
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
 </p>
 
-## 5. Dynamic Asset Allocation Strategies <a name="dynamic-asset-allocations"></a>
+## Dynamic Asset Allocation Strategies <a name="dynamic-asset-allocations"></a>
 
-## 6. Individual Stock Investing <a name="individual-stock-investing"></a>
+## Individual Stock Investing <a name="individual-stock-investing"></a>
 
 ### Key Considerations
 
