@@ -2,7 +2,7 @@
 
 ## Table of Contents
 1. [Data Sources](#data-sources)
-2. [Prerequisites]
+2. [Prerequisites: Basics of Quant Investing](#prerequisites)
 3. [Quantitative Stock Selection](#quantitative-stock-selection)
 4. [Questrade Portfolio Performance Analysis](#questrade-portfolio-performance)
 5. [Fixed Asset Allocation Portfolios Performance](#fixed-asset-allocations)
@@ -15,9 +15,15 @@
 - Financial Modelling Prep API (https://financialmodelingprep.com/developer/docs/)
 - Questrade API (https://www.questrade.com/api)
 
-## 2. Prerequisites:
+## 2. Prerequisites <a name="prerequisites"></a>
 
+Below is a collection of jupyter notebooks which touch upon the basics of quantitative investing and data analysis in Python Pandas.
 
+- Working with Pandas DataFrame
+- Returns, Volatility and Sharpe Ratio of Stocks
+- Maximum Drawdown (MDD)
+- Portfolio Statistics and Optimizaion
+- Portfolio Optimizer with PyPortfolioOpt
 
 ## 2. Quantitative Stock Selection <a name="quantitative-stock-selection"></a>
 
