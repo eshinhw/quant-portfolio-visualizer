@@ -54,9 +54,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## 5. Dynamic Asset Allocation Strategies <a name="dynamic-asset-allocations"></a>
 
-## 6. 
-
-## 2. Individual Stock Investing <a name="individual-stock-investing"></a>
+## 6. Individual Stock Investing <a name="individual-stock-investing"></a>
 
 ### Key Considerations
 
