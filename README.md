@@ -7,8 +7,8 @@ Welcome to pyQuant! :)
 2. [Prerequisites: Basics of Quant Investing](#prerequisites)
 3. [Questrade Portfolio Manager](#questrade-portfolio-manager)
 4. [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)
-5. [Dynamic Asset Allocation Strategies](#)
-6. [Individual Stock Investing](#quantitative-stock-selection)
+5. [Dynamic Asset Allocation Portfolios](#dynamic-asset-allocations)
+6. [Individual Stock Investing](#individual-stock-investing)
 7. [Dual Momentum: GEM vs GBM](#dual-momentum)
 
 ## 1. Data Sources <a name="data-sources"></a>
@@ -46,7 +46,17 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112912007-90aa4600-90c4-11eb-9868-7e1939e89af2.png">
 </p>
 
-## 2. Quantitative Stock Selection <a name="quantitative-stock-selection"></a>
+## 4. Fixed Asset Allocation Portfolios <a name="fixed-asset-allocation"></a>
+
+<p align="center">
+  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
+</p>
+
+## 5. Dynamic Asset Allocation Strategies <a name="dynamic-asset-allocations"></a>
+
+## 6. 
+
+## 2. Individual Stock Investing <a name="individual-stock-investing"></a>
 
 ### Key Considerations
 
@@ -96,16 +106,6 @@ Even with high dividend yield, we can't expect high price appreciation.
 </p>
 
 
-
-## 4. Fixed Asset Allocation Portfolios Performance <a name="fixed-asset-allocations"></a>
-
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
-</p>
-
-## 5. Performance Measures: Returns, Volatility, Sharpe Ratio and Maximum Drawdown <a name="performance-measures"></a>
-
-## 6. Portfolio Optimization with PyPortfolioOpt <a name="portfolio-optimization"></a>
 
 ## 7. Dual Momentum: GEM vs GBM <a name="dual-momentum"></a>
 
