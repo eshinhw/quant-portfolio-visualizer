@@ -3,13 +3,13 @@
 Welcome to pyQuant! :)
 
 ## Table of Contents
-- [Data Sources](#data-sources)
-- [Prerequisites: Basics of Quant Investing](#prerequisites)
-- [Questrade Portfolio Manager](#questrade-portfolio-manager)
-- [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)- 
-- [Dynamic Asset Allocation Portfolios](#dynamic-asset-allocations)
-- [Individual Stock Investing](#individual-stock-investing)
-- [Dual Momentum: GEM vs GBM](#dual-momentum)
+* [Data Sources](#data-sources)
+* [Prerequisites: Basics of Quant Investing](#prerequisites)
+* [Questrade Portfolio Manager](#questrade-portfolio-manager)
+* [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)- 
+* [Dynamic Asset Allocation Portfolios](#dynamic-asset-allocations)
+* [Individual Stock Investing](#individual-stock-investing)
+* [Dual Momentum: GEM vs GBM](#dual-momentum)
 
 ## Data Sources <a name="data-sources"></a>
 
@@ -20,11 +20,11 @@ Welcome to pyQuant! :)
 
 Below is a collection of jupyter notebooks which touch upon the basics of quantitative investing and data analysis in Python Pandas.
 
-- Working with Pandas DataFrame
-- Returns, Volatility and Sharpe Ratio of Stocks
-- Maximum Drawdown (MDD)
-- Portfolio Statistics and Optimizaion
-- Portfolio Optimizer with PyPortfolioOpt
+- [Working with Pandas DataFrame]
+- [Returns, Volatility and Sharpe Ratio of Stocks]
+- [Maximum Drawdown (MDD)]
+- [Portfolio Statistics and Optimizaion]
+- [Portfolio Optimizer with PyPortfolioOpt]
 
 ## Questrade Portfolio Performance Analysis <a name="questrade-portfolio-manager"></a>
 
