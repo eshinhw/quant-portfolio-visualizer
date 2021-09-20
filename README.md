@@ -1,5 +1,7 @@
 # pyQuant
 
+Welcome to pyQuant!
+
 ## Table of Contents
 1. [Data Sources](#data-sources)
 2. [Prerequisites: Basics of Quant Investing](#prerequisites)
