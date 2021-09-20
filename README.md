@@ -20,11 +20,10 @@ Welcome to pyQuant! :)
 
 Below is a collection of jupyter notebooks which touch upon the basics of quantitative investing and data analysis in Python Pandas.
 
-- [Working with Pandas DataFrame]
-- [Returns, Volatility and Sharpe Ratio of Stocks]
-- [Maximum Drawdown (MDD)]
-- [Portfolio Statistics and Optimizaion]
-- [Portfolio Optimizer with PyPortfolioOpt]
+- [Working with Pandas DataFrame](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Working%20with%20Pandas%20DataFrame.ipynb)
+- [Returns, Volatility and Sharpe Ratio of Stocks](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Returns,%20Volatility%20and%20Sharpe%20Ratio%20of%20Stocks.ipynb)
+- [Maximum Drawdown (MDD)](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Maximum%20Drawdown%20(MDD).ipynb)
+- [Portfolio Statistics and Optimizaion with PyPortfolioOpt](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Portfolio%20Statistics%20and%20Optimization%20with%20PyPortfolioOpt.ipynb)
 
 ## Questrade Portfolio Performance Analysis <a name="questrade-portfolio-manager"></a>
 
