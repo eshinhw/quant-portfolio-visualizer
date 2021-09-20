@@ -1,6 +1,6 @@
 # pyQuant
 
-Welcome to pyQuant!
+Welcome to pyQuant! :)
 
 ## Table of Contents
 1. [Data Sources](#data-sources)
