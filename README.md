@@ -1,20 +1,60 @@
 # pyQuant
 
-## Table of Contents
-1. [Data Sources](#data-sources)
-2. [Quantitative Stock Selection](#quantitative-stock-selection)
-3. [Questrade Portfolio Performance Analysis](#questrade-portfolio-performance)
-4. [Fixed Asset Allocation Portfolios Performance](#fixed-asset-allocations)
-5. [Performance Measures: Returns, Volatility, Sharpe Ratio and Maximum Drawdown](#performance-measures)
-6. [Portfolio Optimization with PyPortfolioOpt](#portfolio-optimization)
-7. [Dual Momentum: GEM vs GBM](#dual-momentum)
+Welcome to pyQuant! :)
 
-## 1. Data Sources <a name="data-sources"></a>
+## Table of Contents
+* [Data Sources](#data-sources)
+* [Prerequisites: Basics of Quant Investing](#prerequisites)
+* [Questrade Portfolio Manager](#questrade-portfolio-manager)
+* [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)- 
+* [Dynamic Asset Allocation Portfolios](#dynamic-asset-allocations)
+* [Individual Stock Investing](#individual-stock-investing)
+* [Dual Momentum: GEM vs GBM](#dual-momentum)
+
+## Data Sources <a name="data-sources"></a>
 
 - Financial Modelling Prep API (https://financialmodelingprep.com/developer/docs/)
 - Questrade API (https://www.questrade.com/api)
 
-## 2. Quantitative Stock Selection <a name="quantitative-stock-selection"></a>
+## Prerequisites <a name="prerequisites"></a>
+
+Below is a collection of jupyter notebooks which touch upon the basics of quantitative investing and data analysis in Python Pandas.
+
+- [Working with Pandas DataFrame]
+- [Returns, Volatility and Sharpe Ratio of Stocks]
+- [Maximum Drawdown (MDD)]
+- [Portfolio Statistics and Optimizaion]
+- [Portfolio Optimizer with PyPortfolioOpt]
+
+## Questrade Portfolio Performance Analysis <a name="questrade-portfolio-manager"></a>
+
+[Questrade Portfolio Manager](https://github.com/eshinhw/pyQuant/blob/6506ee9852b765138d370f36ff82a40124c290d5/Questrade%20Portfolio%20Performance%20Analysis.ipynb)
+
+### Portfolio Holdings
+
+<p align="center">
+  <img width="600" height="600" src="https://user-images.githubusercontent.com/41933169/112911987-84be8400-90c4-11eb-94cf-b3c9836887f5.png">
+</p>
+
+<p align="center">
+  <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/112912042-a15abc00-90c4-11eb-8098-4c1e84b4b433.png">
+</p>
+
+### Monthly Dividend Income
+
+<p align="center">
+  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112912007-90aa4600-90c4-11eb-9868-7e1939e89af2.png">
+</p>
+
+## Fixed Asset Allocation Portfolios <a name="fixed-asset-allocation"></a>
+
+<p align="center">
+  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
+</p>
+
+## Dynamic Asset Allocation Strategies <a name="dynamic-asset-allocations"></a>
+
+## Individual Stock Investing <a name="individual-stock-investing"></a>
 
 ### Key Considerations
 
@@ -63,33 +103,7 @@ Even with high dividend yield, we can't expect high price appreciation.
   <img width="800" height="400" src="https://user-images.githubusercontent.com/41933169/131682928-2e1e4e10-f84f-4bea-bd43-066ad01a7728.png">
 </p>
 
-## 3. Questrade Portfolio Performance Analysis <a name="questrade-portfolio-performance"></a>
 
-### 3-1. Holdings Summary
-
-<p align="center">
-  <img width="600" height="600" src="https://user-images.githubusercontent.com/41933169/112911987-84be8400-90c4-11eb-94cf-b3c9836887f5.png">
-</p>
-
-<p align="center">
-  <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/112912042-a15abc00-90c4-11eb-8098-4c1e84b4b433.png">
-</p>
-
-### 3-2. Monthly Dividend Income
-
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112912007-90aa4600-90c4-11eb-9868-7e1939e89af2.png">
-</p>
-
-## 4. Fixed Asset Allocation Portfolios Performance <a name="fixed-asset-allocations"></a>
-
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
-</p>
-
-## 5. Performance Measures: Returns, Volatility, Sharpe Ratio and Maximum Drawdown <a name="performance-measures"></a>
-
-## 6. Portfolio Optimization with PyPortfolioOpt <a name="portfolio-optimization"></a>
 
 ## 7. Dual Momentum: GEM vs GBM <a name="dual-momentum"></a>
 
