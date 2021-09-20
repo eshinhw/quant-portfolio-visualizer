@@ -6,7 +6,7 @@ Welcome to pyQuant! :)
 * [Data Sources](#data-sources)
 * [Prerequisites: Basics of Quant Investing](#prerequisites)
 * [Questrade Portfolio Manager](#questrade-portfolio-manager)
-* [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)- 
+* [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)
 * [Dynamic Asset Allocation Portfolios](#dynamic-asset-allocations)
 * [Individual Stock Investing](#individual-stock-investing)
 * [Dual Momentum: GEM vs GBM](#dual-momentum)
@@ -45,21 +45,26 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## Fixed Asset Allocation Portfolios <a name="fixed-asset-allocation"></a>
 
+[Fixed Asset Allocation Portfolios Notebook](https://github.com/eshinhw/pyQuant/blob/5251ca2c01116efd9e15c5f77783ecd6e5be3f4c/Fixed%20Asset%20Allocation%20Portfolios.ipynb)
+
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
 </p>
 
-## Dynamic Asset Allocation Strategies <a name="dynamic-asset-allocations"></a>
+## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
+
+- VAA
+- DAA
 
 ## Individual Stock Investing <a name="individual-stock-investing"></a>
 
-### Key Considerations
+### Investment Goals
 
 - Good Dividend History
 - High Dividend Growth Rate
 - Strong Historical Momentum (Historical Price Movement)
 
-### Financial Data and Ratios Used
+### Financial Ratios Considered
 
 - Market Cap (B)
 - Revenue Growth
@@ -102,7 +107,7 @@ Even with high dividend yield, we can't expect high price appreciation.
 
 
 
-## 7. Dual Momentum: GEM vs GBM <a name="dual-momentum"></a>
+## Dual Momentum: GEM vs GBM <a name="dual-momentum"></a>
 
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768475-3d63c500-8fea-11eb-912b-15261c7bffef.png">
