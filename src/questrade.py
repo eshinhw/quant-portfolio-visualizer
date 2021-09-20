@@ -4,7 +4,7 @@ import math
 import os
 import platform
 import pprint
-import credentials
+import src.credentials
 import time
 
 import pandas as pd

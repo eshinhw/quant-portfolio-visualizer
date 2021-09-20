@@ -7,9 +7,9 @@ import pandas as pd
 import requests
 import pprint
 
-import credentials
+import src.credentials as cred
 
-FMP_API_KEY = credentials.FMP_API_KEYS
+FMP_API_KEY = cred.FMP_API_KEYS
 START_DATE = dt.datetime(1970, 1, 1)
 END_DATE = dt.datetime.today()
 
