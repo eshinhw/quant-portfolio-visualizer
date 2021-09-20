@@ -2,17 +2,22 @@
 
 ## Table of Contents
 1. [Data Sources](#data-sources)
-2. [Quantitative Stock Selection](#quantitative-stock-selection)
-3. [Questrade Portfolio Performance Analysis](#questrade-portfolio-performance)
-4. [Fixed Asset Allocation Portfolios Performance](#fixed-asset-allocations)
-5. [Performance Measures: Returns, Volatility, Sharpe Ratio and Maximum Drawdown](#performance-measures)
-6. [Portfolio Optimization with PyPortfolioOpt](#portfolio-optimization)
-7. [Dual Momentum: GEM vs GBM](#dual-momentum)
+2. [Prerequisites]
+3. [Quantitative Stock Selection](#quantitative-stock-selection)
+4. [Questrade Portfolio Performance Analysis](#questrade-portfolio-performance)
+5. [Fixed Asset Allocation Portfolios Performance](#fixed-asset-allocations)
+6. [Performance Measures: Returns, Volatility, Sharpe Ratio and Maximum Drawdown](#performance-measures)
+7. [Portfolio Optimization with PyPortfolioOpt](#portfolio-optimization)
+8. [Dual Momentum: GEM vs GBM](#dual-momentum)
 
 ## 1. Data Sources <a name="data-sources"></a>
 
 - Financial Modelling Prep API (https://financialmodelingprep.com/developer/docs/)
 - Questrade API (https://www.questrade.com/api)
+
+## 2. Prerequisites:
+
+
 
 ## 2. Quantitative Stock Selection <a name="quantitative-stock-selection"></a>
 
