@@ -55,7 +55,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
 
-- VAA
+- [VAA]()
 - DAA
 
 ## Individual Stock Investing <a name="individual-stock-investing"></a>
