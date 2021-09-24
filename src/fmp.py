@@ -151,21 +151,21 @@ def calculate_hist_momentum(symbol: str, period: int):
     ret = (currentPrice - prevPrice) / prevPrice
     return ret
 
-# def get_historical_monthly_prices(symbol: str):
-#     prices = get_daily_prices(symbol)
-#     prices.dropna(inplace=True)
-#     prices.reset_index(inplace=True)
-#     prices = prices[["Date", "Close"]]
-#     prices["STD_YM"] = prices["Date"].map(lambda x: dt.datetime.strftime(x, "%Y-%m"))
-#     month_list = prices["STD_YM"].unique()
-#     monthly_prices = pd.DataFrame()
-#     for m in month_list:
-#         monthly_prices = monthly_prices.append(
-#             prices[prices["STD_YM"] == m].iloc[-1, :]
-#         )
-#     monthly_prices = monthly_prices.drop(columns=["STD_YM"], axis=1)
-#     monthly_prices.set_index("Date", inplace=True)
-#     return monthly_prices[:-1]
+def get_monthly_prices(symbol: str):
+    daily = pd.DataFrame()
+    monthly = pd.DataFrame()
+
+    daily[symbol] = get_daily_prices(symbol)['Close']
+
+    for i in range(0,len(daily.index)-1):
+        currMonth = dt.datetime.strptime(daily.index[i], '%Y-%m-%d').month
+        nextMonth = dt.datetime.strptime(daily.index[i+1], '%Y-%m-%d').month
+
+        if currMonth != nextMonth:
+            monthly = monthly.append(daily.loc[daily.index[i]])
+
+    return monthly
+
 
 
 # def calculate_momentum(symbol: str, periods: List[int]):
