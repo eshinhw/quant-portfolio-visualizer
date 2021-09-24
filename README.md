@@ -22,7 +22,7 @@ In this repo, only system 2 will be implemented.
 - **Stop Loss**: 2 x ATR
 - **Take Profit (Modified)**: either 2 x ATR or 20 days low for long and 20 days high for short (whichever is close to current price)
 
-## Reversal Strategy ()
+## Reversal Strategy
 
 ### Strategy Overview
 
