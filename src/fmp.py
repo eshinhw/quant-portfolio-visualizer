@@ -168,20 +168,11 @@ def get_monthly_prices(symbol: str):
 
 
 
-# def calculate_momentum(symbol: str, periods: List[int]):
-#     ret = []
-#     ret.append(symbol)
-#     monthly_prices = get_historical_monthly_prices(symbol)
-#     for period in periods:
-#         monthly_returns = monthly_prices.apply(
-#             lambda x: x / x.shift(period) - 1, axis=0
-#         )
-#         monthly_returns = monthly_returns.rename(columns={"Adj Close": "Returns"})
-#         mom = float(monthly_returns["Returns"][-1])
-#         if mom == np.nan:
-#             mom = float("-inf")
-#         ret.append(mom)
-#     return ret
+def calculate_momentum(symbol: str, period: int):
+    monthly = get_monthly_prices(symbol)
+    curr = monthly[symbol][-1]
+    ret = (curr - monthly[symbol].shift(period)[-1]) / monthly[symbol].shift(period)[-1]
+    return ret
 
 
 
