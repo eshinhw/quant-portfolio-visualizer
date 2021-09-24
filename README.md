@@ -66,7 +66,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134734529-a66b258b-bc31-433a-95be-d72cd367fb93.png">
 </p>
 
-- [Vigilant Asset Allocation (VAA) Notebook](https://github.com/eshinhw/pyQuant/blob/74f61f1260dd13ea163e02d6d902ab859ae36091/Vigilant%20Asset%20Allocation%20(VAA).ipynb)
+- [Vigilant Asset Allocation (VAA) Notebook](https://github.com/eshinhw/pyQuant/blob/2bd5efddb4bb726fad77bf25ab601b31670496fa/Vigilant%20Asset%20Allocation%20(VAA).ipynb)
 
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134711294-cf8d6242-df12-436d-b8ca-736a06a80083.png">
