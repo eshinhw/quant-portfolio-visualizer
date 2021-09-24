@@ -72,7 +72,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 </p>
 
 <p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134615589-681322ca-5ccd-4f15-8f4c-b2a2f76524f9.png">
+  <img width="600" height="400" src="https://user-images.githubusercontent.com/41933169/134615589-681322ca-5ccd-4f15-8f4c-b2a2f76524f9.png">
 </p>
 
 - DAA
