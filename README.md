@@ -55,7 +55,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
 
-- [Vigilant Asset Allocation (VAA)](https://github.com/eshinhw/pyQuant/blob/277aec80e49b5f2934fe9bb4009eccfb9b30d162/Vigilant%20Asset%20Allocation%20(VAA).ipynb)
+- [Vigilant Asset Allocation (VAA)](https://github.com/eshinhw/pyQuant/blob/37ca12b2219dd5f3a88444862807a73b17d95e6f/Vigilant%20Asset%20Allocation%20(VAA).ipynb)
 - DAA
 - 
 
