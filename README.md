@@ -7,7 +7,7 @@ Welcome to pyQuant! :)
 * [Prerequisites: Basics of Quant Investing](#prerequisites)
 * [Questrade Portfolio Manager](#questrade-portfolio-manager)
 * [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)
-* [Dynamic Asset Allocation Portfolios](#dynamic-asset-allocations)
+* [Tactical Asset Allocation Portfolios](#tactical-asset-allocations)
 * [Individual Stock Investing](#individual-stock-investing)
 
 ## Data Sources <a name="data-sources"></a>
@@ -58,7 +58,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
 </p>
 
-## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
+## Tactical Asset Allocation Portfolios <a name="tactical-asset-allocations"></a>
 
 - [Dual Momentum: GEM vs GBM Notebook](https://github.com/eshinhw/pyQuant/blob/f46470aeac879368ba8a6fe5666dc8ee3946b577/Global%20Equities%20Momentum%20(GEM)%20and%20Global%20Balanced%20Momentum%20(GBM).ipynb)
 
