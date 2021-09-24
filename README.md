@@ -63,7 +63,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 - [Dual Momentum: GEM vs GBM Notebook](https://github.com/eshinhw/pyQuant/blob/f46470aeac879368ba8a6fe5666dc8ee3946b577/Global%20Equities%20Momentum%20(GEM)%20and%20Global%20Balanced%20Momentum%20(GBM).ipynb)
 
 <p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768475-3d63c500-8fea-11eb-912b-15261c7bffef.png">
+  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134734529-a66b258b-bc31-433a-95be-d72cd367fb93.png">
 </p>
 
 - [Vigilant Asset Allocation (VAA) Notebook](https://github.com/eshinhw/pyQuant/blob/74f61f1260dd13ea163e02d6d902ab859ae36091/Vigilant%20Asset%20Allocation%20(VAA).ipynb)
