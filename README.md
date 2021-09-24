@@ -23,6 +23,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 - [Returns, Volatility and Sharpe Ratio of Stocks Notebook](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Returns,%20Volatility%20and%20Sharpe%20Ratio%20of%20Stocks.ipynb)
 - [Maximum Drawdown (MDD) Notebook](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Maximum%20Drawdown%20(MDD).ipynb)
 - [Portfolio Statistics and Optimizaion with PyPortfolioOpt Notebook](https://github.com/eshinhw/pyQuant/blob/4550cabf6ed644a6a56ad531da8aad3928834431/Portfolio%20Statistics%20and%20Optimization%20with%20PyPortfolioOpt.ipynb)
+- [Performance Against Market Benchmark]()
 
 ## Questrade Portfolio Manager <a name="questrade-portfolio-manager"></a>
 
