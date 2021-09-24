@@ -175,9 +175,6 @@ def calculate_momentum(symbol: str, period: int):
     return ret
 
 
-
-
-
 if __name__ == "__main__":
 
     sp500_symbols()
