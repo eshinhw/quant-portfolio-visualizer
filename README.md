@@ -50,7 +50,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 [Fixed Asset Allocation Portfolios Notebook](https://github.com/eshinhw/pyQuant/blob/5251ca2c01116efd9e15c5f77783ecd6e5be3f4c/Fixed%20Asset%20Allocation%20Portfolios.ipynb)
 
 - Traditonal 60/40 Portfolio
-- All Seasons Portfolio
+- Four Seasons Portfolio
 - All Weather Portfolio
 - Permanent Portfolio
 
