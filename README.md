@@ -69,11 +69,15 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 - [Vigilant Asset Allocation (VAA) Notebook](https://github.com/eshinhw/pyQuant/blob/37ca12b2219dd5f3a88444862807a73b17d95e6f/Vigilant%20Asset%20Allocation%20(VAA).ipynb)
 
 <p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134615526-64dfe266-390b-44a7-9c62-550570d07138.png">
+  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134708557-f62e20d6-40e4-43ce-95d3-3b5a0dcae47a.png">
 </p>
 
 <p align="center">
-  <img width="600" height="400" src="https://user-images.githubusercontent.com/41933169/134615589-681322ca-5ccd-4f15-8f4c-b2a2f76524f9.png">
+  <img width="600" height="400" src="https://user-images.githubusercontent.com/41933169/134708641-5b99eeb7-c6cc-497c-84a8-9f82ef10489e.png">
+</p>
+
+<p align="center">
+  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134709033-bc204c5b-610e-47ff-9049-a2e011f9b4b8.png">
 </p>
 
 - DAA
