@@ -57,6 +57,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 - [Vigilant Asset Allocation (VAA)](https://github.com/eshinhw/pyQuant/blob/277aec80e49b5f2934fe9bb4009eccfb9b30d162/Vigilant%20Asset%20Allocation%20(VAA).ipynb)
 - DAA
+- 
 
 ## Individual Stock Investing <a name="individual-stock-investing"></a>
 
