@@ -54,13 +54,12 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
 
-- [Dual Momentum: GEM vs GBM](https://github.com/eshinhw/pyQuant/blob/f46470aeac879368ba8a6fe5666dc8ee3946b577/Global%20Equities%20Momentum%20(GEM)%20and%20Global%20Balanced%20Momentum%20(GBM).ipynb)
+- [Dual Momentum: GEM vs GBM Notebook](https://github.com/eshinhw/pyQuant/blob/f46470aeac879368ba8a6fe5666dc8ee3946b577/Global%20Equities%20Momentum%20(GEM)%20and%20Global%20Balanced%20Momentum%20(GBM).ipynb)
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768475-3d63c500-8fea-11eb-912b-15261c7bffef.png">
 </p>
-- [Vigilant Asset Allocation (VAA)](https://github.com/eshinhw/pyQuant/blob/37ca12b2219dd5f3a88444862807a73b17d95e6f/Vigilant%20Asset%20Allocation%20(VAA).ipynb)
+- [Vigilant Asset Allocation (VAA) Notebook](https://github.com/eshinhw/pyQuant/blob/37ca12b2219dd5f3a88444862807a73b17d95e6f/Vigilant%20Asset%20Allocation%20(VAA).ipynb)
 - DAA
-- 
 
 ## Individual Stock Investing <a name="individual-stock-investing"></a>
 
