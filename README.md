@@ -55,7 +55,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 - Permanent Portfolio
 
 <p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112768398-faa1ed00-8fe9-11eb-991c-8402d19524f2.png">
+  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134737654-68260fef-7996-443e-89cf-1ed0a8510052.png">
 </p>
 
 ## Tactical Asset Allocation Portfolios <a name="tactical-asset-allocations"></a>
