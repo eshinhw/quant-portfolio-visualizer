@@ -16,7 +16,7 @@ Long term trend following strategy with wide stop and target. **A breakout signa
 
 In this repo, only system 2 will be implemented.
 
-### System 2 Trading Rules
+### System 2 Trading Logics
 
 - **Entry**: Breakout Long @ previous 55 days high or Breakout Short @ previous 55 days low
 - **Stop Loss**: 2 x ATR
@@ -28,7 +28,7 @@ In this repo, only system 2 will be implemented.
 
 It's known that original turtle trading system has about 30% of breakout success rate at key highs and lows. Then, about 70% of the time, markets fail to break out pre-determined key levels. Based on this statistical edge, We can create a simple reversal strategy which bets against original turtles to capitalize 70% of false breakouts. The reversal strategy takes long at previous key lows and takes short at previous key highs, expecting the markets to reverse. This strategy is known as 'Turtle Soup' by Linda Bradford-Raschke, and you can learn more about this strategy and many more short term trading strategies [here](https://www.amazon.ca/Street-Smarts-Probability-Trading-Strategies/dp/0965046109).
 
-### Trading Rules
+### Trading Logics
 
 - **Entry**: Long @ previous X days low or Short @ previous X days high
 - **Stop Loss**: Trailing stop to limit the downside risk
