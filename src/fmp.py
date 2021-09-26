@@ -114,7 +114,7 @@ def get_current_price(symbol):
 
 def get_daily_prices(symbol):
     data = requests.get(
-        f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={FMP_API_KEY}"
+        f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?from=1980-10-10&apikey={FMP_API_KEY}"
     ).json()
     df_data = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
 
@@ -165,8 +165,6 @@ def get_monthly_prices(symbol: str):
             monthly = monthly.append(daily.loc[daily.index[i]])
 
     return monthly
-
-
 
 def calculate_momentum(symbol: str, period: int):
     monthly = get_monthly_prices(symbol)
