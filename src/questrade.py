@@ -131,6 +131,7 @@ class QuestradeBot:
         total_costs = 0
         positions = self.Questrade.get_account_positions(self.accountNum)
         for position in positions:
+            # handle daily execution for closeQuantity
             if position['openQuantity'] != 0:
                 symbol = position['symbol']
                 description = self.Questrade.ticker_information(symbol)['description']
