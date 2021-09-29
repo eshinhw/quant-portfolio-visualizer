@@ -131,22 +131,23 @@ class QuestradeBot:
         total_costs = 0
         positions = self.Questrade.get_account_positions(self.accountNum)
         for position in positions:
-            symbol = position['symbol']
-            description = self.Questrade.ticker_information(symbol)['description']
-            qty = position['openQuantity']
-            cmv = position['currentMarketValue']
-            currency = self.Questrade.ticker_information(symbol)['currency']
-            cost = position['totalCost']
-            change = round(100 * (cmv - cost) / cost, 2)
+            if position['openQuantity'] != 0:
+                symbol = position['symbol']
+                description = self.Questrade.ticker_information(symbol)['description']
+                qty = position['openQuantity']
+                cmv = position['currentMarketValue']
+                currency = self.Questrade.ticker_information(symbol)['currency']
+                cost = position['totalCost']
+                change = round(100 * (cmv - cost) / cost, 2)
 
-            total_costs = total_costs + cost
-            position_data['Symbol'].append(symbol)
-            position_data['Description'].append(description)
-            position_data['Currency'].append(currency)
-            position_data['Quantities'].append(qty)
-            position_data['Market Value'].append(cmv)
-            position_data['Return (%)'].append(change)
-            position_data['Portfolio (%)'].append(round(100 * (cmv / total_market_value),2))
+                total_costs = total_costs + cost
+                position_data['Symbol'].append(symbol)
+                position_data['Description'].append(description)
+                position_data['Currency'].append(currency)
+                position_data['Quantities'].append(qty)
+                position_data['Market Value'].append(cmv)
+                position_data['Return (%)'].append(change)
+                position_data['Portfolio (%)'].append(round(100 * (cmv / total_market_value),2))
 
         portfolio = pd.DataFrame(position_data)
         portfolio.set_index('Symbol', inplace=True)
