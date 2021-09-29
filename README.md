@@ -8,6 +8,8 @@ Welcome to pyQuant! :)
 * [Questrade Portfolio Manager](#questrade-portfolio-manager)
 * [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)
 * [Tactical Asset Allocation Portfolios](#tactical-asset-allocations)
+  * [Dual Momentum](#dual-momentum)
+  * [Vigilant Asset Allocation (VAA)](#vigilant-asset-allocation)   
 * [Individual Stock Investing](#individual-stock-investing)
 
 ## Data Sources <a name="data-sources"></a>
