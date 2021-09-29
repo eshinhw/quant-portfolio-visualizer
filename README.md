@@ -60,13 +60,17 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## Tactical Asset Allocation Portfolios <a name="tactical-asset-allocations"></a>
 
-- [Dual Momentum: GEM vs GBM Notebook](https://github.com/eshinhw/pyQuant/blob/d204e76cd9b37623d2899e5fdf1fcc56fd270600/Global%20Equities%20Momentum%20(GEM)%20and%20Global%20Balanced%20Momentum%20(GBM).ipynb)
+### Dual Momentum <a name="dual-momentum"></a>
+
+[Dual Momentum: GEM vs GBM Notebook](https://github.com/eshinhw/pyQuant/blob/d204e76cd9b37623d2899e5fdf1fcc56fd270600/Global%20Equities%20Momentum%20(GEM)%20and%20Global%20Balanced%20Momentum%20(GBM).ipynb)
 
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134734529-a66b258b-bc31-433a-95be-d72cd367fb93.png">
 </p>
 
-- [Vigilant Asset Allocation (VAA) Notebook](https://github.com/eshinhw/pyQuant/blob/2bd5efddb4bb726fad77bf25ab601b31670496fa/Vigilant%20Asset%20Allocation%20(VAA).ipynb)
+### Vigilant Asset Allocation (VAA) <a name="vigilant-asset-allocation"></a>
+
+[Vigilant Asset Allocation (VAA) Notebook](https://github.com/eshinhw/pyQuant/blob/2bd5efddb4bb726fad77bf25ab601b31670496fa/Vigilant%20Asset%20Allocation%20(VAA).ipynb)
 
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134711294-cf8d6242-df12-436d-b8ca-736a06a80083.png">
