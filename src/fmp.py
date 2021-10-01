@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import requests
 import pprint
+import calendar
 
 import src.credentials as cred
 
@@ -157,11 +158,11 @@ def get_monthly_prices(symbol: str):
 
     daily[symbol] = get_daily_prices(symbol)['Close']
 
-    for i in range(0,len(daily.index)-1):
-        currMonth = dt.datetime.strptime(daily.index[i], '%Y-%m-%d').month
-        nextMonth = dt.datetime.strptime(daily.index[i+1], '%Y-%m-%d').month
-
-        if currMonth != nextMonth:
+    for i in range(0,len(daily.index)):
+        curr_date = dt.datetime.strptime(daily.index[i], "%Y-%m-%d")
+        month_end_date = curr_date.replace(day = calendar.monthrange(curr_date.year, curr_date.month)[1])
+        if curr_date == month_end_date:
+            print(curr_date)
             monthly = monthly.append(daily.loc[daily.index[i]])
 
     return monthly
@@ -175,4 +176,4 @@ def calculate_momentum(symbol: str, period: int):
 
 if __name__ == "__main__":
 
-    sp500_symbols()
+    get_monthly_prices('AAPL')
