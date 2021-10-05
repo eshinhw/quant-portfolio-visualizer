@@ -52,8 +52,12 @@ class QuestradeBot:
             data['Cash'].append(x['cash'])
             data['Market_Value'].append(x['marketValue'])
             data['Total_Equity'].append(x['totalEquity'])
-            data['Cash (%)'].append(round(100 * x['cash']/x['totalEquity'],2))
-            data['Investment (%)'].append(round(100 * x['marketValue']/x['totalEquity'],2))
+            if x['totalEquity'] != 0:
+                data['Cash (%)'].append(round(100 * x['cash']/x['totalEquity'],2))
+                data['Investment (%)'].append(round(100 * x['marketValue']/x['totalEquity'],2))
+            else:
+                data['Cash (%)'].append(0)
+                data['Investment (%)'].append(0)
 
         df = pd.DataFrame(data)
         df.set_index('Currency', inplace=True)
