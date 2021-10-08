@@ -221,16 +221,3 @@ class QuestradeBot:
 #     curr_price = get_daily_prices(symbol)
 #     return (amount, math.floor(amount / curr_price))
 
-if __name__ == '__main__':
-
-    token = credentials.QUESTRADE_API_CODE
-    accountNum = credentials.QUESTRADE_ACCOUNT_NUM
-
-    q = QuestradeBot(token=token, accountNum=accountNum)
-    #print(q.search_symbolID('AAPL'))
-    #pprint.pprint(q.get_option_chains('AAPL')['optionChain'])
-    #pprint.pprint(q.get_option_chains('AAPL')[0])
-    #q.get_id_details(37664695)
-    print(q.create_option_chains('AAPL', 1, 2))
-    # q.get_balance()
-    # print(q.calculate_portfolio_return())
