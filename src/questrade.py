@@ -23,10 +23,12 @@ class QuestradeBot:
             now = dt.datetime.now()
             fileAge = (now - modified).days
             if fileAge > 3:
+                print("fileAge part executed")
                 print("access_token.yml EXPIRED: REFRESH QUESTRADE API TOKEN")
                 os.remove("./access_token.yml")
             else:
                 # we can refresh token
+                print("refresh_token")
                 self.Questrade = Questrade(token_yaml="./access_token.yml")
                 self.Questrade.refresh_access_token(from_yaml=True)
 
@@ -49,6 +51,7 @@ class QuestradeBot:
         access_token = token['access_token']
         url = token['api_server'] + '/v1/accounts/' + str(acctNum) + '/balances'
         bal = requests.get(url, headers={'Authorization': f'{token_type} {access_token}'}).json()
+
         data = {'Currency': [], 'Cash': [], 'Market_Value': [], 'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
 
         for x in bal['perCurrencyBalances']:
