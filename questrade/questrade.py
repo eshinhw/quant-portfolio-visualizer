@@ -1,10 +1,16 @@
+import sys
+
+from os.path import dirname, abspath
+d = dirname(dirname(abspath(__file__))) # /home/kristina/desire-directory
+sys.path.append(d)
+
 import datetime as dt
 from genericpath import getmtime
 import math
 import os
 import platform
 import pprint
-import src.credentials
+import credentials
 import time
 
 import pandas as pd
