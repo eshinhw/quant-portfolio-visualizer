@@ -2,7 +2,3 @@ __pycache__
 .ipynb_checkpoints
 access_token.yml
 credentials.py
-__pycache__
-.ipynb_checkpoints
-account_info.txt
-account_info.json
