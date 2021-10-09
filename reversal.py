@@ -4,6 +4,10 @@ import dfdata
 import schedule
 import pandas as pd
 
+from os.path import dirname, abspath
+d = dirname(dirname(abspath(__file__)))
+sys.path.append(d)
+
 SYMBOLS = ["EUR_USD", "GBP_USD", "AUD_USD", 'NZD_USD',
            'USD_JPY', 'EUR_JPY', 'GBP_JPY', 'CAD_JPY', 'AUD_JPY']
 
