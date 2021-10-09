@@ -112,7 +112,7 @@ Below is a collection of jupyter notebooks for individual stock investing.
 
 # pyTrader
 
-## Introduction
+## FX/CFD/Cryptocurrency Trading <a name="oanda-trading"></a>
 
 Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opportunities in systematic and algorithmic ways, using various historically proven trading strategies.
 
