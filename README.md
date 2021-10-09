@@ -12,6 +12,7 @@ Welcome to pyQuant! :)
   * [Vigilant Asset Allocation (VAA)](#vigilant-asset-allocation)
   * [Defensive Asset Allocation (DAA)](#defensive-asset-allocation)
 * [Individual Stock Investing](#individual-stock-investing)
+* [FX/CFD/Cryptocurrency Trading](#oanda-trading)
 
 ## Data Sources <a name="data-sources"></a>
 
