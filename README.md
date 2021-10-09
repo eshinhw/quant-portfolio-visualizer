@@ -61,13 +61,13 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## Tactical Asset Allocation Portfolios <a name="tactical-asset-allocations"></a>
 
-### Dual Momentum <a name="dual-momentum"></a>
+### 1. Dual Momentum <a name="dual-momentum"></a>
 
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134734529-a66b258b-bc31-433a-95be-d72cd367fb93.png">
 </p>
 
-### Vigilant Asset Allocation (VAA) <a name="vigilant-asset-allocation"></a>
+### 2. Vigilant Asset Allocation (VAA) <a name="vigilant-asset-allocation"></a>
 
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134711294-cf8d6242-df12-436d-b8ca-736a06a80083.png">
@@ -81,7 +81,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134711636-525a29bf-1b1d-48dd-8fcf-ae14b8001486.png">
 </p>
 
-### Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
+### 3. Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
 
 ## Individual Stock Investing <a name="individual-stock-investing"></a>
 
@@ -111,7 +111,7 @@ Below is a collection of jupyter notebooks for individual stock investing.
 
 Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opportunities in systematic and algorithmic ways, using various historically proven trading strategies.
 
-### Trend Following Strategy
+### 1. Trend Following Strategy
 
 #### Strategy Overview
 
@@ -125,7 +125,7 @@ In this repo, only system 2 will be implemented.
 - **Stop Loss**: 2 x ATR
 - **Take Profit (Modified)**: either 2 x ATR or 20 days low for long and 20 days high for short (whichever is close to current price)
 
-### Reversal Strategy
+### 2. Reversal Strategy
 
 #### Strategy Overview
 
