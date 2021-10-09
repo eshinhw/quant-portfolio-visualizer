@@ -17,6 +17,7 @@ Welcome to pyQuant! :)
 
 - [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
 - [Questrade API](https://www.questrade.com/api)
+- [OANDA API](https://developer.oanda.com/)
 
 ## Prerequisites: Basics of Quant Investing <a name="prerequisites"></a>
 
@@ -117,7 +118,7 @@ Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opp
 
 ## Trading Platform & Data Source
 
-- [OANDA API](https://developer.oanda.com/)
+
 
 ## Trend Following Strategy
 
