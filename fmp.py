@@ -8,9 +8,8 @@ import requests
 import pprint
 import calendar
 
-import src.credentials as cred
+from credentials import FMP_API_KEY
 
-FMP_API_KEY = cred.FMP_API_KEYS
 START_DATE = dt.datetime(1970, 1, 1)
 END_DATE = dt.datetime.today()
 
@@ -37,6 +36,29 @@ def dow_symbols():
         symbols.append(data["symbol"])
 
     return symbols
+
+def crypto_list():
+
+    cryptos = []
+
+    data = requests.get(
+        f"https://financialmodelingprep.com/api/v3/quotes/crypto?apikey={FMP_API_KEY}"
+    ).json()
+
+    for c in data:
+        cryptos.append(c['symbol'])
+
+    return cryptos
+
+def crypto_prices(symbol: str):
+
+    available_cryptos = crypto_list()
+
+    if symbol in available_cryptos:
+        data = requests.get(f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={FMP_API_KEY}").json()
+
+        print(data)
+
 
 
 def extract_financials(symbols):
