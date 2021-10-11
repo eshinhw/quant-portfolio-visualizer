@@ -12,11 +12,13 @@ Welcome to pyQuant! :)
   * [Vigilant Asset Allocation (VAA)](#vigilant-asset-allocation)
   * [Defensive Asset Allocation (DAA)](#defensive-asset-allocation)
 * [Individual Stock Investing](#individual-stock-investing)
+* [FX/CFD/Cryptocurrency Trading](#oanda-trading)
 
 ## Data Sources <a name="data-sources"></a>
 
 - [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
 - [Questrade API](https://www.questrade.com/api)
+- [OANDA API](https://developer.oanda.com/)
 
 ## Prerequisites: Basics of Quant Investing <a name="prerequisites"></a>
 
@@ -59,13 +61,13 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## Tactical Asset Allocation Portfolios <a name="tactical-asset-allocations"></a>
 
-### Dual Momentum <a name="dual-momentum"></a>
+### 1. Dual Momentum <a name="dual-momentum"></a>
 
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134734529-a66b258b-bc31-433a-95be-d72cd367fb93.png">
 </p>
 
-### Vigilant Asset Allocation (VAA) <a name="vigilant-asset-allocation"></a>
+### 2. Vigilant Asset Allocation (VAA) <a name="vigilant-asset-allocation"></a>
 
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134711294-cf8d6242-df12-436d-b8ca-736a06a80083.png">
@@ -79,7 +81,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134711636-525a29bf-1b1d-48dd-8fcf-ae14b8001486.png">
 </p>
 
-### Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
+### 3. Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
 
 ## Individual Stock Investing <a name="individual-stock-investing"></a>
 
@@ -105,41 +107,31 @@ Below is a collection of jupyter notebooks for individual stock investing.
 - DPS
 - DPS Growth
 
-
-
-
-
-# pyTrader
-
-## Introduction
+## FX/CFD/Cryptocurrency Trading <a name="oanda-trading"></a>
 
 Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opportunities in systematic and algorithmic ways, using various historically proven trading strategies.
 
-## Trading Platform & Data Source
+### 1. Trend Following Strategy
 
-- [OANDA API](https://developer.oanda.com/)
-
-## Trend Following Strategy
-
-### Strategy Overview
+#### Strategy Overview
 
 Long term trend following strategy with wide stop and target. **A breakout signal of previous highs or lows is considered as the beginning of new trend.** Stops are determined by Average True Range of previous days. By original turtle trading, system 1 uses shorter periods to catch short trend and system 2 uses longer periods to catch long term trend. You can learn more about turtle trading [here](https://bigpicture.typepad.com/comments/files/turtlerules.pdf).
 
 In this repo, only system 2 will be implemented.
 
-### System 2 Trading Logics
+#### System 2 Trading Logics
 
 - **Entry**: Breakout Long @ previous 55 days high or Breakout Short @ previous 55 days low
 - **Stop Loss**: 2 x ATR
 - **Take Profit (Modified)**: either 2 x ATR or 20 days low for long and 20 days high for short (whichever is close to current price)
 
-## Reversal Strategy
+### 2. Reversal Strategy
 
-### Strategy Overview
+#### Strategy Overview
 
 It's known that original turtle trading system has about 30% of breakout success rate at key highs and lows. Then, about 70% of the time, markets fail to break out pre-determined key levels. Based on this statistical edge, We can create a simple reversal strategy which bets against original turtles to capitalize 70% of false breakouts. The reversal strategy takes long at previous key lows and takes short at previous key highs, expecting the markets to reverse. This strategy is known as 'Turtle Soup' by Linda Bradford-Raschke, and you can learn more about this strategy and many more short term trading strategies [here](https://www.amazon.ca/Street-Smarts-Probability-Trading-Strategies/dp/0965046109).
 
-### Trading Logics
+#### Trading Logics
 
 - **Entry**: Long @ previous X days low or Short @ previous X days high
 - **Stop Loss**: Trailing stop to limit the downside risk
