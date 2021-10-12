@@ -2,6 +2,11 @@
 
 Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opportunities in systematic and algorithmic ways, using various historically proven trading strategies.
 
+## Data Sources
+
+- FMP API
+- OANDA API
+
 ## Trading Instruments
 
 - FX/CFD
@@ -13,7 +18,7 @@ Long term trend following strategy with wide stop and target. **A breakout signa
 
 In this repo, only system 2 will be implemented.
 
-#### System 2 Trading Logics
+#### Trading Logics
 
 - **Entry**: Breakout Long @ previous 55 days high or Breakout Short @ previous 55 days low
 - **Stop Loss**: 2 x ATR
