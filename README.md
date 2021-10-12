@@ -1,8 +1,17 @@
 # pyTrader
 
+Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opportunities in systematic and algorithmic ways, using various historically proven trading strategies.
+
+## Trading Instruments
+
+- FX/CFD
+- Cryptocurrencies
+
+
+
 ## FX/CFD/Cryptocurrency Trading <a name="oanda-trading"></a>
 
-Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opportunities in systematic and algorithmic ways, using various historically proven trading strategies.
+
 
 ### 1. Trend Following Strategy
 
