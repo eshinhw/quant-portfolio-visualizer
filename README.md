@@ -4,8 +4,8 @@ Deleveop a trading bot deployed in forex & CFD markets to capitalize trading opp
 
 ## Data Sources
 
-- FMP API
-- OANDA API
+- [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
+- [OANDA API](https://developer.oanda.com/)
 
 ## Trading Instruments
 
