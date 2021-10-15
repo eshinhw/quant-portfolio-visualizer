@@ -5,8 +5,6 @@ from oandapyV20 import API
 import oandapyV20.endpoints.trades as trades
 from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
 from oandaTrader import OandaTrader
-import fbprophet
-
 from fbprophet import Prophet
 
 K = 0.5
@@ -74,9 +72,9 @@ while True:
                 current_ask_price = get_current_ask_price(symbol)
                 current_bid_price = get_current_bid_price(symbol)
                 if ma < current_bid_price and entry_price < current_bid_price and entry_price < predict_price:
-                    oanda.create_buy_market_order()
+                    oanda.create_buy_market_order(symbol)
                 if ma > current_ask_price and entry_price > current_ask_price and entry_price > predict_price:
-                    oanda.create_sell_market_order()
+                    oanda.create_sell_market_order(symbol)
 
             # close a trade
             else:
