@@ -131,36 +131,12 @@ class OandaTrader(Oanda):
         resp = self.client.request(r)
         return resp["trades"]
 
-    def create_limit_order(self, symbol, entry, stop, units)
+    def create_limit_order(self, symbol, entry, stop):
+        units = self.calculate_unit_size(symbol, entry, stop, 0.05)
 
-    def create_sell_limit(account_ID: str,
-                      symbol: str,
-                      entry: float,
-                      stop: float,
-                      units: int,
-                      trailing_stop: bool) -> None:
-
-    if trailing_stop is True:
-        if "_USD" in symbol:
-            dist = round(abs(entry - stop), 5)
-
-        if "_JPY" in symbol:
-            dist = round(abs(entry - stop), 3)
-
-        order_body = {
-            "order": {
-                "price": str(entry),
-                "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(dist)},
-                "timeInForce": "GTC",
-                "instrument": symbol,
-                "units": "-" + str(units),
-                "type": "LIMIT",
-                "positionFill": "DEFAULT",
-            }
-        }
-
-    if trailing_stop is False:
-        order_body = {
+        # Sell Limit
+        if entry < stop:
+            order_body = {
             "order": {
                 "price": str(entry),
                 "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
@@ -169,39 +145,12 @@ class OandaTrader(Oanda):
                 "units": "-" + str(units),
                 "type": "LIMIT",
                 "positionFill": "DEFAULT",
-            }
-        }
-    r = orders.OrderCreate(account_ID, data=order_body)
-    client.request(r)
-
-
-    def create_buy_limit(account_ID: str,
-                        symbol: str,
-                        entry: float,
-                        stop: float,
-                        units: int,
-                        trailing_stop: bool) -> None:
-
-        if trailing_stop is True:
-            if "_USD" in symbol:
-                dist = round(abs(entry - stop), 5)
-
-            if "_JPY" in symbol:
-                dist = round(abs(entry - stop), 3)
-
-            order_body = {
-                "order": {
-                    "price": str(entry),
-                    "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(dist)},
-                    "timeInForce": "GTC",
-                    "instrument": symbol,
-                    "units": str(units),
-                    "type": "LIMIT",
-                    "positionFill": "DEFAULT",
                 }
             }
+            r = orders.OrderCreate(self.acctID, data=order_body)
+            self.client.request(r)
 
-        if trailing_stop is False:
+        else:
             order_body = {
                 "order": {
                     "price": str(entry),
@@ -213,79 +162,29 @@ class OandaTrader(Oanda):
                     "positionFill": "DEFAULT",
                 }
             }
-        r = orders.OrderCreate(account_ID, data=order_body)
-        client.request(r)
+            r = orders.OrderCreate(self.acctID, data=order_body)
+            self.client.request(r)
 
+    def create_stop_order(self, symbol, entry, stop):
+        units = self.calculate_unit_size(symbol, entry, stop, 0.05)
 
-    def create_sell_stop(account_ID: str,
-                        symbol: str,
-                        entry: float,
-                        stop: float,
-                        units: int,
-                        trailing_stop: bool) -> None:
-
-        if trailing_stop is True:
-            if "_USD" in symbol:
-                dist = round(abs(entry - stop), 5)
-
-            if "_JPY" in symbol:
-                dist = round(abs(entry - stop), 3)
-
+        # Sell Stop
+        if entry < stop:
             order_body = {
-                "order": {
-                    "price": str(entry),
-                    "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(dist)},
-                    "timeInForce": "GTC",
-                    "instrument": symbol,
-                    "units": "-" + str(units),
-                    "type": "STOP",
-                    "positionFill": "DEFAULT",
+            "order": {
+                "price": str(entry),
+                "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
+                "timeInForce": "GTC",
+                "instrument": symbol,
+                "units": "-" + str(units),
+                "type": "STOP",
+                "positionFill": "DEFAULT",
                 }
             }
+            r = orders.OrderCreate(self.acctID, data=order_body)
+            self.client.request(r)
 
-        if trailing_stop is False:
-            order_body = {
-                "order": {
-                    "price": str(entry),
-                    "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
-                    "timeInForce": "GTC",
-                    "instrument": symbol,
-                    "units": "-" + str(units),
-                    "type": "STOP",
-                    "positionFill": "DEFAULT",
-                }
-            }
-        r = orders.OrderCreate(account_ID, data=order_body)
-        client.request(r)
-
-
-    def create_buy_stop(account_ID: str,
-                        symbol: str,
-                        entry: float,
-                        stop: float,
-                        units: int,
-                        trailing_stop: bool) -> None:
-
-        if trailing_stop is True:
-            if "_USD" in symbol:
-                dist = round(abs(entry - stop), 5)
-
-            if "_JPY" in symbol:
-                dist = round(abs(entry - stop), 3)
-
-            order_body = {
-                "order": {
-                    "price": str(entry),
-                    "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(dist)},
-                    "timeInForce": "GTC",
-                    "instrument": symbol,
-                    "units": str(units),
-                    "type": "STOP",
-                    "positionFill": "DEFAULT",
-                }
-            }
-
-        if trailing_stop is False:
+        else:
             order_body = {
                 "order": {
                     "price": str(entry),
@@ -297,11 +196,8 @@ class OandaTrader(Oanda):
                     "positionFill": "DEFAULT",
                 }
             }
-        r = orders.OrderCreate(account_ID, data=order_body)
-        client.request(r)
-
-
-
+            r = orders.OrderCreate(self.acctID, data=order_body)
+            self.client.request(r)
 
 if __name__ == '__main__':
 
