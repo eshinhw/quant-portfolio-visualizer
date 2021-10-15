@@ -1,4 +1,3 @@
-import json
 import time
 import datetime
 from oandapyV20 import API
