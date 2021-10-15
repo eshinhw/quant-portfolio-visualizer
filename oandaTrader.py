@@ -2,6 +2,7 @@ import os
 import json
 import pandas as pd
 import datetime as dt
+from oanda import Oanda
 from oandapyV20 import API
 from typing import List, Dict, Tuple
 import oandapyV20.endpoints.orders as orders
@@ -11,7 +12,7 @@ import oandapyV20.contrib.requests as requests
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
-from oanda_new import Oanda
+
 
 class OandaTrader(Oanda):
 
