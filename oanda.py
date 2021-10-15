@@ -32,7 +32,8 @@ class Oanda:
         data = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
 
         for candle in resp["candles"]:
-            data["Date"].append(candle["time"][: candle["time"].index("T")])
+            date = candle["time"][: candle["time"].index("T")]
+            data["Date"].append(dt.datetime.strptime(date, "%Y-%m-%d"))
             data["Open"].append(float(candle["mid"]["o"]))
             data["High"].append(float(candle["mid"]["h"]))
             data["Low"].append(float(candle["mid"]["l"]))
