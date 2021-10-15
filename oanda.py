@@ -155,19 +155,6 @@ def get_trade_list(account_ID: str) -> List[Dict]:
     return resp["trades"]
 
 
-def get_acct_balance(account_ID: str) -> float:
-    """ Retrieve account balance.
-
-    Args:
-        accountID (String): account ID
-
-    Returns:
-        Float: current account balance
-    """
-    resp = client.request(accounts.AccountSummary(account_ID))
-    return float(resp["account"]["balance"])
-
-
 def get_candle_data(symbol: str, count: int, interval: str):
     """ Return historical price data.
 
