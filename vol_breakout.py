@@ -46,9 +46,11 @@ while True:
                 current_price = get_current_price(symbol)
                 if target_price < current_price and ma15 < current_price:
                     cad = oanda.get_balance()
-                    if cad > 5000:
-                        upbit.buy_market_order("KRW-BTC", cad*(1-FEE))
+                    if cad > 1000:
+                        oanda.create_buy_market_order()
+            # close trade
             else:
+                trade = oanda.
                 btc = get_balance("BTC")
                 if btc > 0.00008:
                     upbit.sell_market_order("KRW-BTC", btc*0.9995)
