@@ -2,16 +2,18 @@ import os
 import json
 import pandas as pd
 import datetime as dt
+
+from pandas.core.indexing import check_bool_indexer
 from oanda import Oanda
 from oandapyV20 import API
 from typing import List, Dict, Tuple
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.trades as trades
 import oandapyV20.endpoints.pricing as pricing
-import oandapyV20.contrib.requests as requests
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
+from oandapyV20.contrib.requests import MarketOrderRequest, LimitOrderRequest, StopOrderRequest
 
 RISK_PER_TRADE = 0.05
 
@@ -95,6 +97,13 @@ class OandaTrader(Oanda):
                 return True
         return False
 
+    def close_open_trade(self, symbol: str):
+        trade_list = self.get_trade_list()
+        for trade in trade_list:
+            if trade["instrument"] == symbol:
+                r = trades.TradeClose(accountID=self.acctID, tradeID=trade["id"])
+                self.client.request(r)
+
 
     def cancel_single_order(self, order_ID: str) -> None:
         r = orders.OrderCancel(accountID=self.acctID, orderID=order_ID)
@@ -129,6 +138,34 @@ class OandaTrader(Oanda):
         r = trades.TradesList(self.acctID)
         resp = self.client.request(r)
         return resp["trades"]
+
+    def create_buy_market_order(self, symbol):
+        order_body = {
+            "order": {
+                "type": "MARKET",
+                "positionFill": "DEFAULT",
+                "instrument": symbol,
+                "timeInForce": "FOK",
+                "units": "100"
+            }
+        }
+
+        r = orders.OrderCreate(self.acctID, data=order_body)
+        self.client.request(r)
+
+
+    def create_sell_market_order(self, symbol):
+        order_body = {
+            "order": {
+                "type": "MARKET",
+                "positionFill": "DEFAULT",
+                "instrument": symbol,
+                "timeInForce": "FOK",
+                "units": "-100"
+            }
+        }
+        r = orders.OrderCreate(self.acctID, data=order_body)
+        self.client.request(r)
 
     def create_limit_order(self, symbol, entry, stop):
         units = self.calculate_unit_size(symbol, entry, stop)
@@ -201,3 +238,6 @@ class OandaTrader(Oanda):
 if __name__ == '__main__':
     ot = OandaTrader(OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID)
     print(ot.calculate_MA('EUR_USD', 20, 'D'))
+    print(ot.check_open_trade('EUR_USD'))
+    ot.close_open_trade('EUR_USD')
+    #ot.create_buy_market_order('EUR_USD')
