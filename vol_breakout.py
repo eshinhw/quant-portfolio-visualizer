@@ -1,7 +1,5 @@
 import time
 import datetime
-from oandapyV20 import API
-import oandapyV20.endpoints.trades as trades
 from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
 from oandaTrader import OandaTrader
 from fbprophet import Prophet
