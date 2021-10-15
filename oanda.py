@@ -32,8 +32,8 @@ class Oanda:
         data = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
 
         for candle in resp["candles"]:
-            date = candle["time"][: candle["time"].index("T")]
-            data["Date"].append(dt.datetime.strptime(date, "%Y-%m-%d"))
+            date = candle['time'].replace('T', ' ')[:candle['time'].index('.')]
+            data["Date"].append(dt.datetime.strptime(date, "%Y-%m-%d %H:%M:%S"))
             data["Open"].append(float(candle["mid"]["o"]))
             data["High"].append(float(candle["mid"]["h"]))
             data["Low"].append(float(candle["mid"]["l"]))
@@ -83,10 +83,10 @@ if __name__ == "__main__":
     # Testing Oanda class methods
 
     oanda = Oanda(OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID)
-    print(oanda.get_balance())
-    print(oanda.get_ohlc('EUR_USD', 5, 'D'))
-    print(oanda.get_current_ask_bid_price('EUR_USD'))
-    print(oanda.calculate_MA('EUR_USD', 20, 'D'))
+    #print(oanda.get_balance())
+    print(oanda.get_ohlc('EUR_USD', 48, 'H1'))
+    #print(oanda.get_current_ask_bid_price('EUR_USD'))
+    #print(oanda.calculate_MA('EUR_USD', 20, 'D'))
 
 
 
