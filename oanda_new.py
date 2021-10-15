@@ -19,33 +19,14 @@ class Oanda:
         self.acctID = accountID
 
     def get_balance(self):
-        """ Retrieve account balance.
-
-        Args:
-            accountID (String): account ID
-
-        Returns:
-            Float: current account balance
-        """
-
         resp = self.client.request(accounts.AccountSummary(self.acctID))
         return float(resp["account"]["balance"])
 
     def get_ohlc(self, symbol: str, count: int, interval: str):
-        """ Return historical price data.
-
-        Args:
-            symbol (String): symbol
-            count (Int): number of intervals
-            interval (String): Daily 'D', Weekly 'W', ...
-
-        Returns:
-            JSON: json format in python dictionary
-        """
-
-        r = instruments.InstrumentsCandles(
-            instrument=symbol, params={"count": count,
-                            "granularity": interval, "dailyAlignment": 13})
+        r = instruments.InstrumentsCandles(instrument=symbol,
+                                           params={"count": count,
+                                                    "granularity": interval,
+                                                    "dailyAlignment": 13})
         resp = self.client.request(r)
 
         data = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
@@ -62,17 +43,8 @@ class Oanda:
         return df
 
     def get_current_ask_bid_price(self, symbol: str) -> Tuple[float]:
-        """ Return current ask and bid price for pair
-
-        Args:
-            pair (String): currency pair
-
-        Returns:
-            Tuple: (ask price, bid price)
-        """
-
-        r = pricing.PricingInfo(accountID=self.acctID, params={
-            "instruments": symbol})
+        r = pricing.PricingInfo(accountID=self.acctID,
+                                params={"instruments": symbol})
         resp = self.client.request(r)
         ask_price = float(resp["prices"][0]["closeoutAsk"])
         bid_price = float(resp["prices"][0]["closeoutBid"])
@@ -98,7 +70,6 @@ class Oanda:
         df = self.get_ohlc(symbol, period, interval)
         df["Low_" + str(period)] = df["Low"].shift(1).rolling(window=period).min()
         return df["Low_" + str(period)].iloc[-1]
-
 
     def calculate_prev_max_high(self, symbol: str, period: int, interval: str):
         df = self.get_ohlc(symbol, period, interval)

@@ -155,57 +155,6 @@ def get_trade_list(account_ID: str) -> List[Dict]:
     return resp["trades"]
 
 
-def get_candle_data(symbol: str, count: int, interval: str):
-    """ Return historical price data.
-
-    Args:
-        symbol (String): symbol
-        count (Int): number of intervals
-        interval (String): Daily 'D', Weekly 'W', ...
-
-    Returns:
-        JSON: json format in python dictionary
-    """
-    instrument_params = {"count": count,
-                         "granularity": interval, "dailyAlignment": 13}
-
-    r = instruments.InstrumentsCandles(
-        instrument=symbol, params=instrument_params)
-    resp = client.request(r)
-    return resp
-
-
-def calculate_moving_average(symbol: str, period: int, interval: str) -> float:
-    instrument_params = {"count": period + 1, "granularity": interval}
-
-    r = instruments.InstrumentsCandles(
-        instrument=symbol, params=instrument_params)
-    resp = client.request(r)
-    closes = []
-    for day in resp["candles"]:
-        if day["complete"] == True:
-            closes.append(float(day["mid"]["c"]))
-
-    return sum(closes) / len(closes)
-
-
-def get_current_ask_bid_price(account_ID: str, symbol: str) -> Tuple[float]:
-    """ Return current ask and bid price for pair
-
-    Args:
-        pair (String): currency pair
-
-    Returns:
-        Tuple: (ask price, bid price)
-    """
-
-    r = pricing.PricingInfo(accountID=account_ID, params={
-        "instruments": symbol})
-    resp = client.request(r)
-    ask_price = float(resp["prices"][0]["closeoutAsk"])
-    bid_price = float(resp["prices"][0]["closeoutBid"])
-    return (ask_price, bid_price)
-
 
 
 def create_sell_limit(account_ID: str,
