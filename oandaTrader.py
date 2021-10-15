@@ -2,8 +2,6 @@ import os
 import json
 import pandas as pd
 import datetime as dt
-
-from pandas.core.indexing import check_bool_indexer
 from oanda import Oanda
 from oandapyV20 import API
 from typing import List, Dict, Tuple

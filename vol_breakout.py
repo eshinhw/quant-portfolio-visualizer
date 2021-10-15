@@ -16,19 +16,22 @@ oanda = OandaTrader(OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID)
 def get_target_price(symbol, K):
     """변동성 돌파 전략으로 매수 목표가 조회"""
     df = oanda.get_ohlc(symbol, 2, 'D')
-    #df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
     target_price = df.iloc[0]['Close'] + (df.iloc[0]['High'] - df.iloc[0]['Low']) * K
     return target_price
 
 def get_start_time(symbol):
-    """시작 시간 조회"""
+    """returns start time"""
     df = oanda.get_ohlc(symbol, 2, 'D')
     start_time = df.index[0]
     return start_time
 
-def get_current_price(symbol):
-    """현재가 조회"""
+def get_current_ask_price(symbol):
+    """returns ask price"""
     return oanda.get_current_ask_bid_price(symbol)[0]
+
+def get_current_bid_price(symbol):
+    """returns ask price"""
+    return oanda.get_current_ask_bid_price(symbol)[1]
 
 
 
@@ -44,7 +47,8 @@ while True:
             if start_time < now < end_time - datetime.timedelta(seconds=10):
                 target_price = get_target_price(symbol, K)
                 ma = oanda.calculate_MA(symbol, 15, 'D')
-                current_price = get_current_price(symbol)
+                current_ask_price = get_current_ask_price(symbol)
+                current_bid_price = get_current_bid_price(symbol)
                 if target_price < current_price and ma < current_price:
                     oanda.create_buy_market_order()
 

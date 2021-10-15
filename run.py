@@ -3,7 +3,6 @@ import sys
 import time
 import oanda
 import schedule
-import reversal
 #import original_turtle
 
 if __name__ == "__main__":
@@ -17,7 +16,6 @@ if __name__ == "__main__":
 
     while True:
         schedule.run_pending()
-        reversal.check_condition_and_place_orders(accounts['turtle_soup'])
         oanda.update_order_trade_status(accounts['turtle_soup'])
         time.sleep(3)
     # print(oanda.get_order_list(accounts['turtle_soup']))
