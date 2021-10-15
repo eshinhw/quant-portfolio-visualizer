@@ -207,9 +207,6 @@ def get_current_ask_bid_price(account_ID: str, symbol: str) -> Tuple[float]:
     return (ask_price, bid_price)
 
 
-# def get_current_price(symbol: str) -> float:
-#     return sum(get_current_ask_bid_price(account_ID, symbol)) / 2
-
 
 def create_sell_limit(account_ID: str,
                       symbol: str,
