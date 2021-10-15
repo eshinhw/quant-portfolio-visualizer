@@ -54,23 +54,23 @@ class OandaTrader(Oanda):
 
 
     def update_order_trade_status(self):
-        trade_list = self.get_trade_list(account_ID)
-        order_list = get_order_list(account_ID)
+        trade_list = self.get_trade_list()
+        order_list = self.get_order_list()
 
         for trade in trade_list:
             for order in order_list:
                 if order["type"] == "LIMIT" and trade["instrument"] == order["instrument"]:
-                    cancel_single_order(account_ID, order["id"])
+                    self.cancel_single_order(order["id"])
 
 
-    def get_order_details(account_ID: str, order_ID: str) -> Dict:
-        r = orders.OrderDetails(accountID=account_ID, orderID=order_ID)
-        resp = client.request(r)
+    def get_order_details(self, order_ID: str) -> Dict:
+        r = orders.OrderDetails(accountID=self.acctID, orderID=order_ID)
+        resp = self.client.request(r)
         return (resp['order'])
 
 
-    def find_order_id(account_ID: str, symbol: str, direction: str) -> str:
-        order_list = get_order_list(account_ID)
+    def find_order_id(self, symbol: str, direction: str) -> str:
+        order_list = self.get_order_list()
 
         for order in order_list:
             if direction == 'LONG':
@@ -81,23 +81,23 @@ class OandaTrader(Oanda):
                     return order['id']
 
 
-    def check_open_order(account_ID: str, symbol: str):
-        order_list = get_order_list(account_ID)
+    def check_open_order(self, symbol: str):
+        order_list = self.get_order_list()
         for order in order_list:
             if order["type"] == "LIMIT" and order["instrument"] == symbol:
                 return True
         return False
 
 
-    def check_open_trade(account_ID: str, symbol: str):
-        trade_list = get_trade_list(account_ID)
+    def check_open_trade(self, symbol: str):
+        trade_list = self.get_trade_list()
         for trade in trade_list:
             if trade["instrument"] == symbol:
                 return True
         return False
 
 
-    def cancel_single_order(self, account_ID: str, order_ID: str) -> None:
+    def cancel_single_order(self, order_ID: str) -> None:
         r = orders.OrderCancel(accountID=self.acctID, orderID=order_ID)
         self.client.request(r)
 
