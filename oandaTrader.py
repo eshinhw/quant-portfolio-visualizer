@@ -13,6 +13,7 @@ import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
 
+RISK_PER_TRADE = 0.05
 
 class OandaTrader(Oanda):
 
@@ -22,8 +23,7 @@ class OandaTrader(Oanda):
     def calculate_unit_size(self,
                             symbol: str,
                             entry: float,
-                            stop: float,
-                            risk_per_trade: float):
+                            stop: float):
 
         if '_USD' in symbol:
             decimal = 4
@@ -34,7 +34,7 @@ class OandaTrader(Oanda):
             multiple = 100
 
         account_balance = self.get_balance(self.acctID)
-        risk_amt_per_trade = account_balance * risk_per_trade
+        risk_amt_per_trade = account_balance * RISK_PER_TRADE
         entry = round(entry, decimal)
         stop = round(stop, decimal)
         stop_loss_pips = round(abs(entry - stop) * multiple, 0)
@@ -81,14 +81,12 @@ class OandaTrader(Oanda):
                 if order['type'] == 'LIMIT' and order['instrument'] == symbol and ('-' in order['units']):
                     return order['id']
 
-
     def check_open_order(self, symbol: str):
         order_list = self.get_order_list()
         for order in order_list:
             if order["type"] == "LIMIT" and order["instrument"] == symbol:
                 return True
         return False
-
 
     def check_open_trade(self, symbol: str):
         trade_list = self.get_trade_list()
@@ -133,7 +131,7 @@ class OandaTrader(Oanda):
         return resp["trades"]
 
     def create_limit_order(self, symbol, entry, stop):
-        units = self.calculate_unit_size(symbol, entry, stop, 0.05)
+        units = self.calculate_unit_size(symbol, entry, stop)
 
         # Sell Limit
         if entry < stop:
@@ -167,7 +165,7 @@ class OandaTrader(Oanda):
             self.client.request(r)
 
     def create_stop_order(self, symbol, entry, stop):
-        units = self.calculate_unit_size(symbol, entry, stop, 0.05)
+        units = self.calculate_unit_size(symbol, entry, stop)
 
         # Sell Stop
         if entry < stop:
@@ -201,6 +199,5 @@ class OandaTrader(Oanda):
             self.client.request(r)
 
 if __name__ == '__main__':
-
     ot = OandaTrader(OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID)
     print(ot.calculate_MA('EUR_USD', 20, 'D'))
