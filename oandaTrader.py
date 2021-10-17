@@ -3,7 +3,6 @@ import json
 import pandas as pd
 import datetime as dt
 from oanda import Oanda
-from oandapyV20 import API
 from typing import List, Dict, Tuple
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.trades as trades
