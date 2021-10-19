@@ -21,25 +21,32 @@ class QuestradeBot:
     def __init__(self, token) -> None:
 
         self.token = token
-        #self.accountNum = accountNum
 
         if os.path.exists("./access_token.yml"):
-            # check expired
-            modified = dt.datetime.fromtimestamp(os.path.getmtime("./access_token.yml"))
-            now = dt.datetime.now()
-            fileAge = (now - modified).days
-            if fileAge > 3:
-                print("fileAge part executed")
-                print("access_token.yml EXPIRED: REFRESH QUESTRADE API TOKEN")
-                os.remove("./access_token.yml")
-            else:
-                # we can refresh token
-                print("refresh_token")
+            try:
                 self.Questrade = Questrade(token_yaml="./access_token.yml")
                 self.Questrade.refresh_access_token(from_yaml=True)
-
-        if not (os.path.exists("./access_token.yml")):
+            except Exception as e:
+                print(e)
+        else:
             self.Questrade = Questrade(access_code=self.token)
+
+            # check expired
+            # modified = dt.datetime.fromtimestamp(os.path.getmtime("./access_token.yml"))
+            # now = dt.datetime.now()
+            # fileAge = (now - modified).days
+            # if fileAge > 3:
+            #     print("fileAge part executed")
+            #     print("access_token.yml EXPIRED: REFRESH QUESTRADE API TOKEN")
+            #     os.remove("./access_token.yml")
+            # else:
+            #     # we can refresh token
+            #     print("refresh_token")
+            #     self.Questrade = Questrade(token_yaml="./access_token.yml")
+            #     self.Questrade.refresh_access_token(from_yaml=True)
+
+        # if not (os.path.exists("./access_token.yml")):
+            # self.Questrade = Questrade(access_code=self.token)
 
     def get_account_ids(self):
         return self.Questrade.get_account_id()
