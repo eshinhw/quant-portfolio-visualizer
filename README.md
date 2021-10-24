@@ -1,4 +1,4 @@
-# Questrade Portfolio Manager
+# Questrade Portfolio Analytics
 
 ### Portfolio Holdings
 
