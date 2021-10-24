@@ -1,4 +1,4 @@
-# questrade-portfolio-manager
+# Questrade Portfolio Manager
 
 ## Questrade Portfolio Manager <a name="questrade-portfolio-manager"></a>
 
