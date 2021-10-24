@@ -20,13 +20,12 @@ from qtrade import Questrade
 class QuestradeBot:
     def __init__(self, token) -> None:
 
-        print(os.getcwd())
-
         if os.path.exists("./access_token.yml"):
             try:
                 self.Questrade = Questrade(token_yaml="./access_token.yml")
                 self.Questrade.refresh_access_token(from_yaml=True)
             except Exception as e:
+                os.remove("./access_token.yml")
                 print(e)
         else:
             self.Questrade = Questrade(access_code=token)
@@ -50,7 +49,6 @@ class QuestradeBot:
 
     def get_account_ids(self):
         return self.Questrade.get_account_id()
-
 
     def get_acct_positions(self, acctNum):
         return self.Questrade.get_account_positions(acctNum)
