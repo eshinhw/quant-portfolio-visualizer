@@ -1,4 +1,4 @@
-# pyQuant
+# Quantitative Asset Allocation
 
 Welcome to pyQuant! :)
 
