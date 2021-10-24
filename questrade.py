@@ -20,7 +20,7 @@ from qtrade import Questrade
 class QuestradeBot:
     def __init__(self, token) -> None:
 
-        self.token = token
+        print(os.getcwd())
 
         if os.path.exists("./access_token.yml"):
             try:
@@ -29,7 +29,7 @@ class QuestradeBot:
             except Exception as e:
                 print(e)
         else:
-            self.Questrade = Questrade(access_code=self.token)
+            self.Questrade = Questrade(access_code=token)
 
             # check expired
             # modified = dt.datetime.fromtimestamp(os.path.getmtime("./access_token.yml"))
