@@ -1,6 +1,4 @@
-# Quantitative Asset Allocation
-
-Welcome to pyQuant! :)
+Welcome to pyQuantResearch! :)
 
 ## Table of Contents
 * [Data Sources](#data-sources)
