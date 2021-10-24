@@ -1,7 +1,5 @@
 # Questrade Portfolio Manager
 
-## Questrade Portfolio Manager <a name="questrade-portfolio-manager"></a>
-
 ### Portfolio Holdings
 
 <p align="center">
