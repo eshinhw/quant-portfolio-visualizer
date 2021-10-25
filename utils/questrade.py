@@ -10,7 +10,6 @@ import math
 import os
 import platform
 import pprint
-import credentials
 import time
 
 import pandas as pd
