@@ -2,14 +2,13 @@ import os
 import json
 import urllib
 import configparser
-from .auth import Auth
+from auth import Auth
 from datetime import datetime, timedelta
 
 CONFIG_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'questrade.cfg')
 
-
 class Questrade:
-    def __init__(self, **kwargs):
+    def __init__(self, user_id, **kwargs):
         if 'config' in kwargs:
             self.config = self.__read_config(kwargs['config'])
         else:
@@ -18,7 +17,9 @@ class Questrade:
         auth_kwargs = {x: y for x, y in kwargs.items() if x in
                        ['token_path', 'refresh_token']}
 
-        self.auth = Auth(**auth_kwargs, config=self.config)
+        print(auth_kwargs)
+
+        self.auth = Auth(user_id, **auth_kwargs, config=self.config)
 
     def __read_config(self, fpath):
         config = configparser.ConfigParser()
@@ -145,3 +146,7 @@ class Questrade:
         if 'endTime' not in kwargs:
             kwargs['endTime'] = self.__now
         return self.__get(self.config['API']['MarketsCandles'].format(id), kwargs)
+
+if __name__ == '__main__':
+    q = Questrade('eshinhw')
+    print(q.accounts)

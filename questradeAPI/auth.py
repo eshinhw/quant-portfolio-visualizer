@@ -3,11 +3,20 @@ import json
 import time
 from urllib import request
 
-TOKEN_PATH = os.path.expanduser('~/.questrade.json')
+
 
 
 class Auth:
-    def __init__(self, **kwargs):
+    def __init__(self, user_id, **kwargs):
+
+        if os.path.exists('./' + user_id):
+            token_path = os.path.expanduser(f'./{user_id}/.questrade.json')
+            print(token_path)
+        else:
+            os.mkdir(f'./{user_id}')
+            token_path = os.path.expanduser(f'./{user_id}/.questrade.json')
+            print(token_path)
+
         if 'config' in kwargs:
             self.config = kwargs['config']
         else:
@@ -15,7 +24,7 @@ class Auth:
         if 'token_path' in kwargs:
             self.token_path = kwargs['token_path']
         else:
-            self.token_path = TOKEN_PATH
+            self.token_path = token_path
         if 'refresh_token' in kwargs:
             self.__refresh_token(kwargs['refresh_token'])
 
@@ -25,7 +34,7 @@ class Auth:
                 str = f.read()
                 return json.loads(str)
         except IOError:
-            raise('No token provided and none found at {}'.format(TOKEN_PATH))
+            raise('No token provided and none found at {}'.format(self.token_path))
 
     def __write_token(self, token):
         with open(self.token_path, 'w') as f:
