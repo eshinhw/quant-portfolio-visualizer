@@ -48,8 +48,8 @@ class QuestradeBot:
         # if not (os.path.exists("./access_token.yml")):
             # self.Questrade = Questrade(access_code=self.token)
 
-    def get_account_ids(self):
-        return self.Questrade.get_account_id()
+    # def get_account_ids(self):
+    #     return self.Questrade.get_account_id()
 
     def get_acct_positions(self, acctNum):
         return self.Questrade.get_account_positions(acctNum)

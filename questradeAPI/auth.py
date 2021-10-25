@@ -11,11 +11,9 @@ class Auth:
 
         if os.path.exists('./' + user_id):
             token_path = os.path.expanduser(f'./{user_id}/.questrade.json')
-            print(token_path)
         else:
             os.mkdir(f'./{user_id}')
             token_path = os.path.expanduser(f'./{user_id}/.questrade.json')
-            print(token_path)
 
         if 'config' in kwargs:
             self.config = kwargs['config']
