@@ -2,11 +2,10 @@ import os
 import json
 import urllib
 import pprint
-import datetime as dt
 import configparser
 import pandas as pd
-from questradeAPI.auth import Auth
-#from auth import Auth
+from auth import Auth
+import datetime as dt
 from datetime import datetime, timedelta
 
 CONFIG_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'questrade.cfg')
