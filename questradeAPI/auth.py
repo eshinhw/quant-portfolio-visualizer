@@ -23,6 +23,7 @@ class Auth:
             self.token_path = kwargs['token_path']
         else:
             self.token_path = token_path
+
         if 'refresh_token' in kwargs:
             self.__refresh_token(kwargs['refresh_token'])
 

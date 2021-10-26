@@ -6,7 +6,7 @@ import datetime as dt
 import configparser
 import pandas as pd
 from questradeAPI.auth import Auth
-# from auth import Auth
+#from auth import Auth
 from datetime import datetime, timedelta
 
 CONFIG_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'questrade.cfg')
@@ -18,8 +18,8 @@ class Questrade:
         else:
             self.config = self.__read_config(CONFIG_PATH)
 
-        auth_kwargs = {x: y for x, y in kwargs.items() if x in
-                       ['token_path', 'refresh_token']}
+        auth_kwargs = {x: y for x, y in kwargs.items()
+            if x in ['token_path', 'refresh_token']}
 
         self.auth = Auth(user_id, **auth_kwargs, config=self.config)
 
@@ -295,4 +295,5 @@ if __name__ == '__main__':
     # print(q.account_positions(ids[0]))
     # print(q.account_activities(ids[0], startTime='2020-11-01T00:00:00-0'))
     # print(q.get_usd_total_cost(ids[0]))
-    print(q.portfolio_return(ids[0]))
+    #print(q.portfolio_return(ids[0]))
+    print(os.getcwd())
