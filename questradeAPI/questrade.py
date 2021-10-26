@@ -6,6 +6,7 @@ import datetime as dt
 import configparser
 import pandas as pd
 from questradeAPI.auth import Auth
+# from auth import Auth
 from datetime import datetime, timedelta
 
 CONFIG_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'questrade.cfg')
@@ -19,8 +20,6 @@ class Questrade:
 
         auth_kwargs = {x: y for x, y in kwargs.items() if x in
                        ['token_path', 'refresh_token']}
-
-        print(auth_kwargs)
 
         self.auth = Auth(user_id, **auth_kwargs, config=self.config)
 
@@ -36,10 +35,10 @@ class Questrade:
 
     def __build_get_req(self, url, params):
         if params:
-            print('params')
-            print(params)
+            # print('params')
+            # print(params)
             url = self.__base_url + url + '?' + urllib.parse.urlencode(params)
-            print(url)
+            # print(url)
             # url = self.__base_url + url + '?' + 'startTime=2011-02-01T00:00:00-05:00&endTime=2011-02-28T00:00:00-05:00&'
             # url = self.__base_url + url + '?' + 'startTime=2011-02-01T00:00:00-05:00&endTime=2011-02-28T00:00:00-05:00&'
             # print(url)
@@ -56,11 +55,11 @@ class Questrade:
         )
         try:
             r = urllib.request.urlopen(req)
-            return json.loads(r.read())
-            # return json.loads(r.read().decode('utf-8'))
+            # return json.loads(r.read())
+            return json.loads(r.read().decode('utf-8'))
         except urllib.error.HTTPError as e:
-            return json.loads(e.read())
-            # return json.loads(e.read().decode('utf-8'))
+            # return json.loads(e.read())
+            return json.loads(e.read().decode('utf-8'))
 
     def __build_post_req(self, url, params):
         url = self.__base_url + url
@@ -111,7 +110,7 @@ class Questrade:
         }
         total_market_value = self.get_usd_total_mv(id)
         total_costs = 0
-        pprint.pprint(positions)
+        # pprint.pprint(positions)
         for position in positions['positions']:
             # handle daily execution for closeQuantity
             if position['openQuantity'] != 0:
@@ -176,15 +175,6 @@ class Questrade:
     def get_cad_total_mv(self, id):
         balance = self.account_balances(id)
         return balance.loc['CAD', 'Market_Value']
-
-    def get_usd_total_cost(self, acctNum):
-        positions = self.account_positions(acctNum)
-        total_cost = 0
-        for pos in positions:
-            curr_cost = pos['totalCost']
-            total_cost += curr_cost
-        return total_cost
-
 
     def account_activities(self, id, **kwargs):
         print("account_activities input: ")
@@ -287,21 +277,8 @@ class Questrade:
         return monthly_div_df
 
     def portfolio_return(self, acctNum):
-        total_mv = self.get_usd_total_mv(acctNum)
-        total_cost = self.get_usd_total_cost(acctNum)
-        m1 = round(100 * (total_mv - total_cost) / total_cost, 2)
-
-        investment = self.account_positions(acctNum)
-
-        m2 = 0
-        for symbol in investment.index:
-
-            ret = investment.loc[symbol, 'Return (%)']
-            port = investment.loc[symbol, 'Portfolio (%)'] / 100
-
-            m2 += ret * port
-
-        print(m1, m2)
+        positions = self.account_positions(acctNum)
+        return (positions['Return (%)'].dot(positions['Portfolio (%)'])) / 100
 
 if __name__ == '__main__':
     q = Questrade('eshinhw')
@@ -316,4 +293,6 @@ if __name__ == '__main__':
 
     # print(q.dividends(ids[0]))
     # print(q.account_positions(ids[0]))
-    print(q.account_activities(ids[0], startTime='2020-11-01T00:00:00-0'))
+    # print(q.account_activities(ids[0], startTime='2020-11-01T00:00:00-0'))
+    # print(q.get_usd_total_cost(ids[0]))
+    print(q.portfolio_return(ids[0]))
