@@ -1,6 +1,6 @@
 # pyTrader
 
-Deleveop a trading bot deployed in Forex, CFD and Cryptocurrency markets to capitalize short term trading opportunities in systematic ways.
+Deleveop a trading bot deployed in Forex, CFD and Cryptocurrency markets to capitalize short term or swing trading opportunities in systematic ways.
 ## Data Sources
 
 - [OANDA API](https://developer.oanda.com/)
