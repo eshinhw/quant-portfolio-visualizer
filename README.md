@@ -14,6 +14,20 @@ In addition to technical components of the strategy, it also utilizies time-seri
 
 ## Trend Following + Momentum Strategy (Rob Carver)
 
+### 1. Determine Investment Universe
+
+### 2. Historical Momentum (Emphasis on Recent Momentum)
+
+### 3. Apply Entry Rules
+
+- Moving Average Crossovers
+- Breakout
+- etc...
+
+### 4. Position Sizing
+
+### 5. Stop Loss for Risk Management
+
 
 
 <!-- ## Turtle Trend Following Strategy (Depreciated)
