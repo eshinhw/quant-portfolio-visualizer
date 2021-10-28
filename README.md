@@ -1,7 +1,6 @@
 # pyTrader
 
-Deleveop a trading bot deployed in Forex, CFD and Cryptocurrency markets to capitalize short term trading opportunities in systematic ways. The trading bot uses Volatility Breakout strategy developed by Larry Williams
-
+Deleveop a trading bot deployed in Forex, CFD and Cryptocurrency markets to capitalize short term trading opportunities in systematic ways.
 ## Data Sources
 
 - [OANDA API](https://developer.oanda.com/)
