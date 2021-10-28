@@ -15,4 +15,6 @@ print(df)
 
 o = Oanda(demo_credentials.OANDA_API_KEY, demo_credentials.VOL_BREAKOUT_ACCOUNT_ID)
 
-print(o.get_ohlc('WHEAT_USD', 30, 'D'))
+print(o.get_ohlc('WTICO_USD', 30, 'D'))
+print(o.calculate_ATR('WTICO_USD', 55, 'D'))
+print(o.calculate_ATR('EUR_USD', 55, 'D'))

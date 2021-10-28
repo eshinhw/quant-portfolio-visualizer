@@ -12,7 +12,7 @@ import oandapyV20.endpoints.instruments as instruments
 from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
 from oandapyV20.contrib.requests import MarketOrderRequest, LimitOrderRequest, StopOrderRequest
 
-RISK_PER_TRADE = 0.05
+RISK_PER_TRADE = 0.01
 
 class OandaTrader(Oanda):
 
@@ -32,7 +32,7 @@ class OandaTrader(Oanda):
             decimal = 2
             multiple = 100
 
-        account_balance = self.get_balance(self.acctID)
+        account_balance = self.get_balance()
         risk_amt_per_trade = account_balance * RISK_PER_TRADE
         entry = round(entry, decimal)
         stop = round(stop, decimal)
@@ -166,13 +166,14 @@ class OandaTrader(Oanda):
 
     def create_limit_order(self, symbol, entry, stop):
         units = self.calculate_unit_size(symbol, entry, stop)
-
+        distance = abs(entry - stop).round(5)
         # Sell Limit
         if entry < stop:
             order_body = {
             "order": {
                 "price": str(entry),
-                "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
+                # "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
+                "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(distance)},
                 "timeInForce": "GTC",
                 "instrument": symbol,
                 "units": "-" + str(units),
@@ -183,11 +184,13 @@ class OandaTrader(Oanda):
             r = orders.OrderCreate(self.acctID, data=order_body)
             self.client.request(r)
 
+        # Buy Limit
         else:
             order_body = {
                 "order": {
                     "price": str(entry),
-                    "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
+                    # "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
+                    "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(distance)},
                     "timeInForce": "GTC",
                     "instrument": symbol,
                     "units": str(units),
