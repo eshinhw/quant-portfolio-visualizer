@@ -18,9 +18,9 @@ In addition to technical components of the strategy, it also utilizies time-seri
 
 ### 2. Historical Momentum (Emphasis on Recent Momentum)
 
-### 3. Apply Entry Rules
+### 3. Entry Rules
 
-- Moving Average Crossovers
+- Moving Average Crossovers: 60 ST + 252 LT
 - Breakout
 - etc...
 
