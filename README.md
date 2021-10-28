@@ -18,15 +18,18 @@ In addition to technical components of the strategy, it also utilizies time-seri
 
 ### 2. Historical Momentum (Emphasis on Recent Momentum)
 
-### 3. Entry Rules
+### 3. Entry Rule: Moving Averages Crossover
 
-- Moving Average Crossovers: 60 ST + 252 LT
-- Breakout
-- etc...
+- Long @ 60MA golden cross 252MA
+- Short @ 60MA dead cross 252MA
 
 ### 4. Position Sizing
 
+- 1~5% per trade
+
 ### 5. Stop Loss for Risk Management
+
+- Trailing Stop @ 2 * ATR(252)
 
 
 
@@ -41,13 +44,4 @@ In this repo, only system 2 will be implemented.
 - **Entry**: Breakout Long @ previous 55 days high or Breakout Short @ previous 55 days low
 - **Stop Loss**: 2 x ATR
 - **Take Profit (Modified)**: either 2 x ATR or 20 days low for long and 20 days high for short (whichever is close to current price)
-
-## Against Turtle Reversal Strategy (Depreciated)
-
-It's known that original turtle trading system has about 30% of breakout success rate at key highs and lows. Then, about 70% of the time, markets fail to break out pre-determined key levels. Based on this statistical edge, We can create a simple reversal strategy which bets against original turtles to capitalize 70% of false breakouts. The reversal strategy takes long at previous key lows and takes short at previous key highs, expecting the markets to reverse. This strategy is known as 'Turtle Soup' by Linda Bradford-Raschke, and you can learn more about this strategy and many more short term trading strategies [here](https://www.amazon.ca/Street-Smarts-Probability-Trading-Strategies/dp/0965046109).
-
-#### Trading Logics
-
-- **Entry**: Long @ previous X days low or Short @ previous X days high
-- **Stop Loss**: Trailing stop to limit the downside risk
-- **Take Profit (Modified)**: Until the initial trailing stop is hit. -->
+-->
