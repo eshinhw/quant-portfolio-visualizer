@@ -18,7 +18,6 @@ Welcome to pyQuantResearch! :)
 
 ## Data Sources <a name="data-sources"></a>
 
-- [Questrade API](https://www.questrade.com/api)
 - [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
 
 ## Prerequisites: Basics of Quant Investing <a name="prerequisites"></a>
