@@ -1,10 +1,10 @@
 import time
 from pprint import pprint
 from oandaTrader import OandaTrader
-from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
+from demo_credentials import OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID
 
 # Login
-oanda = OandaTrader(OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID)
+oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
 
 INSTRUMENTS = oanda.fx_instruments()
 

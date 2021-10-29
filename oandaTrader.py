@@ -299,14 +299,4 @@ class OandaTrader(Oanda):
 if __name__ == '__main__':
     ot = OandaTrader(OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID)
     symbol = 'EUR_JPY'
-    # print(ot.get_trade_list())
-    # print(ot.get_order_list())
-    # entry = ot.get_current_ask_bid_price(symbol)[0]
-    # stop = entry - ot.calculate_ATR(symbol, 252, 'D') * 2
-
-    # ot.create_limit_order(symbol, entry, stop)
-    #ot.update_stop_loss('EUR_JPY', 130.00)
-    #ot.create_limit_order(symbol, 128, 127, 0.01)
-    # ot.cancel_all_orders()
-    #ot.create_limit_order('AUD_CAD', 0.9300, 0.9250, 0.01)
-    # print(ot.fx_instruments())
+    ot.cancel_all_orders()

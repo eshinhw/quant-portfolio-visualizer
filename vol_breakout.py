@@ -1,6 +1,6 @@
 import time
 import datetime
-from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
+from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID
 from oandaTrader import OandaTrader
 from fbprophet import Prophet
 
@@ -9,7 +9,7 @@ FEE = 0.0050
 INSTRUMENTS = ['EUR_USD']
 
 # Login
-oanda = OandaTrader(OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID)
+oanda = OandaTrader(OANDA_API_KEY, TEST_ACCOUNT_ID)
 
 def get_entry_price(symbol, K):
     df = oanda.get_ohlc(symbol, 2, 'D')
