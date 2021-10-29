@@ -29,7 +29,6 @@ ATR_MULTIPLIER = 2.5
 
 count = 0
 
-
 for symbol in INSTRUMENTS:
     count += 1
     print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
@@ -46,27 +45,24 @@ for symbol in INSTRUMENTS:
         curr_sma = ohlc.iloc[-1][f'{SMA}MA']
         curr_lma = ohlc.iloc[-1][f'{LMA}MA']
 
-        entry = oanda.get_current_ask_bid_price(symbol)[0]
-        stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * ATR_MULTIPLIER
-
-        # print("atr: ", oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL))
-        # print("diff:", entry - stop)
+        curr_low = oanda.get_current_low(symbol, 5, INTERVAL)
+        curr_high = oanda.get_current_high(symbol, 5, INTERVAL)
 
         # bullish cross over --> long
         if prev_sma < prev_lma and prev_sma > prev_lma:
-            if (symbol not in trades_list) and (symbol not in orders_list):
-                # long entry
-                entry = oanda.get_current_ask_bid_price(symbol)[0]
-                stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * ATR_MULTIPLIER
+            entry = oanda.get_current_ask_bid_price(symbol)[0]
+            stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * ATR_MULTIPLIER
+            if (entry > curr_lma) and (curr_low > curr_lma) and (symbol not in trades_list) and (symbol not in orders_list):
                 oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
+                print(f"Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
 
         # bearish cross over --> short
         if prev_sma > prev_lma and curr_sma < curr_lma:
-            # short entry
-            if (symbol not in trades_list) and (symbol not in orders_list):
-                entry = oanda.get_current_ask_bid_price(symbol)[1]
-                stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * ATR_MULTIPLIER
+            entry = oanda.get_current_ask_bid_price(symbol)[1]
+            stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * ATR_MULTIPLIER
+            if (entry < curr_lma) and (curr_high < curr_lma) and (symbol not in trades_list) and (symbol not in orders_list):
                 oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
+                print(f"Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
 
         time.sleep(1)
 

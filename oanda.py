@@ -45,6 +45,29 @@ class Oanda:
         df.set_index("Date", inplace=True)
         return df
 
+    def get_current_low(self, symbol, count, interval):
+        r = instruments.InstrumentsCandles(instrument=symbol,
+                                           params={"count": count,
+                                                    "granularity": interval,
+                                                    "dailyAlignment": 13})
+        resp = self.client.request(r)
+
+        most_recent_low = float(resp['candles'][-1]['mid']['l'])
+
+        return most_recent_low
+
+    def get_current_high(self, symbol, count, interval):
+        r = instruments.InstrumentsCandles(instrument=symbol,
+                                           params={"count": count,
+                                                    "granularity": interval,
+                                                    "dailyAlignment": 13})
+        resp = self.client.request(r)
+
+        most_recent_high = float(resp['candles'][-1]['mid']['h'])
+
+        return most_recent_high
+
+
     def get_current_ask_bid_price(self, symbol: str) -> Tuple[float]:
         r = pricing.PricingInfo(accountID=self.acctID,
                                 params={"instruments": symbol})
@@ -92,6 +115,8 @@ if __name__ == "__main__":
 
     # print(oanda.fx_instruments())
     print(os.name)
+
+    print(oanda.get_current_low('EUR_USD', 5, 'H1'))
 
 
 
