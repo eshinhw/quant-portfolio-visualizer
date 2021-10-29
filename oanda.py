@@ -79,21 +79,6 @@ class Oanda:
         df["High_" + str(period)] = df["High"].shift(1).rolling(window=period).max()
         return df["High_" + str(period)].iloc[-1]
 
-    def fx_instruments(self):
-        major = ['USD','AUD', 'NZD', 'GBP']
-        fx_pairs = []
-        df = pd.read_csv('./instruments.csv')
-        df['Instrument'] = df['Instrument'].str.replace('/','_')
-        low_spread = df[df['Spread'] < 10].sort_values(by='Spread')
-        # print(low_spread.tail(10))
-        # print(low_spread)
-        # print(df['Instrument'])
-        for inst in low_spread['Instrument'].tolist():
-            if '_USD' in inst or '_JPY' in inst:
-                fx_pairs.append(inst)
-        return fx_pairs
-
-
 
 if __name__ == "__main__":
 
@@ -105,8 +90,8 @@ if __name__ == "__main__":
     #print(oanda.get_current_ask_bid_price('EUR_USD'))
     #print(oanda.calculate_MA('EUR_USD', 20, 'D'))
 
-    print(oanda.fx_instruments())
-
+    # print(oanda.fx_instruments())
+    print(os.name)
 
 
 

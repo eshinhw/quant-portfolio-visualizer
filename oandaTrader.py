@@ -142,6 +142,8 @@ class OandaTrader(Oanda):
         """
         r = orders.OrderList(self.acctID)
         resp = self.client.request(r)
+        return resp['orders']
+        print(resp)
         symbols_list = []
         for trade in resp['orders']:
             symbols_list.append(trade['instrument'])
@@ -153,12 +155,31 @@ class OandaTrader(Oanda):
         """
         r = trades.TradesList(self.acctID)
         resp = self.client.request(r)
+        return resp['trades']
         symbols_list = []
         #print(resp)
         for trade in resp['trades']:
             #print(trade)
             symbols_list.append(trade['instrument'])
         return symbols_list
+
+    def fx_instruments(self):
+        major = ['USD','AUD', 'NZD', 'GBP']
+        fx_pairs = []
+        if os.name == "nt":
+            df = pd.read_csv('./instruments.csv')
+        if os.name == "posix":
+            df = pd.read_csv('/home/eshinhw/pyTrader/instruments.csv')
+
+        df['Instrument'] = df['Instrument'].str.replace('/','_')
+        low_spread = df[df['Spread'] < 10].sort_values(by='Spread')
+        # print(low_spread.tail(10))
+        # print(low_spread)
+        # print(df['Instrument'])
+        for inst in low_spread['Instrument'].tolist():
+            if '_USD' in inst or '_JPY' in inst:
+                fx_pairs.append(inst)
+        return fx_pairs
 
     def create_buy_market_order(self, symbol):
         order_body = {
@@ -264,8 +285,10 @@ if __name__ == '__main__':
     symbol = 'EUR_JPY'
     # print(ot.get_trade_list())
     # print(ot.get_order_list())
-    entry = ot.get_current_ask_bid_price(symbol)[0]
-    stop = entry - ot.calculate_ATR(symbol, 252, 'D') * 2
+    # entry = ot.get_current_ask_bid_price(symbol)[0]
+    # stop = entry - ot.calculate_ATR(symbol, 252, 'D') * 2
 
-    ot.create_limit_order(symbol, entry, stop)
-
+    # ot.create_limit_order(symbol, entry, stop)
+    print(ot.get_order_list())
+    print(ot.get_trade_list())
+    ot.cancel_all_orders()
