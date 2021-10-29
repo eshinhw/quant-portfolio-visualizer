@@ -17,7 +17,7 @@ ATR_MULTIPLIER = 2.5
 for symbol in INSTRUMENTS:
     try:
 
-        ohlc = oanda.get_ohlc(symbol, 260, 'D')
+        ohlc = oanda.get_ohlc(symbol, 365, 'D')
         ohlc['60MA'] = ohlc['Close'].rolling(SMA).mean()
         ohlc['252MA'] = ohlc['Close'].rolling(LMA).mean()
 
