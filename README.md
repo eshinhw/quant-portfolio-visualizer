@@ -14,9 +14,8 @@ Welcome to pyQuantResearch! :)
 
 ## Data Sources <a name="data-sources"></a>
 
-- [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
 - [Questrade API](https://www.questrade.com/api)
-- [OANDA API](https://developer.oanda.com/)
+- [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
 
 ## Prerequisites: Basics of Quant Investing <a name="prerequisites"></a>
 
@@ -27,8 +26,6 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 - Maximum Drawdown (MDD) Notebook
 - Portfolio Statistics and Optimizaion with PyPortfolioOpt Notebook
 - Performance Against Benchmark Notebook
-
-
 
 ## Fixed Asset Allocation Portfolios <a name="fixed-asset-allocations"></a>
 
