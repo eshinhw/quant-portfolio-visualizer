@@ -22,7 +22,8 @@ class OandaTrader(Oanda):
     def calculate_unit_size(self,
                             symbol: str,
                             entry: float,
-                            stop: float):
+                            stop: float,
+                            risk: float):
 
         if '_USD' in symbol:
             decimal = 4
@@ -33,24 +34,27 @@ class OandaTrader(Oanda):
             multiple = 100
 
         account_balance = self.get_balance()
-        risk_amt_per_trade = account_balance * RISK_PER_TRADE
+        risk_amt_per_trade = account_balance * risk
         entry = round(entry, decimal)
         stop = round(stop, decimal)
-        stop_loss_pips = round(abs(entry - stop) * multiple, 0)
+        print(abs(entry - stop))
+        stop_loss_pips = round(abs(entry - stop), decimal+1)
+
+        print(stop_loss_pips)
 
         if '_USD' in symbol:
             (currentAsk, currentBid) = self.get_current_ask_bid_price(symbol)
             acct_conversion_rate = 1 / ((currentAsk + currentBid) / 2)
             unit_size = round((risk_amt_per_trade / stop_loss_pips *
                             acct_conversion_rate) * multiple, 0)
-            return unit_size
+            return (unit_size, entry, stop, stop_loss_pips)
 
         if '_JPY' in symbol:
             (currentAsk, currentBid) = self.get_current_ask_bid_price(symbol)
             acct_conversion_rate = ((currentAsk + currentBid) / 2)
             unit_size = round((risk_amt_per_trade / stop_loss_pips *
                             acct_conversion_rate) * multiple, 0)
-            return unit_size
+            return (unit_size, entry, stop, stop_loss_pips)
 
 
     def update_order_trade_status(self):
@@ -126,7 +130,10 @@ class OandaTrader(Oanda):
         """
         r = orders.OrderList(self.acctID)
         resp = self.client.request(r)
-        return resp["orders"]
+        symbols_list = []
+        for trade in resp['orders']:
+            symbols_list.append(trade['instrument'])
+        return symbols_list
 
 
     def get_trade_list(self) -> List[Dict]:
@@ -134,7 +141,12 @@ class OandaTrader(Oanda):
         """
         r = trades.TradesList(self.acctID)
         resp = self.client.request(r)
-        return resp["trades"]
+        symbols_list = []
+        #print(resp)
+        for trade in resp['trades']:
+            #print(trade)
+            symbols_list.append(trade['instrument'])
+        return symbols_list
 
     def create_buy_market_order(self, symbol):
         order_body = {
@@ -164,9 +176,9 @@ class OandaTrader(Oanda):
         r = orders.OrderCreate(self.acctID, data=order_body)
         self.client.request(r)
 
-    def create_limit_order(self, symbol, entry, stop):
-        units = self.calculate_unit_size(symbol, entry, stop)
-        distance = abs(entry - stop).round(5)
+    def create_limit_order(self, symbol, entry, stop, risk):
+        (units, entry, stop, distance) = self.calculate_unit_size(symbol, entry, stop, risk)
+        #print(entry-stop)
         # Sell Limit
         if entry < stop:
             order_body = {
@@ -237,7 +249,11 @@ class OandaTrader(Oanda):
 
 if __name__ == '__main__':
     ot = OandaTrader(OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID)
-    print(ot.calculate_MA('EUR_USD', 20, 'D'))
-    print(ot.check_open_trade('EUR_USD'))
-    ot.close_open_trade('EUR_USD')
-    #ot.create_buy_market_order('EUR_USD')
+    symbol = 'EUR_JPY'
+    # print(ot.get_trade_list())
+    # print(ot.get_order_list())
+    entry = ot.get_current_ask_bid_price(symbol)[0]
+    stop = entry - ot.calculate_ATR(symbol, 252, 'D') * 2
+
+    ot.create_limit_order(symbol, entry, stop)
+
