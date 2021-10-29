@@ -12,7 +12,7 @@ Deleveop a trading bot deployed in Forex, CFD and Cryptocurrency markets to capi
 ## Trend Following + Momentum Strategy (Rob Carver)
 
 ### 1. Determine Investment Universe
-- FX Pairs
+- Major FX Pairs
 
 ### 2. Entry Rule: Moving Averages Crossover
 
