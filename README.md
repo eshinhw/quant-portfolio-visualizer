@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/139357234-e03b8ab4-5156-493c-b64a-e6b7845c72a9.png">
+</p>
+
 # Questrade Portfolio Analytics
 
 ### Portfolio Holdings
