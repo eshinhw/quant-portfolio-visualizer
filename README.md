@@ -4,7 +4,6 @@ Deleveop a trading bot deployed in Forex, CFD and Cryptocurrency markets to capi
 ## Data Sources
 
 - [OANDA API](https://developer.oanda.com/)
-- [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
 
 ## Volatility Breakout Strategy (Larry Williams)
 
