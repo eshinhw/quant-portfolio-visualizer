@@ -29,7 +29,7 @@ count = 0
 
 for symbol in INSTRUMENTS:
     count += 1
-    print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
+    # print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
     try:
         ohlc = oanda.get_ohlc(symbol, LMA * 2, INTERVAL)
         ohlc[f'{SMA}MA'] = ohlc['Close'].rolling(SMA).mean()
@@ -70,6 +70,5 @@ for symbol in INSTRUMENTS:
 
     except Exception as e:
         print(e)
-        time.sleep(10)
 
-print("completed --" + time.ctime())
+print("Run Successfully --------- " + time.ctime())
