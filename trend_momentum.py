@@ -44,7 +44,9 @@ for symbol in INSTRUMENTS:
                 stop = entry - oanda.calculate_ATR(symbol, ATR_DAYS, 'D') * ATR_MULTIPLIER
                 oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
 
+        time.sleep(10)
+
 
     except Exception as e:
         print(e)
-        time.sleep(1)
+        time.sleep(10)
