@@ -16,9 +16,13 @@ ATR_MULTIPLIER = 2.5
 # while True:
 for symbol in INSTRUMENTS:
     try:
+
         ohlc = oanda.get_ohlc(symbol, 260, 'D')
         ohlc['60MA'] = ohlc['Close'].rolling(SMA).mean()
         ohlc['252MA'] = ohlc['Close'].rolling(LMA).mean()
+
+        # print(symbol)
+        # print(ohlc)
 
         trades_list = oanda.get_trade_list()
         orders_list = oanda.get_order_list()
@@ -44,7 +48,7 @@ for symbol in INSTRUMENTS:
                 stop = entry - oanda.calculate_ATR(symbol, ATR_DAYS, 'D') * ATR_MULTIPLIER
                 oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
 
-        time.sleep(10)
+        time.sleep(1)
 
     except Exception as e:
         print(e)
