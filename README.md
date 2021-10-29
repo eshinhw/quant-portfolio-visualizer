@@ -29,7 +29,7 @@ In addition to technical components of the strategy, it also utilizies time-seri
 
 ### 5. Stop Loss for Risk Management
 
-- Trailing Stop @ 2 * ATR(252)
+- Trailing Stop @ ATR_MULTIPLIER * ATR(252)
 
 
 
