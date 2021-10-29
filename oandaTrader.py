@@ -29,7 +29,6 @@ class OandaTrader(Oanda):
         # https://www.youtube.com/watch?v=bNEpAOOulwk&ab_channel=KarenFoo
 
         account_balance = self.get_balance()
-        print('Account Balance: ', account_balance)
 
         if '_USD' in symbol:
             decimal = 4
@@ -37,26 +36,11 @@ class OandaTrader(Oanda):
 
             usdcad = self.get_current_ask_bid_price('USD_CAD')[0]
             us_dolloar_per_trade = (account_balance * risk) / usdcad
-            print("US Dollar / Trade: ", us_dolloar_per_trade)
-
             entry = round(entry, decimal)
             stop = round(stop, decimal)
             # sl_pips NOT in fractions but in decimal by multiplying multiple
             stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
-            print("Stop Loss in Pips: ", stop_loss_pips)
-            # print(entry, stop)
-            # print(abs(entry - stop))
-            # stop_loss_pips = float("{:.5f}".format(abs(entry - stop)))
-            # stop_loss_pips = float('%.5f' % (abs(entry - stop)))
-
-            risk_per_pip = us_dolloar_per_trade / stop_loss_pips
-            print("US Dollar Loss in Pips", risk_per_pip)
-
-            unit_size = round(us_dolloar_per_trade / (stop_loss_pips) * multiple, 0)
-            print(unit_size)
-            # unit_size = risk_per_pip / pip
-            # unit_size = round((risk_amt_per_trade_in_us / stop_loss_pips * acct_conversion_rate), 0)
-            # print("unit_size: ", unit_size)
+            unit_size = round(us_dolloar_per_trade / stop_loss_pips * multiple, 0)
             return (unit_size, entry, stop, stop_loss_pips)
 
         if '_JPY' in symbol:
@@ -65,17 +49,27 @@ class OandaTrader(Oanda):
             cadjpy = self.get_current_ask_bid_price('CAD_JPY')[0]
             jpy_per_trade = (account_balance * risk) * cadjpy
             # risk_amt_per_trade_in_jpy = risk_amt_per_trade /
-            # print(jpy_per_trade)
             entry = round(entry, decimal)
             stop = round(stop, decimal)
-            # print(abs(entry - stop))
             # sl_pips NOT in fractions but in decimal by multiplying multiple
             stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
-            # print(stop_loss_pips)
-
             unit_size = round((jpy_per_trade / stop_loss_pips * multiple), 0)
             print(unit_size)
             return (unit_size, entry, stop, stop_loss_pips)
+
+        if '_CAD' in symbol:
+            decimal = 4
+            multiple = 10000
+
+            cad_dolloar_per_trade = (account_balance * risk)
+
+            entry = round(entry, decimal)
+            stop = round(stop, decimal)
+            # sl_pips NOT in fractions but in decimal by multiplying multiple
+            stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
+            unit_size = round(cad_dolloar_per_trade / stop_loss_pips * multiple, 0)
+            return (unit_size, entry, stop, stop_loss_pips)
+
 
 
     def update_order_trade_status(self):
@@ -162,7 +156,7 @@ class OandaTrader(Oanda):
 
 
     def fx_instruments(self):
-        major = ['USD','AUD', 'NZD', 'GBP']
+        major = ['_USD','_CAD', '_JPY']
         fx_pairs = []
         if os.name == "nt":
             df = pd.read_csv('./instruments.csv')
@@ -175,8 +169,9 @@ class OandaTrader(Oanda):
         # print(low_spread)
         # print(df['Instrument'])
         for inst in low_spread['Instrument'].tolist():
-            if '_USD' in inst or '_JPY' in inst:
-                fx_pairs.append(inst)
+            for b in major:
+                if b in inst:
+                    fx_pairs.append(inst)
         return fx_pairs
 
     def create_buy_market_order(self, symbol):
@@ -313,4 +308,5 @@ if __name__ == '__main__':
     #ot.update_stop_loss('EUR_JPY', 130.00)
     #ot.create_limit_order(symbol, 128, 127, 0.01)
     # ot.cancel_all_orders()
-    ot.create_limit_order('CHF_JPY', 123, 122, 0.01)
+    #ot.create_limit_order('AUD_CAD', 0.9300, 0.9250, 0.01)
+    # print(ot.fx_instruments())
