@@ -9,12 +9,6 @@ Deleveop a trading bot deployed in Forex, CFD and Cryptocurrency markets to capi
 
 - [OANDA API](https://developer.oanda.com/)
 
-## Volatility Breakout Strategy (Larry Williams)
-
-The trading bot uses Volatility Breakout strategy developed by Larry Williams. You can find lots of free resources online. 
-
-In addition to technical components of the strategy, it also utilizies time-series data prediction model called **Prophet** developed by Facebook. Prophet is a procedure for forecasting time series data based on an additive model where non-linear trends are fit with yearly, weekly, and daily seasonality, plus holiday effects. You can learn more about this [here](https://facebook.github.io/prophet/).
-
 ## Trend Following + Momentum Strategy (Rob Carver)
 
 ### 1. Determine Investment Universe
@@ -32,3 +26,9 @@ In addition to technical components of the strategy, it also utilizies time-seri
 ### 4. Stop Loss for Risk Management
 
 - Trailing Stop @ ATR_MULTIPLIER * ATR(252)
+
+## Volatility Breakout Strategy (Larry Williams)
+
+The trading bot uses Volatility Breakout strategy developed by Larry Williams. You can find lots of free resources online. 
+
+In addition to technical components of the strategy, it also utilizies time-series data prediction model called **Prophet** developed by Facebook. Prophet is a procedure for forecasting time series data based on an additive model where non-linear trends are fit with yearly, weekly, and daily seasonality, plus holiday effects. You can learn more about this [here](https://facebook.github.io/prophet/).
