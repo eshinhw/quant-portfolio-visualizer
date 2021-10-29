@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import datetime as dt
 from oanda import Oanda
+from pprint import pprint
 from typing import List, Dict, Tuple
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.trades as trades
@@ -10,7 +11,7 @@ import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
-from oandapyV20.contrib.requests import MarketOrderRequest, LimitOrderRequest, StopOrderRequest
+from oandapyV20.contrib.requests import MarketOrderRequest, LimitOrderRequest, StopOrderRequest, StopLossOrderRequest
 
 RISK_PER_TRADE = 0.01
 
@@ -25,47 +26,55 @@ class OandaTrader(Oanda):
                             stop: float,
                             risk: float):
 
-        account_balance = self.get_balance()
-        # print(account_balance)
-        risk_amt_per_trade = account_balance * risk
+        # https://www.youtube.com/watch?v=bNEpAOOulwk&ab_channel=KarenFoo
 
-        # print(risk_amt_per_trade)
+        account_balance = self.get_balance()
+        print('Account Balance: ', account_balance)
 
         if '_USD' in symbol:
             decimal = 4
             multiple = 10000
 
+            usdcad = self.get_current_ask_bid_price('USD_CAD')[0]
+            us_dolloar_per_trade = (account_balance * risk) / usdcad
+            print("US Dollar / Trade: ", us_dolloar_per_trade)
+
             entry = round(entry, decimal)
             stop = round(stop, decimal)
+            # sl_pips NOT in fractions but in decimal by multiplying multiple
+            stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
+            print("Stop Loss in Pips: ", stop_loss_pips)
             # print(entry, stop)
             # print(abs(entry - stop))
             # stop_loss_pips = float("{:.5f}".format(abs(entry - stop)))
             # stop_loss_pips = float('%.5f' % (abs(entry - stop)))
 
-            stop_loss_pips = round(abs(entry - stop), decimal + 1)
-            # print(stop_loss_pips)
-            # print(type(stop_loss_pips))
-            (currentAsk, currentBid) = self.get_current_ask_bid_price(symbol)
-            acct_conversion_rate = 1 / currentAsk
-            unit_size = round((risk_amt_per_trade / stop_loss_pips *
-                            acct_conversion_rate), 0)
+            risk_per_pip = us_dolloar_per_trade / stop_loss_pips
+            print("US Dollar Loss in Pips", risk_per_pip)
+
+            unit_size = round(us_dolloar_per_trade / (stop_loss_pips) * multiple, 0)
+            print(unit_size)
+            # unit_size = risk_per_pip / pip
+            # unit_size = round((risk_amt_per_trade_in_us / stop_loss_pips * acct_conversion_rate), 0)
             # print("unit_size: ", unit_size)
             return (unit_size, entry, stop, stop_loss_pips)
 
         if '_JPY' in symbol:
             decimal = 2
             multiple = 100
-
+            cadjpy = self.get_current_ask_bid_price('CAD_JPY')[0]
+            jpy_per_trade = (account_balance * risk) * cadjpy
+            # risk_amt_per_trade_in_jpy = risk_amt_per_trade /
+            # print(jpy_per_trade)
             entry = round(entry, decimal)
             stop = round(stop, decimal)
             # print(abs(entry - stop))
-            stop_loss_pips = round(abs(entry - stop), decimal + 1)
+            # sl_pips NOT in fractions but in decimal by multiplying multiple
+            stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
             # print(stop_loss_pips)
 
-            (currentAsk, currentBid) = self.get_current_ask_bid_price(symbol)
-            acct_conversion_rate = currentAsk
-            unit_size = round((risk_amt_per_trade / stop_loss_pips *
-                            acct_conversion_rate), 0)
+            unit_size = round((jpy_per_trade / stop_loss_pips * multiple), 0)
+            print(unit_size)
             return (unit_size, entry, stop, stop_loss_pips)
 
 
@@ -143,12 +152,6 @@ class OandaTrader(Oanda):
         r = orders.OrderList(self.acctID)
         resp = self.client.request(r)
         return resp['orders']
-        print(resp)
-        symbols_list = []
-        for trade in resp['orders']:
-            symbols_list.append(trade['instrument'])
-        return symbols_list
-
 
     def get_trade_list(self) -> List[Dict]:
         """ Retrieve a list of open trades
@@ -156,12 +159,7 @@ class OandaTrader(Oanda):
         r = trades.TradesList(self.acctID)
         resp = self.client.request(r)
         return resp['trades']
-        symbols_list = []
-        #print(resp)
-        for trade in resp['trades']:
-            #print(trade)
-            symbols_list.append(trade['instrument'])
-        return symbols_list
+
 
     def fx_instruments(self):
         major = ['USD','AUD', 'NZD', 'GBP']
@@ -217,8 +215,8 @@ class OandaTrader(Oanda):
             order_body = {
             "order": {
                 "price": str(entry),
-                # "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
-                "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(distance)},
+                "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
+                # "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(distance)},
                 "timeInForce": "GTC",
                 "instrument": symbol,
                 "units": "-" + str(units),
@@ -234,8 +232,8 @@ class OandaTrader(Oanda):
             order_body = {
                 "order": {
                     "price": str(entry),
-                    # "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
-                    "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(distance)},
+                    "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
+                    # "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(distance)},
                     "timeInForce": "GTC",
                     "instrument": symbol,
                     "units": str(units),
@@ -245,6 +243,29 @@ class OandaTrader(Oanda):
             }
             r = orders.OrderCreate(self.acctID, data=order_body)
             self.client.request(r)
+
+    def update_stop_loss(self, symbol, new_stop_loss):
+        trades_list = self.get_trade_list()
+
+        for trade in trades_list:
+            pprint(trade)
+            if symbol == trade['instrument']:
+                sl_order_id = trade['stopLossOrder']['id']
+                trade_id = trade['id']
+                # cancel existing stop loss
+                self.cancel_single_order(sl_order_id)
+                # create new stop loss
+                order_body = {
+                    "order": {
+                        "type": "STOP_LOSS",
+                        "tradeID": trade_id,
+                        "price": str(new_stop_loss),
+                        "timeInForce": "GTC"
+                    }
+                }
+                r = orders.OrderCreate(self.acctID, data=order_body)
+                self.client.request(r)
+
 
     def create_stop_order(self, symbol, entry, stop):
         units = self.calculate_unit_size(symbol, entry, stop)
@@ -289,6 +310,7 @@ if __name__ == '__main__':
     # stop = entry - ot.calculate_ATR(symbol, 252, 'D') * 2
 
     # ot.create_limit_order(symbol, entry, stop)
-    print(ot.get_order_list())
-    print(ot.get_trade_list())
-    ot.cancel_all_orders()
+    #ot.update_stop_loss('EUR_JPY', 130.00)
+    #ot.create_limit_order(symbol, 128, 127, 0.01)
+    # ot.cancel_all_orders()
+    ot.create_limit_order('CHF_JPY', 123, 122, 0.01)
