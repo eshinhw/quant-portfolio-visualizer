@@ -5,7 +5,7 @@ from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
 # Login
 oanda = OandaTrader(OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID)
 
-INSTRUMENTS = oanda.fx_instruments()
+INSTRUMENTS = ['EUR_USD', 'USD_JPY']
 MA_LAGGING_DAYS = -5
 SMA = 60
 LMA = 252
@@ -13,10 +13,16 @@ ATR_DAYS = 252
 RISK_PER_TRADE = 0.01
 ATR_MULTIPLIER = 2.5
 
+count = 0
+
+oanda.create_limit_order('EUR_USD', 1.10, 1.09, 0.01)
+oanda.create_limit_order('USD_JPY', 108, 107, 0.01)
+
 # while True:
 for symbol in INSTRUMENTS:
+    count += 1
+    print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
     try:
-
         ohlc = oanda.get_ohlc(symbol, 365, 'D')
         ohlc['60MA'] = ohlc['Close'].rolling(SMA).mean()
         ohlc['252MA'] = ohlc['Close'].rolling(LMA).mean()
@@ -53,3 +59,5 @@ for symbol in INSTRUMENTS:
     except Exception as e:
         print(e)
         time.sleep(10)
+
+print("completed --" + time.ctime())

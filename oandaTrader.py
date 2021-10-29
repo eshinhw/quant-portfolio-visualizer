@@ -26,9 +26,10 @@ class OandaTrader(Oanda):
                             risk: float):
 
         account_balance = self.get_balance()
+        # print(account_balance)
         risk_amt_per_trade = account_balance * risk
 
-        print(risk_amt_per_trade)
+        # print(risk_amt_per_trade)
 
         if '_USD' in symbol:
             decimal = 4
@@ -36,19 +37,19 @@ class OandaTrader(Oanda):
 
             entry = round(entry, decimal)
             stop = round(stop, decimal)
-            print(entry, stop)
-            print(abs(entry - stop))
-            stop_loss_pips = float("{:.5f}".format(abs(entry - stop)))
+            # print(entry, stop)
+            # print(abs(entry - stop))
+            # stop_loss_pips = float("{:.5f}".format(abs(entry - stop)))
             # stop_loss_pips = float('%.5f' % (abs(entry - stop)))
 
             stop_loss_pips = round(abs(entry - stop), decimal + 1)
-            print(stop_loss_pips)
-            print(type(stop_loss_pips))
+            # print(stop_loss_pips)
+            # print(type(stop_loss_pips))
             (currentAsk, currentBid) = self.get_current_ask_bid_price(symbol)
-            acct_conversion_rate = 1 / ((currentAsk + currentBid) / 2)
+            acct_conversion_rate = 1 / currentAsk
             unit_size = round((risk_amt_per_trade / stop_loss_pips *
                             acct_conversion_rate), 0)
-            print("unit_size: ", unit_size)
+            # print("unit_size: ", unit_size)
             return (unit_size, entry, stop, stop_loss_pips)
 
         if '_JPY' in symbol:
@@ -57,12 +58,12 @@ class OandaTrader(Oanda):
 
             entry = round(entry, decimal)
             stop = round(stop, decimal)
-            print(abs(entry - stop))
+            # print(abs(entry - stop))
             stop_loss_pips = round(abs(entry - stop), decimal + 1)
-            print(stop_loss_pips)
+            # print(stop_loss_pips)
 
             (currentAsk, currentBid) = self.get_current_ask_bid_price(symbol)
-            acct_conversion_rate = ((currentAsk + currentBid) / 2)
+            acct_conversion_rate = currentAsk
             unit_size = round((risk_amt_per_trade / stop_loss_pips *
                             acct_conversion_rate), 0)
             return (unit_size, entry, stop, stop_loss_pips)
