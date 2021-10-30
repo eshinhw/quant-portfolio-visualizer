@@ -243,7 +243,6 @@ class OandaTrader(Oanda):
         trades_list = self.get_trade_list()
 
         for trade in trades_list:
-            pprint(trade)
             if symbol == trade['instrument']:
                 sl_order_id = trade['stopLossOrder']['id']
                 trade_id = trade['id']

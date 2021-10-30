@@ -94,15 +94,10 @@ class Oanda:
         df = self.get_ohlc(symbol, period, interval)
         return min(df['Low'])
 
-        df["Low_" + str(period)] = df["Low"].shift(1).rolling(window=period).min()
-        print(df)
-        return df["Low_" + str(period)].iloc[-1]
-
     def calculate_prev_max_high(self, symbol: str, period: int, interval: str):
         df = self.get_ohlc(symbol, period, interval)
         return max(df['High'])
-        df["High_" + str(period)] = df["High"].shift(1).rolling(window=period).max()
-        return df["High_" + str(period)].iloc[-1]
+
 
 
 if __name__ == "__main__":
