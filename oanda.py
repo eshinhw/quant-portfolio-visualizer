@@ -10,8 +10,6 @@ import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.contrib.requests as requests
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
-from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
-
 
 
 class Oanda:
@@ -94,11 +92,15 @@ class Oanda:
 
     def calculate_prev_min_low(self, symbol: str, period: int, interval: str):
         df = self.get_ohlc(symbol, period, interval)
+        return min(df['Low'])
+
         df["Low_" + str(period)] = df["Low"].shift(1).rolling(window=period).min()
+        print(df)
         return df["Low_" + str(period)].iloc[-1]
 
     def calculate_prev_max_high(self, symbol: str, period: int, interval: str):
         df = self.get_ohlc(symbol, period, interval)
+        return max(df['High'])
         df["High_" + str(period)] = df["High"].shift(1).rolling(window=period).max()
         return df["High_" + str(period)].iloc[-1]
 

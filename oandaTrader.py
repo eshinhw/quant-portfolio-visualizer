@@ -10,7 +10,7 @@ import oandapyV20.endpoints.trades as trades
 import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
-from demo_credentials import OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID
+from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID
 from oandapyV20.contrib.requests import MarketOrderRequest, LimitOrderRequest, StopOrderRequest, StopLossOrderRequest
 
 RISK_PER_TRADE = 0.01
@@ -297,6 +297,6 @@ class OandaTrader(Oanda):
             self.client.request(r)
 
 if __name__ == '__main__':
-    ot = OandaTrader(OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID)
+    ot = OandaTrader(OANDA_API_KEY, TEST_ACCOUNT_ID)
     symbol = 'EUR_JPY'
     ot.cancel_all_orders()
