@@ -4,7 +4,8 @@
 
 # pyTrader
 
-Deleveop a trading bot deployed in Forex, CFD and Cryptocurrency markets to capitalize short term or swing trading opportunities in systematic ways.
+Deleveop a trading bot to capitalize short term and swing trading opportunities in FX markets.
+
 ## Data Sources
 
 - [OANDA API](https://developer.oanda.com/)
@@ -16,8 +17,8 @@ Deleveop a trading bot deployed in Forex, CFD and Cryptocurrency markets to capi
 
 ### 2. Entry Rule: Moving Averages Crossover
 
-- Long @ 60MA golden cross 252MA
-- Short @ 60MA dead cross 252MA
+- Long @ H1 120MA golden cross H1 720MA
+- Short @ H1 120MA dead cross H1 720MA
 
 ### 3. Position Sizing
 
@@ -26,6 +27,7 @@ Deleveop a trading bot deployed in Forex, CFD and Cryptocurrency markets to capi
 ### 4. Stop Loss for Risk Management
 
 - Trailing Stop @ ATR_MULTIPLIER * ATR(252)
+- Structural Stop Loss Management based on Previous Support/Resistance
 
 ## Volatility Breakout Strategy (Larry Williams)
 
