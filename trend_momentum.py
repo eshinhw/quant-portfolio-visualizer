@@ -17,7 +17,8 @@ SMA = 120
 LMA = 720
 ATR_PERIOD = 480
 RISK_PER_TRADE = 0.01
-ATR_MULTIPLIER = 3
+SL_ATR_MULTIPLIER = 3
+PREV_KEY_LEVEL_BUFFER = 3
 
 # DAILY SETUP
 # INTERVAL = 'D'
@@ -58,7 +59,7 @@ def open_trades():
             # bullish cross over --> long
             if prev_sma < prev_lma and prev_sma > prev_lma:
                 entry = oanda.get_current_ask_bid_price(symbol)[0]
-                stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * ATR_MULTIPLIER
+                stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
                 if (entry > curr_lma) and (curr_low > curr_lma):
                     if (symbol not in trades_list) and (symbol not in orders_list):
                         oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
@@ -67,7 +68,7 @@ def open_trades():
             # bearish cross over --> short
             if prev_sma > prev_lma and curr_sma < curr_lma:
                 entry = oanda.get_current_ask_bid_price(symbol)[1]
-                stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * ATR_MULTIPLIER
+                stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
                 if (entry < curr_lma) and (curr_high < curr_lma):
                     if (symbol not in trades_list) and (symbol not in orders_list):
                         oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
@@ -85,23 +86,21 @@ def manage_trades():
         entry = float(trade['price'])
         sl = float(trade['stopLossOrder']['price'])
         tp = float(trade['takeProfitOrder']['price'])
-
-        print(trade['openTime'][:trade['openTime'].index('.')].replace('T', ' '))
-
-        open_time = dt.datetime.strptime(trade['openTime'][:trade['openTime'].index('.')].replace('T', ' '), "%Y-%m-%d %H:%M:%S")
-        print(open_time)
-        print(type(open_time))
+        open_time = dt.datetime.strptime(trade['openTime'][:trade['openTime'].index('.')].replace('T', ' '),
+                                         "%Y-%m-%d %H:%M:%S")
+        # print(open_time)
+        # print(type(open_time))
 
         curr_time = dt.datetime.now()
-        print(curr_time)
+        # print(curr_time)
         diff = curr_time - open_time
         hours_diff = round(diff.seconds / 3600, 0)
         days_diff = round(diff.days, 0)
         #print(type(diff.days))
-        print(curr_time)
-        print(type(curr_time))
+        # print(curr_time)
+        # print(type(curr_time))
 
-        print(hours_diff, days_diff)
+        # print(hours_diff, days_diff)
 
 
         # print(trade)
@@ -116,10 +115,10 @@ def manage_trades():
             profit_pips = abs(curr_price - entry)
             # print(profit_pips)
             # print(sl_pips)
-            recent_low = oanda.calculate_prev_min_low(instrument, days_diff+10, 'D')
+            recent_low = oanda.calculate_prev_min_low(instrument, days_diff+PREV_KEY_LEVEL_BUFFER, 'D')
             atr = oanda.calculate_ATR(instrument, int(hours_diff), 'H1')
-            print(atr)
-            print(recent_low)
+            # print(atr)
+            # print(recent_low)
             support = recent_low - atr
 
             #print(recent_low)
@@ -128,48 +127,52 @@ def manage_trades():
                 oanda.update_stop_loss(instrument, entry)
             elif profit_pips > 4 * sl_pips:
                 # move stop loss to 1:1
-                oanda.update_stop_loss(instrument, entry + sl_pips)
+                oanda.update_stop_loss(instrument, max(entry + sl_pips, support))
             elif profit_pips > 5 * sl_pips:
                 # move stop loss to 2:1
-                oanda.update_stop_loss(instrument, entry + (2 * sl_pips))
+                oanda.update_stop_loss(instrument, max(entry + (2 * sl_pips), support))
             elif profit_pips > 6 * sl_pips:
                 # move stop loss to 3:1
-                oanda.update_stop_loss(instrument, entry + (3 * sl_pips))
+                oanda.update_stop_loss(instrument, max(entry + (3 * sl_pips), support))
             elif profit_pips > 7 * sl_pips:
                 # move stop loss to 4:1
-                oanda.update_stop_loss(instrument, entry + (4 * sl_pips))
+                oanda.update_stop_loss(instrument, max(entry + (4 * sl_pips), support))
             elif profit_pips > 8 * sl_pips:
                 # move stop loss to 5:1
-                oanda.update_stop_loss(instrument, entry + (5 * sl_pips))
+                oanda.update_stop_loss(instrument, max(entry + (5 * sl_pips), support))
             elif profit_pips > 9 * sl_pips:
                 # move stop loss to 6:1
-                oanda.update_stop_loss(instrument, entry + (6 * sl_pips))
+                oanda.update_stop_loss(instrument, max(entry + (6 * sl_pips), support))
         # short trade
         else:
             curr_price = oanda.get_current_ask_bid_price(instrument)[0]
             profit_pips = abs(curr_price - entry)
+            recent_high = oanda.calculate_prev_max_high(instrument, days_diff+PREV_KEY_LEVEL_BUFFER, 'D')
+            atr = oanda.calculate_ATR(instrument, int(hours_diff), 'H1')
+            # print(atr)
+            # print(recent_low)
+            resistance = recent_high + atr
             if profit_pips > 3 * sl_pips:
                 # move stop loss to BE
                 oanda.update_stop_loss(instrument, entry)
             elif profit_pips > 4 * sl_pips:
                 # move stop loss to 1:1
-                oanda.update_stop_loss(instrument, entry - sl_pips)
+                oanda.update_stop_loss(instrument, min(entry - sl_pips, resistance))
             elif profit_pips > 5 * sl_pips:
                 # move stop loss to 2:1
-                oanda.update_stop_loss(instrument, entry - (2 * sl_pips))
+                oanda.update_stop_loss(instrument, min(entry - (2 * sl_pips), resistance))
             elif profit_pips > 6 * sl_pips:
                 # move stop loss to 3:1
-                oanda.update_stop_loss(instrument, entry - (3 * sl_pips))
+                oanda.update_stop_loss(instrument, min(entry - (3 * sl_pips), resistance))
             elif profit_pips > 7 * sl_pips:
                 # move stop loss to 4:1
-                oanda.update_stop_loss(instrument, entry - (4 * sl_pips))
+                oanda.update_stop_loss(instrument, min(entry - (4 * sl_pips), resistance))
             elif profit_pips > 8 * sl_pips:
                 # move stop loss to 5:1
-                oanda.update_stop_loss(instrument, entry - (5 * sl_pips))
+                oanda.update_stop_loss(instrument, min(entry - (5 * sl_pips), resistance))
             elif profit_pips > 9 * sl_pips:
                 # move stop loss to 6:1
-                oanda.update_stop_loss(instrument, entry - (6 * sl_pips))
-
+                oanda.update_stop_loss(instrument, min(entry - (6 * sl_pips), resistance))
 
 
 
