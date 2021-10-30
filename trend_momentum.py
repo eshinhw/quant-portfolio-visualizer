@@ -1,10 +1,12 @@
 import time
+import math
+import datetime as dt
 from pprint import pprint
 from oandaTrader import OandaTrader
-from demo_credentials import OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID
+from demo_credentials import OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID, TEST_ACCOUNT_ID
 
 # Login
-oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
+oanda = OandaTrader(OANDA_API_KEY, TEST_ACCOUNT_ID)
 
 INSTRUMENTS = oanda.fx_instruments()
 
@@ -83,11 +85,44 @@ def manage_trades():
         entry = float(trade['price'])
         sl = float(trade['stopLossOrder']['price'])
         tp = float(trade['takeProfitOrder']['price'])
+
+        print(trade['openTime'][:trade['openTime'].index('.')].replace('T', ' '))
+
+        open_time = dt.datetime.strptime(trade['openTime'][:trade['openTime'].index('.')].replace('T', ' '), "%Y-%m-%d %H:%M:%S")
+        print(open_time)
+        print(type(open_time))
+
+        curr_time = dt.datetime.now()
+        print(curr_time)
+        diff = curr_time - open_time
+        hours_diff = round(diff.seconds / 3600, 0)
+        days_diff = round(diff.days, 0)
+        #print(type(diff.days))
+        print(curr_time)
+        print(type(curr_time))
+
+        print(hours_diff, days_diff)
+
+
+        # print(trade)
         sl_pips = abs(entry - sl)
         # long trade
         if sl < entry:
+            # print(instrument)
             curr_price = oanda.get_current_ask_bid_price(instrument)[1]
+            # print(curr_price)
+            # print(entry)
+            # print(sl)
             profit_pips = abs(curr_price - entry)
+            # print(profit_pips)
+            # print(sl_pips)
+            recent_low = oanda.calculate_prev_min_low(instrument, days_diff+10, 'D')
+            atr = oanda.calculate_ATR(instrument, int(hours_diff), 'H1')
+            print(atr)
+            print(recent_low)
+            support = recent_low - atr
+
+            #print(recent_low)
             if profit_pips > 3 * sl_pips:
                 # move stop loss to BE
                 oanda.update_stop_loss(instrument, entry)
@@ -139,8 +174,8 @@ def manage_trades():
 
 
 
-#pprint.pprint(trades_list)
-#pprint.pprint(orders_list)
+pprint(trades_list)
+pprint(orders_list)
 
 manage_trades()
 print("Run Successfully --------- " + time.ctime())
