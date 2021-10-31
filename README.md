@@ -10,6 +10,10 @@ Deleveop a trading bot to capitalize short term and swing trading opportunities 
 
 - [OANDA API](https://developer.oanda.com/)
 
+## Trading Automation 
+
+- [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
+
 ## Trend Following + Momentum Strategy (Rob Carver)
 
 ### 1. Determine Investment Universe
