@@ -27,7 +27,7 @@ SMA = 120
 LMA = 720
 ATR_PERIOD = 480
 RISK_PER_TRADE = 0.005
-SL_ATR_MULTIPLIER = 3
+SL_MULTIPLIER = 3
 PREV_KEY_LEVEL_BUFFER = 3
 WAIT_PERIOD = 12
 ENTRY_STOP_BUFFER = 3
@@ -102,10 +102,10 @@ def open_trades():
 
                 entry = round(curr_high + (ENTRY_STOP_BUFFER / multiple), decimal)
 
-                stop_with_atr = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
+                stop_with_atr = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_MULTIPLIER
                 stop_with_low = curr_low - (ENTRY_STOP_BUFFER / multiple)
 
-                stop = round(max(stop_with_atr, stop_with_low), decimal)
+                stop = round(min(stop_with_atr, stop_with_low), decimal)
 
                 if (symbol not in SYMBOLS_TRADES) and (symbol not in SYMBOLS_ORDERS):
                     oanda.create_stop_order(symbol, entry, stop, RISK_PER_TRADE)
@@ -116,10 +116,10 @@ def open_trades():
                 curr_low = oanda.get_current_low(symbol, WAIT_PERIOD, INTERVAL)
                 curr_high = oanda.get_current_high(symbol, WAIT_PERIOD, INTERVAL)
 
-                entry = round(curr_low - (ENTRY_STOP_BUFFER / DECIMAL_TABLE[symbol]['multiple']), decimal)
-                stop_with_atr = entry + oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
-                stop_with_high = curr_high + (ENTRY_STOP_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
-                stop = round(min(stop_with_atr, stop_with_high), decimal)
+                entry = round(curr_low - (ENTRY_STOP_BUFFER / multiple), decimal)
+                stop_with_atr = entry + oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_MULTIPLIER
+                stop_with_high = curr_high + (ENTRY_STOP_BUFFER / multiple)
+                stop = round(max(stop_with_atr, stop_with_high), decimal)
 
                 if (symbol not in SYMBOLS_TRADES) and (symbol not in SYMBOLS_ORDERS):
                     oanda.create_stop_order(symbol, entry, stop, RISK_PER_TRADE)

@@ -203,11 +203,11 @@ class OandaTrader(Oanda):
             if '_USD' in inst or '_CAD' in inst:
                 table[inst] = {}
                 table[inst]['decimal'] = 4
-                table[inst]['multiple'] = 10 * 4
+                table[inst]['multiple'] = 10 ** 4
             if '_JPY' in inst:
                 table[inst] = {}
                 table[inst]['decimal'] = 2
-                table[inst]['multiple'] = 10 * 2
+                table[inst]['multiple'] = 10 ** 2
         return table
 
     def create_buy_market_order(self, symbol):
