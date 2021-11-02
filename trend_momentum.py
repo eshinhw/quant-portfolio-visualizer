@@ -17,7 +17,6 @@ print(INSTRUMENTS)
 
 # 1H SETUP
 INTERVAL = 'H1'
-MA_LAGGING_PERIOD = -36
 SMA = 120
 LMA = 720
 ATR_PERIOD = 480
@@ -56,13 +55,6 @@ def symbols_in_trades():
                 symbols.append(trade['instrument'])
     return symbols
 
-orders_list = symbols_in_orders()
-trades_list = symbols_in_trades()
-
-#pprint(trades_list)
-
-#pprint(orders_list)
-
 # open trades
 
 def open_trades():
@@ -75,36 +67,25 @@ def open_trades():
             ohlc[f'{SMA}MA'] = ohlc['Close'].rolling(SMA).mean()
             ohlc[f'{LMA}MA'] = ohlc['Close'].rolling(LMA).mean()
 
-            prev_sma = ohlc.iloc[MA_LAGGING_PERIOD][f'{SMA}MA']
-            prev_lma = ohlc.iloc[MA_LAGGING_PERIOD][f'{LMA}MA']
+            prev_sma = ohlc.iloc[-2][f'{SMA}MA']
+            prev_lma = ohlc.iloc[-2][f'{LMA}MA']
             curr_sma = ohlc.iloc[-1][f'{SMA}MA']
             curr_lma = ohlc.iloc[-1][f'{LMA}MA']
 
-            #print(ohlc)
-
             curr_low = oanda.get_current_low(symbol, 5, INTERVAL)
             curr_high = oanda.get_current_high(symbol, 5, INTERVAL)
-            print(symbol)
-            crossover_date = ohlc[ohlc[f'{SMA}MA'] < ohlc[f'{LMA}MA']]
-            after = ohlc[ohlc[f'{SMA}MA'] > ohlc[f'{LMA}MA']]
-            print(crossover_date)
-            print(after)
-
-            # print('stop_pips:', oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * ATR_MULTIPLIER)
 
             # bullish cross over --> long
             if prev_sma < prev_lma and curr_sma > curr_lma:
-                print('long trade')
                 entry = oanda.get_current_ask_bid_price(symbol)[0]
                 stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
-                if (entry > curr_lma) and (curr_low > curr_lma):
+                if (entry > curr_sma) and (curr_low > curr_sma):
                     if (symbol not in trades_list) and (symbol not in orders_list):
                         oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
                         print(f"Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
 
             # bearish cross over --> short
             if prev_sma > prev_lma and curr_sma < curr_lma:
-                print('short trade')
                 entry = oanda.get_current_ask_bid_price(symbol)[1]
                 stop = entry + oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
                 if (entry < curr_lma) and (curr_high < curr_lma):
@@ -169,10 +150,10 @@ def manage_trades():
             rr_factor = profit_pips / sl_pips
             manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance)
 
-
-#pprint(orders_list)
-
+orders_list = symbols_in_orders()
+trades_list = symbols_in_trades()
 
 open_trades()
 manage_trades()
+
 print("Run Successfully --------- " + time.ctime() + "---------------------------------")
