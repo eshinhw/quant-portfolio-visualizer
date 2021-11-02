@@ -7,7 +7,7 @@ from demo_credentials import OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID, TEST_ACC
 
 # Login
 if os.name == 'nt':
-    oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
+    oanda = OandaTrader(OANDA_API_KEY, TEST_ACCOUNT_ID)
 if os.name == 'posix':
     oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
 
@@ -122,7 +122,6 @@ def manage_trades():
         instrument = trade['instrument']
         entry = float(trade['price'])
         sl = float(trade['stopLossOrder']['price'])
-        tp = float(trade['takeProfitOrder']['price'])
         open_time = dt.datetime.strptime(trade['openTime'][:trade['openTime'].index('.')].replace('T', ' '),
                                          "%Y-%m-%d %H:%M:%S")
         curr_time = dt.datetime.now()
@@ -130,9 +129,9 @@ def manage_trades():
         hours_diff = round(diff.seconds / 3600, 0)
         days_diff = round(diff.days, 0)
         sl_pips = abs(entry - sl)
+
         # long trade
         if sl < entry:
-            # print(instrument)
             curr_price = oanda.get_current_ask_bid_price(instrument)[1]
             profit_pips = abs(curr_price - entry)
             recent_low = oanda.calculate_prev_min_low(instrument, days_diff+PREV_KEY_LEVEL_BUFFER, 'D')
