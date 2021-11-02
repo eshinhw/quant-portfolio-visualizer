@@ -31,7 +31,7 @@ Deleveop a trading bot to capitalize short term and swing trading opportunities 
 
 ### 4. Stop Loss for Risk Management
 
-- Trailing Stop @ ATR_MULTIPLIER * ATR(252)
+- Trailing Stop with Average True Range (ATR)
 - Structural Stop Loss Management based on Previous Support/Resistance
 
 ## Volatility Breakout Strategy (Larry Williams)
