@@ -49,9 +49,11 @@ def bullish_crossover_test(symbol):
     ohlc[f'{LMA}MA'] = ohlc['Close'].rolling(LMA).mean()
 
     curr_date = ohlc.index[-1]
-    bullish_crossover_date = ohlc[ohlc[f'{SMA}MA'] < ohlc[f'{LMA}MA']].index[-1] + dt.timedelta(hours=1)
-    entry_date = bullish_crossover_date + dt.timedelta(hours=WAIT_PERIOD)
-
+    try:
+        bullish_crossover_date = ohlc[ohlc[f'{SMA}MA'] < ohlc[f'{LMA}MA']].index[-1] + dt.timedelta(hours=1)
+        entry_date = bullish_crossover_date + dt.timedelta(hours=WAIT_PERIOD)
+    except:
+        return False
     # print(type(curr_date))
     # print(curr_date)
     # print(bullish_crossover_date)
@@ -59,61 +61,69 @@ def bullish_crossover_test(symbol):
     # print(curr_date == entry_date)
 
     return curr_date == entry_date
-    #print(bullish_crossover_date)dfdfd
+
+def bearish_crossover_test(symbol):
+    # print(symbol)
+    ohlc = oanda.get_ohlc(symbol, LMA * 2, INTERVAL)
+    ohlc[f'{SMA}MA'] = ohlc['Close'].rolling(SMA).mean()
+    ohlc[f'{LMA}MA'] = ohlc['Close'].rolling(LMA).mean()
+
+    curr_date = ohlc.index[-1]
+
+    try:
+        bearish_crossover_date = ohlc[ohlc[f'{SMA}MA'] > ohlc[f'{LMA}MA']].index[-1] + dt.timedelta(hours=1)
+        entry_date = bearish_crossover_date + dt.timedelta(hours=WAIT_PERIOD)
+    except:
+        # print('return False')
+        return False
+
+    # print(type(curr_date))
+    # print(curr_date)
+    # print(bearish_crossover_date)
+    # print(entry_date)
+    # print(curr_date == entry_date)
+
+    return curr_date == entry_date
 
 def open_trades():
     count = 0
     for symbol in INSTRUMENTS:
         count += 1
-        # print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
-        print("-----------------")
+        print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
+
+        decimal = DECIMAL_TABLE[symbol]['decimal']
+        multiple = DECIMAL_TABLE[symbol]['multiple']
+
         try:
-            bullish_crossover_test(symbol)
-            # crossover test
-            ohlc = oanda.get_ohlc(symbol, LMA * 2, INTERVAL)
-            ohlc[f'{SMA}MA'] = ohlc['Close'].rolling(SMA).mean()
-            ohlc[f'{LMA}MA'] = ohlc['Close'].rolling(LMA).mean()
-
-            prev_sma = ohlc.iloc[-2][f'{SMA}MA']
-            prev_lma = ohlc.iloc[-2][f'{LMA}MA']
-            curr_sma = ohlc.iloc[-1][f'{SMA}MA']
-            curr_lma = ohlc.iloc[-1][f'{LMA}MA']
-
-            #print(ohlc.index[-1])
-
-
-
             # bullish cross over --> long
             if bullish_crossover_test(symbol):
-                """
-                Wait period for optimal entry and noise filtering
-                1) wait 12 H1 bars
-                2) find high and low of wait period
-                3) breakout entry
-                """
-
                 curr_low = oanda.get_current_low(symbol, WAIT_PERIOD, INTERVAL)
                 curr_high = oanda.get_current_high(symbol, WAIT_PERIOD, INTERVAL)
 
+                entry = round(curr_high + (ENTRY_STOP_BUFFER / multiple), decimal)
 
-                entry = curr_high + (ENTRY_STOP_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
                 stop_with_atr = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
-                stop_with_low = curr_low - (ENTRY_STOP_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                stop_with_low = curr_low - (ENTRY_STOP_BUFFER / multiple)
 
-                stop = min(stop_with_atr, stop_with_low)
+                stop = round(max(stop_with_atr, stop_with_low), decimal)
 
                 if (symbol not in SYMBOLS_TRADES) and (symbol not in SYMBOLS_ORDERS):
-                    oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
+                    oanda.create_stop_order(symbol, entry, stop, RISK_PER_TRADE)
                     print(f"Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
 
             # bearish cross over --> short
-            if prev_sma > prev_lma and curr_sma < curr_lma:
-                entry = oanda.get_current_ask_bid_price(symbol)[1]
-                stop = entry + oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
-                if (entry < curr_lma) and (curr_high < curr_lma):
-                    if (symbol not in SYMBOLS_TRADES) and (symbol not in SYMBOLS_ORDERS):
-                        oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
-                        print(f"Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
+            if bearish_crossover_test(symbol):
+                curr_low = oanda.get_current_low(symbol, WAIT_PERIOD, INTERVAL)
+                curr_high = oanda.get_current_high(symbol, WAIT_PERIOD, INTERVAL)
+
+                entry = round(curr_low - (ENTRY_STOP_BUFFER / DECIMAL_TABLE[symbol]['multiple']), decimal)
+                stop_with_atr = entry + oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
+                stop_with_high = curr_high + (ENTRY_STOP_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                stop = round(min(stop_with_atr, stop_with_high), decimal)
+
+                if (symbol not in SYMBOLS_TRADES) and (symbol not in SYMBOLS_ORDERS):
+                    oanda.create_stop_order(symbol, entry, stop, RISK_PER_TRADE)
+                    print(f"Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
 
             time.sleep(1)
 
