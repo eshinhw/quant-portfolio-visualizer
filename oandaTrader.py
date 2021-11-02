@@ -305,9 +305,8 @@ class OandaTrader(Oanda):
                 self.client.request(r)
 
 
-    def create_stop_order(self, symbol, entry, stop):
-        units = self.calculate_unit_size(symbol, entry, stop)
-
+    def create_stop_order(self, symbol, entry, stop, risk):
+        (units, entry, stop) = self.calculate_unit_size(symbol, entry, stop, risk)
         # Sell Stop
         if entry < stop:
             order_body = {
