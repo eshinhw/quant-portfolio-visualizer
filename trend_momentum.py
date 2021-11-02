@@ -7,7 +7,7 @@ from demo_credentials import OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID, TEST_ACC
 
 # Login
 if os.name == 'nt':
-    oanda = OandaTrader(OANDA_API_KEY, TEST_ACCOUNT_ID)
+    oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
 if os.name == 'posix':
     oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
 
@@ -32,10 +32,25 @@ PREV_KEY_LEVEL_BUFFER = 3
 # RISK_PER_TRADE = 0.01
 # ATR_MULTIPLIER = 2.5
 
+def symbols_in_orders():
+    orders = oanda.get_order_list()
+    symbols = []
+    for order in orders:
+        if order['instrument'] not in symbols:
+            symbols.append(order['instrument'])
+    return symbols
 
+def symbols_in_trades():
+    trades = oanda.get_trade_list()
+    symbols = []
+    for trade in trades:
+        if trade['instrument'] not in symbols:
+            symbols.append(trade['instrument'])
+    return symbols
 
-trades_list = oanda.get_trade_list()
-orders_list = oanda.get_order_list()
+trades_list = symbols_in_trades()
+orders_list = symbols_in_orders()
+
 
 # open trades
 
@@ -84,14 +99,20 @@ def open_trades():
 
 def manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support):
     if rr_factor >= 2 and rr_factor < 3:
+        # if risk reward factor is 2.x, move stoploss to break even
         oanda.update_stop_loss(instrument, entry)
     else:
+        # if rr_factor is 3.x, change stop loss to 1.x (achieved 1:1 ratio)
+        # if rr_factor is 4.x, change stop loss to 2.x (achieved 2:1 ratio)
         oanda.update_stop_loss(instrument, max(entry + (rr_factor - 2) * sl_pips, support))
 
 def manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance):
     if rr_factor >= 2 and rr_factor < 3:
+        # if risk reward factor is 2.x, move stoploss to break even
         oanda.update_stop_loss(instrument, entry)
     else:
+        # if rr_factor is 3.x, change stop loss to 1.x (achieved 1:1 ratio)
+        # if rr_factor is 4.x, change stop loss to 2.x (achieved 2:1 ratio)
         oanda.update_stop_loss(instrument, min(entry - (rr_factor - 2) * sl_pips, resistance))
 
 def manage_trades():
@@ -129,9 +150,8 @@ def manage_trades():
             manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance)
 
 
+pprint(orders_list)
 
-# pprint(trades_list)
-# pprint(orders_list)
 
 open_trades()
 manage_trades()

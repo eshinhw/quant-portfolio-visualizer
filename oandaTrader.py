@@ -207,6 +207,7 @@ class OandaTrader(Oanda):
         #print(entry-stop)
         # Sell Limit
         if entry < stop:
+            print('sell limit')
             order_body = {
             "order": {
                 "price": str(entry),
@@ -219,11 +220,13 @@ class OandaTrader(Oanda):
                 "positionFill": "DEFAULT",
                 }
             }
+            print(order_body)
             r = orders.OrderCreate(self.acctID, data=order_body)
             self.client.request(r)
 
         # Buy Limit
         else:
+            print('buy limit')
             order_body = {
                 "order": {
                     "price": str(entry),
@@ -236,6 +239,7 @@ class OandaTrader(Oanda):
                     "positionFill": "DEFAULT",
                 }
             }
+            print(order_body)
             r = orders.OrderCreate(self.acctID, data=order_body)
             self.client.request(r)
 
