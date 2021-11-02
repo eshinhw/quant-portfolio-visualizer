@@ -51,10 +51,11 @@ class OandaTrader(Oanda):
             # risk_amt_per_trade_in_jpy = risk_amt_per_trade /
             entry = round(entry, decimal)
             stop = round(stop, decimal)
+            print(entry,stop)
             # sl_pips NOT in fractions but in decimal by multiplying multiple
             stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
             unit_size = round((jpy_per_trade / stop_loss_pips * multiple), 0)
-            print(unit_size)
+            #print(unit_size)
             return (unit_size, entry, stop, stop_loss_pips)
 
         if '_CAD' in symbol:
@@ -156,8 +157,10 @@ class OandaTrader(Oanda):
 
 
     def fx_instruments(self):
-        major = ['_USD','_CAD', '_JPY']
-        fx_pairs = []
+        quote = ['_USD','_CAD', '_JPY']
+        major = ['AUD_', 'USD_', 'NZD_', 'CAD_', 'EUR_']
+        quote_pairs = []
+        major_pairs = []
         if os.name == "nt":
             df = pd.read_csv('./instruments.csv')
         if os.name == "posix":
@@ -169,10 +172,15 @@ class OandaTrader(Oanda):
         # print(low_spread)
         # print(df['Instrument'])
         for inst in low_spread['Instrument'].tolist():
-            for b in major:
-                if b in inst:
-                    fx_pairs.append(inst)
-        return fx_pairs
+            for q in quote:
+                if q in inst:
+                    quote_pairs.append(inst)
+
+        for pair in quote_pairs:
+            for m in major:
+                if m in pair:
+                    major_pairs.append(pair)
+        return major_pairs
 
     def create_buy_market_order(self, symbol):
         order_body = {
@@ -204,7 +212,11 @@ class OandaTrader(Oanda):
 
     def create_limit_order(self, symbol, entry, stop, risk):
         (units, entry, stop, distance) = self.calculate_unit_size(symbol, entry, stop, risk)
-        #print(entry-stop)
+        print(entry-stop)
+        print("entry:", entry)
+        print('stop:', stop)
+        print(entry < stop)
+        print(entry > stop)
         # Sell Limit
         if entry < stop:
             print('sell limit')

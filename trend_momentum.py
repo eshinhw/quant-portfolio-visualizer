@@ -13,6 +13,8 @@ if os.name == 'posix':
 
 INSTRUMENTS = oanda.fx_instruments()
 
+print(INSTRUMENTS)
+
 # 1H SETUP
 INTERVAL = 'H1'
 MA_LAGGING_PERIOD = -36
@@ -35,22 +37,31 @@ PREV_KEY_LEVEL_BUFFER = 3
 def symbols_in_orders():
     orders = oanda.get_order_list()
     symbols = []
-    for order in orders:
-        if order['instrument'] not in symbols:
-            symbols.append(order['instrument'])
+    # pprint(orders)
+    if orders:
+        for order in orders:
+            # pprint(order)
+            if order['type'] == 'LIMIT' and order['instrument'] not in symbols:
+                symbols.append(order['instrument'])
     return symbols
 
 def symbols_in_trades():
     trades = oanda.get_trade_list()
     symbols = []
-    for trade in trades:
-        if trade['instrument'] not in symbols:
-            symbols.append(trade['instrument'])
+    #pprint(trades)
+    if trades:
+        for trade in trades:
+            #pprint(trade)
+            if trade['instrument'] not in symbols:
+                symbols.append(trade['instrument'])
     return symbols
 
-trades_list = symbols_in_trades()
 orders_list = symbols_in_orders()
+trades_list = symbols_in_trades()
 
+#pprint(trades_list)
+
+#pprint(orders_list)
 
 # open trades
 
@@ -76,6 +87,7 @@ def open_trades():
 
             # bullish cross over --> long
             if prev_sma < prev_lma and prev_sma > prev_lma:
+                print('long trade')
                 entry = oanda.get_current_ask_bid_price(symbol)[0]
                 stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
                 if (entry > curr_lma) and (curr_low > curr_lma):
@@ -85,8 +97,9 @@ def open_trades():
 
             # bearish cross over --> short
             if prev_sma > prev_lma and curr_sma < curr_lma:
+                print('short trade')
                 entry = oanda.get_current_ask_bid_price(symbol)[1]
-                stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
+                stop = entry + oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
                 if (entry < curr_lma) and (curr_high < curr_lma):
                     if (symbol not in trades_list) and (symbol not in orders_list):
                         oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
@@ -150,7 +163,7 @@ def manage_trades():
             manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance)
 
 
-pprint(orders_list)
+#pprint(orders_list)
 
 
 open_trades()
