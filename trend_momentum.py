@@ -13,7 +13,7 @@ if os.name == 'posix':
 
 INSTRUMENTS = oanda.fx_instruments()
 
-print(INSTRUMENTS)
+# print(INSTRUMENTS)
 
 # 1H SETUP
 INTERVAL = 'H1'
