@@ -12,6 +12,7 @@ if os.name == 'posix':
     oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
 
 INSTRUMENTS = oanda.fx_instruments()
+
 ORDERS_LIST = oanda.get_order_list()
 TRADES_LIST = oanda.get_trade_list()
 
@@ -86,7 +87,7 @@ def manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support):
         # if risk reward factor is 2.x, move stoploss to break even
         oanda.update_stop_loss(instrument, entry)
     else:
-        new_sl = round(entry + (rr_factor - 2) * sl_pips, DECIMAL_TABLE[instrument])
+        new_sl = round(entry + (rr_factor - 2) * sl_pips, DECIMAL_TABLE[instrument]['decimal'])
         # if rr_factor is 3.x, change stop loss to 1.x (achieved 1:1 ratio)
         # if rr_factor is 4.x, change stop loss to 2.x (achieved 2:1 ratio)
         oanda.update_stop_loss(instrument, max(new_sl, support))
@@ -96,7 +97,7 @@ def manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance):
         # if risk reward factor is 2.x, move stoploss to break even
         oanda.update_stop_loss(instrument, entry)
     else:
-        new_sl = round(entry - (rr_factor - 2) * sl_pips, DECIMAL_TABLE[instrument])
+        new_sl = round(entry - (rr_factor - 2) * sl_pips, DECIMAL_TABLE[instrument]['decimal'])
         # if rr_factor is 3.x, change stop loss to 1.x (achieved 1:1 ratio)
         # if rr_factor is 4.x, change stop loss to 2.x (achieved 2:1 ratio)
         oanda.update_stop_loss(instrument, min(new_sl, resistance))
@@ -122,7 +123,7 @@ def manage_trades():
             profit_pips = abs(curr_price - entry)
             recent_low = oanda.calculate_prev_min_low(instrument, days_diff+PREV_KEY_LEVEL_BUFFER, 'D')
             atr = oanda.calculate_ATR(instrument, int(hours_diff), 'H1')
-            support = round(recent_low - atr, DECIMAL_TABLE[instrument])
+            support = round(recent_low - atr, DECIMAL_TABLE[instrument]['decimal'])
             rr_factor = profit_pips / sl_pips
             manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support)
 
@@ -132,11 +133,9 @@ def manage_trades():
             profit_pips = abs(curr_price - entry)
             recent_high = oanda.calculate_prev_max_high(instrument, days_diff+PREV_KEY_LEVEL_BUFFER, 'D')
             atr = oanda.calculate_ATR(instrument, int(hours_diff), 'H1')
-            resistance = round(recent_high + atr, DECIMAL_TABLE[instrument])
+            resistance = round(recent_high + atr, DECIMAL_TABLE[instrument]['decimal'])
             rr_factor = profit_pips / sl_pips
             manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance)
-
-
 
 open_trades()
 manage_trades()

@@ -13,8 +13,6 @@ import oandapyV20.endpoints.instruments as instruments
 from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID
 from oandapyV20.contrib.requests import MarketOrderRequest, LimitOrderRequest, StopOrderRequest, StopLossOrderRequest
 
-RISK_PER_TRADE = 0.01
-
 class OandaTrader(Oanda):
 
     def __init__(self, api_key, accountID) -> None:
@@ -29,11 +27,12 @@ class OandaTrader(Oanda):
         # https://www.youtube.com/watch?v=bNEpAOOulwk&ab_channel=KarenFoo
 
         account_balance = self.get_balance()
+        dec_table = self.create_decimal_table()
+
+        decimal = dec_table[symbol]['decimal']
+        multiple = dec_table[symbol]['multiple']
 
         if '_USD' in symbol:
-            decimal = 4
-            multiple = 10000
-
             usdcad = self.get_current_ask_bid_price('USD_CAD')[0]
             us_dolloar_per_trade = (account_balance * risk) / usdcad
             entry = round(entry, decimal)
@@ -44,8 +43,6 @@ class OandaTrader(Oanda):
             return (unit_size, entry, stop, stop_loss_pips)
 
         if '_JPY' in symbol:
-            decimal = 2
-            multiple = 100
             cadjpy = self.get_current_ask_bid_price('CAD_JPY')[0]
             jpy_per_trade = (account_balance * risk) * cadjpy
             # risk_amt_per_trade_in_jpy = risk_amt_per_trade /
@@ -59,18 +56,13 @@ class OandaTrader(Oanda):
             return (unit_size, entry, stop, stop_loss_pips)
 
         if '_CAD' in symbol:
-            decimal = 4
-            multiple = 10000
-
             cad_dolloar_per_trade = (account_balance * risk)
-
             entry = round(entry, decimal)
             stop = round(stop, decimal)
             # sl_pips NOT in fractions but in decimal by multiplying multiple
             stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
             unit_size = round(cad_dolloar_per_trade / stop_loss_pips * multiple, 0)
             return (unit_size, entry, stop, stop_loss_pips)
-
 
 
     def update_order_trade_status(self):
@@ -209,9 +201,13 @@ class OandaTrader(Oanda):
         table = {}
         for inst in trading_instruments:
             if '_USD' in inst or '_CAD' in inst:
-                table[inst] = 4
+                table[inst] = {}
+                table[inst]['decimal'] = 4
+                table[inst]['multiple'] = 10 * 4
             if '_JPY' in inst:
-                table[inst] = 2
+                table[inst] = {}
+                table[inst]['decimal'] = 2
+                table[inst]['multiple'] = 10 * 2
         return table
 
     def create_buy_market_order(self, symbol):
