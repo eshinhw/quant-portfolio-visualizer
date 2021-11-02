@@ -137,7 +137,10 @@ def manage_trades():
             rr_factor = profit_pips / sl_pips
             manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance)
 
-open_trades()
-manage_trades()
 
-print("Run Successfully --------- " + time.ctime() + "---------------------------------")
+if __name__ == "__main__":
+
+    open_trades()
+    manage_trades()
+
+    print("Run Successfully --------- " + time.ctime() + "---------------------------------")
