@@ -14,15 +14,16 @@ Deleveop a trading bot to capitalize short term and swing trading opportunities 
 
 - [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
 
-## Trend Following + Momentum Strategy (Rob Carver)
+## Trend Following + MA Crossover Strategy (Rob Carver)
 
 ### 1. Determine Investment Universe
-- Major FX Pairs
+
+- Major FX Pairs: USD, JPY, EUR, AUD, NZD, CAD
 
 ### 2. Entry Rule: Moving Averages Crossover
 
-- Long @ H1 120MA golden cross H1 720MA
-- Short @ H1 120MA dead cross H1 720MA
+- Long @ H1 120MA X H1 720MA
+- Short @ H1 120MA X H1 720MA
 
 ### 3. Position Sizing
 
@@ -30,7 +31,7 @@ Deleveop a trading bot to capitalize short term and swing trading opportunities 
 
 ### 4. Stop Loss for Risk Management
 
-- Trailing Stop @ ATR_MULTIPLIER * ATR(252)
+- Trailing Stop with Average True Range (ATR)
 - Structural Stop Loss Management based on Previous Support/Resistance
 
 ## Volatility Breakout Strategy (Larry Williams)
