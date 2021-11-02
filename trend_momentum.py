@@ -7,7 +7,7 @@ from demo_credentials import OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID, TEST_ACC
 
 # Login
 if os.name == 'nt':
-    oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
+    oanda = OandaTrader(OANDA_API_KEY, TEST_ACCOUNT_ID)
 if os.name == 'posix':
     oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
 
@@ -26,7 +26,7 @@ INTERVAL = 'H1'
 SMA = 120
 LMA = 720
 ATR_PERIOD = 480
-RISK_PER_TRADE = 0.01
+RISK_PER_TRADE = 0.005
 SL_ATR_MULTIPLIER = 3
 PREV_KEY_LEVEL_BUFFER = 3
 
