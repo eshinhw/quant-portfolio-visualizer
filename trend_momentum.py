@@ -7,13 +7,18 @@ from demo_credentials import OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID, TEST_ACC
 
 # Login
 if os.name == 'nt':
-    oanda = OandaTrader(OANDA_API_KEY, TEST_ACCOUNT_ID)
+    oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
 if os.name == 'posix':
     oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
 
 INSTRUMENTS = oanda.fx_instruments()
+ORDERS_LIST = oanda.get_order_list()
+TRADES_LIST = oanda.get_trade_list()
 
-# print(INSTRUMENTS)
+SYMBOLS_ORDERS = oanda.symbols_in_orders()
+SYMBOLS_TRADES = oanda.symbols_in_trades()
+
+DECIMAL_TABLE = oanda.create_decimal_table()
 
 # 1H SETUP
 INTERVAL = 'H1'
@@ -32,28 +37,6 @@ PREV_KEY_LEVEL_BUFFER = 3
 # ATR_PERIOD = 252
 # RISK_PER_TRADE = 0.01
 # ATR_MULTIPLIER = 2.5
-
-def symbols_in_orders():
-    orders = oanda.get_order_list()
-    symbols = []
-    # pprint(orders)
-    if orders:
-        for order in orders:
-            # pprint(order)
-            if order['type'] == 'LIMIT' and order['instrument'] not in symbols:
-                symbols.append(order['instrument'])
-    return symbols
-
-def symbols_in_trades():
-    trades = oanda.get_trade_list()
-    symbols = []
-    #pprint(trades)
-    if trades:
-        for trade in trades:
-            #pprint(trade)
-            if trade['instrument'] not in symbols:
-                symbols.append(trade['instrument'])
-    return symbols
 
 # open trades
 
@@ -80,7 +63,7 @@ def open_trades():
                 entry = oanda.get_current_ask_bid_price(symbol)[0]
                 stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
                 if (entry > curr_sma) and (curr_low > curr_sma):
-                    if (symbol not in trades_list) and (symbol not in orders_list):
+                    if (symbol not in SYMBOLS_TRADES) and (symbol not in SYMBOLS_ORDERS):
                         oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
                         print(f"Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
 
@@ -89,7 +72,7 @@ def open_trades():
                 entry = oanda.get_current_ask_bid_price(symbol)[1]
                 stop = entry + oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
                 if (entry < curr_lma) and (curr_high < curr_lma):
-                    if (symbol not in trades_list) and (symbol not in orders_list):
+                    if (symbol not in SYMBOLS_TRADES) and (symbol not in SYMBOLS_ORDERS):
                         oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
                         print(f"Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
 
@@ -103,22 +86,27 @@ def manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support):
         # if risk reward factor is 2.x, move stoploss to break even
         oanda.update_stop_loss(instrument, entry)
     else:
+        new_sl = round(entry + (rr_factor - 2) * sl_pips, DECIMAL_TABLE[instrument])
         # if rr_factor is 3.x, change stop loss to 1.x (achieved 1:1 ratio)
         # if rr_factor is 4.x, change stop loss to 2.x (achieved 2:1 ratio)
-        oanda.update_stop_loss(instrument, max(entry + (rr_factor - 2) * sl_pips, support))
+        oanda.update_stop_loss(instrument, max(new_sl, support))
 
 def manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance):
     if rr_factor >= 2 and rr_factor < 3:
         # if risk reward factor is 2.x, move stoploss to break even
         oanda.update_stop_loss(instrument, entry)
     else:
+        new_sl = round(entry - (rr_factor - 2) * sl_pips, DECIMAL_TABLE[instrument])
+        print()
+        print(resistance)
         # if rr_factor is 3.x, change stop loss to 1.x (achieved 1:1 ratio)
         # if rr_factor is 4.x, change stop loss to 2.x (achieved 2:1 ratio)
-        oanda.update_stop_loss(instrument, min(entry - (rr_factor - 2) * sl_pips, resistance))
+        oanda.update_stop_loss(instrument, min(new_sl, resistance))
 
 def manage_trades():
     # systematically adjust stop loss
-    for trade in trades_list:
+    for trade in TRADES_LIST:
+        print(trade)
         instrument = trade['instrument']
         entry = float(trade['price'])
         sl = float(trade['stopLossOrder']['price'])
@@ -136,7 +124,7 @@ def manage_trades():
             profit_pips = abs(curr_price - entry)
             recent_low = oanda.calculate_prev_min_low(instrument, days_diff+PREV_KEY_LEVEL_BUFFER, 'D')
             atr = oanda.calculate_ATR(instrument, int(hours_diff), 'H1')
-            support = recent_low - atr
+            support = round(recent_low - atr, DECIMAL_TABLE[instrument])
             rr_factor = profit_pips / sl_pips
             manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support)
         # short trade
@@ -145,12 +133,11 @@ def manage_trades():
             profit_pips = abs(curr_price - entry)
             recent_high = oanda.calculate_prev_max_high(instrument, days_diff+PREV_KEY_LEVEL_BUFFER, 'D')
             atr = oanda.calculate_ATR(instrument, int(hours_diff), 'H1')
-            resistance = recent_high + atr
+            resistance = round(recent_high + atr, DECIMAL_TABLE[instrument])
             rr_factor = profit_pips / sl_pips
             manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance)
 
-orders_list = symbols_in_orders()
-trades_list = symbols_in_trades()
+
 
 open_trades()
 manage_trades()

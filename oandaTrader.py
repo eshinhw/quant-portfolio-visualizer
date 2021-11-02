@@ -155,6 +155,28 @@ class OandaTrader(Oanda):
         resp = self.client.request(r)
         return resp['trades']
 
+    def symbols_in_orders(self):
+        orders = self.get_order_list()
+        symbols = []
+        # pprint(orders)
+        if orders:
+            for order in orders:
+                # pprint(order)
+                if order['type'] == 'LIMIT' and order['instrument'] not in symbols:
+                    symbols.append(order['instrument'])
+        return symbols
+
+    def symbols_in_trades(self):
+        trades = self.get_trade_list()
+        symbols = []
+        #pprint(trades)
+        if trades:
+            for trade in trades:
+                #pprint(trade)
+                if trade['instrument'] not in symbols:
+                    symbols.append(trade['instrument'])
+        return symbols
+
 
     def fx_instruments(self):
         quote = ['_USD','_CAD', '_JPY']
@@ -181,6 +203,16 @@ class OandaTrader(Oanda):
                 if m in pair:
                     major_pairs.append(pair)
         return major_pairs
+
+    def create_decimal_table(self):
+        trading_instruments = self.fx_instruments()
+        table = {}
+        for inst in trading_instruments:
+            if '_USD' in inst or '_CAD' in inst:
+                table[inst] = 4
+            if '_JPY' in inst:
+                table[inst] = 2
+        return table
 
     def create_buy_market_order(self, symbol):
         order_body = {
