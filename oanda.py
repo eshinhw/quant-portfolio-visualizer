@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import datetime as dt
 from oandapyV20 import API
+from pprint import pprint
 from typing import List, Dict, Tuple
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.trades as trades
@@ -10,6 +11,7 @@ import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.contrib.requests as requests
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
+from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID
 
 
 class Oanda:
@@ -32,12 +34,13 @@ class Oanda:
         data = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
 
         for candle in resp["candles"]:
-            date = candle['time'].replace('T', ' ')[:candle['time'].index('.')]
-            data["Date"].append(dt.datetime.strptime(date, "%Y-%m-%d %H:%M:%S"))
-            data["Open"].append(float(candle["mid"]["o"]))
-            data["High"].append(float(candle["mid"]["h"]))
-            data["Low"].append(float(candle["mid"]["l"]))
-            data["Close"].append(float(candle["mid"]["c"]))
+            if candle['complete']:
+                date = candle['time'].replace('T', ' ')[:candle['time'].index('.')]
+                data["Date"].append(dt.datetime.strptime(date, "%Y-%m-%d %H:%M:%S"))
+                data["Open"].append(float(candle["mid"]["o"]))
+                data["High"].append(float(candle["mid"]["h"]))
+                data["Low"].append(float(candle["mid"]["l"]))
+                data["Close"].append(float(candle["mid"]["c"]))
 
         df = pd.DataFrame(data)
         df.set_index("Date", inplace=True)
@@ -104,7 +107,7 @@ if __name__ == "__main__":
 
     # Testing Oanda class methods
 
-    oanda = Oanda(OANDA_API_KEY, VOL_BREAKOUT_ACCOUNT_ID)
+    oanda = Oanda(OANDA_API_KEY, TEST_ACCOUNT_ID)
     #print(oanda.get_balance())
     # print(oanda.get_ohlc('EUR_USD', 48, 'H1'))
     #print(oanda.get_current_ask_bid_price('EUR_USD'))
@@ -114,6 +117,7 @@ if __name__ == "__main__":
     print(os.name)
 
     print(oanda.get_current_low('EUR_USD', 5, 'H1'))
+    print(oanda.get_ohlc('EUR_USD', 10, 'D'))
 
 
 

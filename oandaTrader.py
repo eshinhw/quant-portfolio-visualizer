@@ -210,7 +210,7 @@ class OandaTrader(Oanda):
                 table[inst]['multiple'] = 10 ** 2
         return table
 
-    def create_buy_market_order(self, symbol):
+    def create_buy_market_order(self, symbol, size):
         order_body = {
             "order": {
                 "type": "MARKET",
@@ -225,7 +225,7 @@ class OandaTrader(Oanda):
         self.client.request(r)
 
 
-    def create_sell_market_order(self, symbol):
+    def create_sell_market_order(self, symbol, size):
         order_body = {
             "order": {
                 "type": "MARKET",

@@ -131,6 +131,10 @@ def open_trades():
             print(e)
 
 def manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support):
+
+    if rr_factor >= 1 and rr_factor < 2:
+        oanda.update_stop_loss(instrument, entry - sl_pips / 2)
+
     if rr_factor >= 2 and rr_factor < 3:
         # if risk reward factor is 2.x, move stoploss to break even
         oanda.update_stop_loss(instrument, entry)
@@ -141,6 +145,9 @@ def manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support):
         oanda.update_stop_loss(instrument, max(new_sl, support))
 
 def manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance):
+    if rr_factor >= 1 and rr_factor < 2:
+        oanda.update_stop_loss(instrument, entry + sl_pips / 2)
+
     if rr_factor >= 2 and rr_factor < 3:
         # if risk reward factor is 2.x, move stoploss to break even
         oanda.update_stop_loss(instrument, entry)
