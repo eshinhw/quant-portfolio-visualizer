@@ -80,13 +80,20 @@ def open_trades():
             curr_sma = ohlc.iloc[-1][f'{SMA}MA']
             curr_lma = ohlc.iloc[-1][f'{LMA}MA']
 
+            #print(ohlc)
+
             curr_low = oanda.get_current_low(symbol, 5, INTERVAL)
             curr_high = oanda.get_current_high(symbol, 5, INTERVAL)
+            print(symbol)
+            crossover_date = ohlc[ohlc[f'{SMA}MA'] < ohlc[f'{LMA}MA']]
+            after = ohlc[ohlc[f'{SMA}MA'] > ohlc[f'{LMA}MA']]
+            print(crossover_date)
+            print(after)
 
             # print('stop_pips:', oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * ATR_MULTIPLIER)
 
             # bullish cross over --> long
-            if prev_sma < prev_lma and prev_sma > prev_lma:
+            if prev_sma < prev_lma and curr_sma > curr_lma:
                 print('long trade')
                 entry = oanda.get_current_ask_bid_price(symbol)[0]
                 stop = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_ATR_MULTIPLIER
