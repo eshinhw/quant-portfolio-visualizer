@@ -97,8 +97,6 @@ def manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance):
         oanda.update_stop_loss(instrument, entry)
     else:
         new_sl = round(entry - (rr_factor - 2) * sl_pips, DECIMAL_TABLE[instrument])
-        print()
-        print(resistance)
         # if rr_factor is 3.x, change stop loss to 1.x (achieved 1:1 ratio)
         # if rr_factor is 4.x, change stop loss to 2.x (achieved 2:1 ratio)
         oanda.update_stop_loss(instrument, min(new_sl, resistance))
@@ -106,7 +104,7 @@ def manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance):
 def manage_trades():
     # systematically adjust stop loss
     for trade in TRADES_LIST:
-        print(trade)
+        # print(trade)
         instrument = trade['instrument']
         entry = float(trade['price'])
         sl = float(trade['stopLossOrder']['price'])
@@ -127,6 +125,7 @@ def manage_trades():
             support = round(recent_low - atr, DECIMAL_TABLE[instrument])
             rr_factor = profit_pips / sl_pips
             manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support)
+
         # short trade
         else:
             curr_price = oanda.get_current_ask_bid_price(instrument)[0]
