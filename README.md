@@ -22,8 +22,8 @@ Deleveop a trading bot to capitalize short term and swing trading opportunities 
 
 ### 2. Entry Rule: Moving Averages Crossover
 
-- Long @ H1 120MA golden cross H1 720MA
-- Short @ H1 120MA dead cross H1 720MA
+- Long @ H1 120MA X H1 720MA
+- Short @ H1 120MA X H1 720MA
 
 ### 3. Position Sizing
 
