@@ -63,6 +63,68 @@ class OandaTrader(Oanda):
             unit_size = round(cad_dolloar_per_trade / stop_loss_pips * multiple, 0)
             return (unit_size, entry, stop, stop_loss_pips)
 
+        if '_CHF' in symbol:
+            cadchf = self.get_current_ask_bid_price('CAD_CHF')[0]
+            chf_per_trade = (account_balance * risk) * cadchf
+            entry = round(entry, decimal)
+            stop = round(stop, decimal)
+            # sl_pips NOT in fractions but in decimal by multiplying multiple
+            stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
+            unit_size = round((chf_per_trade / stop_loss_pips * multiple), 0)
+            #print(unit_size)
+            return (unit_size, entry, stop, stop_loss_pips)
+
+        if '_SGD' in symbol:
+            cadsgd = self.get_current_ask_bid_price('CAD_SGD')[0]
+            sgd_per_trade = (account_balance * risk) * cadsgd
+            entry = round(entry, decimal)
+            stop = round(stop, decimal)
+            # sl_pips NOT in fractions but in decimal by multiplying multiple
+            stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
+            unit_size = round((sgd_per_trade / stop_loss_pips * multiple), 0)
+            #print(unit_size)
+            return (unit_size, entry, stop, stop_loss_pips)
+
+
+    def fx_instruments(self):
+        quote = ['_USD','_CAD', '_JPY', '_CHF', '_SGD']
+        major = ['AUD_', 'USD_', 'NZD_', 'CAD_', 'EUR_', 'GBP_', 'SGD_']
+        quote_pairs = []
+        major_pairs = []
+        if os.name == "nt":
+            df = pd.read_csv('./instruments.csv')
+        if os.name == "posix":
+            df = pd.read_csv('/home/eshinhw/pyTrader/instruments.csv')
+
+        df['Instrument'] = df['Instrument'].str.replace('/','_')
+        low_spread = df[df['Spread'] < 10].sort_values(by='Spread')
+        # print(low_spread.tail(10))
+        # print(low_spread)
+        # print(df['Instrument'])
+        for inst in low_spread['Instrument'].tolist():
+            for q in quote:
+                if q in inst:
+                    quote_pairs.append(inst)
+
+        for pair in quote_pairs:
+            for m in major:
+                if m in pair:
+                    major_pairs.append(pair)
+        return major_pairs
+
+    def create_decimal_table(self):
+        trading_instruments = self.fx_instruments()
+        table = {}
+        for inst in trading_instruments:
+            if '_USD' in inst or '_CAD' in inst or '_CHF' in inst or '_SGD' in inst:
+                table[inst] = {}
+                table[inst]['decimal'] = 4
+                table[inst]['multiple'] = 10 ** 4
+            if '_JPY' in inst:
+                table[inst] = {}
+                table[inst]['decimal'] = 2
+                table[inst]['multiple'] = 10 ** 2
+        return table
 
     def update_order_trade_status(self):
         trade_list = self.get_trade_list()
@@ -183,45 +245,7 @@ class OandaTrader(Oanda):
         return symbols
 
 
-    def fx_instruments(self):
-        quote = ['_USD','_CAD', '_JPY']
-        major = ['AUD_', 'USD_', 'NZD_', 'CAD_', 'EUR_']
-        quote_pairs = []
-        major_pairs = []
-        if os.name == "nt":
-            df = pd.read_csv('./instruments.csv')
-        if os.name == "posix":
-            df = pd.read_csv('/home/eshinhw/pyTrader/instruments.csv')
 
-        df['Instrument'] = df['Instrument'].str.replace('/','_')
-        low_spread = df[df['Spread'] < 10].sort_values(by='Spread')
-        # print(low_spread.tail(10))
-        # print(low_spread)
-        # print(df['Instrument'])
-        for inst in low_spread['Instrument'].tolist():
-            for q in quote:
-                if q in inst:
-                    quote_pairs.append(inst)
-
-        for pair in quote_pairs:
-            for m in major:
-                if m in pair:
-                    major_pairs.append(pair)
-        return major_pairs
-
-    def create_decimal_table(self):
-        trading_instruments = self.fx_instruments()
-        table = {}
-        for inst in trading_instruments:
-            if '_USD' in inst or '_CAD' in inst:
-                table[inst] = {}
-                table[inst]['decimal'] = 4
-                table[inst]['multiple'] = 10 ** 4
-            if '_JPY' in inst:
-                table[inst] = {}
-                table[inst]['decimal'] = 2
-                table[inst]['multiple'] = 10 ** 2
-        return table
 
     def create_buy_market_order(self, symbol, size):
         order_body = {
@@ -354,4 +378,4 @@ class OandaTrader(Oanda):
 if __name__ == '__main__':
     ot = OandaTrader(OANDA_API_KEY, VOLATILITY_BREAKOUT)
     symbol = 'EUR_JPY'
-    ot.cancel_all_orders()
+    print(ot.fx_instruments())
