@@ -28,7 +28,7 @@ class Oanda:
         r = instruments.InstrumentsCandles(instrument=symbol,
                                            params={"count": count,
                                                     "granularity": interval,
-                                                    "dailyAlignment": 20})
+                                                    "dailyAlignment": 13})
         resp = self.client.request(r)
 
         data = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}

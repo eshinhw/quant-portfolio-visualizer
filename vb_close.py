@@ -11,16 +11,6 @@ if os.name == 'nt':
 if os.name == 'posix':
     oanda = OandaTrader(OANDA_API_KEY, VOLATILITY_BREAKOUT)
 
-INSTRUMENTS = oanda.fx_instruments()
-
-ORDERS_LIST = oanda.get_order_list()
-TRADES_LIST = oanda.get_trade_list()
-
-SYMBOLS_ORDERS = oanda.symbols_in_stop_orders()
-SYMBOLS_TRADES = oanda.symbols_in_trades()
-
-DECIMAL_TABLE = oanda.create_decimal_table()
-
 def close_trades():
     oanda.cancel_all_orders()
     oanda.close_all_trades()

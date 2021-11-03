@@ -22,7 +22,7 @@ ENTRY_BUFFER = 6
 ORDERS_LIST = oanda.get_order_list()
 TRADES_LIST = oanda.get_trade_list()
 
-SYMBOLS_ORDERS = oanda.symbols_in_stop_orders()
+SYMBOLS_ORDERS = oanda.symbols_in_orders()
 SYMBOLS_TRADES = oanda.symbols_in_trades()
 
 DECIMAL_TABLE = oanda.create_decimal_table()
@@ -44,18 +44,25 @@ DECIMAL_TABLE = oanda.create_decimal_table()
 #     predicted_price = forecast[forecast['ds'] == end_date]['yhat']
 #     return predicted_price
 
-def direction(symbol):
+def directional_strength(symbol):
 
     df = oanda.get_ohlc(symbol, 6, 'D')
+
     df['strength'] = (df['Close'] - df['Open'])
+    bullish = df[df['strength'] > 0]
+    bearish = df[df['strength'] < 0]
+    # print(df)
 
-    bullish = abs(df['strength'].max())
-    bearish = abs(df['strength'].min())
+    # print(bullish)
+    # print(bullish['strength'].sum())
 
-    print(df)
-    print(bullish, bearish)
+    # print(bearish)
+    # print(bearish['strength'].sum())
+
+    # print(df)
+    # print(bullish, bearish)
     # true -> bullish long, false -> bearish short
-    return bullish > bearish
+    return abs(bullish['strength'].sum()) > abs(bearish['strength'].sum())
 
 
 
@@ -67,8 +74,8 @@ def open_trades():
         #print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
         try:
             df = oanda.get_ohlc(symbol, 5, 'D')
-            # print(symbol)
-            # print(df)
+            print(symbol)
+            print(df)
 
             prev_high = df.iloc[-2]['High']
             prev_low = df.iloc[-2]['Low']
@@ -84,20 +91,22 @@ def open_trades():
             #print(prev_range, atr)
 
             if symbol not in SYMBOLS_ORDERS and symbol not in SYMBOLS_TRADES:
-                # if direction(symbol):
+                if directional_strength(symbol):
                     # bullish -> long at low
                     # weighted_entry = historical_low * 0.6 + prev_low * 0.4
                     # long_entry = weighted_entry + (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
                     long_entry = prev_low + (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
                     sl = long_entry - atr
                     oanda.create_limit_order(symbol, long_entry, sl, RISK_PER_TRADE)
-                # else:
+                    oanda.create_stop_order(symbol, prev_high+(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple']), prev_high - atr, RISK_PER_TRADE)
+                else:
                     # bearish -> short at high
                     # weighted_entry = historical_high * 0.6 + prev_high * 0.4
                     # short_entry = weighted_entry -(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
                     short_entry = prev_high - (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
                     sl = short_entry + atr
                     oanda.create_limit_order(symbol, short_entry, sl, RISK_PER_TRADE)
+                    oanda.create_stop_order(symbol, prev_low-(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple']), prev_low + atr, RISK_PER_TRADE)
 
             time.sleep(1)
         except Exception as e:
@@ -106,4 +115,7 @@ def open_trades():
 
 if __name__ == '__main__':
     open_trades()
+    #directional_strength('GBP_SGD')
+    print(SYMBOLS_ORDERS)
+    print(SYMBOLS_TRADES)
     print("Open Trades::: " + time.ctime())

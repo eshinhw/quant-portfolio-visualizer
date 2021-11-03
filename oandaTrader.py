@@ -214,22 +214,12 @@ class OandaTrader(Oanda):
     def symbols_in_orders(self):
         orders = self.get_order_list()
         symbols = []
-        pprint(orders)
+        #pprint(orders)
         if orders:
             for order in orders:
-                pprint(order)
-                if order['type'] == 'LIMIT' and order['instrument'] not in symbols:
-                    symbols.append(order['instrument'])
-        return symbols
-
-    def symbols_in_stop_orders(self):
-        orders = self.get_order_list()
-        symbols = []
-        # pprint(orders)
-        if orders:
-            for order in orders:
-                # pprint(order)
-                if order['type'] == 'STOP' and order['instrument'] not in symbols:
+                #pprint(order)
+                if order['type'] != 'STOP_LOSS' and order['instrument'] not in symbols:
+                    #print(order['instrument'])
                     symbols.append(order['instrument'])
         return symbols
 
@@ -243,9 +233,6 @@ class OandaTrader(Oanda):
                 if trade['instrument'] not in symbols:
                     symbols.append(trade['instrument'])
         return symbols
-
-
-
 
     def create_buy_market_order(self, symbol, size):
         order_body = {

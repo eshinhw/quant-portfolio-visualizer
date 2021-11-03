@@ -10,26 +10,23 @@ if os.name == 'nt':
 if os.name == 'posix':
     oanda = OandaTrader(OANDA_API_KEY, VOLATILITY_BREAKOUT)
 
-INSTRUMENTS = oanda.fx_instruments()
-
 ORDERS_LIST = oanda.get_order_list()
 TRADES_LIST = oanda.get_trade_list()
 
-SYMBOLS_ORDERS = oanda.symbols_in_stop_orders()
-SYMBOLS_TRADES = oanda.symbols_in_trades()
-
-DECIMAL_TABLE = oanda.create_decimal_table()
-
 def manage_trades():
     for trade in TRADES_LIST:
-        instrument = trade['instrument']
-        if instrument in SYMBOLS_ORDERS:
-            for order in ORDERS_LIST:
-                #print(order)
-                order_id = order['id']
-                if instrument == order['instrument']:
-                    oanda.cancel_single_order(order_id)
+        #print(trade)
+        trade_id = trade['id']
+        trade_instrument = trade['instrument']
+        for order in ORDERS_LIST:
+            if order['type'] == 'LIMIT' and trade_instrument == order['instrument']:
+                print(order)
+                oanda.cancel_single_order(order['id'])
 
 if __name__ == '__main__':
+    manage_trades()
+    manage_trades()
+    manage_trades()
+    manage_trades()
     manage_trades()
     print("Manage Trades::: " + time.ctime())
