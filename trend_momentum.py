@@ -89,7 +89,7 @@ def open_trades():
     count = 0
     for symbol in INSTRUMENTS:
         count += 1
-        print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
+        #print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
 
         decimal = DECIMAL_TABLE[symbol]['decimal']
         multiple = DECIMAL_TABLE[symbol]['multiple']

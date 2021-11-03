@@ -1,20 +1,17 @@
 import os
 import time
 import datetime as dt
-from pytz import timezone
-from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID
+from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID, VOLATILITY_BREAKOUT
 from oandaTrader import OandaTrader
-from ta.trend import SMAIndicator
 # from fbprophet import Prophet
 
 K = 0.5
-INSTRUMENTS = ['EUR_USD']
 
 # Login
 if os.name == 'nt':
     oanda = OandaTrader(OANDA_API_KEY, TEST_ACCOUNT_ID)
 if os.name == 'posix':
-    oanda = OandaTrader(OANDA_API_KEY, TREND_FOLLOWING_ACCOUNT_ID)
+    oanda = OandaTrader(OANDA_API_KEY, VOLATILITY_BREAKOUT)
 
 INSTRUMENTS = oanda.fx_instruments()
 
@@ -50,7 +47,7 @@ def open_trades():
 
     for symbol in INSTRUMENTS:
         count += 1
-        print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
+        #print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
         try:
             df = oanda.get_ohlc(symbol, 5, 'D')
             # print(df)
@@ -106,3 +103,5 @@ def manage_trades():
 if __name__ == '__main__':
     open_trades()
     manage_trades()
+
+    print("Run Successfully --------- " + time.ctime() + "---------------------------------")
