@@ -15,7 +15,7 @@ if os.name == 'posix':
 
 INSTRUMENTS = oanda.fx_instruments()
 
-RISK_PER_TRADE = 0.0001
+RISK_PER_TRADE = 0.0002
 
 ORDERS_LIST = oanda.get_order_list()
 TRADES_LIST = oanda.get_trade_list()
@@ -50,7 +50,7 @@ def open_trades():
         #print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
         try:
             df = oanda.get_ohlc(symbol, 5, 'D')
-            # print(symbol)
+            print(symbol)
             # print(df)
 
             prev_high = df.iloc[-2]['High']
@@ -58,13 +58,21 @@ def open_trades():
             prev_close = df.iloc[-2]['Close']
             prev_range = prev_high - prev_low
 
+            # stop size different depending on market direction: ma
+            # optimize entry
+            # optimize K
+            # prev day candle color
+
             long_entry_price = prev_close + (prev_range * K)
             short_entry_price = prev_close - (prev_range * K)
 
-            if symbol not in SYMBOLS_ORDERS and symbol not in SYMBOLS_TRADES:
-                # create buy stop order
-                oanda.create_stop_order(symbol, long_entry_price, prev_close, RISK_PER_TRADE)
-                oanda.create_stop_order(symbol, short_entry_price, prev_close, RISK_PER_TRADE)
+            atr = oanda.calculate_ATR(symbol, 20, 'D')
+            print(prev_range, atr)
+
+            # if symbol not in SYMBOLS_ORDERS and symbol not in SYMBOLS_TRADES:
+            #     # create buy stop order
+            #     oanda.create_stop_order(symbol, long_entry_price, prev_close, RISK_PER_TRADE)
+            #     oanda.create_stop_order(symbol, short_entry_price, prev_close, RISK_PER_TRADE)
 
             time.sleep(1)
         except Exception as e:
