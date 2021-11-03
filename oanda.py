@@ -28,19 +28,18 @@ class Oanda:
         r = instruments.InstrumentsCandles(instrument=symbol,
                                            params={"count": count,
                                                     "granularity": interval,
-                                                    "dailyAlignment": 13})
+                                                    "dailyAlignment": 20})
         resp = self.client.request(r)
 
         data = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
 
         for candle in resp["candles"]:
-            if candle['complete']:
-                date = candle['time'].replace('T', ' ')[:candle['time'].index('.')]
-                data["Date"].append(dt.datetime.strptime(date, "%Y-%m-%d %H:%M:%S"))
-                data["Open"].append(float(candle["mid"]["o"]))
-                data["High"].append(float(candle["mid"]["h"]))
-                data["Low"].append(float(candle["mid"]["l"]))
-                data["Close"].append(float(candle["mid"]["c"]))
+            date = candle['time'].replace('T', ' ')[:candle['time'].index('.')]
+            data["Date"].append(dt.datetime.strptime(date, "%Y-%m-%d %H:%M:%S"))
+            data["Open"].append(float(candle["mid"]["o"]))
+            data["High"].append(float(candle["mid"]["h"]))
+            data["Low"].append(float(candle["mid"]["l"]))
+            data["Close"].append(float(candle["mid"]["c"]))
 
         df = pd.DataFrame(data)
         df.set_index("Date", inplace=True)
@@ -114,9 +113,9 @@ if __name__ == "__main__":
     #print(oanda.calculate_MA('EUR_USD', 20, 'D'))
 
     # print(oanda.fx_instruments())
-    print(os.name)
+    #print(os.name)
 
-    print(oanda.get_current_low('EUR_USD', 5, 'H1'))
+    #print(oanda.get_current_low('EUR_USD', 5, 'H1'))
     print(oanda.get_ohlc('EUR_USD', 10, 'D'))
 
 

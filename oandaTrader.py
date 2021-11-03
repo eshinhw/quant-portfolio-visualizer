@@ -10,7 +10,7 @@ import oandapyV20.endpoints.trades as trades
 import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
-from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID
+from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID, VOLATILITY_BREAKOUT
 from oandapyV20.contrib.requests import MarketOrderRequest, LimitOrderRequest, StopOrderRequest, StopLossOrderRequest
 
 class OandaTrader(Oanda):
@@ -120,16 +120,19 @@ class OandaTrader(Oanda):
 
     def close_all_trades(self) -> None:
         trades_list = self.get_trade_list()
-        for trade in trades_list:
-            r = trades.TradeClose(accountID=self.acctID, tradeID=trade["id"])
-            self.client.request(r)
-
+        while trades_list:
+            for trade in trades_list:
+                r = trades.TradeClose(accountID=self.acctID, tradeID=trade["id"])
+                self.client.request(r)
+            trades_list = self.get_trade_list()
 
     def cancel_all_orders(self) -> None:
         order_list = self.get_order_list()
-        for order in order_list:
-            r = orders.OrderCancel(accountID=self.acctID, orderID=order["id"])
-            self.client.request(r)
+        while order_list:
+            for order in order_list:
+                r = orders.OrderCancel(accountID=self.acctID, orderID=order["id"])
+                self.client.request(r)
+            order_list = self.get_order_list()
 
 
     def get_order_list(self) -> List[Dict]:
@@ -149,10 +152,10 @@ class OandaTrader(Oanda):
     def symbols_in_orders(self):
         orders = self.get_order_list()
         symbols = []
-        # pprint(orders)
+        pprint(orders)
         if orders:
             for order in orders:
-                # pprint(order)
+                pprint(order)
                 if order['type'] == 'LIMIT' and order['instrument'] not in symbols:
                     symbols.append(order['instrument'])
         return symbols
@@ -349,6 +352,6 @@ class OandaTrader(Oanda):
             self.client.request(r)
 
 if __name__ == '__main__':
-    ot = OandaTrader(OANDA_API_KEY, TEST_ACCOUNT_ID)
+    ot = OandaTrader(OANDA_API_KEY, VOLATILITY_BREAKOUT)
     symbol = 'EUR_JPY'
     ot.cancel_all_orders()

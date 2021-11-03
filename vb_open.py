@@ -9,7 +9,7 @@ K = 0.5
 
 # Login
 if os.name == 'nt':
-    oanda = OandaTrader(OANDA_API_KEY, TEST_ACCOUNT_ID)
+    oanda = OandaTrader(OANDA_API_KEY, VOLATILITY_BREAKOUT)
 if os.name == 'posix':
     oanda = OandaTrader(OANDA_API_KEY, VOLATILITY_BREAKOUT)
 
@@ -20,7 +20,7 @@ RISK_PER_TRADE = 0.001
 ORDERS_LIST = oanda.get_order_list()
 TRADES_LIST = oanda.get_trade_list()
 
-SYMBOLS_ORDERS = oanda.symbols_in_orders()
+SYMBOLS_ORDERS = oanda.symbols_in_stop_orders()
 SYMBOLS_TRADES = oanda.symbols_in_trades()
 
 DECIMAL_TABLE = oanda.create_decimal_table()
@@ -50,27 +50,15 @@ def open_trades():
         #print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
         try:
             df = oanda.get_ohlc(symbol, 5, 'D')
-            # print(df)
-
-            now = dt.datetime.now()
-            start_time = df.index[-1]
-            end_time = start_time + dt.timedelta(days=1)
-            # print(start_time)
-            # print(now)
-            # print(end_time)
-
-            prev_open = df.iloc[-1]['Open']
-            prev_high = df.iloc[-1]['High']
-            prev_low = df.iloc[-1]['Low']
-            prev_close = df.iloc[-1]['Close']
-            prev_range = df.iloc[-1]['High'] - df.iloc[-1]['Low']
+            print(df)
+            prev_open = df.iloc[-2]['Open']
+            prev_high = df.iloc[-2]['High']
+            prev_low = df.iloc[-2]['Low']
+            prev_close = df.iloc[-2]['Close']
+            prev_range = prev_high - prev_low
 
             long_entry_price = prev_close + (prev_range * K)
             short_entry_price = prev_close - (prev_range * K)
-
-            curr_ask, curr_bid = oanda.get_current_ask_bid_price(symbol)
-
-            # atr = oanda.calculate_ATR(symbol, 20, 'D')
 
             if symbol not in SYMBOLS_ORDERS and symbol not in SYMBOLS_TRADES:
                 # create buy stop order
@@ -82,26 +70,6 @@ def open_trades():
             print(e)
             time.sleep(1)
 
-def manage_trades():
-    now = dt.datetime.now()
-    for trade in TRADES_LIST:
-        instrument = trade['instrument']
-        open_time = dt.datetime.strptime(trade['openTime'].replace('T', ' ')[:trade['openTime'].index('.')], "%Y-%m-%d %H:%M:%S")
-        open_time = open_time - dt.timedelta(hours=4)
-        close_time = open_time + dt.timedelta(hours=24)
-        if now > close_time:
-            oanda.close_open_trade(instrument)
-
-        if instrument in SYMBOLS_ORDERS:
-            for order in ORDERS_LIST:
-                order_id = order['id']
-                if instrument == order['instrument']:
-                    oanda.cancel_single_order(order_id)
-
-# Start AutoTrade
-# Start Date = 5PM ET
 if __name__ == '__main__':
     open_trades()
-    manage_trades()
-
-    print("Run Successfully --------- " + time.ctime() + "---------------------------------")
+    print("Open Trades::: " + time.ctime())
