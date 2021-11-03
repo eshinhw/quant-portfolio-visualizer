@@ -5,8 +5,6 @@ from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID, VOLATILITY_BREAKOUT
 from oandaTrader import OandaTrader
 # from fbprophet import Prophet
 
-K = 0.5
-
 # Login
 if os.name == 'nt':
     oanda = OandaTrader(OANDA_API_KEY, VOLATILITY_BREAKOUT)
@@ -51,17 +49,6 @@ def directional_strength(symbol):
     df['strength'] = (df['Close'] - df['Open'])
     bullish = df[df['strength'] > 0]
     bearish = df[df['strength'] < 0]
-    # print(df)
-
-    # print(bullish)
-    # print(bullish['strength'].sum())
-
-    # print(bearish)
-    # print(bearish['strength'].sum())
-
-    # print(df)
-    # print(bullish, bearish)
-    # true -> bullish long, false -> bearish short
     return abs(bullish['strength'].sum()) > abs(bearish['strength'].sum())
 
 
@@ -79,13 +66,6 @@ def open_trades():
 
             prev_high = df.iloc[-2]['High']
             prev_low = df.iloc[-2]['Low']
-            # prev_close = df.iloc[-2]['Close']
-            # prev_range = prev_high - prev_low
-
-            # stop size different depending on market direction: ma
-            # optimize entry
-            # optimize K
-            # prev day candle color
 
             atr = oanda.calculate_ATR(symbol, 10, 'D')
             #print(prev_range, atr)
