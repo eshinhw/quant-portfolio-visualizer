@@ -48,7 +48,6 @@ class OandaTrader(Oanda):
             # risk_amt_per_trade_in_jpy = risk_amt_per_trade /
             entry = round(entry, decimal)
             stop = round(stop, decimal)
-            print(entry,stop)
             # sl_pips NOT in fractions but in decimal by multiplying multiple
             stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
             unit_size = round((jpy_per_trade / stop_loss_pips * multiple), 0)
@@ -155,6 +154,17 @@ class OandaTrader(Oanda):
             for order in orders:
                 # pprint(order)
                 if order['type'] == 'LIMIT' and order['instrument'] not in symbols:
+                    symbols.append(order['instrument'])
+        return symbols
+
+    def symbols_in_stop_orders(self):
+        orders = self.get_order_list()
+        symbols = []
+        # pprint(orders)
+        if orders:
+            for order in orders:
+                # pprint(order)
+                if order['type'] == 'STOP' and order['instrument'] not in symbols:
                     symbols.append(order['instrument'])
         return symbols
 
@@ -306,7 +316,7 @@ class OandaTrader(Oanda):
 
 
     def create_stop_order(self, symbol, entry, stop, risk):
-        (units, entry, stop) = self.calculate_unit_size(symbol, entry, stop, risk)
+        (units, entry, stop, distance) = self.calculate_unit_size(symbol, entry, stop, risk)
         # Sell Stop
         if entry < stop:
             order_body = {
