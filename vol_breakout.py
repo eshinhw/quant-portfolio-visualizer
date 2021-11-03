@@ -18,7 +18,7 @@ if os.name == 'posix':
 
 INSTRUMENTS = oanda.fx_instruments()
 
-RISK_PER_TRADE = 0.005
+RISK_PER_TRADE = 0.001
 
 ORDERS_LIST = oanda.get_order_list()
 TRADES_LIST = oanda.get_trade_list()
