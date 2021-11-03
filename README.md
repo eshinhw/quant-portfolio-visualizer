@@ -36,9 +36,9 @@ Deleveop a trading bot to capitalize short term and swing trading opportunities 
 
 
 
-## Volatility Breakout Strategy (Larry Williams)
+## Volatility Breakout/Reversal Strategy (Larry Williams)
 
-The trading bot uses Volatility Breakout strategy developed by Larry Williams. You can find lots of free resources online. 
+The trading bot uses Volatility Breakout strategy developed by Larry Williams.
 
 ### 1. Determine Investment Universe
 
