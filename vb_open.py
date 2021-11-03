@@ -23,7 +23,7 @@ TRADES_LIST = oanda.get_trade_list()
 SYMBOLS_ORDERS = oanda.symbols_in_stop_orders()
 SYMBOLS_TRADES = oanda.symbols_in_trades()
 
-DECIMAL_TABLE = oanda.create_decimal_table()
+# DECIMAL_TABLE = oanda.create_decimal_table()
 
 # def predict(symbol):
 #     df = oanda.get_ohlc(symbol,24,'H1')
@@ -50,8 +50,9 @@ def open_trades():
         #print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
         try:
             df = oanda.get_ohlc(symbol, 5, 'D')
-            print(df)
-            prev_open = df.iloc[-2]['Open']
+            # print(symbol)
+            # print(df)
+
             prev_high = df.iloc[-2]['High']
             prev_low = df.iloc[-2]['Low']
             prev_close = df.iloc[-2]['Close']
