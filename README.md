@@ -18,7 +18,7 @@ Deleveop a trading bot to capitalize short term and swing trading opportunities 
 
 ### 1. Determine Investment Universe
 
-- Major FX Pairs: USD, JPY, EUR, AUD, NZD, CAD
+- FX Pairs
 
 ### 2. Entry Rule: Moving Averages Crossover
 
@@ -34,8 +34,28 @@ Deleveop a trading bot to capitalize short term and swing trading opportunities 
 - Trailing Stop with Average True Range (ATR)
 - Structural Stop Loss Management based on Previous Support/Resistance
 
-## Volatility Breakout Strategy (Larry Williams)
 
-The trading bot uses Volatility Breakout strategy developed by Larry Williams. You can find lots of free resources online. 
+
+## Volatility Breakout/Reversal Strategy (Larry Williams)
+
+The trading bot uses Volatility Breakout strategy developed by Larry Williams.
+
+### 1. Determine Investment Universe
+
+- FX Pairs
+
+### 2. Entry Rule
+
+- Determine dominant market direction based on previous candle formations
+- Place two types of orders at the same time: limit order for reversal and stop order for breakout
+
+### 3. Position Sizing
+
+- 0.01% per trade
+
+### 4. Stop Loss for Risk Management
+
+- Entry +/- Average True Range (ATR)
+- Close at the end of day (24 hours time cut)
 
 In addition to technical components of the strategy, it also utilizies time-series data prediction model called **Prophet** developed by Facebook. Prophet is a procedure for forecasting time series data based on an additive model where non-linear trends are fit with yearly, weekly, and daily seasonality, plus holiday effects. You can learn more about this [here](https://facebook.github.io/prophet/).
