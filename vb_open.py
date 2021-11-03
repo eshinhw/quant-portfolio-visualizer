@@ -122,6 +122,6 @@ def open_trades():
 if __name__ == '__main__':
     open_trades()
     #directional_strength('GBP_SGD')
-    print(SYMBOLS_ORDERS)
-    print(SYMBOLS_TRADES)
+    # print(SYMBOLS_ORDERS)
+    # print(SYMBOLS_TRADES)
     print("Open Trades::: " + time.ctime())
