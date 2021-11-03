@@ -2,9 +2,9 @@
   <img width="1000" height="350" src="https://user-images.githubusercontent.com/41933169/139357106-274bad5a-b353-418a-9e66-b35c0c9f3d60.png">
 </p>
 
-# pyQuantInvest
+# pyAlphaQuant
 
-Welcome to pyQuantInvest! :)
+Welcome to pyAlphaQuant! :)
 
 ## Table of Contents
 * [Data Sources](#data-sources)
