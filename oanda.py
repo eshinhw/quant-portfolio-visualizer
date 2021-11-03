@@ -49,7 +49,7 @@ class Oanda:
         r = instruments.InstrumentsCandles(instrument=symbol,
                                            params={"count": count,
                                                     "granularity": interval,
-                                                    "dailyAlignment": 13})
+                                                    "dailyAlignment": 17})
         resp = self.client.request(r)
 
         most_recent_low = float(resp['candles'][-1]['mid']['l'])
@@ -60,7 +60,7 @@ class Oanda:
         r = instruments.InstrumentsCandles(instrument=symbol,
                                            params={"count": count,
                                                     "granularity": interval,
-                                                    "dailyAlignment": 13})
+                                                    "dailyAlignment": 17})
         resp = self.client.request(r)
 
         most_recent_high = float(resp['candles'][-1]['mid']['h'])
