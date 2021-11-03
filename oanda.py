@@ -28,7 +28,7 @@ class Oanda:
         r = instruments.InstrumentsCandles(instrument=symbol,
                                            params={"count": count,
                                                     "granularity": interval,
-                                                    "dailyAlignment": 13})
+                                                    "dailyAlignment": 17})
         resp = self.client.request(r)
 
         data = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
@@ -99,8 +99,6 @@ class Oanda:
     def calculate_prev_max_high(self, symbol: str, period: int, interval: str):
         df = self.get_ohlc(symbol, period, interval)
         return max(df['High'])
-
-
 
 if __name__ == "__main__":
 

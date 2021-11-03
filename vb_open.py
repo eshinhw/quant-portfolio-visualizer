@@ -74,8 +74,8 @@ def open_trades():
         #print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
         try:
             df = oanda.get_ohlc(symbol, 5, 'D')
-            print(symbol)
-            print(df)
+            # print(symbol)
+            # print(df)
 
             prev_high = df.iloc[-2]['High']
             prev_low = df.iloc[-2]['Low']
@@ -93,20 +93,26 @@ def open_trades():
             if symbol not in SYMBOLS_ORDERS and symbol not in SYMBOLS_TRADES:
                 if directional_strength(symbol):
                     # bullish -> long at low
-                    # weighted_entry = historical_low * 0.6 + prev_low * 0.4
-                    # long_entry = weighted_entry + (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
-                    long_entry = prev_low + (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
-                    sl = long_entry - atr
-                    oanda.create_limit_order(symbol, long_entry, sl, RISK_PER_TRADE)
-                    oanda.create_stop_order(symbol, prev_high+(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple']), prev_high - atr, RISK_PER_TRADE)
+                    curr_ask = oanda.get_current_ask_bid_price(symbol)[0]
+
+                    limit_long_entry = min(curr_ask, prev_low + (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple']))
+                    limit_sl = limit_long_entry - atr
+                    oanda.create_limit_order(symbol, limit_long_entry, limit_sl, RISK_PER_TRADE)
+
+                    stop_long_entry = prev_high+(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                    stop_sl = stop_long_entry - atr
+                    oanda.create_stop_order(symbol, stop_long_entry, stop_sl, RISK_PER_TRADE)
                 else:
                     # bearish -> short at high
-                    # weighted_entry = historical_high * 0.6 + prev_high * 0.4
-                    # short_entry = weighted_entry -(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
-                    short_entry = prev_high - (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
-                    sl = short_entry + atr
-                    oanda.create_limit_order(symbol, short_entry, sl, RISK_PER_TRADE)
-                    oanda.create_stop_order(symbol, prev_low-(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple']), prev_low + atr, RISK_PER_TRADE)
+                    curr_bid = oanda.get_current_ask_bid_price(symbol)[1]
+
+                    limit_short_entry = max(curr_bid, prev_high - (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple']))
+                    limit_sl = limit_short_entry + atr
+                    oanda.create_limit_order(symbol, limit_short_entry, limit_sl, RISK_PER_TRADE)
+
+                    stop_short_entry = prev_low-(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                    stop_sl = stop_short_entry + atr
+                    oanda.create_stop_order(symbol, stop_short_entry, stop_sl, RISK_PER_TRADE)
 
             time.sleep(1)
         except Exception as e:
