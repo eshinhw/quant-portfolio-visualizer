@@ -277,14 +277,14 @@ class OandaTrader(Oanda):
 
     def create_limit_order(self, symbol, entry, stop, risk):
         (units, entry, stop, distance) = self.calculate_unit_size(symbol, entry, stop, risk)
-        print(entry-stop)
-        print("entry:", entry)
-        print('stop:', stop)
-        print(entry < stop)
-        print(entry > stop)
+        # print(entry-stop)
+        # print("entry:", entry)
+        # print('stop:', stop)
+        # print(entry < stop)
+        # print(entry > stop)
         # Sell Limit
         if entry < stop:
-            print('sell limit')
+            #print('sell limit')
             order_body = {
             "order": {
                 "price": str(entry),
@@ -297,13 +297,13 @@ class OandaTrader(Oanda):
                 "positionFill": "DEFAULT",
                 }
             }
-            print(order_body)
+            #print(order_body)
             r = orders.OrderCreate(self.acctID, data=order_body)
             self.client.request(r)
 
         # Buy Limit
         else:
-            print('buy limit')
+            #print('buy limit')
             order_body = {
                 "order": {
                     "price": str(entry),
@@ -316,7 +316,7 @@ class OandaTrader(Oanda):
                     "positionFill": "DEFAULT",
                 }
             }
-            print(order_body)
+            #print(order_body)
             r = orders.OrderCreate(self.acctID, data=order_body)
             self.client.request(r)
 
