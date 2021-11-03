@@ -106,5 +106,4 @@ def open_trades():
 
 if __name__ == '__main__':
     open_trades()
-    #direction('AUD_CAD')
     print("Open Trades::: " + time.ctime())

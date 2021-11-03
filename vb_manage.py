@@ -12,8 +12,6 @@ if os.name == 'posix':
 
 INSTRUMENTS = oanda.fx_instruments()
 
-RISK_PER_TRADE = 0.0001
-
 ORDERS_LIST = oanda.get_order_list()
 TRADES_LIST = oanda.get_trade_list()
 
@@ -27,7 +25,7 @@ def manage_trades():
         instrument = trade['instrument']
         if instrument in SYMBOLS_ORDERS:
             for order in ORDERS_LIST:
-                print(order)
+                #print(order)
                 order_id = order['id']
                 if instrument == order['instrument']:
                     oanda.cancel_single_order(order_id)
