@@ -1,6 +1,7 @@
 import os
 import time
 import datetime as dt
+import numpy as np
 from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID, VOLATILITY_BREAKOUT
 from oandaTrader import OandaTrader
 # from fbprophet import Prophet
@@ -42,14 +43,26 @@ DECIMAL_TABLE = oanda.create_decimal_table()
 #     predicted_price = forecast[forecast['ds'] == end_date]['yhat']
 #     return predicted_price
 
-def directional_strength(symbol):
-
+def conviction(symbol):
     df = oanda.get_ohlc(symbol, 6, 'D')
+    df['conviction'] = abs((df['Close'] - df['Open']) / (df['High'] - df['Low']))
 
     df['strength'] = (df['Close'] - df['Open'])
     bullish = df[df['strength'] > 0]
     bearish = df[df['strength'] < 0]
-    return abs(bullish['strength'].sum()) > abs(bearish['strength'].sum())
+
+    df = df[:-1]
+
+    convince = df['conviction'].median() > 0.5
+    bull = abs(bullish['strength'].sum()) > abs(bearish['strength'].sum())
+
+    print(df)
+    print(df['conviction'].median())
+
+    return convince, bull
+
+    # df['vol'] = np.where((df['Close'] - df['Open']) < 0, -1, 1)
+
 
 
 
@@ -68,10 +81,11 @@ def open_trades():
             prev_low = df.iloc[-2]['Low']
 
             atr = oanda.calculate_ATR(symbol, 10, 'D')
-            #print(prev_range, atr)
+
+            convince, bullish = conviction(symbol)
 
             if symbol not in SYMBOLS_ORDERS and symbol not in SYMBOLS_TRADES:
-                if directional_strength(symbol):
+                if bullish:
                     # bullish -> long at low
                     curr_ask = oanda.get_current_ask_bid_price(symbol)[0]
 
@@ -104,5 +118,8 @@ def open_trades():
             time.sleep(1)
 
 if __name__ == '__main__':
-    open_trades()
+    #open_trades()
+    for symbol in INSTRUMENTS:
+        print(symbol)
+        print(conviction(symbol))
     print("Open Trades::: " + time.ctime())
