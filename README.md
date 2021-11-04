@@ -4,7 +4,15 @@
 
 # pyTrader
 
-Deleveop a trading bot to capitalize short term and swing trading opportunities in FX markets.
+Deleveop an automated trading bot to capitalize short term trading opportunities in FX markets. With the scripts in pyTrader, I can manage lots of orders and trades at once.
+
+<p align="center">
+  <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/140251156-0dadf0d7-ff8d-4a40-a598-95bb8ecc9c1d.png">
+</p>
+
+<p align="center">
+  <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/140251232-6cec6486-fc71-4225-982c-c000e0a8c981.png">
+</p>
 
 ## Data Sources
 
@@ -33,8 +41,6 @@ Deleveop a trading bot to capitalize short term and swing trading opportunities 
 
 - Trailing Stop with Average True Range (ATR)
 - Structural Stop Loss Management based on Previous Support/Resistance
-
-
 
 ## Volatility Breakout/Reversal Strategy (Larry Williams)
 
