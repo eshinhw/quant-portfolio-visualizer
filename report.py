@@ -5,17 +5,18 @@ sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "questradeAPI"))) # ap
 import smtplib
 import math
 import requests
+import time
 import numpy as np
 import pandas as pd
 import datetime as dt
 import matplotlib.pyplot as plt
-from questradeAPI.credentials import ESHINHW_ACCOUNT_TYPE, ESHINHW_QUESTRADE_API_CODE
-from questradeAPI.credentials import ALWL6782_ACCOUNT_TYPE, ALWL6782_QUESTRADE_API_CODE
+from credentials import ESHINHW_ACCOUNT_TYPE, ESHINHW_QUESTRADE_API_CODE
+from credentials import ALWL6782_ACCOUNT_TYPE, ALWL6782_QUESTRADE_API_CODE
 from questradeAPI import Questrade
 from email.message import EmailMessage
-from questradeAPI.credentials import GMAIL_ADDRESS, GMAIL_PW
+from credentials import GMAIL_ADDRESS, GMAIL_PW
 
-def sendEmail(subject, curr_pos, filters, watchlist):
+def sendEmail(subject, stock_bal, stock_port, quant_bal, quant_port):
     msg = EmailMessage()
     msg["Subject"] = subject
     msg["From"] = GMAIL_ADDRESS
@@ -28,13 +29,18 @@ def sendEmail(subject, curr_pos, filters, watchlist):
         <html>
             <body>
                 <p> Hello Investors,<br> Below is the daily summary of your portfolio and updated stock watchlist.<br> Have a good evening :) </p>
-                <h1> Portfolio Overview </h1>
+                <h1> Stock Portfolio Overview </h1>
                 <h3> Balance Summary </h3>
-                {curr_pos}
+                {stock_bal}
                 <h3> Performance Summary </h3>
-                {filters}
+                {stock_port}
                 <br>
-                {watchlist}
+                <h1> Quant Portfolio Overview </h1>
+                <h3> Balance Summary </h3>
+                {quant_bal}
+                <h3> Performance Summary </h3>
+                {quant_port}
+                <br>
             </body>
         </html>
     """,
@@ -76,5 +82,5 @@ for aNum in acctNums:
     else:
         print("Please define portfolio first in credentials.py")
 
-sendEmail('Stock Portfolio', stock_bal.to_html(), stock_portfolio.to_html(), stock_bal.to_html())
-sendEmail('Quant Portfolio', quant_bal.to_html(), quant_portfolio.to_html(), quant_bal.to_html())
+sendEmail('Questrade Portfolios Daily Report', stock_bal.to_html(), stock_portfolio.to_html(), quant_bal.to_html(), quant_portfolio.to_html())
+print("Sent Successfully ------ " + time.ctime())
