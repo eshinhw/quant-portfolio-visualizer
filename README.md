@@ -4,6 +4,8 @@
 
 # qPortfolioAnalytics
 
+No longer need to log into the platform to check how your investing portfolios are doing! qPortfolioAnalytics accesses your accounts through Questrade API and generate a daily report automatically sent to your inbox every weekday at 6pm EST.
+
 ### Portfolio Holdings
 
 <p align="center">
