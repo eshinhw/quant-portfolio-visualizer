@@ -23,6 +23,6 @@
 ### Automated Daily Account Report through Email
 
 <p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/140528484-2d801cf6-227b-4004-b001-abed24b41d75.png">
+  <img width="1000" height="700" src="https://user-images.githubusercontent.com/41933169/140528484-2d801cf6-227b-4004-b001-abed24b41d75.png">
 </p>
 
