@@ -10,10 +10,18 @@ class Auth:
     def __init__(self, user_id, **kwargs):
 
         if os.path.exists('./' + user_id):
-            token_path = os.path.expanduser(f'./{user_id}/.questrade.json')
+            if os.name == 'nt':
+                token_path = os.path.expanduser(f'./{user_id}/.questrade.json')
+            if os.name == 'posix':
+                token_path = os.path.expanduser(f'/home/eshinhw/qPortfolioAnalytics/{user_id}/.questrade.json')
         else:
-            os.mkdir(f'./{user_id}')
-            token_path = os.path.expanduser(f'./{user_id}/.questrade.json')
+            if os.name == 'nt':
+                os.mkdir(f'./{user_id}')
+                token_path = os.path.expanduser(f'./{user_id}/.questrade.json')
+            if os.name == 'posix':
+                os.mkdir(f'/home/eshinhw/qPortfolioAnalytics/{user_id}')
+                token_path = os.path.expanduser(f'/home/eshinhw/qPortfolioAnalytics/{user_id}/.questrade.json')
+
 
         if 'config' in kwargs:
             self.config = kwargs['config']
