@@ -14,13 +14,11 @@ Deleveop an automated trading bot to capitalize short term trading opportunities
   <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/140251232-6cec6486-fc71-4225-982c-c000e0a8c981.png">
 </p>
 
-## Data Sources
+## External Resources
 
-- [OANDA API](https://developer.oanda.com/)
-
-## Trading Automation 
-
-- [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
+- Market Data: [OANDA API](https://developer.oanda.com/)
+- Trading Automation: [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
+- Account Verification: [Volatility Breakout](https://www.myfxbook.com/members/EddieShin/volatility-breakout/9169645)
 
 ## Trend Following + MA Crossover Strategy (Rob Carver)
 
