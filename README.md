@@ -19,3 +19,10 @@
 <p align="center">
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/112912007-90aa4600-90c4-11eb-9868-7e1939e89af2.png">
 </p>
+
+### Automated Daily Account Report through Email
+
+<p align="center">
+  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/140528484-2d801cf6-227b-4004-b001-abed24b41d75.png">
+</p>
+
