@@ -2,6 +2,8 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "questradeAPI"))) # append questradeAPI directory path
 
+print(sys.path)
+
 import smtplib
 import math
 import requests
