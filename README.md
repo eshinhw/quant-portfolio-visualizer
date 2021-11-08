@@ -44,7 +44,7 @@ Deleveop an automated trading bot to capitalize short term trading opportunities
 
 ## Overall Comments
 
-I've tried other short-term strategies like Volatility Breakout and Reversal but none of them really worked well in FX markets.
+I've tried other short-term strategies like **Volatility Breakout** and **Reversal** but none of them really worked well in FX markets. I decided to focus on long-term trades.
 
 <!-- ## Monthly Support/Resistance Reversal Strategy
 
