@@ -42,6 +42,10 @@ Deleveop an automated trading bot to capitalize short term trading opportunities
 - If currently in long trade and bearish crossover occurs, exit the long trade.
 - If currently in short trade and bullish crossover occurs, exit the short trade.
 
+## Overall Comments
+
+I've tried other short-term strategies like Volatility Breakout and Reversal but none of them really worked well in FX markets.
+
 <!-- ## Monthly Support/Resistance Reversal Strategy
 
 ### 1. Determine Investment Universe
@@ -61,5 +65,7 @@ Deleveop an automated trading bot to capitalize short term trading opportunities
 
 - Entry +/- Average True Range (ATR)
 - Close at the end of day (24 hours time cut)
+
+
 
 In addition to technical components of the strategy, it also utilizies time-series data prediction model called **Prophet** developed by Facebook. Prophet is a procedure for forecasting time series data based on an additive model where non-linear trends are fit with yearly, weekly, and daily seasonality, plus holiday effects. You can learn more about this [here](https://facebook.github.io/prophet/). -->
