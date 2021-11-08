@@ -1,17 +1,15 @@
 import os
-import json
 import pandas as pd
-import datetime as dt
-from oanda import Oanda
 from pprint import pprint
+from oandaData import OandaData
 from typing import List, Dict, Tuple
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.trades as trades
-import oandapyV20.endpoints.pricing as pricing
-import oandapyV20.endpoints.accounts as accounts
-import oandapyV20.endpoints.instruments as instruments
+# import oandapyV20.endpoints.pricing as pricing
+# import oandapyV20.endpoints.accounts as accounts
+# import oandapyV20.endpoints.instruments as instruments
 from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID, VOLATILITY_BREAKOUT
-from oandapyV20.contrib.requests import MarketOrderRequest, LimitOrderRequest, StopOrderRequest, StopLossOrderRequest
+
 
 class OandaTrader(OandaData):
 
