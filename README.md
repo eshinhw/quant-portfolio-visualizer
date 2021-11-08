@@ -4,7 +4,7 @@
 
 # pyTrader
 
-Deleveop an automated trading bot to capitalize short term trading opportunities in FX markets. With the scripts in pyTrader, I can manage lots of orders and trades at once.
+Deleveop an automated trading bot to capitalize trading opportunities in FX markets.
 
 <p align="center">
   <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/140251156-0dadf0d7-ff8d-4a40-a598-95bb8ecc9c1d.png">
