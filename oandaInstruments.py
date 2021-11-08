@@ -15,9 +15,7 @@ class OandaInstrument():
 
         df['Instrument'] = df['Instrument'].str.replace('/','_')
         low_spread = df[df['Spread'] < 10].sort_values(by='Spread')
-        # print(low_spread.tail(10))
-        # print(low_spread)
-        # print(df['Instrument'])
+
         for inst in low_spread['Instrument'].tolist():
             for q in quote:
                 if q in inst:
