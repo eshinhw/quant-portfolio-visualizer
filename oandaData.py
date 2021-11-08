@@ -51,9 +51,7 @@ class OandaData:
                                                     "granularity": interval,
                                                     "dailyAlignment": 17})
         resp = self.client.request(r)
-
         most_recent_low = float(resp['candles'][-1]['mid']['l'])
-
         return most_recent_low
 
     def get_current_high(self, symbol, count, interval):
@@ -62,9 +60,7 @@ class OandaData:
                                                     "granularity": interval,
                                                     "dailyAlignment": 17})
         resp = self.client.request(r)
-
         most_recent_high = float(resp['candles'][-1]['mid']['h'])
-
         return most_recent_high
 
 
@@ -101,20 +97,7 @@ class OandaData:
         return max(df['High'])
 
 if __name__ == "__main__":
-
-    # Testing Oanda class methods
-
-    oanda = Oanda(OANDA_API_KEY, TEST_ACCOUNT_ID)
-    #print(oanda.get_balance())
-    # print(oanda.get_ohlc('EUR_USD', 48, 'H1'))
-    #print(oanda.get_current_ask_bid_price('EUR_USD'))
-    #print(oanda.calculate_MA('EUR_USD', 20, 'D'))
-
-    # print(oanda.fx_instruments())
-    #print(os.name)
-
-    #print(oanda.get_current_low('EUR_USD', 5, 'H1'))
-    print(oanda.get_ohlc('EUR_USD', 10, 'D'))
+    pass
 
 
 
