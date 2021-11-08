@@ -14,7 +14,7 @@ import oandapyV20.endpoints.instruments as instruments
 from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID
 
 
-class Oanda:
+class OandaData:
 
     def __init__(self, api_key, accountID) -> None:
         self.client = API(api_key)

@@ -22,15 +22,12 @@ SYMBOLS_TRADES = oanda.symbols_in_trades()
 DECIMAL_TABLE = oanda.create_decimal_table()
 
 # DAILY SETUP
-INTERVAL = 'D'
-MA_LAGGING_PERIOD = -3
 SMA = 120
 LMA = 480
-
-RISK_PER_TRADE = 0.02
-
+INTERVAL = 'D'
+MA_LAGGING_PERIOD = -3
 SL_PERCENT = 0.025
-
+RISK_PER_TRADE = 0.02
 
 # open trades
 
@@ -110,74 +107,71 @@ def open_trades():
         except Exception as e:
             print(e)
 
-def manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support):
-
-    if rr_factor >= 1 and rr_factor < 2:
-        oanda.update_stop_loss(instrument, entry - sl_pips / 2)
-
-    if rr_factor >= 2 and rr_factor < 3:
-        # if risk reward factor is 2.x, move stoploss to break even
-        oanda.update_stop_loss(instrument, entry)
-    else:
-        new_sl = round(entry + (rr_factor - 2) * sl_pips, DECIMAL_TABLE[instrument]['decimal'])
-        # if rr_factor is 3.x, change stop loss to 1.x (achieved 1:1 ratio)
-        # if rr_factor is 4.x, change stop loss to 2.x (achieved 2:1 ratio)
-        oanda.update_stop_loss(instrument, max(new_sl, support))
-
-def manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance):
-    if rr_factor >= 1 and rr_factor < 2:
-        oanda.update_stop_loss(instrument, entry + sl_pips / 2)
-
-    if rr_factor >= 2 and rr_factor < 3:
-        # if risk reward factor is 2.x, move stoploss to break even
-        oanda.update_stop_loss(instrument, entry)
-    else:
-        new_sl = round(entry - (rr_factor - 2) * sl_pips, DECIMAL_TABLE[instrument]['decimal'])
-        # if rr_factor is 3.x, change stop loss to 1.x (achieved 1:1 ratio)
-        # if rr_factor is 4.x, change stop loss to 2.x (achieved 2:1 ratio)
-        oanda.update_stop_loss(instrument, min(new_sl, resistance))
-
-def manage_trades():
-    # systematically adjust stop loss
-    for trade in TRADES_LIST:
-        # print(trade)
-        instrument = trade['instrument']
-        entry = float(trade['price'])
-        sl = float(trade['stopLossOrder']['price'])
-        open_time = dt.datetime.strptime(trade['openTime'][:trade['openTime'].index('.')].replace('T', ' '),
-                                         "%Y-%m-%d %H:%M:%S")
-        curr_time = dt.datetime.now()
-        diff = curr_time - open_time
-        hours_diff = round(diff.seconds / 3600, 0)
-        days_diff = round(diff.days, 0)
-        sl_pips = abs(entry - sl)
-
-        # long trade
-        if sl < entry:
-            curr_price = oanda.get_current_ask_bid_price(instrument)[1]
-            profit_pips = abs(curr_price - entry)
-            recent_low = oanda.calculate_prev_min_low(instrument, days_diff+PREV_KEY_LEVEL_BUFFER, 'D')
-            atr = oanda.calculate_ATR(instrument, int(hours_diff), 'H1')
-            support = round(recent_low - atr, DECIMAL_TABLE[instrument]['decimal'])
-            rr_factor = profit_pips / sl_pips
-            manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support)
-
-        # short trade
-        else:
-            curr_price = oanda.get_current_ask_bid_price(instrument)[0]
-            profit_pips = abs(curr_price - entry)
-            recent_high = oanda.calculate_prev_max_high(instrument, days_diff+PREV_KEY_LEVEL_BUFFER, 'D')
-            atr = oanda.calculate_ATR(instrument, int(hours_diff), 'H1')
-            resistance = round(recent_high + atr, DECIMAL_TABLE[instrument]['decimal'])
-            rr_factor = profit_pips / sl_pips
-            manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance)
-
 
 if __name__ == "__main__":
 
-    # open_trades()
-    # manage_trades()
+    open_trades()
+    print("Run Successfully --> " + time.ctime())
 
-    bullish_crossover_test('EUR_USD')
+# def manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support):
 
-    print("Run Successfully --------- " + time.ctime() + "---------------------------------")
+#     if rr_factor >= 1 and rr_factor < 2:
+#         oanda.update_stop_loss(instrument, entry - sl_pips / 2)
+
+#     if rr_factor >= 2 and rr_factor < 3:
+#         # if risk reward factor is 2.x, move stoploss to break even
+#         oanda.update_stop_loss(instrument, entry)
+#     else:
+#         new_sl = round(entry + (rr_factor - 2) * sl_pips, DECIMAL_TABLE[instrument]['decimal'])
+#         # if rr_factor is 3.x, change stop loss to 1.x (achieved 1:1 ratio)
+#         # if rr_factor is 4.x, change stop loss to 2.x (achieved 2:1 ratio)
+#         oanda.update_stop_loss(instrument, max(new_sl, support))
+
+# def manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance):
+#     if rr_factor >= 1 and rr_factor < 2:
+#         oanda.update_stop_loss(instrument, entry + sl_pips / 2)
+
+#     if rr_factor >= 2 and rr_factor < 3:
+#         # if risk reward factor is 2.x, move stoploss to break even
+#         oanda.update_stop_loss(instrument, entry)
+#     else:
+#         new_sl = round(entry - (rr_factor - 2) * sl_pips, DECIMAL_TABLE[instrument]['decimal'])
+#         # if rr_factor is 3.x, change stop loss to 1.x (achieved 1:1 ratio)
+#         # if rr_factor is 4.x, change stop loss to 2.x (achieved 2:1 ratio)
+#         oanda.update_stop_loss(instrument, min(new_sl, resistance))
+
+# def manage_trades():
+#     # systematically adjust stop loss
+#     for trade in TRADES_LIST:
+#         # print(trade)
+#         instrument = trade['instrument']
+#         entry = float(trade['price'])
+#         sl = float(trade['stopLossOrder']['price'])
+#         open_time = dt.datetime.strptime(trade['openTime'][:trade['openTime'].index('.')].replace('T', ' '),
+#                                          "%Y-%m-%d %H:%M:%S")
+#         curr_time = dt.datetime.now()
+#         diff = curr_time - open_time
+#         hours_diff = round(diff.seconds / 3600, 0)
+#         days_diff = round(diff.days, 0)
+#         sl_pips = abs(entry - sl)
+
+#         # long trade
+#         if sl < entry:
+#             curr_price = oanda.get_current_ask_bid_price(instrument)[1]
+#             profit_pips = abs(curr_price - entry)
+#             recent_low = oanda.calculate_prev_min_low(instrument, days_diff+PREV_KEY_LEVEL_BUFFER, 'D')
+#             atr = oanda.calculate_ATR(instrument, int(hours_diff), 'H1')
+#             support = round(recent_low - atr, DECIMAL_TABLE[instrument]['decimal'])
+#             rr_factor = profit_pips / sl_pips
+#             manage_stop_for_long(instrument, entry, sl_pips, rr_factor, support)
+
+#         # short trade
+#         else:
+#             curr_price = oanda.get_current_ask_bid_price(instrument)[0]
+#             profit_pips = abs(curr_price - entry)
+#             recent_high = oanda.calculate_prev_max_high(instrument, days_diff+PREV_KEY_LEVEL_BUFFER, 'D')
+#             atr = oanda.calculate_ATR(instrument, int(hours_diff), 'H1')
+#             resistance = round(recent_high + atr, DECIMAL_TABLE[instrument]['decimal'])
+#             rr_factor = profit_pips / sl_pips
+#             manage_stop_for_short(instrument, entry, sl_pips, rr_factor, resistance)
+
