@@ -18,39 +18,39 @@ Deleveop an automated trading bot to capitalize short term trading opportunities
 
 - Market Data: [OANDA API](https://developer.oanda.com/)
 - Trading Automation: [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
-- Account Verification: [Volatility Breakout](https://www.myfxbook.com/members/EddieShin/volatility-breakout/9169645), [Trending MA Crossover](https://www.myfxbook.com/members/EddieShin/trending-ma-crossover/9170659)
+- Account Performance Verification: [Trending MA Crossover](https://www.myfxbook.com/members/EddieShin/trending-ma-crossover/9170659)
 
 ## Trend Following + MA Crossover Strategy (Rob Carver)
 
 ### 1. Determine Investment Universe
 
-- FX Pairs
+- Global FX Pairs
 
 ### 2. Entry Rule: Moving Averages Crossover
 
-- Long @ H1 120MA X H1 720MA
-- Short @ H1 120MA X H1 720MA
+- Long @ Bullish Crossover D 120MA X D 480MA
+- Short @ Bearish Crossover D 120MA X D 480MA
 
-### 3. Position Sizing
+### 3. Position Sizing & Stop Loss
 
-- 1~5% per trade
+- 2% of total capital / trade
+- Stop Loss for Long Trade: Entry - 2.5%
+- Stop Loss for Short Trade: Entry + 2.5% 
 
-### 4. Stop Loss for Risk Management
+### 4. Exit Rule: Counter Moving Averages Crossover
 
-- Trailing Stop with Average True Range (ATR)
-- Structural Stop Loss Management based on Previous Support/Resistance
+- If currently in long trade and bearish crossover occurs, exit the long trade.
+- If currently in short trade and bullish crossover occurs, exit the short trade.
 
-## Volatility Breakout/Reversal Strategy (Larry Williams)
-
-The trading bot uses Volatility Breakout strategy developed by Larry Williams.
+<!-- ## Monthly Support/Resistance Reversal Strategy
 
 ### 1. Determine Investment Universe
 
-- FX Pairs
+- Global FX Pairs
 
 ### 2. Entry Rule
 
-- Determine dominant market direction based on previous candle formations
+- Determine monthly lows and highs.
 - Place two types of orders at the same time: limit order for reversal and stop order for breakout
 
 ### 3. Position Sizing
@@ -62,4 +62,4 @@ The trading bot uses Volatility Breakout strategy developed by Larry Williams.
 - Entry +/- Average True Range (ATR)
 - Close at the end of day (24 hours time cut)
 
-In addition to technical components of the strategy, it also utilizies time-series data prediction model called **Prophet** developed by Facebook. Prophet is a procedure for forecasting time series data based on an additive model where non-linear trends are fit with yearly, weekly, and daily seasonality, plus holiday effects. You can learn more about this [here](https://facebook.github.io/prophet/).
+In addition to technical components of the strategy, it also utilizies time-series data prediction model called **Prophet** developed by Facebook. Prophet is a procedure for forecasting time series data based on an additive model where non-linear trends are fit with yearly, weekly, and daily seasonality, plus holiday effects. You can learn more about this [here](https://facebook.github.io/prophet/). -->
