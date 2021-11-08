@@ -1,5 +1,5 @@
-import time
 import os
+import time
 import datetime as dt
 from pprint import pprint
 from oandaTrader import OandaTrader
@@ -21,69 +21,48 @@ SYMBOLS_TRADES = oanda.symbols_in_trades()
 
 DECIMAL_TABLE = oanda.create_decimal_table()
 
-# 1H SETUP
-INTERVAL = 'H1'
-SMA = 120
-LMA = 720
-ATR_PERIOD = 480
-RISK_PER_TRADE = 0.005
-SL_MULTIPLIER = 3
-PREV_KEY_LEVEL_BUFFER = 3
-WAIT_PERIOD = 12
-ENTRY_STOP_BUFFER = 3
-
 # DAILY SETUP
-# INTERVAL = 'D'
-# MA_LAGGING_PERIOD = -5
-# SMA = 60
-# LMA = 252
-# ATR_PERIOD = 252
-# RISK_PER_TRADE = 0.01
-# ATR_MULTIPLIER = 2.5
+INTERVAL = 'D'
+MA_LAGGING_PERIOD = -3
+SMA = 120
+LMA = 480
+
+RISK_PER_TRADE = 0.02
+
+SL_PERCENT = 0.025
+
 
 # open trades
 
 def bullish_crossover_test(symbol):
     ohlc = oanda.get_ohlc(symbol, LMA * 2, INTERVAL)
-    ohlc[f'{SMA}MA'] = ohlc['Close'].rolling(SMA).mean()
-    ohlc[f'{LMA}MA'] = ohlc['Close'].rolling(LMA).mean()
+    sma = f'{SMA}MA'
+    lma = f'{LMA}MA'
+    ohlc[sma] = ohlc['Close'].rolling(SMA).mean()
+    ohlc[lma] = ohlc['Close'].rolling(LMA).mean()
 
-    curr_date = ohlc.index[-1]
-    try:
-        bullish_crossover_date = ohlc[ohlc[f'{SMA}MA'] < ohlc[f'{LMA}MA']].index[-1] + dt.timedelta(hours=1)
-        entry_date = bullish_crossover_date + dt.timedelta(hours=WAIT_PERIOD)
-    except:
-        return False
-    # print(type(curr_date))
-    # print(curr_date)
-    # print(bullish_crossover_date)
-    # print(entry_date)
-    # print(curr_date == entry_date)
+    prev_sma = ohlc[sma].iloc[MA_LAGGING_PERIOD]
+    prev_lma = ohlc[lma].iloc[MA_LAGGING_PERIOD]
 
-    return curr_date == entry_date
+    curr_sma = ohlc[sma].iloc[-1]
+    curr_lma = ohlc[lma].iloc[-1]
+
+    return prev_sma < prev_lma and curr_sma > curr_lma
 
 def bearish_crossover_test(symbol):
-    # print(symbol)
     ohlc = oanda.get_ohlc(symbol, LMA * 2, INTERVAL)
-    ohlc[f'{SMA}MA'] = ohlc['Close'].rolling(SMA).mean()
-    ohlc[f'{LMA}MA'] = ohlc['Close'].rolling(LMA).mean()
+    sma = f'{SMA}MA'
+    lma = f'{LMA}MA'
+    ohlc[sma] = ohlc['Close'].rolling(SMA).mean()
+    ohlc[lma] = ohlc['Close'].rolling(LMA).mean()
 
-    curr_date = ohlc.index[-1]
+    prev_sma = ohlc[sma].iloc[MA_LAGGING_PERIOD]
+    prev_lma = ohlc[lma].iloc[MA_LAGGING_PERIOD]
 
-    try:
-        bearish_crossover_date = ohlc[ohlc[f'{SMA}MA'] > ohlc[f'{LMA}MA']].index[-1] + dt.timedelta(hours=1)
-        entry_date = bearish_crossover_date + dt.timedelta(hours=WAIT_PERIOD)
-    except:
-        # print('return False')
-        return False
+    curr_sma = ohlc[sma].iloc[-1]
+    curr_lma = ohlc[lma].iloc[-1]
 
-    # print(type(curr_date))
-    # print(curr_date)
-    # print(bearish_crossover_date)
-    # print(entry_date)
-    # print(curr_date == entry_date)
-
-    return curr_date == entry_date
+    return prev_sma > prev_lma and curr_sma < curr_lma
 
 def open_trades():
     count = 0
@@ -91,39 +70,40 @@ def open_trades():
         count += 1
         #print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
 
-        decimal = DECIMAL_TABLE[symbol]['decimal']
-        multiple = DECIMAL_TABLE[symbol]['multiple']
+        # decimal = DECIMAL_TABLE[symbol]['decimal']
+        # multiple = DECIMAL_TABLE[symbol]['multiple']
 
         try:
             # bullish cross over --> long
             if bullish_crossover_test(symbol):
-                curr_low = oanda.get_current_low(symbol, WAIT_PERIOD, INTERVAL)
-                curr_high = oanda.get_current_high(symbol, WAIT_PERIOD, INTERVAL)
 
-                entry = round(curr_high + (ENTRY_STOP_BUFFER / multiple), decimal)
+                # Determine entry and stop price
+                entry = oanda.get_current_ask_bid_price(symbol)[0]
+                stop = entry - (entry * SL_PERCENT)
 
-                stop_with_atr = entry - oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_MULTIPLIER
-                stop_with_low = curr_low - (ENTRY_STOP_BUFFER / multiple)
-
-                stop = round(min(stop_with_atr, stop_with_low), decimal)
 
                 if (symbol not in SYMBOLS_TRADES) and (symbol not in SYMBOLS_ORDERS):
-                    oanda.create_stop_order(symbol, entry, stop, RISK_PER_TRADE)
-                    print(f"Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
+                    oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
+                    print(f"Long Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
+                else:
+                    # there exists a trade in opposite direction which must be closed first.
+                    oanda.close_open_trade(symbol)
+                    oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
 
             # bearish cross over --> short
             if bearish_crossover_test(symbol):
-                curr_low = oanda.get_current_low(symbol, WAIT_PERIOD, INTERVAL)
-                curr_high = oanda.get_current_high(symbol, WAIT_PERIOD, INTERVAL)
 
-                entry = round(curr_low - (ENTRY_STOP_BUFFER / multiple), decimal)
-                stop_with_atr = entry + oanda.calculate_ATR(symbol, ATR_PERIOD, INTERVAL) * SL_MULTIPLIER
-                stop_with_high = curr_high + (ENTRY_STOP_BUFFER / multiple)
-                stop = round(max(stop_with_atr, stop_with_high), decimal)
+                # Determine entry and stop price
+                entry = oanda.get_current_ask_bid_price(symbol)[1]
+                stop = entry + (entry * SL_PERCENT)
 
                 if (symbol not in SYMBOLS_TRADES) and (symbol not in SYMBOLS_ORDERS):
-                    oanda.create_stop_order(symbol, entry, stop, RISK_PER_TRADE)
-                    print(f"Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
+                    oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
+                    print(f"Short Order Placed [{symbol}] @ ENTRY: {entry} SL: {stop}")
+                else:
+                    # there exists a trade in opposite direction which must be closed first.
+                    oanda.close_open_trade(symbol)
+                    oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
 
             time.sleep(1)
 
@@ -195,7 +175,9 @@ def manage_trades():
 
 if __name__ == "__main__":
 
-    open_trades()
-    manage_trades()
+    # open_trades()
+    # manage_trades()
+
+    bullish_crossover_test('EUR_USD')
 
     print("Run Successfully --------- " + time.ctime() + "---------------------------------")
