@@ -11,7 +11,7 @@ import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.contrib.requests as requests
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
-from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID
+from credentials import OANDA_API_KEY, TEST_ACCOUNT_ID
 
 
 class OandaData:

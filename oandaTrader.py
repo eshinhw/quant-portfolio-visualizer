@@ -9,7 +9,7 @@ import oandapyV20.endpoints.trades as trades
 # import oandapyV20.endpoints.pricing as pricing
 # import oandapyV20.endpoints.accounts as accounts
 # import oandapyV20.endpoints.instruments as instruments
-from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID, VOLATILITY_BREAKOUT
+from credentials import OANDA_API_KEY, TEST_ACCOUNT_ID, VOLATILITY_BREAKOUT
 
 
 class OandaTrader(OandaData, OandaInstrument):
