@@ -37,10 +37,10 @@ Deleveop an automated trading bot to capitalize short term trading opportunities
 - Stop Loss for Long Trade: Entry - 2.5%
 - Stop Loss for Short Trade: Entry + 2.5% 
 
-### 4. Exit Rule: Counter Moving Averages Crossover
+### 4. Exit Rule: Counter Moving Averages Crossover (Continuous Trading)
 
-- If currently in long trade and bearish crossover occurs, exit the long trade.
-- If currently in short trade and bullish crossover occurs, exit the short trade.
+- If currently in long trade and bearish crossover occurs, exit the long trade and enter the short trade.
+- If currently in short trade and bullish crossover occurs, exit the short trade and enter the long trade.
 
 ## Overall Comments
 
