@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 from pprint import pprint
 from oandaData import OandaData
@@ -6,9 +5,6 @@ from typing import List, Dict, Tuple
 from oandaInstrument import OandaInstrument
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.trades as trades
-# import oandapyV20.endpoints.pricing as pricing
-# import oandapyV20.endpoints.accounts as accounts
-# import oandapyV20.endpoints.instruments as instruments
 from credentials import OANDA_API_KEY, TEST_ACCOUNT_ID, VOLATILITY_BREAKOUT
 
 
