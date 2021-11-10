@@ -3,7 +3,7 @@ import pandas as pd
 from pprint import pprint
 from oandaData import OandaData
 from typing import List, Dict, Tuple
-from oandaInstruments import OandaInstrument
+from oandaInstrument import OandaInstrument
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.trades as trades
 # import oandapyV20.endpoints.pricing as pricing
@@ -12,7 +12,7 @@ import oandapyV20.endpoints.trades as trades
 from credentials import OANDA_API_KEY, TEST_ACCOUNT_ID, VOLATILITY_BREAKOUT
 
 
-class OandaTrader(OandaData, OandaInstrument):
+class OandaOrder(OandaData, OandaInstrument):
 
     def __init__(self, api_key, accountID) -> None:
         super().__init__(api_key, accountID)

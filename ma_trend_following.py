@@ -2,14 +2,14 @@ import os
 import time
 import datetime as dt
 from pprint import pprint
-from oandaTrader import OandaTrader
+from oandaOrder import OandaOrder
 from credentials import OANDA_API_KEY, FORWARD_TESTING_ACCOUNT_ID, TEST_ACCOUNT_ID
 
 # Login
 if os.name == 'nt':
-    oanda = OandaTrader(OANDA_API_KEY, TEST_ACCOUNT_ID)
+    oanda = OandaOrder(OANDA_API_KEY, TEST_ACCOUNT_ID)
 if os.name == 'posix':
-    oanda = OandaTrader(OANDA_API_KEY, FORWARD_TESTING_ACCOUNT_ID)
+    oanda = OandaOrder(OANDA_API_KEY, FORWARD_TESTING_ACCOUNT_ID)
 
 INSTRUMENTS = oanda.fx_instruments()
 
