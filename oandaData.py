@@ -6,8 +6,6 @@ from typing import List, Dict, Tuple
 import oandapyV20.endpoints.pricing as pricing
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
-#from credentials import OANDA_API_KEY, TEST_ACCOUNT_ID
-
 
 class OandaData:
 
