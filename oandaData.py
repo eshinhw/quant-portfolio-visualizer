@@ -1,14 +1,9 @@
-import os
-import json
 import pandas as pd
 import datetime as dt
 from oandapyV20 import API
 from pprint import pprint
 from typing import List, Dict, Tuple
-import oandapyV20.endpoints.orders as orders
-import oandapyV20.endpoints.trades as trades
 import oandapyV20.endpoints.pricing as pricing
-import oandapyV20.contrib.requests as requests
 import oandapyV20.endpoints.accounts as accounts
 import oandapyV20.endpoints.instruments as instruments
 #from credentials import OANDA_API_KEY, TEST_ACCOUNT_ID
