@@ -44,7 +44,10 @@ def bullish_crossover_test(symbol):
     curr_sma = ohlc[sma].iloc[-1]
     curr_lma = ohlc[lma].iloc[-1]
 
-    return prev_sma < prev_lma and curr_sma > curr_lma
+    curr_close = ohlc['Close'].iloc[-1]
+    curr_low = ohlc['Low'].iloc[-1]
+
+    return prev_sma < prev_lma and curr_sma > curr_lma and curr_close > curr_sma and curr_low > curr_sma
 
 def bearish_crossover_test(symbol):
     ohlc = oanda.get_ohlc(symbol, LMA * 2, INTERVAL)
@@ -59,7 +62,10 @@ def bearish_crossover_test(symbol):
     curr_sma = ohlc[sma].iloc[-1]
     curr_lma = ohlc[lma].iloc[-1]
 
-    return prev_sma > prev_lma and curr_sma < curr_lma
+    curr_close = ohlc['Close'].iloc[-1]
+    curr_high = ohlc['High'].iloc[-1]
+
+    return prev_sma > prev_lma and curr_sma < curr_lma and curr_close < curr_sma and curr_high < curr_sma
 
 def open_trades():
     count = 0
