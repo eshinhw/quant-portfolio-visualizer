@@ -7,11 +7,7 @@
 Deleveop an automated trading bot to capitalize trading opportunities in FX markets.
 
 <p align="center">
-  <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/140251156-0dadf0d7-ff8d-4a40-a598-95bb8ecc9c1d.png">
-</p>
-
-<p align="center">
-  <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/140251232-6cec6486-fc71-4225-982c-c000e0a8c981.png">
+  <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/141128813-6cf66bd2-84e2-41f4-b9d4-93206c3b9276.png">
 </p>
 
 ## External Resources
