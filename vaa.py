@@ -4,13 +4,15 @@ Vigilant Asset Allocation (VAA) Implementation Source Codes
 
 import numpy as np
 import pandas as pd
-import fmp.fmp_prices as FMP_PRICES
 import datetime as dt
 import matplotlib.pyplot as plt
+import fmp.fmp_prices as FMP_PRICES
 
 ## Portfolio Assets
 offensive = ['SPY', 'VEA', 'VWO', 'AGG']
 defensive = ['SHY', 'IEF', 'LQD']
+MOMENTUM_PERIODS = [1,3,6,12]
+MOMENTUM_WEIGHTS = np.array([1,2,4,12])
 
 ## Calculate monthly prices of offensive assets
 offensive_monthly = pd.DataFrame()
@@ -18,12 +20,20 @@ offensive_monthly = pd.DataFrame()
 for symbol in offensive:
     offensive_monthly[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
 offensive_monthly.dropna(inplace=True)
-offensive_monthly.tail(20)
+print(offensive_monthly.tail(20))
 
 ## Offensive assets momentum
+
+# offensive_momentum = pd.DataFrame(index=offensive)
+
+# print(offensive_momentum)
+
 momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
+offensive_mom = []
 for symbol in offensive_monthly.columns:
     print(symbol)
+    # for period in MOMENTUM_PERIODS:        
+    #     offensive_mom.append(FMP_PRICES.historical_monthly_momentum(symbol,period))
     curr = offensive_monthly[symbol][-1]
     print(curr)
     print(offensive_monthly[symbol].shift(1)[-1])
@@ -38,14 +48,14 @@ for symbol in offensive_monthly.columns:
     momentum_data['12M'].append(m12_ret)
 offensive_momentum = pd.DataFrame(momentum_data, index=offensive)
 offensive_momentum['Score'] = 12 * offensive_momentum['1M'] + 4 * offensive_momentum['3M'] + 2 * offensive_momentum['6M'] + 1 * offensive_momentum['12M']
-offensive_momentum
+print(offensive_momentum)
 
 
 ## Defensive Assets Momentum
 defensive_monthly = pd.DataFrame()
 
 for symbol in defensive:
-    defensive_monthly[symbol] = fmp.get_monthly_prices(symbol)[symbol]
+    defensive_monthly[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
 defensive_monthly
 momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
 for symbol in defensive_monthly.columns:
@@ -62,7 +72,7 @@ for symbol in defensive_monthly.columns:
 defensive_momentum = pd.DataFrame(momentum_data, index=defensive)
 defensive_momentum['Score'] = 12 * defensive_momentum['1M'] + 4 * defensive_momentum['3M'] + 2 * defensive_momentum['6M'] + 1 * defensive_momentum['12M']
 
-
+"""
 ## Backtesting
 ### VAA (Original Version: Offensive + Defensive)
 #### Trading Logics
@@ -252,3 +262,4 @@ if (offensive_momentum['Score'] < 0).any():
 else:
     first = offensive_momentum.sort_values(by='Score', ascending=False).index[0]
     print('invest in ' + first)
+"""

@@ -5,9 +5,10 @@ import numpy as np
 import pandas as pd
 import datetime as dt
 from typing import List
-import fmp_symbols as SYMBOLS
 from credentials import FMP_API_KEY
-import fmp_financials as FINANCIALS
+
+import fmp.fmp_symbols as SYMBOLS
+import fmp.fmp_financials as FINANCIALS
 
 START_DATE = dt.datetime(1970, 1, 1)
 END_DATE = dt.datetime.today()
