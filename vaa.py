@@ -9,68 +9,51 @@ import matplotlib.pyplot as plt
 import fmp.fmp_prices as FMP_PRICES
 
 ## Portfolio Assets
-offensive = ['SPY', 'VEA', 'VWO', 'AGG']
-defensive = ['SHY', 'IEF', 'LQD']
+
+OFFENSIVE_ASSETS = ['SPY', 'VEA', 'VWO', 'AGG']
+DEFENSIVE_ASSETS = ['SHY', 'IEF', 'LQD']
 MOMENTUM_PERIODS = [1,3,6,12]
-MOMENTUM_WEIGHTS = np.array([1,2,4,12])
+MOMENTUM_WEIGHTS = np.array([12,4,2,1])
 
-## Calculate monthly prices of offensive assets
-offensive_monthly = pd.DataFrame()
-
-for symbol in offensive:
-    offensive_monthly[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
-offensive_monthly.dropna(inplace=True)
-print(offensive_monthly.tail(20))
 
 ## Offensive assets momentum
 
-# offensive_momentum = pd.DataFrame(index=offensive)
-
-# print(offensive_momentum)
-
-momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
+offensive_momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
 offensive_mom = []
-for symbol in offensive_monthly.columns:
-    print(symbol)
-    # for period in MOMENTUM_PERIODS:        
-    #     offensive_mom.append(FMP_PRICES.historical_monthly_momentum(symbol,period))
-    curr = offensive_monthly[symbol][-1]
-    print(curr)
-    print(offensive_monthly[symbol].shift(1)[-1])
-    m1_ret = (curr - offensive_monthly[symbol].shift(1)[-1]) / offensive_monthly[symbol].shift(1)[-1]
-    momentum_data['1M'].append(m1_ret)
-    print(m1_ret)
-    m3_ret = (curr - offensive_monthly[symbol].shift(3)[-1]) / offensive_monthly[symbol].shift(3)[-1]
-    momentum_data['3M'].append(m3_ret)
-    m6_ret = (curr - offensive_monthly[symbol].shift(6)[-1]) / offensive_monthly[symbol].shift(6)[-1]
-    momentum_data['6M'].append(m6_ret)
-    m12_ret = (curr - offensive_monthly[symbol].shift(12)[-1]) / offensive_monthly[symbol].shift(12)[-1]
-    momentum_data['12M'].append(m12_ret)
-offensive_momentum = pd.DataFrame(momentum_data, index=offensive)
-offensive_momentum['Score'] = 12 * offensive_momentum['1M'] + 4 * offensive_momentum['3M'] + 2 * offensive_momentum['6M'] + 1 * offensive_momentum['12M']
-print(offensive_momentum)
+for symbol in OFFENSIVE_ASSETS:
+    for period in MOMENTUM_PERIODS:        
+        offensive_momentum_data[str(period)+'M'].append(FMP_PRICES.historical_monthly_momentum(symbol,period))
+offensive_momentum = pd.DataFrame(offensive_momentum_data, index=OFFENSIVE_ASSETS)
+offensive_momentum['Score'] = offensive_momentum.dot(MOMENTUM_WEIGHTS)
 
 
 ## Defensive Assets Momentum
-defensive_monthly = pd.DataFrame()
 
-for symbol in defensive:
-    defensive_monthly[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
-defensive_monthly
-momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
-for symbol in defensive_monthly.columns:
-    print(symbol)
-    curr = defensive_monthly[symbol][-1]
-    m1_ret = (curr - defensive_monthly[symbol].shift(1)[-1]) / defensive_monthly[symbol].shift(1)[-1]
-    momentum_data['1M'].append(m1_ret)
-    m3_ret = (curr - defensive_monthly[symbol].shift(3)[-1]) / defensive_monthly[symbol].shift(3)[-1]
-    momentum_data['3M'].append(m3_ret)
-    m6_ret = (curr - defensive_monthly[symbol].shift(6)[-1]) / defensive_monthly[symbol].shift(6)[-1]
-    momentum_data['6M'].append(m6_ret)
-    m12_ret = (curr - defensive_monthly[symbol].shift(12)[-1]) / defensive_monthly[symbol].shift(12)[-1]
-    momentum_data['12M'].append(m12_ret)
-defensive_momentum = pd.DataFrame(momentum_data, index=defensive)
-defensive_momentum['Score'] = 12 * defensive_momentum['1M'] + 4 * defensive_momentum['3M'] + 2 * defensive_momentum['6M'] + 1 * defensive_momentum['12M']
+defensive_momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
+
+for symbol in DEFENSIVE_ASSETS:
+    for period in MOMENTUM_PERIODS:        
+        defensive_momentum_data[str(period)+'M'].append(FMP_PRICES.historical_monthly_momentum(symbol,period))
+
+defensive_momentum = pd.DataFrame(defensive_momentum_data, index=DEFENSIVE_ASSETS)
+defensive_momentum['Score'] = defensive_momentum.dot(MOMENTUM_WEIGHTS)
+
+
+print(defensive_momentum)
+
+## Investment decision based on strategy algorithm
+
+if (offensive_momentum['Score'] < 0).any():
+    if (defensive_momentum['Score'] < 0).any():
+        print('hold cash')
+    else:
+        first = defensive_momentum.sort_values(by='Score', ascending=False).index[0]
+        print('invest in ' + first)
+else:
+    first = offensive_momentum.sort_values(by='Score', ascending=False).index[0]
+    print('invest in ' + first)
+
+
 
 """
 ## Backtesting
@@ -122,64 +105,9 @@ vaa_monthly_rets
 vaa_port = np.multiply(mom_rank, vaa_monthly_rets)
 vaa_port_returns = vaa_port.sum(axis=1)
 vaa_port_cum_returns = np.exp(np.log1p(vaa_port_returns).cumsum())[:-1]
-### VAA (Modified: Relative Momentum Offensive Only)
-#### Trading Logics
 
 
-offensive_monthly_mom = offensive_monthly.copy()
-offensive_monthly_mom = offensive_monthly_mom.apply(vaa_returns, axis=0)
-offensive_monthly_mom.dropna(inplace=True)
 
-# print(offensive_monthly_mom)
-
-off_mom_rank = offensive_monthly_mom.rank(axis=1, ascending=False)
-for symbol in off_mom_rank.columns:
-    off_mom_rank[symbol] = np.where(off_mom_rank[symbol] < 2, 1, 0)
-    
-print(off_mom_rank)
-    
-offensive_monthly_rets = offensive_monthly.pct_change()
-offensive_monthly_rets.dropna(inplace=True)
-offensive_monthly_rets = offensive_monthly_rets[off_mom_rank.index[0]:].shift(-1)
-
-offensive_port = np.multiply(off_mom_rank, offensive_monthly_rets)
-offensive_port_returns = offensive_port.sum(axis=1)
-offensive_port_cum_returns = np.exp(np.log1p(offensive_port_returns).cumsum())[:-1]
-offensive_port_cum_returns.tail()
-### VAA (Modified: Dual momentum Offensive Only)
-#### Trading Logics
-
-dual_offensive_monthly_mom = offensive_monthly.copy()
-dual_offensive_monthly_mom = dual_offensive_monthly_mom.apply(vaa_returns, axis=0)
-dual_offensive_monthly_mom.dropna(inplace=True)
-
-print(dual_offensive_monthly_mom)
-
-for date in dual_offensive_monthly_mom.index:
-    if (dual_offensive_monthly_mom.loc[date] < 0).any():
-        # print(date, ' negative')
-        # check defensive assets
-        dual_offensive_monthly_mom.loc[date, 'SPY'] = 0
-        dual_offensive_monthly_mom.loc[date, 'VEA'] = 0
-        dual_offensive_monthly_mom.loc[date, 'VWO'] = 0
-        dual_offensive_monthly_mom.loc[date, 'AGG'] = 0
-
-print(dual_offensive_monthly_mom)
-
-dual_off_mom_rank = dual_offensive_monthly_mom.rank(axis=1, ascending=False)
-
-print(dual_off_mom_rank)
-for symbol in dual_off_mom_rank.columns:
-    dual_off_mom_rank[symbol] = np.where(dual_off_mom_rank[symbol] == 1, 1, 0)
-    
-dual_offensive_monthly_rets = offensive_monthly.pct_change()
-dual_offensive_monthly_rets.dropna(inplace=True)
-dual_offensive_monthly_rets = dual_offensive_monthly_rets[dual_off_mom_rank.index[0]:].shift(-1)
-
-dual_offensive_port = np.multiply(dual_off_mom_rank, dual_offensive_monthly_rets)
-dual_offensive_port_returns = dual_offensive_port.sum(axis=1)
-dual_offensive_port_cum_returns = np.exp(np.log1p(dual_offensive_port_returns).cumsum())[:-1]
-dual_offensive_port_cum_returns
 
 ### 60/40 Benchmark
 assets = ['BND', 'SPY']
@@ -250,16 +178,71 @@ plt.legend(sub_df.columns)
 plt.xlabel('Date')
 plt.ylabel('Returns')
 plt.title('Portfolio Performance Comparison')
-## Investment decision based on strategy algorithm
-offensive_momentum
-defensive_momentum
-if (offensive_momentum['Score'] < 0).any():
-    if (defensive_momentum['Score'] < 0).any():
-        print('hold cash')
-    else:
-        first = defensive_momentum.sort_values(by='Score', ascending=False).index[0]
-        print('invest in ' + first)
-else:
-    first = offensive_momentum.sort_values(by='Score', ascending=False).index[0]
-    print('invest in ' + first)
+
+
+
+"""
+# ===============================================================================================
+"""
+### VAA (Modified: Relative Momentum Offensive Only)
+#### Trading Logics
+
+
+offensive_monthly_mom = offensive_monthly.copy()
+offensive_monthly_mom = offensive_monthly_mom.apply(vaa_returns, axis=0)
+offensive_monthly_mom.dropna(inplace=True)
+
+# print(offensive_monthly_mom)
+
+off_mom_rank = offensive_monthly_mom.rank(axis=1, ascending=False)
+for symbol in off_mom_rank.columns:
+    off_mom_rank[symbol] = np.where(off_mom_rank[symbol] < 2, 1, 0)
+    
+print(off_mom_rank)
+    
+offensive_monthly_rets = offensive_monthly.pct_change()
+offensive_monthly_rets.dropna(inplace=True)
+offensive_monthly_rets = offensive_monthly_rets[off_mom_rank.index[0]:].shift(-1)
+
+offensive_port = np.multiply(off_mom_rank, offensive_monthly_rets)
+offensive_port_returns = offensive_port.sum(axis=1)
+offensive_port_cum_returns = np.exp(np.log1p(offensive_port_returns).cumsum())[:-1]
+offensive_port_cum_returns.tail()
+
+
+### VAA (Modified: Dual momentum Offensive Only)
+#### Trading Logics
+
+dual_offensive_monthly_mom = offensive_monthly.copy()
+dual_offensive_monthly_mom = dual_offensive_monthly_mom.apply(vaa_returns, axis=0)
+dual_offensive_monthly_mom.dropna(inplace=True)
+
+print(dual_offensive_monthly_mom)
+
+for date in dual_offensive_monthly_mom.index:
+    if (dual_offensive_monthly_mom.loc[date] < 0).any():
+        # print(date, ' negative')
+        # check defensive assets
+        dual_offensive_monthly_mom.loc[date, 'SPY'] = 0
+        dual_offensive_monthly_mom.loc[date, 'VEA'] = 0
+        dual_offensive_monthly_mom.loc[date, 'VWO'] = 0
+        dual_offensive_monthly_mom.loc[date, 'AGG'] = 0
+
+print(dual_offensive_monthly_mom)
+
+dual_off_mom_rank = dual_offensive_monthly_mom.rank(axis=1, ascending=False)
+
+print(dual_off_mom_rank)
+for symbol in dual_off_mom_rank.columns:
+    dual_off_mom_rank[symbol] = np.where(dual_off_mom_rank[symbol] == 1, 1, 0)
+    
+dual_offensive_monthly_rets = offensive_monthly.pct_change()
+dual_offensive_monthly_rets.dropna(inplace=True)
+dual_offensive_monthly_rets = dual_offensive_monthly_rets[dual_off_mom_rank.index[0]:].shift(-1)
+
+dual_offensive_port = np.multiply(dual_off_mom_rank, dual_offensive_monthly_rets)
+dual_offensive_port_returns = dual_offensive_port.sum(axis=1)
+dual_offensive_port_cum_returns = np.exp(np.log1p(dual_offensive_port_returns).cumsum())[:-1]
+dual_offensive_port_cum_returns
+
 """
