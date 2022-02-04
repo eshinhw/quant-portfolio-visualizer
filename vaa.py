@@ -1,20 +1,25 @@
-# Vigilant Asset Allocation (VAA)
+"""
+Vigilant Asset Allocation (VAA) Implementation Source Codes
+"""
 
 import numpy as np
 import pandas as pd
-import src.fmp as fmp
+import fmp.fmp_prices as FMP_PRICES
 import datetime as dt
 import matplotlib.pyplot as plt
+
 ## Portfolio Assets
 offensive = ['SPY', 'VEA', 'VWO', 'AGG']
 defensive = ['SHY', 'IEF', 'LQD']
+
 ## Calculate monthly prices of offensive assets
 offensive_monthly = pd.DataFrame()
 
 for symbol in offensive:
-    offensive_monthly[symbol] = fmp.get_monthly_prices(symbol)[symbol]
+    offensive_monthly[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
 offensive_monthly.dropna(inplace=True)
 offensive_monthly.tail(20)
+
 ## Offensive assets momentum
 momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
 for symbol in offensive_monthly.columns:
@@ -34,6 +39,8 @@ for symbol in offensive_monthly.columns:
 offensive_momentum = pd.DataFrame(momentum_data, index=offensive)
 offensive_momentum['Score'] = 12 * offensive_momentum['1M'] + 4 * offensive_momentum['3M'] + 2 * offensive_momentum['6M'] + 1 * offensive_momentum['12M']
 offensive_momentum
+
+
 ## Defensive Assets Momentum
 defensive_monthly = pd.DataFrame()
 
@@ -54,6 +61,8 @@ for symbol in defensive_monthly.columns:
     momentum_data['12M'].append(m12_ret)
 defensive_momentum = pd.DataFrame(momentum_data, index=defensive)
 defensive_momentum['Score'] = 12 * defensive_momentum['1M'] + 4 * defensive_momentum['3M'] + 2 * defensive_momentum['6M'] + 1 * defensive_momentum['12M']
+
+
 ## Backtesting
 ### VAA (Original Version: Offensive + Defensive)
 #### Trading Logics
