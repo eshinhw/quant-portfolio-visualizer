@@ -1,6 +1,4 @@
-import pprint
 import requests
-import calendar
 import numpy as np
 import pandas as pd
 import datetime as dt
@@ -11,6 +9,7 @@ START_DATE = dt.datetime(1970, 1, 1)
 END_DATE = dt.datetime.today()
 
 def sp500_symbols():
+    """ retrieves S&P 500 symbols"""
     symbols = []
     data = requests.get(f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API_KEY}").json()
 
@@ -21,6 +20,7 @@ def sp500_symbols():
 
 
 def dow_symbols():
+    """ retrieves Dow Jones Industrial Averages (DJIA) symbols"""
     symbols = []
     data = requests.get(f"https://financialmodelingprep.com/api/v3/dowjones_constituent?apikey={FMP_API_KEY}").json()
 
@@ -30,6 +30,7 @@ def dow_symbols():
     return symbols
 
 def crypto_symbols():
+    """ retrieves crypto-currency symbols"""
     cryptos = []
     data = requests.get(f"https://financialmodelingprep.com/api/v3/quotes/crypto?apikey={FMP_API_KEY}").json()
 
