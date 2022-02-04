@@ -18,11 +18,11 @@ def crypto_prices(symbol: str):
         data = requests.get(f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={FMP_API_KEY}").json()
         print(data)
 
-def get_current_price(symbol):
+def get_current_price(symbol: str):
     data = requests.get(f"https://financialmodelingprep.com/api/v3/quote-short/{symbol}?apikey={FMP_API_KEY}").json()
     return data[0]["price"]
 
-def get_daily_prices(symbol):
+def get_daily_prices(symbol: str):
     data = requests.get(f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?from=1980-10-10&apikey={FMP_API_KEY}").json()
     df_data = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
 
