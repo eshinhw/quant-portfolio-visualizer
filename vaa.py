@@ -170,6 +170,7 @@ dual_offensive_port = np.multiply(dual_off_mom_rank, dual_offensive_monthly_rets
 dual_offensive_port_returns = dual_offensive_port.sum(axis=1)
 dual_offensive_port_cum_returns = np.exp(np.log1p(dual_offensive_port_returns).cumsum())[:-1]
 dual_offensive_port_cum_returns
+
 ### 60/40 Benchmark
 assets = ['BND', 'SPY']
 
@@ -184,6 +185,7 @@ sixtyForty_returns['port'] = sixtyForty_returns.dot(sixtyForty_weights)
 sixtyForty_returns.tail()
 sixtyForty_cum_returns = np.exp(np.log1p(sixtyForty_returns['port']).cumsum())[:-1]
 sixtyForty_cum_returns.tail()
+
 ### SPY (S&P 500)
 benchmark_prices = fmp.get_monthly_prices('SPY')
 benchmark_returns = benchmark_prices.pct_change()
