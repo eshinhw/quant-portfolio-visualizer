@@ -16,9 +16,7 @@ END_DATE = dt.datetime.today()
 
 def sp500_symbols():
     symbols = []
-    sp500 = requests.get(
-        f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API_KEY}"
-    ).json()
+    sp500 = requests.get(f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={FMP_API_KEY}").json()
 
     for data in sp500:
         symbols.append(data["symbol"])
@@ -28,9 +26,7 @@ def sp500_symbols():
 
 def dow_symbols():
     symbols = []
-    dow = requests.get(
-        f"https://financialmodelingprep.com/api/v3/dowjones_constituent?apikey={FMP_API_KEY}"
-    ).json()
+    dow = requests.get(f"https://financialmodelingprep.com/api/v3/dowjones_constituent?apikey={FMP_API_KEY}").json()
 
     for data in dow:
         symbols.append(data["symbol"])
@@ -42,8 +38,7 @@ def crypto_list():
     cryptos = []
 
     data = requests.get(
-        f"https://financialmodelingprep.com/api/v3/quotes/crypto?apikey={FMP_API_KEY}"
-    ).json()
+        f"https://financialmodelingprep.com/api/v3/quotes/crypto?apikey={FMP_API_KEY}").json()
 
     for c in data:
         cryptos.append(c['symbol'])
@@ -130,15 +125,11 @@ def extract_financials(symbols):
 
 def get_current_price(symbol):
 
-    data = requests.get(
-        f"https://financialmodelingprep.com/api/v3/quote-short/{symbol}?apikey={FMP_API_KEY}"
-    ).json()
+    data = requests.get(f"https://financialmodelingprep.com/api/v3/quote-short/{symbol}?apikey={FMP_API_KEY}").json()
     return data[0]["price"]
 
 def get_daily_prices(symbol):
-    data = requests.get(
-        f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?from=1980-10-10&apikey={FMP_API_KEY}"
-    ).json()
+    data = requests.get(f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?from=1980-10-10&apikey={FMP_API_KEY}").json()
     df_data = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
 
     for d in data["historical"]:
@@ -184,7 +175,6 @@ def get_monthly_prices(symbol: str):
         curr_date = dt.datetime.strptime(daily.index[i], "%Y-%m-%d")
         month_end_date = curr_date.replace(day = calendar.monthrange(curr_date.year, curr_date.month)[1])
         if curr_date == month_end_date:
-            print(curr_date)
             monthly = monthly.append(daily.loc[daily.index[i]])
 
     return monthly
@@ -198,4 +188,4 @@ def calculate_momentum(symbol: str, period: int):
 
 if __name__ == "__main__":
 
-    get_monthly_prices('AAPL')
+    print(get_monthly_prices('AAPL'))
