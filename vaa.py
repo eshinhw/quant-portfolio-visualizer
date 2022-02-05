@@ -16,8 +16,6 @@ class VAA():
         self.momentum_periods = [1,3,6,12]
         self.momentum_weights = np.array([12,4,2,1])
 
-
-
     def _price(self):
 
         vaa_assets = self.offensive_assets + self.defensive_assets
@@ -31,7 +29,7 @@ class VAA():
 
         print(self.monthly_prices)
 
-        def mom_score(x):
+        def weighted_momentum_score(x):
             m1 = x / x.shift(1) - 1
             m3 = x / x.shift(3) - 1
             m6 = x / x.shift(6) - 1
@@ -39,7 +37,7 @@ class VAA():
             return 12 * m1 + 4 * m3 + 2 * m6 + 1 * m12
 
         # calcuate weighted momentum scores at each month
-        self.monthly_momentum = self.monthly_prices.copy().apply(mom_score,axis=0)
+        self.monthly_momentum = self.monthly_prices.copy().apply(weighted_momentum_score,axis=0)
         self.monthly_momentum.dropna(inplace=True)
 
         print(self.monthly_momentum)
@@ -69,32 +67,27 @@ class VAA():
         print("AFTER CHECKING CONDITIONS")
 
         # rank across columns
-        mom_rank = self.monthly_momentum.rank(axis=1, ascending=False)
+        self.momentum_rank = self.monthly_momentum.rank(axis=1, ascending=False)
 
-        for symbol in mom_rank.columns:
+        for symbol in self.momentum_rank.columns:
             # if mon_rank[symbol] == 1, change the value to 1. Otherwise, change it to 0.
-            mom_rank[symbol] = np.where(mom_rank[symbol] == 1, 1, 0)
-        
-        print(mom_rank)        
+            self.momentum_rank[symbol] = np.where(self.momentum_rank[symbol] == 1, 1, 0)
+             
 
         # we have to shift the returns upward by one to align with momentum signal above.
         monthly_returns = self.monthly_prices.pct_change()
         monthly_returns.dropna(inplace=True)
         print(monthly_returns)
-        monthly_returns = monthly_returns[mom_rank.index[0]:].shift(-1)
+        monthly_returns = monthly_returns[self.momentum_rank.index[0]:].shift(-1)
         
-        print(mom_rank.index[0])
+        print(self.momentum_rank.index[0])
         #print(monthly_returns[mom_rank.index[0]:])
         
         print(monthly_returns)
-
-
-        vaa_port = np.multiply(mom_rank, monthly_returns)
-        
+       
         print("============================================================================")
         
-        print(vaa_port)
-        vaa_port_returns = vaa_port.sum(axis=1)
+        vaa_port_returns = np.multiply(self.mom_rank, monthly_returns).sum(axis=1)
 
         print(vaa_port_returns)
         
@@ -102,8 +95,6 @@ class VAA():
 
         print(vaa_port_cum_returns)
 
-
-        # print(total_monthly_returns)
 
     # def _weighted_entumentum(self):
     #     ## Offensive assets momentum
