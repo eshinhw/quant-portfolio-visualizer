@@ -135,9 +135,6 @@ class VAA():
         port_mdd = drawdown.min()
         return port_mdd
 
-    def sharpe(self):
-        pass
-
 
 vaa = VAA()
 
@@ -151,30 +148,7 @@ print(vaa.mdd())
 
 
 
-### 60/40 Benchmark
-assets = ['BND', 'SPY']
 
-sixtyForty = pd.DataFrame() 
-
-for symbol in assets:
-    sixtyForty[symbol] = fmp.get_monthly_prices(symbol)[symbol]
-sixtyForty_returns = sixtyForty.pct_change()
-sixtyForty_returns = sixtyForty_returns[mom_rank.index[0]:].shift(-1)
-sixtyForty_weights = np.array([0.4, 0.6])
-sixtyForty_returns['port'] = sixtyForty_returns.dot(sixtyForty_weights)
-sixtyForty_returns.tail()
-sixtyForty_cum_returns = np.exp(np.log1p(sixtyForty_returns['port']).cumsum())[:-1]
-sixtyForty_cum_returns.tail()
-
-
-
-
-### SPY (S&P 500)
-benchmark_prices = fmp.get_monthly_prices('SPY')
-benchmark_returns = benchmark_prices.pct_change()
-benchmark_returns = benchmark_returns[mom_rank.index[0]:].shift(-1)
-benchmark_cum_returns = np.exp(np.log1p(benchmark_returns).cumsum())[:-1]
-benchmark_cum_returns.tail()
 
 
 
