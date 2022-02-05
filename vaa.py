@@ -18,6 +18,9 @@ class VAA():
         self.mom_rank = self.momentum_score_rank()
         self.port_cum_returns = self.cumulative_return()
 
+    def __str__(self) -> str:
+        return "VAA"
+
     def _weighted_momentum_score(self,x):
         """
         momentum_periods = [1,3,6,12]
@@ -51,11 +54,15 @@ class VAA():
                 self.mom_score.loc[date, 'VEA'] = 0
                 self.mom_score.loc[date, 'VWO'] = 0
                 self.mom_score.loc[date, 'AGG'] = 0
-                if (self.mom_score.loc[date,['SHY', 'IEF', 'LQD']] < 0).any():
-                    # hold cash
-                    self.mom_score.loc[date, 'SHY'] = 0
-                    self.mom_score.loc[date, 'IEF'] = 0
-                    self.mom_score.loc[date, 'LQD'] = 0
+
+                # if (self.mom_score.loc[date,['SHY', 'IEF', 'LQD']] < 0).any():
+                #     # hold cash
+                #     self.mom_score.loc[date, 'SHY'] = 0
+                #     self.mom_score.loc[date, 'IEF'] = 0
+                #     self.mom_score.loc[date, 'LQD'] = 0
+
+                #     # invest defensive asset
+
             else:
                 # invest offensive asset
                 self.mom_score.loc[date, 'SHY'] = 0
@@ -140,6 +147,8 @@ class VAA():
 
 if __name__ == "__main__":
     vaa = VAA()
+
+    vaa.__str
 
     print(vaa.monthly_return())
 
