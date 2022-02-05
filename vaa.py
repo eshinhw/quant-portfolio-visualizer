@@ -18,14 +18,6 @@ class VAA():
         self.mom_rank = self.momentum_score_rank()
         self.port_cum_returns = self.cumulative_return()
 
-    def monthly_prices(self):
-        vaa_assets = self.offensive_assets + self.defensive_assets
-        monthly_prices = pd.DataFrame()
-        for asset in vaa_assets:
-            monthly_prices[asset] = FMP_PRICES.get_monthly_prices(asset)[asset]
-        monthly_prices.dropna(inplace=True)
-        return monthly_prices
-
     def _weighted_momentum_score(self,x):
         """
         momentum_periods = [1,3,6,12]
@@ -36,6 +28,14 @@ class VAA():
         m6 = x / x.shift(6) - 1
         m12 = x / x.shift(12) - 1
         return 12 * m1 + 4 * m3 + 2 * m6 + 1 * m12
+
+    def monthly_prices(self):
+        vaa_assets = self.offensive_assets + self.defensive_assets
+        monthly_prices = pd.DataFrame()
+        for asset in vaa_assets:
+            monthly_prices[asset] = FMP_PRICES.get_monthly_prices(asset)[asset]
+        monthly_prices.dropna(inplace=True)
+        return monthly_prices
 
     def momentum_score(self):
         # calcuate weighted momentum scores at each month
@@ -117,13 +117,13 @@ class VAA():
         monthly_returns = self.prices.pct_change()
         monthly_returns.dropna(inplace=True)
         monthly_returns = monthly_returns[self.mom_rank.index[0]:].shift(-1)        
-        vaa_port_returns = np.multiply(self.mom_rank, monthly_returns).sum(axis=1)        
+        vaa_port_returns = np.multiply(self.mom_rank, monthly_returns).sum(axis=1)  
+        print(vaa_port_returns)      
         vaa_port_cum_returns = np.exp(np.log1p(vaa_port_returns).cumsum())[:-1]
         return vaa_port_cum_returns
 
     def cagr(self):
         first_value = self.port_cum_returns[0]
-        print(first_value)
         last_value = self.port_cum_returns[-1]  
         years = len(self.port_cum_returns.index)/12    
         cagr = (last_value/first_value)**(1/years) - 1
@@ -141,8 +141,8 @@ class VAA():
 
 vaa = VAA()
 
-print(vaa.cagr)
-print(vaa.mdd)
+print(vaa.cagr())
+print(vaa.mdd())
 
 """
 
