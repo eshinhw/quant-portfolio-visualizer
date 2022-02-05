@@ -16,22 +16,102 @@ class VAA():
         self.momentum_periods = [1,3,6,12]
         self.momentum_weights = np.array([12,4,2,1])
 
+
+
     def _price(self):
 
         total_assets = self.offensive_assets + self.defensive_assets
 
         print(total_assets)
 
-        self.vaa_monthly_prices = pd.DataFrame()
+        self.total_monthly_prices = pd.DataFrame()
 
         for asset in total_assets:
-            self.vaa_monthly_prices[asset] = FMP_PRICES.get_monthly_prices(asset)[asset]
+            self.total_monthly_prices[asset] = FMP_PRICES.get_monthly_prices(asset)[asset]
 
-        print(self.vaa_monthly_prices)
+        self.total_monthly_prices.dropna(inplace=True)
+
+        print(self.total_monthly_prices)
+
+        def mom_score(x):
+            m1 = x / x.shift(1) - 1
+            m3 = x / x.shift(3) - 1
+            m6 = x / x.shift(6) - 1
+            m12 = x / x.shift(12) - 1
+            return 12 * m1 + 4 * m3 + 2 * m6 + 1 * m12
+
+        # calcuate weighted momentum scores at each month
+        self.total_monthly_mom = self.total_monthly_prices.copy().apply(mom_score,axis=0)
+        self.total_monthly_mom.dropna(inplace=True)
+
+        print(self.total_monthly_mom)
+
+        print("CHECK CONDITIONS")
+
+        for date in self.total_monthly_mom.index:
+            if (self.total_monthly_mom.loc[date,['SPY', 'VEA', 'VWO', 'AGG']] < 0).any():
+                # check defensive assets
+                self.total_monthly_mom.loc[date, 'SPY'] = 0
+                self.total_monthly_mom.loc[date, 'VEA'] = 0
+                self.total_monthly_mom.loc[date, 'VWO'] = 0
+                self.total_monthly_mom.loc[date, 'AGG'] = 0
+                if (self.total_monthly_mom.loc[date,['SHY', 'IEF', 'LQD']] < 0).any():
+                    # hold cash
+                    self.total_monthly_mom.loc[date, 'SHY'] = 0
+                    self.total_monthly_mom.loc[date, 'IEF'] = 0
+                    self.total_monthly_mom.loc[date, 'LQD'] = 0
+            else:
+                # invest offensive asset
+                self.total_monthly_mom.loc[date, 'SHY'] = 0
+                self.total_monthly_mom.loc[date, 'IEF'] = 0
+                self.total_monthly_mom.loc[date, 'LQD'] = 0
+        
+        print(self.total_monthly_mom)
+
+        print("AFTER CHECKING CONDITIONS")
+
+        # rank across columns
+        mom_rank = self.total_monthly_mom.rank(axis=1, ascending=False)
+
+        for symbol in mom_rank.columns:
+            # if mon_rank[symbol] == 1, change the value to 1. Otherwise, change it to 0.
+            mom_rank[symbol] = np.where(mom_rank[symbol] == 1, 1, 0)
+        
+        print(mom_rank)
+
+        
+
+        
+
+        # we have to shift the returns upward by one to align with momentum signal above.
+        total_monthly_returns = self.total_monthly_prices.pct_change()
+        total_monthly_returns.dropna(inplace=True)
+        print(total_monthly_returns)
+        total_monthly_returns = total_monthly_returns[mom_rank.index[0]:].shift(-1)
+        
+        print(mom_rank.index[0])
+        #print(total_monthly_returns[mom_rank.index[0]:])
+        
+        print(total_monthly_returns)
 
 
+        vaa_port = np.multiply(mom_rank, total_monthly_returns)
+        
+        print("============================================================================")
+        
+        print(vaa_port)
+        vaa_port_returns = vaa_port.sum(axis=1)
 
-    def _momentum(self):
+        print(vaa_port_returns)
+        
+        vaa_port_cum_returns = np.exp(np.log1p(vaa_port_returns).cumsum())[:-1]
+
+        print(vaa_port_cum_returns)
+
+
+        # print(total_monthly_returns)
+
+    def _weighted_momentum(self):
         ## Offensive assets momentum
 
         offensive_momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
@@ -40,6 +120,8 @@ class VAA():
                 offensive_momentum_data[str(period)+'M'].append(FMP_PRICES.historical_monthly_momentum(symbol,period))
         self.offensive_momentum = pd.DataFrame(offensive_momentum_data, index=self.offensive_assets)
         self.offensive_momentum['Score'] = self.offensive_momentum.dot(self.momentum_weights)
+
+        print(self.offensive_momentum)
 
         ## Defensive Assets Momentum
 
@@ -51,6 +133,8 @@ class VAA():
 
         self.defensive_momentum = pd.DataFrame(defensive_momentum_data, index=self.defensive_assets)
         self.defensive_momentum['Score'] = self.defensive_momentum.dot(self.momentum_weights)
+
+        print(self.defensive_momentum)
 
     def decision(self):
         ## Investment decision based on strategy algorithm
@@ -78,12 +162,7 @@ class VAA():
         pass
 
     # def backtesting(self):
-    #     def vaa_returns(x):
-    #         m1 = x / x.shift(1) - 1
-    #         m3 = x / x.shift(3) - 1
-    #         m6 = x / x.shift(6) - 1
-    #         m12 = x / x.shift(12) - 1
-    #         return (12 * m1 + 4 * m3 + 2 * m6 + 1 * m12) / 4
+
 
 
 
@@ -93,49 +172,18 @@ class VAA():
     #     vaa_monthly_mom = vaa_monthly_prices.copy()
     #     vaa_monthly_mom = vaa_monthly_mom.apply(vaa_returns, axis=0)
     #     vaa_monthly_mom.dropna(inplace=True)
-    #     for date in vaa_monthly_mom.index:
-    #         if (vaa_monthly_mom.loc[date,['SPY', 'VEA', 'VWO', 'AGG']] < 0).any():
-    #             # check defensive assets
-    #             vaa_monthly_mom.loc[date, 'SPY'] = 0
-    #             vaa_monthly_mom.loc[date, 'VEA'] = 0
-    #             vaa_monthly_mom.loc[date, 'VWO'] = 0
-    #             vaa_monthly_mom.loc[date, 'AGG'] = 0
-    #             if (vaa_monthly_mom.loc[date,['SHY', 'IEF', 'LQD']] < 0).any():
-    #                 # hold cash
-    #                 vaa_monthly_mom.loc[date, 'SHY'] = 0
-    #                 vaa_monthly_mom.loc[date, 'IEF'] = 0
-    #                 vaa_monthly_mom.loc[date, 'LQD'] = 0
-    #         else:
-    #             # invest offensive asset
-    #             vaa_monthly_mom.loc[date, 'SHY'] = 0
-    #             vaa_monthly_mom.loc[date, 'IEF'] = 0
-    #             vaa_monthly_mom.loc[date, 'LQD'] = 0
+
 
 
 
 vaa = VAA()
 
 vaa._price()
+# vaa._weighted_momentum()
 
 """
-## Backtesting
-### VAA (Original Version: Offensive + Defensive)
-#### Trading Logics
 
 
-vaa_monthly_mom
-mom_rank = vaa_monthly_mom.rank(axis=1, ascending=False)
-for symbol in mom_rank.columns:
-    mom_rank[symbol] = np.where(mom_rank[symbol] == 1, 1, 0)
-mom_rank
-# we have to shift the returns upward by one to align with momentum signal above.
-vaa_monthly_rets = vaa_monthly_prices.pct_change()
-vaa_monthly_rets.dropna(inplace=True)
-vaa_monthly_rets = vaa_monthly_rets[mom_rank.index[0]:].shift(-1)
-vaa_monthly_rets
-vaa_port = np.multiply(mom_rank, vaa_monthly_rets)
-vaa_port_returns = vaa_port.sum(axis=1)
-vaa_port_cum_returns = np.exp(np.log1p(vaa_port_returns).cumsum())[:-1]
 
 
 
