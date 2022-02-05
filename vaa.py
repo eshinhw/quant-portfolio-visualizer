@@ -66,6 +66,8 @@ def vaa_returns(x):
     m6 = x / x.shift(6) - 1
     m12 = x / x.shift(12) - 1
     return (12 * m1 + 4 * m3 + 2 * m6 + 1 * m12) / 4
+
+    
 vaa_assets = ['SPY', 'VEA', 'VWO', 'AGG', 'SHY', 'IEF', 'LQD']
 vaa_monthly_prices = pd.DataFrame()
 
