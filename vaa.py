@@ -66,6 +66,10 @@ class VAA():
     def sharpe(self):
         pass
 
+    def backtesting(self):
+        pass
+    
+
 
 
 """
