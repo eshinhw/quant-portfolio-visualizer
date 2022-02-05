@@ -165,10 +165,10 @@ class SPY():
         port_mdd = drawdown.min()
         return port_mdd    
 
+if __name__ == "__main__":
+    sf = SixtyForty()
 
-sf = SixtyForty()
+    spy = SPY()
 
-spy = SPY()
-
-print(sf.cagr(), sf.mdd())
-print(spy.cagr(), spy.mdd())
+    print(sf.cagr(), sf.mdd())
+    print(spy.cagr(), spy.mdd())

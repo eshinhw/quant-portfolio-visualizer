@@ -117,8 +117,7 @@ class VAA():
         monthly_returns = self.prices.pct_change()
         monthly_returns.dropna(inplace=True)
         monthly_returns = monthly_returns[self.mom_rank.index[0]:].shift(-1)        
-        vaa_port_returns = np.multiply(self.mom_rank, monthly_returns).sum(axis=1)  
-        print(vaa_port_returns)      
+        vaa_port_returns = np.multiply(self.mom_rank, monthly_returns).sum(axis=1)      
         vaa_port_cum_returns = np.exp(np.log1p(vaa_port_returns).cumsum())[:-1]
         return vaa_port_cum_returns
 
@@ -135,11 +134,11 @@ class VAA():
         port_mdd = drawdown.min()
         return port_mdd
 
+if __name__ == "__main__":
+    vaa = VAA()
 
-vaa = VAA()
-
-print(vaa.cagr())
-print(vaa.mdd())
+    print(vaa.cagr())
+    print(vaa.mdd())
 
 """
 
