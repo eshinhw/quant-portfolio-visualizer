@@ -15,43 +15,56 @@ DEFENSIVE_ASSETS = ['SHY', 'IEF', 'LQD']
 MOMENTUM_PERIODS = [1,3,6,12]
 MOMENTUM_WEIGHTS = np.array([12,4,2,1])
 
+class VAA():
 
-## Offensive assets momentum
+    def decision(self):
+        ## Offensive assets momentum
 
-offensive_momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
-offensive_mom = []
-for symbol in OFFENSIVE_ASSETS:
-    for period in MOMENTUM_PERIODS:        
-        offensive_momentum_data[str(period)+'M'].append(FMP_PRICES.historical_monthly_momentum(symbol,period))
-offensive_momentum = pd.DataFrame(offensive_momentum_data, index=OFFENSIVE_ASSETS)
-offensive_momentum['Score'] = offensive_momentum.dot(MOMENTUM_WEIGHTS)
+        offensive_momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
+        offensive_mom = []
+        for symbol in OFFENSIVE_ASSETS:
+            for period in MOMENTUM_PERIODS:        
+                offensive_momentum_data[str(period)+'M'].append(FMP_PRICES.historical_monthly_momentum(symbol,period))
+        offensive_momentum = pd.DataFrame(offensive_momentum_data, index=OFFENSIVE_ASSETS)
+        offensive_momentum['Score'] = offensive_momentum.dot(MOMENTUM_WEIGHTS)
+
+        ## Defensive Assets Momentum
+
+        defensive_momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
+
+        for symbol in DEFENSIVE_ASSETS:
+            for period in MOMENTUM_PERIODS:        
+                defensive_momentum_data[str(period)+'M'].append(FMP_PRICES.historical_monthly_momentum(symbol,period))
+
+        defensive_momentum = pd.DataFrame(defensive_momentum_data, index=DEFENSIVE_ASSETS)
+        defensive_momentum['Score'] = defensive_momentum.dot(MOMENTUM_WEIGHTS)
 
 
-## Defensive Assets Momentum
+        print(defensive_momentum)
 
-defensive_momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
+        ## Investment decision based on strategy algorithm
 
-for symbol in DEFENSIVE_ASSETS:
-    for period in MOMENTUM_PERIODS:        
-        defensive_momentum_data[str(period)+'M'].append(FMP_PRICES.historical_monthly_momentum(symbol,period))
+        if (offensive_momentum['Score'] < 0).any():
+            if (defensive_momentum['Score'] < 0).any():
+                print('hold cash')
+            else:
+                first = defensive_momentum.sort_values(by='Score', ascending=False).index[0]
+                print('invest in ' + first)
+        else:
+            first = offensive_momentum.sort_values(by='Score', ascending=False).index[0]
+            print('invest in ' + first)
 
-defensive_momentum = pd.DataFrame(defensive_momentum_data, index=DEFENSIVE_ASSETS)
-defensive_momentum['Score'] = defensive_momentum.dot(MOMENTUM_WEIGHTS)
+    def cumulative_return(self):
+        pass
 
+    def cagr(self):
+        pass
+    
+    def mdd(self):
+        pass
 
-print(defensive_momentum)
-
-## Investment decision based on strategy algorithm
-
-if (offensive_momentum['Score'] < 0).any():
-    if (defensive_momentum['Score'] < 0).any():
-        print('hold cash')
-    else:
-        first = defensive_momentum.sort_values(by='Score', ascending=False).index[0]
-        print('invest in ' + first)
-else:
-    first = offensive_momentum.sort_values(by='Score', ascending=False).index[0]
-    print('invest in ' + first)
+    def sharpe(self):
+        pass
 
 
 
@@ -67,7 +80,7 @@ def vaa_returns(x):
     m12 = x / x.shift(12) - 1
     return (12 * m1 + 4 * m3 + 2 * m6 + 1 * m12) / 4
 
-    
+
 vaa_assets = ['SPY', 'VEA', 'VWO', 'AGG', 'SHY', 'IEF', 'LQD']
 vaa_monthly_prices = pd.DataFrame()
 
