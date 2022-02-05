@@ -112,10 +112,14 @@ class VAA():
             first = self.offensive_momentum.sort_values(by='Score', ascending=False).index[0]
             print('invest in ' + first)
 
-    def cumulative_return(self):
-        # we have to shift the returns upward by one to align with momentum signal above.
+    def monthly_return(self):
         monthly_returns = self.prices.pct_change()
         monthly_returns.dropna(inplace=True)
+        return monthly_returns
+
+    def cumulative_return(self):
+        # we have to shift the returns upward by one to align with momentum signal above.
+        monthly_returns = self.monthly_return()
         monthly_returns = monthly_returns[self.mom_rank.index[0]:].shift(-1)        
         vaa_port_returns = np.multiply(self.mom_rank, monthly_returns).sum(axis=1)      
         vaa_port_cum_returns = np.exp(np.log1p(vaa_port_returns).cumsum())[:-1]
@@ -137,8 +141,7 @@ class VAA():
 if __name__ == "__main__":
     vaa = VAA()
 
-    print(vaa.cagr())
-    print(vaa.mdd())
+    print(vaa.monthly_return())
 
 """
 
@@ -185,21 +188,7 @@ for col in combined_df.columns:
 stats_summary.set_index('Portfolio', inplace=True)
 stats_summary.sort_values('CAGR/MDD', ascending=False, inplace=True)
 stats_summary
-### Backtesting Performance Comparison (All Portfolios)
-plt.figure(figsize=(15,10))
-plt.plot(combined_df)
-plt.legend(combined_df.columns)
-plt.xlabel('Date')
-plt.ylabel('Returns')
-plt.title('Portfolio Performance Comparison')
-### Backtesting Performance Comparison (Original VAA, 60/40, SPY)
-sub_df = combined_df[['VAA/Original', '60/40', 'SPY']]
-plt.figure(figsize=(15,10))
-plt.plot(sub_df)
-plt.legend(sub_df.columns)
-plt.xlabel('Date')
-plt.ylabel('Returns')
-plt.title('Portfolio Performance Comparison')
+
 
 
 

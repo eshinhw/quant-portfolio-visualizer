@@ -19,6 +19,7 @@ class FourSeasons():
         for symbol in self.assets:
             prices[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
 
+        prices.dropna(inplace=True)
         monthly_returns = prices.pct_change()
         monthly_returns = monthly_returns.shift(-1)
         monthly_returns['port'] = monthly_returns.dot(self.weights)
@@ -27,6 +28,7 @@ class FourSeasons():
 
     def cagr(self):
         first_value = self.port_cum_returns[0]
+        print(first_value)
         last_value = self.port_cum_returns[-1]  
         years = len(self.port_cum_returns.index)/12    
         cagr = (last_value/first_value)**(1/years) - 1
@@ -51,6 +53,7 @@ class AllWeather():
         for symbol in self.assets:
             prices[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
 
+        prices.dropna(inplace=True)
         monthly_returns = prices.pct_change()
         monthly_returns = monthly_returns.shift(-1)
         monthly_returns['port'] = monthly_returns.dot(self.weights)
@@ -82,6 +85,7 @@ class Permanent():
         for symbol in self.assets:
             prices[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
 
+        prices.dropna(inplace=True)
         monthly_returns = prices.pct_change()
         monthly_returns = monthly_returns.shift(-1)
         monthly_returns['port'] = monthly_returns.dot(self.weights)
@@ -114,6 +118,7 @@ class SixtyForty():
         for symbol in self.assets:
             prices[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
 
+        prices.dropna(inplace=True)
         monthly_returns = prices.pct_change()
         monthly_returns = monthly_returns.shift(-1)
         monthly_returns['port'] = monthly_returns.dot(self.weights)
@@ -146,6 +151,7 @@ class SPY():
         for symbol in self.assets:
             prices[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
 
+        prices.dropna(inplace=True)
         monthly_returns = prices.pct_change()
         monthly_returns = monthly_returns.shift(-1)
         monthly_returns['port'] = monthly_returns.dot(self.weights)
@@ -166,9 +172,12 @@ class SPY():
         return port_mdd    
 
 if __name__ == "__main__":
-    sf = SixtyForty()
+    # sf = SixtyForty()
 
-    spy = SPY()
+    # spy = SPY()
 
-    print(sf.cagr(), sf.mdd())
-    print(spy.cagr(), spy.mdd())
+    fs = FourSeasons()
+
+    # print(sf.cagr(), sf.mdd())
+    # print(spy.cagr(), spy.mdd())
+    print(fs.cagr(), fs.mdd())
