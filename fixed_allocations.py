@@ -6,15 +6,18 @@ import datetime as dt
 import matplotlib.pyplot as plt
 import fmp.fmp_prices as FMP_PRICES
 
-class FourSeasons():
+class FixedAllocation():
 
-    def __init__(self) -> None:
-        self.assets = ['VTI', 'TLT', 'IEF', 'GLD', 'DBC']
-        self.weights = np.array([0.3, 0.4, 0.15, 0.075, 0.075])
+    def __init__(self,name,assets,weights) -> None:
+        self.name = name
+        self.assets = assets
+        #['VTI', 'TLT', 'IEF', 'GLD', 'DBC']
+        self.weights = weights
+        #np.array([0.3, 0.4, 0.15, 0.075, 0.075])
         self.port_cum_returns = self.cumulative_returns()
 
     def __str__(self) -> str:
-        return "Four Seasons"
+        return self.name
 
     def monthly_return(self):
         monthly_prices = pd.DataFrame()
