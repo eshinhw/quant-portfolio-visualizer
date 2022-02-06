@@ -3,8 +3,12 @@
 import numpy as np
 import pandas as pd
 import datetime as dt
-import matplotlib.pyplot as plt
+import riskfolio as rp
+import yfinance as yf
 import fmp.fmp_prices as FMP_PRICES
+
+start = '2016-01-01'
+end = '2019-12-30'
 
 class FixedAllocation():
 
@@ -16,6 +20,14 @@ class FixedAllocation():
 
     def __str__(self) -> str:
         return self.name
+
+    def daily_return(self):
+        data = yf.download(self.assets, start = start, end = end)
+        data = data.loc[:,'Adj Close']
+        #data = data.loc[:,('Adj Close', slice(None))]
+        data.columns = self.assets
+        rets = data.pct_change().dropna()
+        return rets
 
     def monthly_return(self):
         monthly_prices = pd.DataFrame()
@@ -49,7 +61,19 @@ class FixedAllocation():
         previous_peaks = self.port_cum_returns.cummax()
         drawdown = (self.port_cum_returns - previous_peaks) / previous_peaks
         port_mdd = drawdown.min()
-        return port_mdd 
+        return port_mdd
+
+    def report(self):
+        rets = self.daily_return()
+
+        port = rp.Portfolio(returns=rets)
+        w = pd.DataFrame(self.weights, index = self.assets)
+        ax = rp.jupyter_report(rets, w, rm='MV', rf=0, alpha=0.05, height=6, width=14,
+                       others=0.05, nrow=25)
+        
+        return ax
+
+
 
 
 

@@ -23,7 +23,10 @@ assets = data.pct_change().dropna()
 
 Y = assets
 
+print(Y)
+
 # Creating the Portfolio Object
+
 port = rp.Portfolio(returns=Y)
 
 # To display dataframes values in percentage format
