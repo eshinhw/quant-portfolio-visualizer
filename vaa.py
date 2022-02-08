@@ -8,6 +8,8 @@ import datetime as dt
 import matplotlib.pyplot as plt
 import fmp.fmp_prices as FMP_PRICES
 
+
+
 class VAA():
 
     def __init__(self) -> None:
@@ -47,13 +49,16 @@ class VAA():
         return mom_score
 
     def momentum_score_rank(self):
+
+        print(self.mom_score[self.offensive_assets])
+        print(self.mom_score[self.defensive_assets])
         for date in self.mom_score.index:
-            if (self.mom_score.loc[date,['SPY', 'VEA', 'VWO', 'AGG']] < 0).any():
+            if (self.mom_score.loc[date,self.offensive_assets] < 0).any():
                 # check defensive assets
-                self.mom_score.loc[date, 'SPY'] = 0
-                self.mom_score.loc[date, 'VEA'] = 0
-                self.mom_score.loc[date, 'VWO'] = 0
-                self.mom_score.loc[date, 'AGG'] = 0
+                self.mom_score.loc[date, 'SPY'] = float("-inf")
+                self.mom_score.loc[date, 'VEA'] = float("-inf")
+                self.mom_score.loc[date, 'VWO'] = float("-inf")
+                self.mom_score.loc[date, 'AGG'] = float("-inf")
 
                 # if (self.mom_score.loc[date,['SHY', 'IEF', 'LQD']] < 0).any():
                 #     # hold cash
@@ -65,9 +70,9 @@ class VAA():
 
             else:
                 # invest offensive asset
-                self.mom_score.loc[date, 'SHY'] = 0
-                self.mom_score.loc[date, 'IEF'] = 0
-                self.mom_score.loc[date, 'LQD'] = 0
+                self.mom_score.loc[date, 'SHY'] = float("-inf")
+                self.mom_score.loc[date, 'IEF'] = float("-inf")
+                self.mom_score.loc[date, 'LQD'] = float("-inf")
         
         # rank across columns
         momentum_rank = self.mom_score.rank(axis=1, ascending=False)
