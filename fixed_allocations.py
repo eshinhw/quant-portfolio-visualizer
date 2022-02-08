@@ -35,6 +35,7 @@ class FixedAllocation():
             monthly_prices[asset] = FMP_PRICES.get_monthly_prices(asset)[asset]
         monthly_returns = monthly_prices.pct_change()
         monthly_returns.dropna(inplace=True)
+        
         return monthly_returns
 
     def cumulative_returns(self):
