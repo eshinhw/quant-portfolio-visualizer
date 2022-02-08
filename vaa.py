@@ -109,6 +109,8 @@ class VAA():
     def decision(self):
         ## Investment decision based on strategy algorithm
 
+        print(self.mom_rank)
+
         if (self.offensive_momentum['Score'] < 0).any():
             if (self.defensive_momentum['Score'] < 0).any():
                 print('hold cash')
@@ -148,7 +150,7 @@ class VAA():
 if __name__ == "__main__":
     vaa = VAA()
 
-    vaa.__str
+    vaa.decision()
 
     print(vaa.monthly_return())
 
