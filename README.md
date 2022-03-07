@@ -18,7 +18,9 @@ Welcome to pyQuant! :)
 
 ## Data Sources <a name="data-sources"></a>
 
+- [yfinance](https://pypi.org/project/yfinance/)
 - [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
+
 
 ## Prerequisites: Basics of Quant Investing <a name="prerequisites"></a>
 
