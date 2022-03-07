@@ -6,7 +6,7 @@ Welcome to pyQuant! :)
 * [Data Sources](#data-sources)
 * [Prerequisites: Basics of Quant Investing](#prerequisites)
 * [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)
-* [Tactical Asset Allocation Portfolios](#tactical-asset-allocations)
+* [Tactical Asset Allocation Portfolios](#dynamic-asset-allocations)
   * [Dual Momentum](#dual-momentum)
   * [Vigilant Asset Allocation (VAA)](#vigilant-asset-allocation)
   * [Defensive Asset Allocation (DAA)](#defensive-asset-allocation)
@@ -15,7 +15,6 @@ Welcome to pyQuant! :)
 
 - [yfinance](https://pypi.org/project/yfinance/)
 - [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
-
 
 ## Prerequisites: Basics of Quant Investing <a name="prerequisites"></a>
 
@@ -38,7 +37,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
   <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134737654-68260fef-7996-443e-89cf-1ed0a8510052.png">
 </p>
 
-## Tactical Asset Allocation Portfolios <a name="tactical-asset-allocations"></a>
+## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
 
 ### 1. Dual Momentum <a name="dual-momentum"></a>
 
