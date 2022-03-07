@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="1000" height="350" src="https://user-images.githubusercontent.com/41933169/139357106-274bad5a-b353-418a-9e66-b35c0c9f3d60.png">
+  <img width="1000" height="400" src="https://user-images.githubusercontent.com/41933169/157116888-d9668abe-cb14-4cea-b15a-9c28e1e539d9.jpg">
 </p>
 
 # pyQuant
