@@ -65,26 +65,3 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ### 3. Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
 
-## Individual Stock Investing <a name="individual-stock-investing"></a>
-
-Below is a collection of jupyter notebooks for individual stock investing.
-
-- Quantitative Stock Selection Notebook
-- Historical Dividend Payout Notebook
-
-### Investment Goals
-
-- Good Dividend History
-- High Dividend Growth Rate
-- Strong Historical Momentum (Historical Price Movement)
-
-### Financial Ratios Considered
-
-- Market Cap (B)
-- Revenue Growth
-- Return on Equity (ROE)
-- Gross Profit Margin
-- EPS Growth
-- Dividend Yield
-- DPS
-- DPS Growth
