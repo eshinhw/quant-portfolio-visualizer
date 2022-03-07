@@ -28,16 +28,16 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## Fixed Asset Allocation Portfolios <a name="fixed-asset-allocations"></a>
 
-### 1. Traditonal 60/40 Portfolio
-### 2. Four Seasons Portfolio
-### 3. All Weather Portfolio
-### 4. Permanent Portfolio
+- Traditonal 60/40 Portfolio
+- Four Seasons Portfolio
+- All Weather Portfolio
+- Permanent Portfolio
 
 ## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
 
-### 1. Dual Momentum <a name="dual-momentum"></a>
+- Dual Momentum <a name="dual-momentum"></a>
 
-### 2. Vigilant Asset Allocation (VAA) <a name="vigilant-asset-allocation"></a>
+- Vigilant Asset Allocation (VAA) <a name="vigilant-asset-allocation"></a>
 
-### 3. Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
+- Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
 
