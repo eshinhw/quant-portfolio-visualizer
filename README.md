@@ -35,3 +35,5 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 - Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
 
+- [Lethargic Asset Allocation (LAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3498092)
+
