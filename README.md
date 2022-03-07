@@ -29,7 +29,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 ## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
 
-- Dual Momentum <a name="dual-momentum"></a>
+- [Dual Momentum](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2042750)
 
 - Vigilant Asset Allocation (VAA) <a name="vigilant-asset-allocation"></a>
 
