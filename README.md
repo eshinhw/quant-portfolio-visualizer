@@ -2,15 +2,6 @@
 
 Welcome to pyQuant! :)
 
-## Table of Contents
-* [Data Sources](#data-sources)
-* [Prerequisites: Basics of Quant Investing](#prerequisites)
-* [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)
-* [Tactical Asset Allocation Portfolios](#dynamic-asset-allocations)
-  * [Dual Momentum](#dual-momentum)
-  * [Vigilant Asset Allocation (VAA)](#vigilant-asset-allocation)
-  * [Defensive Asset Allocation (DAA)](#defensive-asset-allocation)
-
 ## Data Sources <a name="data-sources"></a>
 
 - [yfinance](https://pypi.org/project/yfinance/)
