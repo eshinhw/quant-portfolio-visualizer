@@ -29,8 +29,11 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 ## Fixed Asset Allocation Portfolios <a name="fixed-asset-allocations"></a>
 
 - Traditonal 60/40 Portfolio
+
 - Four Seasons Portfolio
+
 - All Weather Portfolio
+
 - Permanent Portfolio
 
 ## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
