@@ -10,7 +10,6 @@ Welcome to pyQuant! :)
   * [Dual Momentum](#dual-momentum)
   * [Vigilant Asset Allocation (VAA)](#vigilant-asset-allocation)
   * [Defensive Asset Allocation (DAA)](#defensive-asset-allocation)
-* [Individual Stock Investing](#individual-stock-investing)
 
 ## Data Sources <a name="data-sources"></a>
 
