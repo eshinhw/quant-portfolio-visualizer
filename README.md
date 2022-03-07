@@ -31,7 +31,7 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 
 - [Dual Momentum](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2042750)
 
-- Vigilant Asset Allocation (VAA) <a name="vigilant-asset-allocation"></a>
+- [Vigilant Asset Allocation (VAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3002624)
 
 - Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
 
