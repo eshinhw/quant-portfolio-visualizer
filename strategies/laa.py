@@ -1,20 +1,17 @@
+from tokenize import Double
 import yfinance as yf
 from math import floor
 from openpyxl import Workbook
 import time
 from os import path, mkdir
 
-TOTAL_BALANCE = 10000
-INVESTMENT_BALANCE = 5000
-CASH_BALANCE = 5000
-
 ASSETS = ['IWD', 'IEF', 'GLD', 'QQQ', 'SHY']
 WEIGHTS = {'IWD': 0.25, 'IEF': 0.25, 'GLD': 0.25, 'QQQ': 0.25, 'SHY': 0.25} 
 
-def num_purchase_shares():
+def num_purchase_shares(portfolio_balance: float):
     for asset in ASSETS:
         curr_price = yf.Ticker(asset).history(period="max")['Close'][-1]
-        allocate_amount = INVESTMENT_BALANCE * WEIGHTS[asset]
+        allocate_amount = portfolio_balance * WEIGHTS[asset]
         shares = floor(allocate_amount / curr_price)
         print(asset, curr_price, shares)
 
