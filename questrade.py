@@ -2,7 +2,7 @@ from os import path
 import pandas as pd
 import datetime as dt
 from qtrade import Questrade
-from strategies import laa
+from strategies import LAA
 from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM
 
 
