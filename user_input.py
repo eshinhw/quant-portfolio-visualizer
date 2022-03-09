@@ -1,5 +1,5 @@
 from questrade import QuestradeBot
-from credentials import QUESTRADE_API_KEY, ACCOUNT_NUMBERS
+from credentials import ACCOUNT_NUMBERS
 
 while True:
     account_options = ['1', '2']
@@ -38,6 +38,9 @@ while True:
             continue
         user_input[option] = weight
     elif option == '3':
+        if sum(user_input.values) + cash != 100:
+            print("Total is not 100%, Provide Correct Weights")
+            continue
         break
     else:
         print("Please Provide Correct Selection")
