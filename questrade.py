@@ -178,11 +178,19 @@ class QuestradeBot:
     def strategy_allocation(self):
         # cash allocation
         # total equity - cash = allocatable amount
-        te = self.get_usd_total_equity()
-        print(te)
-        cash_amount = te * self.cash_rate
-        rebalancing_amount = te - cash_amount
-        print(rebalancing_amount)
-        # strategy weights
+        total_equity = self.get_usd_total_equity()
+        total_mv = self.get_usd_total_mv()
+        curr_cash = total_equity - total_mv
+        print(curr_cash)
+        target_cash = total_equity * (self.cash_rate/100)
+        
+        if target_cash < curr_cash:
+            # invest more from curr_cash
+            invest_amount = curr_cash - target_cash
+            print("invest more from curr_cash")
 
-        pass
+        else:
+            # sell some from investment to increase curr_cash
+            new_market_value = total_mv - (target_cash - curr_cash)
+            print("sell some from investment to increase curr_cash")
+        
