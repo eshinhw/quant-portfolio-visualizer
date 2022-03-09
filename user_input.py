@@ -21,6 +21,7 @@ while True:
         continue
     break
 
+total_strategy_weight = 0
 while True:
     user_strategy = {}
     strategy_options = ['1','2']
@@ -35,10 +36,13 @@ while True:
         print("Enter Strategy Allocation Weight")
         weight = int(input())
         if weight < 0 or weight > (100 - cash):
+            print("weight is not correct")
             continue
+        total_strategy_weight += weight
         user_strategy[option] = weight
     elif option == '3':
-        if sum(user_strategy.values) + cash != 100:
+        if total_strategy_weight != (100 - cash):
+            print(cash, total_strategy_weight)
             print("Total is not 100%, Provide Correct Weights")
             continue
         break
@@ -46,9 +50,6 @@ while True:
         print("Please Provide Correct Selection")
         continue
 
+qb = QuestradeBot(ACCOUNT_NUMBERS[user_account], cash, user_strategy)
 
-qb = QuestradeBot(ACCOUNT_NUMBERS[user_account], cash, )
-# print(qb.get_balance())
-# print(qb.get_investment_summary())
-# print(qb.get_dividend_income())
-# print(qb.calculate_portfolio_return())
+qb.strategy_allocation()

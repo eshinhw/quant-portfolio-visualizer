@@ -1,4 +1,4 @@
-from os import path
+from os import path, remove
 import pandas as pd
 import datetime as dt
 from strategies import LAA
@@ -12,15 +12,20 @@ class QuestradeBot:
     def __init__(self, acctNum, cash_rate, strategy):
 
         strategies = {'1': 'LAA', '2': 'VAA'}
+        self.cash_rate = cash_rate
 
         # Initialize Questrade Instance
         if path.exists("./access_token.yml"):
-            self.qtrade = Questrade(token_yaml='./access_token.yml')
-            if not self.qtrade:
+            try:
+                self.qtrade = Questrade(token_yaml='./access_token.yml')
+                self.qtrade.get_account_id()
+            except:
+                self.qtrade.refresh_access_token(from_yaml=True)
                 try:
-                    self.qtrade.refresh_access_token(from_yaml=True)
+                    self.qtrade.get_account_id()
                 except:
-                    print("Please refresh Questrade Access Code First!")
+                    print("Get a new access code!")
+                    remove("./access_token.yml")
                     self.qtrade = Questrade(access_code=QUESTRADE_API_KEY)
                 
         else:
@@ -38,19 +43,19 @@ class QuestradeBot:
         return self.qtrade.get_account_positions(self.acctNum)
 
     def get_usd_total_equity(self):
-        balance = self.get_balance()
+        balance = self.get_account_balance_summary()
         return balance.loc['USD','Total_Equity']
 
     def get_usd_total_mv(self):
-        balance = self.get_balance()
+        balance = self.get_account_balance_summary()
         return balance.loc['USD', 'Market_Value']
 
     def get_cad_total_equity(self):
-        balance = self.get_balance()
+        balance = self.get_account_balance_summary()
         return balance.loc['CAD','Total_Equity']
 
     def get_cad_total_mv(self):
-        balance = self.get_balance()
+        balance = self.get_account_balance_summary()
         return balance.loc['CAD', 'Market_Value']
 
     def get_usd_total_cost(self):
@@ -82,7 +87,7 @@ class QuestradeBot:
         df.set_index('Currency', inplace=True)
         return df
 
-    def get_portfolio_summary(self):
+    def get_investment_summary(self):
         position_data = {
             'Symbol': [],
             'Description': [],
@@ -172,5 +177,12 @@ class QuestradeBot:
 
     def strategy_allocation(self):
         # cash allocation
-        # 
+        # total equity - cash = allocatable amount
+        te = self.get_usd_total_equity()
+        print(te)
+        cash_amount = te * self.cash_rate
+        rebalancing_amount = te - cash_amount
+        print(rebalancing_amount)
+        # strategy weights
+
         pass
