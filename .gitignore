@@ -3,3 +3,4 @@ __pycache__
 access_token.yml
 credentials.py
 .questrade.json
+.DS_Store
