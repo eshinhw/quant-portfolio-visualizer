@@ -1,12 +1,13 @@
 from questrade import QuestradeBot
-from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM, ACCOUNT_NUMBERS
+from credentials import QUESTRADE_API_KEY, ACCOUNT_NUMBERS
 
 while True:
+    account_options = ['1', '2']
     print("Select Saved Account")
     print("1. Standard TFSA - Eddie")
     print("2. Quant TFSA - Eddie")
     user_account = input()
-    if user_account == '1' or user_account == '2':
+    if user_account in account_options:
         break
     else:
         print("Please Select One of The Options Provided")
@@ -22,8 +23,7 @@ while True:
 
 while True:
     user_input = {}
-    options = ['1','2']
-
+    strategy_options = ['1','2']
     print("Choose portfolio strategy")
     print("1. Lethargic Asset Allocation (LAA)")
     print("2. Vigilant Asset Allocation (VAA)")
@@ -31,7 +31,7 @@ while True:
 
     option = input()
 
-    if option in options:
+    if option in strategy_options:
         print("Enter Strategy Allocation Weight")
         weight = int(input())
         if weight < 0 or weight > (100 - cash):
@@ -44,7 +44,7 @@ while True:
         continue
 
 
-# qb = QuestradeBot(QUANT_ACCOUNT_NUM)
+qb = QuestradeBot(ACCOUNT_NUMBERS[user_account], cash, )
 # print(qb.get_balance())
 # print(qb.get_investment_summary())
 # print(qb.get_dividend_income())
