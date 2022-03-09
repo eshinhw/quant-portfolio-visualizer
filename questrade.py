@@ -3,11 +3,16 @@ import pandas as pd
 import datetime as dt
 from strategies import LAA
 from qtrade import Questrade
-from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM
+from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM, ACCOUNT_NUMBERS
+
+
 
 
 class QuestradeBot:
-    def __init__(self, acctNum):
+    def __init__(self, acctNum, cash_rate, strategy):
+
+        strategies = {'1': 'LAA', '2': 'VAA'}
+
         # Initialize Questrade Instance
         if path.exists("./access_token.yml"):
             self.qtrade = Questrade(token_yaml='./access_token.yml')
@@ -169,11 +174,3 @@ class QuestradeBot:
         # cash allocation
         # 
         pass
-
-
-if __name__ == "__main__":
-    qb = QuestradeBot(QUANT_ACCOUNT_NUM)
-    print(qb.get_balance())
-    print(qb.get_investment_summary())
-    print(qb.get_dividend_income())
-    print(qb.calculate_portfolio_return())
