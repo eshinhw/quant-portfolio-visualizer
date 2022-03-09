@@ -1,4 +1,4 @@
-from os import access, path
+from os import path
 import pandas as pd
 from qtrade import Questrade
 from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM
@@ -6,7 +6,7 @@ import datetime as dt
 
 class QuestradeBot:
 
-    def __init__(self):
+    def __init__(self, acctNum):
         # Initialize Questrade Instance
         if path.exists("./access_token.yml"):
             self.qtrade = Questrade(token_yaml='./access_token.yml')
@@ -19,6 +19,8 @@ class QuestradeBot:
                 
         else:
             self.qtrade = Questrade(access_code=QUESTRADE_API_KEY)
+        
+        self.acctNum = acctNum
 
     def get_acct_id(self):
         return self.qtrade.get_account_id()
@@ -26,36 +28,35 @@ class QuestradeBot:
     def get_ticker_info(self, symbol: str):
         return self.qtrade.ticker_information(symbol)
 
-    def get_acct_positions(self, acctNum):
-        return self.qtrade.get_account_positions(acctNum)
+    def get_acct_positions(self):
+        return self.qtrade.get_account_positions(self.acctNum)
 
-    def get_usd_total_equity(self, acctNum):
-        balance = self.get_balance(acctNum)
+    def get_usd_total_equity(self):
+        balance = self.get_balance()
         return balance.loc['USD','Total_Equity']
 
-    def get_usd_total_mv(self, acctNum):
-        balance = self.get_balance(acctNum)
+    def get_usd_total_mv(self):
+        balance = self.get_balance()
         return balance.loc['USD', 'Market_Value']
 
-    def get_cad_total_equity(self, acctNum):
-        balance = self.get_balance(acctNum)
+    def get_cad_total_equity(self):
+        balance = self.get_balance()
         return balance.loc['CAD','Total_Equity']
 
-    def get_cad_total_mv(self, acctNum):
-        balance = self.get_balance(acctNum)
+    def get_cad_total_mv(self):
+        balance = self.get_balance()
         return balance.loc['CAD', 'Market_Value']
 
-    def get_usd_total_cost(self, acctNum):
-        positions = self.get_acct_positions(acctNum)
+    def get_usd_total_cost(self):
+        positions = self.get_acct_positions()
         total_cost = 0
         for pos in positions:
             curr_cost = pos['totalCost']
             total_cost += curr_cost
         return total_cost
 
-    def get_balance(self, acctNum):
-
-        bal = self.qtrade.get_account_balances(acctNum)
+    def get_balance(self):
+        bal = self.qtrade.get_account_balances(self.acctNum)
 
         data = {'Currency': [], 'Cash': [], 'Market_Value': [], 'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
 
@@ -75,7 +76,7 @@ class QuestradeBot:
         df.set_index('Currency', inplace=True)
         return df
 
-    def get_investment_summary(self, acctNum):
+    def get_investment_summary(self):
         position_data = {
             'Symbol': [],
             'Description': [],
@@ -85,9 +86,9 @@ class QuestradeBot:
             'Return (%)': [],
             'Portfolio (%)': []
         }
-        total_market_value = self.get_usd_total_mv(acctNum)
+        total_market_value = self.get_usd_total_mv()
         total_costs = 0
-        positions = self.qtrade.get_account_positions(acctNum)
+        positions = self.qtrade.get_account_positions(self.acctNum)
         for position in positions:
             # handle daily execution for closeQuantity
             if position['openQuantity'] != 0:
@@ -113,7 +114,7 @@ class QuestradeBot:
         portfolio.index.name = None
         return portfolio
 
-    def get_dividend_income(self, acctNum):
+    def get_dividend_income(self):
         startDate = '2018-04-01'
         endDate = dt.date.today().strftime("%Y-%m-%d")
         dtrange = pd.date_range(startDate, endDate, freq='d')
@@ -133,13 +134,12 @@ class QuestradeBot:
         for date in dateList:
             start = date[0]
             end = date[1]
-            activities = self.qtrade.get_account_activities(acctNum, start, end)
+            activities = self.qtrade.get_account_activities(self.acctNum, start, end)
             monthly_div = 0
             for activity in activities:
                 if activity['type'] == 'Dividends':
                     monthly_div = monthly_div + activity['netAmount']
-            output[dt.datetime.strptime(start,
-                                        "%Y-%m-%d").strftime("%Y-%m")] = monthly_div
+            output[dt.datetime.strptime(start,"%Y-%m-%d").strftime("%Y-%m")] = monthly_div
             total_div_earned = total_div_earned + monthly_div
 
         monthly_div_df = pd.DataFrame.from_dict(output,
@@ -148,12 +148,11 @@ class QuestradeBot:
 
         return monthly_div_df
 
-    def calculate_portfolio_return(self, acctNum):
-        total_mv = self.get_usd_total_mv(acctNum)
-        total_cost = self.get_usd_total_cost(acctNum)
+    def calculate_portfolio_return(self):
+        total_mv = self.get_usd_total_mv()
+        total_cost = self.get_usd_total_cost()
         m1 = round(100 * (total_mv - total_cost) / total_cost, 2)
-
-        investment = self.get_investment_summary(acctNum)
+        investment = self.get_investment_summary()
 
         m2 = 0
         for symbol in investment.index:
@@ -167,8 +166,8 @@ class QuestradeBot:
 
 
 if __name__ == "__main__":
-    qb = QuestradeBot()
-    print(qb.get_balance(QUANT_ACCOUNT_NUM))
-    print(qb.get_investment_summary(QUANT_ACCOUNT_NUM))
-    print(qb.get_dividend_income(STANDARD_ACCOUNT_NUM))
-    print(qb.calculate_portfolio_return(QUANT_ACCOUNT_NUM))
+    qb = QuestradeBot(QUANT_ACCOUNT_NUM)
+    print(qb.get_balance())
+    print(qb.get_investment_summary())
+    print(qb.get_dividend_income())
+    print(qb.calculate_portfolio_return())
