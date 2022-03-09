@@ -54,7 +54,7 @@ class QuestradeBot:
             total_cost += curr_cost
         return total_cost
 
-    def get_balance(self):
+    def get_account_balance_summary(self):
         bal = self.qtrade.get_account_balances(self.acctNum)
 
         data = {'Currency': [], 'Cash': [], 'Market_Value': [], 'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
@@ -75,7 +75,7 @@ class QuestradeBot:
         df.set_index('Currency', inplace=True)
         return df
 
-    def get_investment_summary(self):
+    def get_portfolio_summary(self):
         position_data = {
             'Symbol': [],
             'Description': [],
@@ -113,7 +113,7 @@ class QuestradeBot:
         portfolio.index.name = None
         return portfolio
 
-    def get_dividend_income(self):
+    def get_historical_dividend_income(self):
         startDate = '2018-04-01'
         endDate = dt.date.today().strftime("%Y-%m-%d")
         dtrange = pd.date_range(startDate, endDate, freq='d')
@@ -147,7 +147,7 @@ class QuestradeBot:
 
         return monthly_div_df
 
-    def calculate_portfolio_return(self):
+    def calculate_account_return(self):
         total_mv = self.get_usd_total_mv()
         total_cost = self.get_usd_total_cost()
         m1 = round(100 * (total_mv - total_cost) / total_cost, 2)
