@@ -1,8 +1,10 @@
 from os import path
 import pandas as pd
-from qtrade import Questrade
-from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM
 import datetime as dt
+from qtrade import Questrade
+from strategies import laa
+from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM
+
 
 class QuestradeBot:
     def __init__(self, acctNum):
@@ -162,6 +164,9 @@ class QuestradeBot:
             m2 += ret * port
 
         print(m1, m2)
+
+    def strategy_allocation(self):
+        pass
 
 
 if __name__ == "__main__":
