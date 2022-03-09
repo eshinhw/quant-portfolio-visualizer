@@ -5,7 +5,6 @@ from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_N
 import datetime as dt
 
 class QuestradeBot:
-
     def __init__(self, acctNum):
         # Initialize Questrade Instance
         if path.exists("./access_token.yml"):
