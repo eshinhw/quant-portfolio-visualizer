@@ -22,7 +22,7 @@ while True:
     break
 
 while True:
-    user_input = {}
+    user_strategy = {}
     strategy_options = ['1','2']
     print("Choose portfolio strategy")
     print("1. Lethargic Asset Allocation (LAA)")
@@ -36,9 +36,9 @@ while True:
         weight = int(input())
         if weight < 0 or weight > (100 - cash):
             continue
-        user_input[option] = weight
+        user_strategy[option] = weight
     elif option == '3':
-        if sum(user_input.values) + cash != 100:
+        if sum(user_strategy.values) + cash != 100:
             print("Total is not 100%, Provide Correct Weights")
             continue
         break
