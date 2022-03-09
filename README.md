@@ -1,23 +1,10 @@
-<p align="center">
-  <img width="1000" height="350" src="https://user-images.githubusercontent.com/41933169/139357106-274bad5a-b353-418a-9e66-b35c0c9f3d60.png">
-</p>
-
 # pyQuant
 
 Welcome to pyQuant! :)
 
-## Table of Contents
-* [Data Sources](#data-sources)
-* [Prerequisites: Basics of Quant Investing](#prerequisites)
-* [Fixed Asset Allocation Portfolios](#fixed-asset-allocations)
-* [Tactical Asset Allocation Portfolios](#tactical-asset-allocations)
-  * [Dual Momentum](#dual-momentum)
-  * [Vigilant Asset Allocation (VAA)](#vigilant-asset-allocation)
-  * [Defensive Asset Allocation (DAA)](#defensive-asset-allocation)
-* [Individual Stock Investing](#individual-stock-investing)
-
 ## Data Sources <a name="data-sources"></a>
 
+- [yfinance](https://pypi.org/project/yfinance/)
 - [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
 
 ## Prerequisites: Basics of Quant Investing <a name="prerequisites"></a>
@@ -33,58 +20,20 @@ Below is a collection of jupyter notebooks which touch upon the basics of quanti
 ## Fixed Asset Allocation Portfolios <a name="fixed-asset-allocations"></a>
 
 - Traditonal 60/40 Portfolio
+
 - Four Seasons Portfolio
+
 - All Weather Portfolio
+
 - Permanent Portfolio
 
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134737654-68260fef-7996-443e-89cf-1ed0a8510052.png">
-</p>
+## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
 
-## Tactical Asset Allocation Portfolios <a name="tactical-asset-allocations"></a>
+- [Dual Momentum](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2042750)
 
-### 1. Dual Momentum <a name="dual-momentum"></a>
+- [Vigilant Asset Allocation (VAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3002624)
 
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134734529-a66b258b-bc31-433a-95be-d72cd367fb93.png">
-</p>
+- Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
 
-### 2. Vigilant Asset Allocation (VAA) <a name="vigilant-asset-allocation"></a>
+- [Lethargic Asset Allocation (LAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3498092)
 
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134711294-cf8d6242-df12-436d-b8ca-736a06a80083.png">
-</p>
-
-<p align="center">
-  <img width="600" height="400" src="https://user-images.githubusercontent.com/41933169/134708641-5b99eeb7-c6cc-497c-84a8-9f82ef10489e.png">
-</p>
-
-<p align="center">
-  <img width="800" height="500" src="https://user-images.githubusercontent.com/41933169/134711636-525a29bf-1b1d-48dd-8fcf-ae14b8001486.png">
-</p>
-
-### 3. Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
-
-## Individual Stock Investing <a name="individual-stock-investing"></a>
-
-Below is a collection of jupyter notebooks for individual stock investing.
-
-- Quantitative Stock Selection Notebook
-- Historical Dividend Payout Notebook
-
-### Investment Goals
-
-- Good Dividend History
-- High Dividend Growth Rate
-- Strong Historical Momentum (Historical Price Movement)
-
-### Financial Ratios Considered
-
-- Market Cap (B)
-- Revenue Growth
-- Return on Equity (ROE)
-- Gross Profit Margin
-- EPS Growth
-- Dividend Yield
-- DPS
-- DPS Growth
