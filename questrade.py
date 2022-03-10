@@ -8,11 +8,7 @@ from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_N
 
 
 class QuestradeBot:
-    def __init__(self, acctNum, cash_rate):
-
-        strategies = {'1': 'LAA', '2': 'VAA'}
-        self.cash_rate = cash_rate
-
+    def __init__(self, acctNum):
         # Initialize Questrade Instance
         if path.exists("./access_token.yml"):
             try:

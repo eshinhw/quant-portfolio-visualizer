@@ -7,51 +7,73 @@ from questrade import QuestradeBot
 from credentials import ACCOUNT_NUMBERS, QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
 from pyfiglet import Figlet
 
-
-
-# def option_interface(qb: QuestradeBot):
-#     while True:
-#         f = Figlet(font='slant')
-#         print(f.renderText("PyQuant"))
-#         print("Select Below")
-#         print("1. Account Balance")
-#         print("2. Investment Summary")
-#         print("3. Historical Dividends")
-#         print("4. Portfolio Rebalancing")
-#         print("5. Exit pyQuant")
-#         user_input = input(">> ")
-#         if user_input == '1':
-#             print(qb.get_account_balance_summary())
-#         elif user_input == '2':
-#             print(qb.get_investment_summary())
-#         elif user_input == '3':
-#             print(qb.get_historical_dividend_income())
-#         elif user_input == '4':
-#             print(qb.strategy_allocation())
-#         elif user_input == '5':
-#             exit
-#         else:
-#             print("Please Select One of the Following Options")
-#             continue
-
 os.system("clear") 
 
 f = Figlet(font='slant')
 print(f.renderText("PyQuant"))
 
 
-questions = [
-    {
-        'type': 'input',
-        'name': 'cash_rate',
-        'message': 'What\'s your desired cash rate?',
-    },
+intro = [
     {
         'type': 'list',
         'name': 'account',
         'message': 'Select Account',
         'choices': ['Standard Account', 'Quant Account']
     },
+    {
+        'type': 'list',
+        'name': 'purpose',
+        'message': 'Select Purpose',
+        'choices': ['Account Summary', 'Strategy Rebalancing']
+    },
+]
+
+intro_answers = prompt(intro)
+
+if intro_answers.get('account') == 'Standard Account':
+    user_account = STANDARD_ACCOUNT_NUM
+if intro_answers.get('account') == 'Quant Account':
+    user_account = QUANT_ACCOUNT_NUM
+
+if intro_answers.get('purpose') == 'Account Summary':
+    summary = [
+        {
+            'type': 'list',
+            'name': 'operation',
+            'message': 'Select Operation',
+            'choices': [
+                'Account Balance', 
+                'Investment Summary', 
+                'Historical Dividends', 
+                'Rebalance Portfolio',
+                'Portfolio Return']
+        }
+    ]
+
+    summary_answers = prompt(summary)
+
+    qb = QuestradeBot(user_account)
+
+    if summary_answers.get('operation') == 'Account Balance':
+    qb.get_account_balance_summary()
+    if summary_answers.get('operation') == 'Investment Summary':
+        qb.get_investment_summary()
+    if summary_answers.get('operation') == 'Historical Dividends':
+        qb.get_historical_dividend_income()
+    if summary_answers.get('operation') == 'Rebalance Portfolio':
+        qb.strategy_allocation()
+    if summary_answers.get('opeartion') == 'Portfolio Return':
+        qb.calculate_account_return()
+
+    {
+        'type': 'list',
+        'name': 'strategy_type',
+        'message': 'Select Strategy Type',
+        'choices': [
+            {'name': 'Single Strategy'},
+            {'name': 'Multiple Strategies'}
+        ]
+    }
     # {
     #     'type': 'checkbox',
     #     'name': 'strategy',
@@ -61,43 +83,18 @@ questions = [
     #         {'name': 'VAA'}
     #     ]
     # },
-    {
-        'type': 'list',
-        'name': 'operation',
-        'message': 'Select Operation',
-        'choices': [
-            'Account Balance', 
-            'Investment Summary', 
-            'Historical Dividends', 
-            'Rebalance Portfolio',
-            'Portfolio Return']
-    }
+
 ]
 
-answers = prompt(questions)
 
-cash = answers.get('cash_rate')
-#print(answers.get('account'))
-
-if answers.get('account') == 'Quant Account':
-    user_account = QUANT_ACCOUNT_NUM
 
 # print(answers.get('strategy'))
 # if answers.get('strategy') == 'LAA':
 #     user_strategy = 'LAA'
 
-qb = QuestradeBot(user_account, cash)
 
-if answers.get('operation') == 'Account Balance':
-    qb.get_account_balance_summary()
-if answers.get('operation') == 'Investment Summary':
-    qb.get_investment_summary()
-if answers.get('operation') == 'Historical Dividends':
-    qb.get_historical_dividend_income()
-if answers.get('operation') == 'Rebalance Portfolio':
-    qb.strategy_allocation()
-if answers.get('opeartion') == 'Portfolio Return':
-    qb.calculate_account_return()
+
+
 
 
 
