@@ -13,7 +13,6 @@ os.system("clear")
 f = Figlet(font='slant')
 print(f.renderText("PyQuant"))
 
-
 intro = [
     {
         'type': 'list',
@@ -58,18 +57,27 @@ if intro_answers.get('purpose') == 'Account Summary':
 
         if summary_answers.get('operation') == 'Account Balance':
             bal = qb.get_account_balance_summary()
-            print(tabulate(bal))
+            print()
+            print(tabulate(bal, headers='keys'))
+            print()
         if summary_answers.get('operation') == 'Investment Summary':
             invest = qb.get_investment_summary()
-            print(tabulate(invest))
+            print()
+            print(tabulate(invest, headers='keys'))
+            print()
         if summary_answers.get('operation') == 'Historical Dividends':
             div = qb.get_historical_dividend_income()
-            print(tabulate(div))
+            print()
+            print(tabulate(div, headers='keys'))
+            print()
         if summary_answers.get('opeartion') == 'Portfolio Return':
             ret = qb.calculate_account_return()
+            print()
             print(tabulate(ret))
+            print()
         if summary_answers.get('operation') == 'Exit':
-            exit
+            break
+        os.system("exit")
 
 
 if intro_answers.get('purpose') == 'Strategy Rebalancing':

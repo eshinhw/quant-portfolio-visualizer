@@ -84,6 +84,7 @@ class QuestradeBot:
         return df
 
     def get_investment_summary(self):
+        # p&l
         position_data = {
             'Symbol': [],
             'Description': [],
@@ -123,6 +124,7 @@ class QuestradeBot:
         return portfolio
 
     def get_historical_dividend_income(self):
+        # identify the first date for creation
         startDate = '2018-04-01'
         endDate = dt.date.today().strftime("%Y-%m-%d")
         dtrange = pd.date_range(startDate, endDate, freq='d')
@@ -153,10 +155,10 @@ class QuestradeBot:
         monthly_div_df = pd.DataFrame.from_dict(output,
                                             orient='index',
                                             columns=['Monthly_Dividend_Income'])
-        print(tabulate(monthly_div_df))
         return monthly_div_df
 
     def calculate_account_return(self):
+        # cagr, mdd, sharpe
         total_mv = self.get_usd_total_mv()
         total_cost = self.get_usd_total_cost()
         m1 = round(100 * (total_mv - total_cost) / total_cost, 2)
