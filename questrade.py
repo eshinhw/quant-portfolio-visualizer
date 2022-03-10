@@ -3,6 +3,7 @@ import pandas as pd
 import datetime as dt
 from strategies import LAA
 from qtrade import Questrade
+from tabulate import tabulate
 from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM, ACCOUNT_NUMBERS
 
 
