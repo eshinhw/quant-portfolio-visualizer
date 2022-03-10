@@ -6,8 +6,6 @@ from qtrade import Questrade
 from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM, ACCOUNT_NUMBERS
 
 
-
-
 class QuestradeBot:
     def __init__(self, acctNum, cash_rate, strategy):
 
