@@ -1,11 +1,12 @@
 from __future__ import print_function, unicode_literals
 from PyInquirer import prompt, print_json
+# from examples import custom_style_2
 
 import os
 from questrade import QuestradeBot
 from credentials import ACCOUNT_NUMBERS
 from pyfiglet import Figlet
-from tabulate import tabulate
+
 
 
 # def option_interface(qb: QuestradeBot):
@@ -48,19 +49,28 @@ questions = [
     {
         'type': 'list',
         'name': 'account',
-        'message': 'Select An Account',
+        'message': 'Select Account',
         'choices': ['Standard TFSA - Eddie', 'Quant TFSA - Eddie']
     },
     {
-        'type': 'list',
+        'type': 'checkbox',
         'name': 'strategy',
-        'message': 'Select Strategies',
-        'choices': 
+        'message': 'Select Strategy (1 or more)',
+        'choices': [
+            {'name': 'LAA'},
+            {'name': 'VAA'}
+        ]
+    },
+    {
+        'type': 'list',
+        'name': 'operation',
+        'message': 'Select Operation',
+        'choices': ['Account Balance', 'Investment Summary', 'Historical Dividends', 'Rebalance Portfolio']
     }
 ]
 
 answers = prompt(questions)
-print(answers.get("cash_rate"))
+#print(answers.get("cash_rate"))
 #print_json(answers)  # use the answers as input for your app
 
 # total_strategy_weight = 0
