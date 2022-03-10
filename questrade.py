@@ -3,7 +3,7 @@ import pandas as pd
 import datetime as dt
 from strategies import LAA
 from qtrade import Questrade
-from tabulate import tabulate
+
 from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM, ACCOUNT_NUMBERS
 
 
@@ -80,7 +80,7 @@ class QuestradeBot:
 
         df = pd.DataFrame(data)
         df.set_index('Currency', inplace=True)
-        print(tabulate(df, headers='keys'))
+        #print(tabulate(df, headers='keys'))
         return df
 
     def get_investment_summary(self):
@@ -119,7 +119,7 @@ class QuestradeBot:
         portfolio = pd.DataFrame(position_data)
         portfolio.set_index('Symbol', inplace=True)
         portfolio.index.name = None
-        print(tabulate(portfolio))
+        #print(tabulate(portfolio))
         return portfolio
 
     def get_historical_dividend_income(self):
