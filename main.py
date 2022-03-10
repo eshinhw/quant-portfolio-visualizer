@@ -45,7 +45,6 @@ if intro_answers.get('purpose') == 'Account Summary':
                 'Account Balance', 
                 'Investment Summary', 
                 'Historical Dividends', 
-                'Rebalance Portfolio',
                 'Portfolio Return']
         }
     ]
@@ -55,15 +54,16 @@ if intro_answers.get('purpose') == 'Account Summary':
     qb = QuestradeBot(user_account)
 
     if summary_answers.get('operation') == 'Account Balance':
-    qb.get_account_balance_summary()
+        qb.get_account_balance_summary()
     if summary_answers.get('operation') == 'Investment Summary':
         qb.get_investment_summary()
     if summary_answers.get('operation') == 'Historical Dividends':
         qb.get_historical_dividend_income()
-    if summary_answers.get('operation') == 'Rebalance Portfolio':
-        qb.strategy_allocation()
     if summary_answers.get('opeartion') == 'Portfolio Return':
         qb.calculate_account_return()
+
+if intro_answers.get('purpose') == 'Strategy Rebalancing':
+
 
     {
         'type': 'list',
@@ -88,9 +88,6 @@ if intro_answers.get('purpose') == 'Account Summary':
 
 
 
-# print(answers.get('strategy'))
-# if answers.get('strategy') == 'LAA':
-#     user_strategy = 'LAA'
 
 
 
@@ -98,47 +95,5 @@ if intro_answers.get('purpose') == 'Account Summary':
 
 
 
-
-
-#print(answers.get("cash_rate"))
-#print_json(answers)  # use the answers as input for your app
-
-# total_strategy_weight = 0
-
-# while True:
-#     os.system("clear")
-#     print(f.renderText("PyQuant"))
-#     user_strategy = {}
-#     strategy_options = ['1','2']
-#     print("Choose portfolio strategy")
-#     print("1. Lethargic Asset Allocation (LAA)")
-#     print("2. Vigilant Asset Allocation (VAA)")
-#     print("3. Go to Account Management")
-
-#     option = input(">> ")
-
-#     if option in strategy_options:
-#         print("Enter Strategy Allocation Weight")
-#         weight = int(input(">> "))
-#         if weight < 0 or weight > (100 - cash):
-#             print("weight is not correct")
-#             continue
-            
-#         total_strategy_weight += weight
-#         user_strategy[option] = weight
-#         if total_strategy_weight == 100:
-#             qb = QuestradeBot(ACCOUNT_NUMBERS[user_account], cash, user_strategy)
-#             option_interface(qb)
-        
-#     elif option == '3':
-#         if total_strategy_weight != (100 - cash):
-#             print(cash, total_strategy_weight)
-#             print("Total is not 100%, Provide Correct Weights")
-#             continue    
-#         
-#         option_interface(qb)
-#     else:
-#         print("Please Provide Correct Selection")
-#         continue
 
 
