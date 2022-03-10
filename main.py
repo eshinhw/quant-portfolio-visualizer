@@ -6,6 +6,7 @@ import os
 from questrade import QuestradeBot
 from credentials import ACCOUNT_NUMBERS, QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
 from pyfiglet import Figlet
+from tabulate import tabulate
 
 os.system("clear") 
 
@@ -36,36 +37,44 @@ if intro_answers.get('account') == 'Quant Account':
     user_account = QUANT_ACCOUNT_NUM
 
 if intro_answers.get('purpose') == 'Account Summary':
-    summary = [
-        {
-            'type': 'list',
-            'name': 'operation',
-            'message': 'Select Operation',
-            'choices': [
-                'Account Balance', 
-                'Investment Summary', 
-                'Historical Dividends', 
-                'Portfolio Return']
-        }
-    ]
+    while True:
+        summary = [
+            {
+                'type': 'list',
+                'name': 'operation',
+                'message': 'Select Operation',
+                'choices': [
+                    'Account Balance', 
+                    'Investment Summary', 
+                    'Historical Dividends', 
+                    'Portfolio Return',
+                    'Exit']
+            }
+        ]
 
-    summary_answers = prompt(summary)
+        summary_answers = prompt(summary)
 
-    qb = QuestradeBot(user_account)
+        qb = QuestradeBot(user_account)
 
-    if summary_answers.get('operation') == 'Account Balance':
-        qb.get_account_balance_summary()
-    if summary_answers.get('operation') == 'Investment Summary':
-        qb.get_investment_summary()
-    if summary_answers.get('operation') == 'Historical Dividends':
-        qb.get_historical_dividend_income()
-    if summary_answers.get('opeartion') == 'Portfolio Return':
-        qb.calculate_account_return()
+        if summary_answers.get('operation') == 'Account Balance':
+            bal = qb.get_account_balance_summary()
+            print(tabulate(bal))
+        if summary_answers.get('operation') == 'Investment Summary':
+            invest = qb.get_investment_summary()
+            print(tabulate(invest))
+        if summary_answers.get('operation') == 'Historical Dividends':
+            div = qb.get_historical_dividend_income()
+            print(tabulate(div))
+        if summary_answers.get('opeartion') == 'Portfolio Return':
+            ret = qb.calculate_account_return()
+            print(tabulate(ret))
+        if summary_answers.get('operation') == 'Exit':
+            exit
+
 
 if intro_answers.get('purpose') == 'Strategy Rebalancing':
 
-
-    {
+    strategy_questions = {
         'type': 'list',
         'name': 'strategy_type',
         'message': 'Select Strategy Type',
@@ -74,6 +83,14 @@ if intro_answers.get('purpose') == 'Strategy Rebalancing':
             {'name': 'Multiple Strategies'}
         ]
     }
+
+    strategy_answers = prompt(strategy_questions)
+
+    if strategy_answers.get('strategy_type') == 'Single Strategy':
+        print("single strategy rebalancing")
+    
+    if strategy_answers.get('strategy_type') == 'Multiple Strategies':
+        print("multiple strategies rebalancing")
     # {
     #     'type': 'checkbox',
     #     'name': 'strategy',
@@ -84,7 +101,7 @@ if intro_answers.get('purpose') == 'Strategy Rebalancing':
     #     ]
     # },
 
-]
+
 
 
 
