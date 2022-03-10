@@ -1,9 +1,16 @@
+from __future__ import print_function, unicode_literals
+from PyInquirer import prompt, print_json
 import os
 from questrade import QuestradeBot
 from credentials import ACCOUNT_NUMBERS
+from pyfiglet import Figlet
+from tabulate import tabulate
+
 
 def option_interface(qb: QuestradeBot):
     while True:
+        f = Figlet(font='slant')
+        print(f.renderText("PyQuant"))
         print("Select Below")
         print("1. Account Balance")
         print("2. Investment Summary")
@@ -25,25 +32,42 @@ def option_interface(qb: QuestradeBot):
             print("Please Select One of the Following Options")
             continue
 
+f = Figlet(font='slant')
+print(f.renderText("PyQuant"))
+os.system("clear") 
 
-while True:
+questions = [
+    {
+        'type': 'input',
+        'name': 'cash_rate',
+        'message': 'What\'s your desired cash rate?',
+    }
+]
+
+answers = prompt(questions)
+print(answers)
+print_json(answers)  # use the answers as input for your app
+
+# while True:
     
-    os.system("clear")
-    account_options = ['1', '2']
-    print("Select Saved Account")
-    print("1. Standard TFSA - Eddie")
-    print("2. Quant TFSA - Eddie")
-    user_account = input(">> ")
-    if user_account in account_options:
-        break
-    else:
-        print("Please Select One of The Options Provided")
-        continue   
+#     os.system("clear")    
+#     print(f.renderText("PyQuant"))
+#     account_options = ['1', '2']
+#     print("Select Saved Account")
+#     print("1. Standard TFSA - Eddie")
+#     print("2. Quant TFSA - Eddie")
+#     user_account = input(">> ")
+#     if user_account in account_options:
+#         break
+#     else:
+#         print("Please Select One of The Options Provided")
+#         continue   
 
  
 
 while True:
     os.system("clear")
+    print(f.renderText("PyQuant"))
     print("Enter Cash Allocation %")
     cash = int(input(">> "))
     if cash < 0 or cash > 100:
@@ -53,8 +77,10 @@ while True:
     break
 
 total_strategy_weight = 0
-os.system("clear")
+
 while True:
+    os.system("clear")
+    print(f.renderText("PyQuant"))
     user_strategy = {}
     strategy_options = ['1','2']
     print("Choose portfolio strategy")
@@ -88,5 +114,4 @@ while True:
         print("Please Provide Correct Selection")
         continue
 
-os.system("clear") 
 
