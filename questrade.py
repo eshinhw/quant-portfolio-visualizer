@@ -8,7 +8,7 @@ from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_N
 
 
 class QuestradeBot:
-    def __init__(self, acctNum, cash_rate, strategy):
+    def __init__(self, acctNum, cash_rate):
 
         strategies = {'1': 'LAA', '2': 'VAA'}
         self.cash_rate = cash_rate
@@ -84,6 +84,7 @@ class QuestradeBot:
 
         df = pd.DataFrame(data)
         df.set_index('Currency', inplace=True)
+        print(tabulate(df, headers='keys'))
         return df
 
     def get_investment_summary(self):
@@ -122,6 +123,7 @@ class QuestradeBot:
         portfolio = pd.DataFrame(position_data)
         portfolio.set_index('Symbol', inplace=True)
         portfolio.index.name = None
+        print(tabulate(portfolio))
         return portfolio
 
     def get_historical_dividend_income(self):
@@ -155,7 +157,7 @@ class QuestradeBot:
         monthly_div_df = pd.DataFrame.from_dict(output,
                                             orient='index',
                                             columns=['Monthly_Dividend_Income'])
-
+        print(tabulate(monthly_div_df))
         return monthly_div_df
 
     def calculate_account_return(self):

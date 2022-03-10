@@ -4,7 +4,7 @@ from PyInquirer import prompt, print_json
 
 import os
 from questrade import QuestradeBot
-from credentials import ACCOUNT_NUMBERS
+from credentials import ACCOUNT_NUMBERS, QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
 from pyfiglet import Figlet
 
 
@@ -50,26 +50,59 @@ questions = [
         'type': 'list',
         'name': 'account',
         'message': 'Select Account',
-        'choices': ['Standard TFSA - Eddie', 'Quant TFSA - Eddie']
+        'choices': ['Standard Account', 'Quant Account']
     },
-    {
-        'type': 'checkbox',
-        'name': 'strategy',
-        'message': 'Select Strategy (1 or more)',
-        'choices': [
-            {'name': 'LAA'},
-            {'name': 'VAA'}
-        ]
-    },
+    # {
+    #     'type': 'checkbox',
+    #     'name': 'strategy',
+    #     'message': 'Select Strategy (1 or more)',
+    #     'choices': [
+    #         {'name': 'LAA'},
+    #         {'name': 'VAA'}
+    #     ]
+    # },
     {
         'type': 'list',
         'name': 'operation',
         'message': 'Select Operation',
-        'choices': ['Account Balance', 'Investment Summary', 'Historical Dividends', 'Rebalance Portfolio']
+        'choices': [
+            'Account Balance', 
+            'Investment Summary', 
+            'Historical Dividends', 
+            'Rebalance Portfolio',
+            'Portfolio Return']
     }
 ]
 
 answers = prompt(questions)
+
+cash = answers.get('cash_rate')
+#print(answers.get('account'))
+
+if answers.get('account') == 'Quant Account':
+    user_account = QUANT_ACCOUNT_NUM
+
+# print(answers.get('strategy'))
+# if answers.get('strategy') == 'LAA':
+#     user_strategy = 'LAA'
+
+qb = QuestradeBot(user_account, cash)
+
+if answers.get('operation') == 'Account Balance':
+    qb.get_account_balance_summary()
+if answers.get('operation') == 'Investment Summary':
+    qb.get_investment_summary()
+if answers.get('operation') == 'Historical Dividends':
+    qb.get_historical_dividend_income()
+if answers.get('operation') == 'Rebalance Portfolio':
+    qb.strategy_allocation()
+if answers.get('opeartion') == 'Portfolio Return':
+    qb.calculate_account_return()
+
+
+
+
+
 #print(answers.get("cash_rate"))
 #print_json(answers)  # use the answers as input for your app
 
@@ -105,7 +138,7 @@ answers = prompt(questions)
 #             print(cash, total_strategy_weight)
 #             print("Total is not 100%, Provide Correct Weights")
 #             continue    
-#         qb = QuestradeBot(ACCOUNT_NUMBERS[user_account], cash, user_strategy)
+#         
 #         option_interface(qb)
 #     else:
 #         print("Please Provide Correct Selection")
