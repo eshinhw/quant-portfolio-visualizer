@@ -218,25 +218,12 @@ class QuestradeBot:
         port_cagr = self._cagr(port_assets, port_weights)
         port_mdd = self._mdd(port_assets, port_weights)
 
-        stat = {'Portfolio': ['BenchMark', 'Account Portfolio'], 'CAGR': [BM_cagr, port_cagr], 'MDD': [BM_mdd, port_mdd]}
+        stat = {'Portfolio': ['BenchMark', 'CurrAcct'], 'CAGR': [BM_cagr, port_cagr], 'MDD': [BM_mdd, port_mdd]}
 
         stat_df = pd.DataFrame(stat)
         stat_df.set_index('Portfolio', inplace=True)
-        print(stat_df)
-        # total_mv = self.get_usd_total_mv()
-        # total_cost = self.get_usd_total_cost()
-        # m1 = round(100 * (total_mv - total_cost) / total_cost, 2)
-        # investment = self.get_investment_summary()
 
-        # m2 = 0
-        # for symbol in investment.index:
-
-        #     ret = investment.loc[symbol, 'Return (%)']
-        #     port = investment.loc[symbol, 'Portfolio (%)'] / 100
-
-        #     m2 += ret * port
-
-        # print(m1, m2)
+        return stat_df
 
     def strategy_allocation(self):
         # cash allocation
