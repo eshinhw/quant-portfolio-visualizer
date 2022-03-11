@@ -26,7 +26,7 @@ def _select_account():
         return QuestradeBot(QUANT_ACCOUNT_NUM)
 
 
-def select_purpose():
+def main_menu():
     qb = _select_account()
     purpose_questions = [
         {
@@ -79,17 +79,17 @@ def account_summary(qb):
                         'type': 'list',
                         'name': 'div_period',
                         'message': 'Choose Period',
-                        'choices': ['1 Month', '3 Months', '6 Months', '1 Year', 'All Time']
+                        'choices': ['Past 1 Month', 'Past 3 Months', 'Past 6 Months', 'Past 1 Year', 'All Time']
                     }
                 ]
                 div_answers = prompt(div_questions)
-                if div_answers.get('div_period') == '1 Month':
+                if div_answers.get('div_period') == 'Past 1 Month':
                     div = qb.get_historical_dividend_income(30)
-                if div_answers.get('div_period') == '3 Months':
+                if div_answers.get('div_period') == 'Past 3 Months':
                     div = qb.get_historical_dividend_income(90)
-                if div_answers.get('div_period') == '6 Months':
+                if div_answers.get('div_period') == 'Past 6 Months':
                     div = qb.get_historical_dividend_income(180)
-                if div_answers.get('div_period') == '1 Year':
+                if div_answers.get('div_period') == 'Past 1 Year':
                     div = qb.get_historical_dividend_income(365)
                 if div_answers.get('div_period') == 'All Time':
                     div = qb.get_historical_dividend_income(1825)
@@ -103,7 +103,7 @@ def account_summary(qb):
                 print(tabulate(ret))
                 print()
             if summary_answers.get('operation') == 'Go to Account Selection':
-                qb = select_account()                
+                qb = _select_account()                
             if summary_answers.get('operation') == 'Exit Program':
                 break
             os.system("exit")
@@ -129,11 +129,10 @@ def rebalance_strategy(qb):
         print("multiple strategies rebalancing")
 
 if __name__ == "__main__":
-    os.system("clear") 
-
-    f = Figlet(font='slant')
-    print(f.renderText("PyQuant"))
-    select_purpose()
+    os.system("clear")
+    fig = Figlet(font='slant')
+    print(fig.renderText("PyQuant"))
+    main_menu()
 
 
 
