@@ -1,8 +1,10 @@
 from os import path, remove
+import numpy as np
 import pandas as pd
 import datetime as dt
 from strategies import LAA
 from qtrade import Questrade
+import fmp.fmp_prices as FMP_PRICES
 
 from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM
 
@@ -161,22 +163,80 @@ class QuestradeBot:
              
         return monthly_div_df
 
-    def calculate_account_return(self):
+    def _monthly_return(self, assets):
+        monthly_prices = pd.DataFrame()
+        for asset in assets:
+            monthly_prices[asset] = FMP_PRICES.get_monthly_prices(asset)[asset]
+        monthly_returns = monthly_prices.pct_change()
+        monthly_returns.dropna(inplace=True)
+        
+        return monthly_returns
+
+    def _cumulative_returns(self, assets, weights):
+        prices = pd.DataFrame() 
+
+        for symbol in assets:
+            prices[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
+        
+        prices.dropna(inplace=True)
+        monthly_returns = prices.pct_change()
+        monthly_returns = monthly_returns.shift(-1)
+        monthly_returns['port'] = monthly_returns.dot(weights)
+        cum_returns = np.exp(np.log1p(monthly_returns['port']).cumsum())[:-1]
+        return cum_returns
+
+    def _cagr(self, assets, weights):
+        cum_ret = self._cumulative_returns(assets,weights)
+        first_value = cum_ret[0]
+        last_value = cum_ret[-1]  
+        years = len(cum_ret.index)/12    
+        cagr = (last_value/first_value)**(1/years) - 1
+        return cagr
+    
+    def _mdd(self, assets, weights):
+        cum_ret = self._cumulative_returns(assets, weights)
+        previous_peaks = cum_ret.cummax()
+        drawdown = (cum_ret - previous_peaks) / previous_peaks
+        port_mdd = drawdown.min()
+        return port_mdd
+
+    def calculate_portfolio_performance(self):
         # cagr, mdd, sharpe
-        total_mv = self.get_usd_total_mv()
-        total_cost = self.get_usd_total_cost()
-        m1 = round(100 * (total_mv - total_cost) / total_cost, 2)
-        investment = self.get_investment_summary()
 
-        m2 = 0
-        for symbol in investment.index:
+        # cagr
 
-            ret = investment.loc[symbol, 'Return (%)']
-            port = investment.loc[symbol, 'Portfolio (%)'] / 100
+        BM_assets = ['SPY', 'IEF']
+        BM_weights = np.array([0.6,0.4])
 
-            m2 += ret * port
+        BM_cagr = self._cagr(BM_assets, BM_weights)
+        BM_mdd = self._mdd(BM_assets, BM_weights)
 
-        print(m1, m2)
+        investments = self.get_investment_summary()
+
+        port_assets = list(investments.index)
+        port_weights = np.array(list(investments['Portfolio (%)'] / 100))
+        port_cagr = self._cagr(port_assets, port_weights)
+        port_mdd = self._mdd(port_assets, port_weights)
+
+        stat = {'Portfolio': ['BenchMark', 'Account Portfolio'], 'CAGR': [BM_cagr, port_cagr], 'MDD': [BM_mdd, port_mdd]}
+
+        stat_df = pd.DataFrame(stat)
+        stat_df.set_index('Portfolio', inplace=True)
+        print(stat_df)
+        # total_mv = self.get_usd_total_mv()
+        # total_cost = self.get_usd_total_cost()
+        # m1 = round(100 * (total_mv - total_cost) / total_cost, 2)
+        # investment = self.get_investment_summary()
+
+        # m2 = 0
+        # for symbol in investment.index:
+
+        #     ret = investment.loc[symbol, 'Return (%)']
+        #     port = investment.loc[symbol, 'Portfolio (%)'] / 100
+
+        #     m2 += ret * port
+
+        # print(m1, m2)
 
     def strategy_allocation(self):
         # cash allocation
@@ -199,4 +259,4 @@ class QuestradeBot:
 
 if __name__ == "__main__":
     qb = QuestradeBot(QUANT_ACCOUNT_NUM)
-    print(qb._get_account_activities())
+    print(qb.calculate_portfolio_performance())
