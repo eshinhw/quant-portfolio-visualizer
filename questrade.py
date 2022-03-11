@@ -128,10 +128,10 @@ class QuestradeBot:
         #print(tabulate(portfolio))
         return portfolio
 
-    def get_historical_dividend_income(self):
+    def get_historical_dividend_income(self, period):
         # identify the first date for creation
         endDate = dt.date.today().strftime("%Y-%m-%d")
-        startDate = '2016-01-01'
+        startDate = dt.date.today() - dt.timedelta(days=period)
         dtrange = pd.date_range(startDate, endDate, freq='d')
         months = pd.Series(dtrange.month)
         starts, ends = months.ne(months.shift(1)), months.ne(months.shift(-1))
