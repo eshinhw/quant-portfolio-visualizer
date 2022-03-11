@@ -6,6 +6,8 @@ from qtrade import Questrade
 
 from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM, ACCOUNT_NUMBERS
 
+START_DATE = '2018-01-01'
+
 
 class QuestradeBot:
     def __init__(self, acctNum):
@@ -36,6 +38,9 @@ class QuestradeBot:
 
     def get_acct_positions(self):
         return self.qtrade.get_account_positions(self.acctNum)
+    
+    def _get_account_activities(self):
+        return self.qtrade.get_account_activities(self.acctNum)
 
     def get_usd_total_equity(self):
         balance = self.get_account_balance_summary()
@@ -119,14 +124,14 @@ class QuestradeBot:
 
         portfolio = pd.DataFrame(position_data)
         portfolio.set_index('Symbol', inplace=True)
-        portfolio.index.name = None
+        #portfolio.index.name = None
         #print(tabulate(portfolio))
         return portfolio
 
-    def get_historical_dividend_income(self):
+    def get_historical_dividend_income(self, period):
         # identify the first date for creation
-        startDate = '2018-04-01'
         endDate = dt.date.today().strftime("%Y-%m-%d")
+        startDate = dt.date.today() - dt.timedelta(days=period)
         dtrange = pd.date_range(startDate, endDate, freq='d')
         months = pd.Series(dtrange.month)
         starts, ends = months.ne(months.shift(1)), months.ne(months.shift(-1))
@@ -192,4 +197,7 @@ class QuestradeBot:
             # sell some from investment to increase curr_cash
             new_market_value = total_mv - (target_cash - curr_cash)
             print("sell some from investment to increase curr_cash")
-        
+
+if __name__ == "__main__":
+    qb = QuestradeBot(QUANT_ACCOUNT_NUM)
+    print(qb._get_account_activities())
