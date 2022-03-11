@@ -100,10 +100,11 @@ def account_summary(qb):
                     'choices': [
                         'Balance Summary', 
                         'Investment Summary',
-                        'Account Performance', 
+                        'Portfolio Performance',
                         'Historical Dividends', 
                         'Go to Account Selection',
-                        'Exit Program']
+                        'Exit Program'
+                    ]
                 }
             ]
 
@@ -114,17 +115,18 @@ def account_summary(qb):
                 print()
                 print(tabulate(bal, headers='keys'))
                 print()
-            if summary_answers.get('operation') == 'Investment Summary':
+            elif summary_answers.get('operation') == 'Investment Summary':
+                print('here?')
                 invest = qb.get_investment_summary()
                 print()
                 print(tabulate(invest, headers='keys'))
                 print()
-            if summary_answers.get('opeartion') == 'Account Performance':
+            elif summary_answers.get('operation') == 'Portfolio Performance':
                 ret = qb.calculate_portfolio_performance()
                 print()
-                print(tabulate(ret))
+                print(tabulate(ret, headers='keys'))
                 print()
-            if summary_answers.get('operation') == 'Historical Dividends':
+            elif summary_answers.get('operation') == 'Historical Dividends':
                 div_questions = [
                     {
                         'type': 'list',
@@ -189,17 +191,12 @@ def account_summary(qb):
                         print()
                         print(tabulate(div, headers='keys'))
                         print()                 
-             
-                    
-                
-                # print()
-                # print(tabulate(div, headers='keys'))
-                # print()
 
-            if summary_answers.get('operation') == 'Go to Account Selection':
+            elif summary_answers.get('operation') == 'Go to Account Selection':
                 qb = _select_account()                
-            if summary_answers.get('operation') == 'Exit Program':
+            elif summary_answers.get('operation') == 'Exit Program':
                 quit()
+
             
 
 def rebalance_strategy(qb):

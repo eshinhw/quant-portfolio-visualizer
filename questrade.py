@@ -205,17 +205,17 @@ class QuestradeBot:
         BM_assets = ['SPY', 'IEF']
         BM_weights = np.array([0.6,0.4])
 
-        BM_cagr = self._cagr(BM_assets, BM_weights)
-        BM_mdd = self._mdd(BM_assets, BM_weights)
+        BM_cagr = round(self._cagr(BM_assets, BM_weights) * 100, 2)
+        BM_mdd = round(self._mdd(BM_assets, BM_weights) * 100, 2)
 
         investments = self.get_investment_summary()
 
         port_assets = list(investments.index)
         port_weights = np.array(list(investments['Portfolio (%)'] / 100))
-        port_cagr = self._cagr(port_assets, port_weights)
-        port_mdd = self._mdd(port_assets, port_weights)
+        port_cagr = round(self._cagr(port_assets, port_weights) * 100, 2)
+        port_mdd = round(self._mdd(port_assets, port_weights) * 100, 2)
 
-        stat = {'Portfolio': ['BenchMark', 'CurrAcct'], 'CAGR': [BM_cagr, port_cagr], 'MDD': [BM_mdd, port_mdd]}
+        stat = {'Portfolio': ['BenchMark', 'CurrAcct'], 'CAGR (%)': [BM_cagr, port_cagr], 'MDD (%)': [BM_mdd, port_mdd]}
 
         stat_df = pd.DataFrame(stat)
         stat_df.set_index('Portfolio', inplace=True)
