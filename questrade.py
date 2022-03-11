@@ -4,7 +4,7 @@ import datetime as dt
 from strategies import LAA
 from qtrade import Questrade
 
-from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM, ACCOUNT_NUMBERS
+from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM
 
 START_DATE = '2018-01-01'
 

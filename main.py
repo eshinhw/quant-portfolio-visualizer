@@ -4,7 +4,7 @@ from PyInquirer import prompt, print_json
 import json
 import os
 from questrade import QuestradeBot
-from credentials import ACCOUNT_NUMBERS, QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
+from credentials import QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
 from pyfiglet import Figlet
 from tabulate import tabulate
 
@@ -14,8 +14,8 @@ def _select_account():
             accounts = json.load(fp)
     else:
         accounts = {}
-        accounts['Standard_Eddie'] = STANDARD_ACCOUNT_NUM
-        accounts['Quant_Eddie'] = QUANT_ACCOUNT_NUM
+        accounts['Standard_Eddie (Default)'] = STANDARD_ACCOUNT_NUM
+        accounts['Quant_Eddie (Default)'] = QUANT_ACCOUNT_NUM
 
         with open('./accounts.json', 'w') as fp:
             json.dump(accounts, fp)
@@ -25,7 +25,7 @@ def _select_account():
             'type': 'list',
             'name': 'account',
             'message': 'Select Account',
-            'choices': list(accounts.keys()) + ['Add New Account']
+            'choices': list(accounts.keys()) + ['Add New Account', 'Reset Saved Accounts', 'Exit Program']
         }
     ]
 
@@ -40,20 +40,32 @@ def _select_account():
             },
             {
                 'type': 'input',
-                'name': 'new_account_number',
+                'name': 'new_account_num',
                 'message': 'What\'s the account number?'
             }
         ]
 
         add_new_account_answers = prompt(add_new_account)
-        
+
         with open('./accounts.json', 'r') as fp:
             accounts = json.load(fp)
         
+        accounts[add_new_account_answers.get('new_account_name')] = add_new_account_answers.get('new_account_num')
 
-    for account in accounts.keys():
-        if account == accounts_answers.get('account'):
-            return QuestradeBot(accounts[account])
+        with open('./accounts.json', 'w') as fp:
+            json.dump(accounts, fp)
+
+        return _select_account()
+    
+    elif accounts_answers.get('account') == 'Reset Saved Accounts':
+        os.remove('./accounts.json')
+        return _select_account()
+    
+    elif 
+    else:
+        for account in accounts.keys():
+            if account == accounts_answers.get('account'):
+                return QuestradeBot(accounts[account])
 
 
 def main_menu():
