@@ -1,7 +1,7 @@
 from __future__ import print_function, unicode_literals
 from PyInquirer import prompt, print_json
 # from examples import custom_style_2
-
+import json
 import os
 from questrade import QuestradeBot
 from credentials import ACCOUNT_NUMBERS, QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
@@ -9,24 +9,51 @@ from pyfiglet import Figlet
 from tabulate import tabulate
 
 def _select_account():
-    standard = 'Standard TFSA'
-    quant = 'Quant TFSA'
+    if os.path.exists("./accounts.json"):
+        with open('./accounts.json', 'r') as fp:
+            accounts = json.load(fp)
+    else:
+        accounts = {}
+        accounts['Standard_Eddie'] = STANDARD_ACCOUNT_NUM
+        accounts['Quant_Eddie'] = QUANT_ACCOUNT_NUM
 
-    accounts = [
+        with open('./accounts.json', 'w') as fp:
+            json.dump(accounts, fp)
+
+    accounts_questions = [
         {
             'type': 'list',
             'name': 'account',
             'message': 'Select Account',
-            'choices': [standard, quant]
+            'choices': list(accounts.keys()) + ['Add New Account']
         }
     ]
 
-    accounts_answers = prompt(accounts)
+    accounts_answers = prompt(accounts_questions)
 
-    if accounts_answers.get('account') == standard:
-        return QuestradeBot(STANDARD_ACCOUNT_NUM)
-    if accounts_answers.get('account') == quant:
-        return QuestradeBot(QUANT_ACCOUNT_NUM)
+    if accounts_answers.get('account') == 'Add New Account':
+        add_new_account = [
+            {
+                'type': 'input',
+                'name': 'new_account_name',
+                'message': 'What\'s the name of new account?'     
+            },
+            {
+                'type': 'input',
+                'name': 'new_account_number',
+                'message': 'What\'s the account number?'
+            }
+        ]
+
+        add_new_account_answers = prompt(add_new_account)
+        
+        with open('./accounts.json', 'r') as fp:
+            accounts = json.load(fp)
+        
+
+    for account in accounts.keys():
+        if account == accounts_answers.get('account'):
+            return QuestradeBot(accounts[account])
 
 
 def main_menu():
@@ -37,7 +64,7 @@ def main_menu():
         {
             'type': 'list',
             'name': 'main_menu',
-            'message': 'Select Purpose',
+            'message': 'Select Menu',
             'choices': ['Account Summary', 'Strategy Rebalancing']
         }
     ]
@@ -84,7 +111,7 @@ def account_summary(qb):
                         'type': 'list',
                         'name': 'div_period',
                         'message': 'Choose Period',
-                        'choices': ['Past 3 Months', 'Past 6 Months', 'Past 1 Year', 'All Time']
+                        'choices': ['Past 3 Months', 'Past 6 Months', 'Past 1 Year', 'Past 5 Years']
                     }
                 ]
                 div_answers = prompt(div_questions)
@@ -95,36 +122,56 @@ def account_summary(qb):
                     sub_div = div.copy().iloc[n:]
                     
                     if (sub_div['Monthly_Dividend_Income'] == 0).all():
+                        print()
                         print("No Dividend Received")
+                        print()
                     else:
                         sub_div.loc["Total"] = sub_div.sum()
                         print()
                         print(tabulate(sub_div, headers='keys'))
                         print()
-
                     
                 if div_answers.get('div_period') == 'Past 6 Months':
                     n = -6
-                    if (div.iloc[n:]['Monthly_Dividend_Income'] == 0).all():
+                    sub_div = div.copy().iloc[n:]
+                    
+                    if (sub_div['Monthly_Dividend_Income'] == 0).all():
                         print("No Dividend Received")
                     else:
-                        print(tabulate(div.iloc[n:], headers='keys'))                   
+                        sub_div.loc["Total"] = sub_div.sum()
+                        print()
+                        print(tabulate(sub_div, headers='keys'))
+                        print()                
 
                     
                 if div_answers.get('div_period') == 'Past 1 Year':
                     n = -12
-                    if (div.iloc[n:]['Monthly_Dividend_Income'] == 0).all():
+                    sub_div = div.copy().iloc[n:]
+                    
+                    if (sub_div['Monthly_Dividend_Income'] == 0).all():
+                        print()
                         print("No Dividend Received")
+                        print()
                     else:
-                        print(tabulate(div.iloc[n:], headers='keys'))               
+                        sub_div.loc["Total"] = sub_div.sum()
+                        print()
+                        print(tabulate(sub_div, headers='keys'))
+                        print()              
 
                     
                 if div_answers.get('div_period') == 'Past 5 Years':
                     n = -60
-                    if (div.iloc[n:]['Monthly_Dividend_Income'] == 0).all():
+                    sub_div = div.copy().iloc[n:]
+                    
+                    if (sub_div['Monthly_Dividend_Income'] == 0).all():
+                        print()
                         print("No Dividend Received")
+                        print()
                     else:
-                        print(tabulate(div.iloc[n:], headers='keys'))                   
+                        sub_div.loc["Total"] = sub_div.sum()
+                        print()
+                        print(tabulate(sub_div, headers='keys'))
+                        print()                  
              
                     
                 
