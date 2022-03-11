@@ -30,21 +30,23 @@ def _select_account():
 
 
 def main_menu():
+    # initialize questradebot
     qb = _select_account()
-    purpose_questions = [
+
+    menu_questions = [
         {
             'type': 'list',
-            'name': 'purpose',
+            'name': 'main_menu',
             'message': 'Select Purpose',
             'choices': ['Account Summary', 'Strategy Rebalancing']
         }
     ]
-    purpose_answers = prompt(purpose_questions)
+    menu_answers = prompt(menu_questions)
 
-    if purpose_answers.get('purpose') == 'Account Summary':
+    if menu_answers.get('main_menu') == 'Account Summary':
         account_summary(qb)
 
-    if purpose_answers.get('purpose') == 'Strategy Rebalancing':
+    if menu_answers.get('main_menu') == 'Strategy Rebalancing':
         rebalance_strategy(qb)
 
 def account_summary(qb):
@@ -82,24 +84,53 @@ def account_summary(qb):
                         'type': 'list',
                         'name': 'div_period',
                         'message': 'Choose Period',
-                        'choices': ['Past 1 Month', 'Past 3 Months', 'Past 6 Months', 'Past 1 Year', 'All Time']
+                        'choices': ['Past 3 Months', 'Past 6 Months', 'Past 1 Year', 'All Time']
                     }
                 ]
                 div_answers = prompt(div_questions)
-                if div_answers.get('div_period') == 'Past 1 Month':
-                    div = qb.get_historical_dividend_income(30)
+                div = qb.get_historical_dividend_income()
+                    
                 if div_answers.get('div_period') == 'Past 3 Months':
-                    div = qb.get_historical_dividend_income(90)
+                    n = -3
+                    sub_div = div.copy().iloc[n:]
+                    
+                    if (sub_div['Monthly_Dividend_Income'] == 0).all():
+                        print("No Dividend Received")
+                    else:
+                        sub_div.loc["Total"] = sub_div.sum()
+                        print()
+                        print(tabulate(sub_div, headers='keys'))
+                        print()
+
+                    
                 if div_answers.get('div_period') == 'Past 6 Months':
-                    div = qb.get_historical_dividend_income(180)
+                    n = -6
+                    if (div.iloc[n:]['Monthly_Dividend_Income'] == 0).all():
+                        print("No Dividend Received")
+                    else:
+                        print(tabulate(div.iloc[n:], headers='keys'))                   
+
+                    
                 if div_answers.get('div_period') == 'Past 1 Year':
-                    div = qb.get_historical_dividend_income(365)
-                if div_answers.get('div_period') == 'All Time':
-                    div = qb.get_historical_dividend_income(1825)
+                    n = -12
+                    if (div.iloc[n:]['Monthly_Dividend_Income'] == 0).all():
+                        print("No Dividend Received")
+                    else:
+                        print(tabulate(div.iloc[n:], headers='keys'))               
+
+                    
+                if div_answers.get('div_period') == 'Past 5 Years':
+                    n = -60
+                    if (div.iloc[n:]['Monthly_Dividend_Income'] == 0).all():
+                        print("No Dividend Received")
+                    else:
+                        print(tabulate(div.iloc[n:], headers='keys'))                   
+             
+                    
                 
-                print()
-                print(tabulate(div, headers='keys'))
-                print()
+                # print()
+                # print(tabulate(div, headers='keys'))
+                # print()
             if summary_answers.get('opeartion') == 'Portfolio Return':
                 ret = qb.calculate_account_return()
                 print()

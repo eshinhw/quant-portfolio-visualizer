@@ -128,10 +128,10 @@ class QuestradeBot:
         #print(tabulate(portfolio))
         return portfolio
 
-    def get_historical_dividend_income(self, period):
+    def get_historical_dividend_income(self):
         # identify the first date for creation
         endDate = dt.date.today().strftime("%Y-%m-%d")
-        startDate = dt.date.today() - dt.timedelta(days=period)
+        startDate = '2016-01-01'
         dtrange = pd.date_range(startDate, endDate, freq='d')
         months = pd.Series(dtrange.month)
         starts, ends = months.ne(months.shift(1)), months.ne(months.shift(-1))
@@ -157,9 +157,8 @@ class QuestradeBot:
             output[dt.datetime.strptime(start,"%Y-%m-%d").strftime("%Y-%m")] = monthly_div
             total_div_earned = total_div_earned + monthly_div
 
-        monthly_div_df = pd.DataFrame.from_dict(output,
-                                            orient='index',
-                                            columns=['Monthly_Dividend_Income'])
+        monthly_div_df = pd.DataFrame.from_dict(output, orient='index', columns=['Monthly_Dividend_Income'])
+             
         return monthly_div_df
 
     def calculate_account_return(self):
