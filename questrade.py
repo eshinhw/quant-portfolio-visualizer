@@ -201,9 +201,6 @@ class QuestradeBot:
         return port_mdd
 
     def calculate_portfolio_performance(self):
-        # cagr, mdd, sharpe
-
-        # cagr
 
         BM_assets = ['SPY', 'IEF']
         BM_weights = np.array([0.6,0.4])

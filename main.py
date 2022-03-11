@@ -119,6 +119,11 @@ def account_summary(qb):
                 print()
                 print(tabulate(invest, headers='keys'))
                 print()
+            if summary_answers.get('opeartion') == 'Account Performance':
+                ret = qb.calculate_portfolio_performance()
+                print()
+                print(tabulate(ret))
+                print()
             if summary_answers.get('operation') == 'Historical Dividends':
                 div_questions = [
                     {
@@ -190,11 +195,7 @@ def account_summary(qb):
                 # print()
                 # print(tabulate(div, headers='keys'))
                 # print()
-            if summary_answers.get('opeartion') == 'Account Performance':
-                ret = qb.calculate_account_return()
-                print()
-                print(tabulate(ret))
-                print()
+
             if summary_answers.get('operation') == 'Go to Account Selection':
                 qb = _select_account()                
             if summary_answers.get('operation') == 'Exit Program':
