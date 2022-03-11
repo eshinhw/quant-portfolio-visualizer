@@ -8,9 +8,7 @@ from credentials import ACCOUNT_NUMBERS, QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
 from pyfiglet import Figlet
 from tabulate import tabulate
 
-USER_ACCOUNT = 
-
-def select_account():
+def _select_account():
     intro = [
         {
             'type': 'list',
@@ -23,12 +21,13 @@ def select_account():
     intro_answers = prompt(intro)
 
     if intro_answers.get('account') == 'Standard Account':
-        USER_ACCOUNT = STANDARD_ACCOUNT_NUM
+        return QuestradeBot(STANDARD_ACCOUNT_NUM)
     if intro_answers.get('account') == 'Quant Account':
-        USER_ACCOUNT = QUANT_ACCOUNT_NUM
+        return QuestradeBot(QUANT_ACCOUNT_NUM)
 
 
 def select_purpose():
+    qb = _select_account()
     purpose_questions = [
         {
             'type': 'list',
@@ -40,7 +39,13 @@ def select_purpose():
     purpose_answers = prompt(purpose_questions)
 
     if purpose_answers.get('purpose') == 'Account Summary':
-        while True:
+        account_summary(qb)
+
+    if purpose_answers.get('purpose') == 'Strategy Rebalancing':
+        rebalance_strategy(qb)
+
+def account_summary(qb):
+    while True:
             summary = [
                 {
                     'type': 'list',
@@ -57,8 +62,6 @@ def select_purpose():
             ]
 
             summary_answers = prompt(summary)
-
-            qb = QuestradeBot(USER_ACCOUNT)
 
             if summary_answers.get('operation') == 'Account Balance':
                 bal = qb.get_account_balance_summary()
@@ -100,47 +103,36 @@ def select_purpose():
                 print(tabulate(ret))
                 print()
             if summary_answers.get('operation') == 'Go to Account Selection':
-                select_account()                
+                qb = select_account()                
             if summary_answers.get('operation') == 'Exit Program':
                 break
             os.system("exit")
 
+def rebalance_strategy(qb):
 
-    if purpose_answers.get('purpose') == 'Strategy Rebalancing':
+    strategy_questions = {
+        'type': 'list',
+        'name': 'strategy_type',
+        'message': 'Select Strategy Type',
+        'choices': [
+            {'name': 'Single Strategy'},
+            {'name': 'Multiple Strategies'}
+        ]
+    }
 
-        strategy_questions = {
-            'type': 'list',
-            'name': 'strategy_type',
-            'message': 'Select Strategy Type',
-            'choices': [
-                {'name': 'Single Strategy'},
-                {'name': 'Multiple Strategies'}
-            ]
-        }
+    strategy_answers = prompt(strategy_questions)
 
-        strategy_answers = prompt(strategy_questions)
-
-        if strategy_answers.get('strategy_type') == 'Single Strategy':
-            print("single strategy rebalancing")
-        
-        if strategy_answers.get('strategy_type') == 'Multiple Strategies':
-            print("multiple strategies rebalancing")
-        # {
-        #     'type': 'checkbox',
-        #     'name': 'strategy',
-        #     'message': 'Select Strategy (1 or more)',
-        #     'choices': [
-        #         {'name': 'LAA'},
-        #         {'name': 'VAA'}
-        #     ]
-        # },
+    if strategy_answers.get('strategy_type') == 'Single Strategy':
+        print("single strategy rebalancing")
+    
+    if strategy_answers.get('strategy_type') == 'Multiple Strategies':
+        print("multiple strategies rebalancing")
 
 if __name__ == "__main__":
     os.system("clear") 
 
     f = Figlet(font='slant')
     print(f.renderText("PyQuant"))
-    select_account()
     select_purpose()
 
 
