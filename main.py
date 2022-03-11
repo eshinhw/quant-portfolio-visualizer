@@ -9,20 +9,23 @@ from pyfiglet import Figlet
 from tabulate import tabulate
 
 def _select_account():
-    intro = [
+    standard = 'Standard TFSA'
+    quant = 'Quant TFSA'
+
+    accounts = [
         {
             'type': 'list',
             'name': 'account',
             'message': 'Select Account',
-            'choices': ['Standard Account', 'Quant Account']
+            'choices': [standard, quant]
         }
     ]
 
-    intro_answers = prompt(intro)
+    accounts_answers = prompt(accounts)
 
-    if intro_answers.get('account') == 'Standard Account':
+    if accounts_answers.get('account') == standard:
         return QuestradeBot(STANDARD_ACCOUNT_NUM)
-    if intro_answers.get('account') == 'Quant Account':
+    if accounts_answers.get('account') == quant:
         return QuestradeBot(QUANT_ACCOUNT_NUM)
 
 
