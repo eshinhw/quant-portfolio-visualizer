@@ -9,3 +9,4 @@ credentials.py
 .questrade.json
 .DS_Store
 >>>>>>> qt/main
+accounts.json
