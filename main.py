@@ -67,10 +67,29 @@ def _select_account():
     else:
         for account in accounts.keys():
             if account == accounts_answers.get('account'):
-                return QuestradeBot(accounts[account])
+                try:
+                    return QuestradeBot(accounts[account])
+                except:
+                    validation_question = [
+                        {
+                            'type': 'password',
+                            'message': 'Enter your new valid access code from Questrade',
+                            'name': 'access_code'
+                        }
+                    ]
+
+                    validation_answer = prompt(validation_question)
+                    
 
 
 def main_menu():
+
+    validation_question = [
+        {
+            'type': 
+        }
+
+    ]
     # initialize questradebot
     qb = _select_account()
 
