@@ -5,6 +5,20 @@ from pprint import pprint
 from oandaOrder import OandaOrder
 from credentials import OANDA_API_KEY, FORWARD_TESTING_ACCOUNT_ID, TEST_ACCOUNT_ID
 
+
+"""
+1. Direction Check
+
+2. Entry
+
+3. Stop
+
+4. Target
+
+5. Manage Trade
+
+"""
+
 # Login
 if os.name == 'nt':
     oanda = OandaOrder(OANDA_API_KEY, TEST_ACCOUNT_ID)
