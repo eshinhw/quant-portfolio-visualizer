@@ -12,7 +12,7 @@ START_DATE = '2018-01-01'
 
 
 class QuestradeBot:
-    def __init__(self, acctNum):
+    def __init__(self, acctNum, accessCode = None):
         # Initialize Questrade Instance
         if path.exists("./access_token.yml"):
             try:
@@ -27,11 +27,12 @@ class QuestradeBot:
                     remove("./access_token.yml")
                 
         else:
-            try:
-                self.qtrade = Questrade(access_code=QUESTRADE_API_KEY)
-            except:
+            if accessCode:
+                self.qtrade = Questrade(access_code=accessCode)
+            else:
                 print("Expiration Error: Get a new access code!")
                 quit()
+
         self.acctNum = acctNum
 
     def get_acct_id(self):
