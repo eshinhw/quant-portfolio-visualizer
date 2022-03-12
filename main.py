@@ -14,6 +14,7 @@ def _select_account():
             accounts = json.load(fp)
     else:
         accounts = {}
+        # default accounts which are always added
         accounts['Standard_Eddie (Default)'] = STANDARD_ACCOUNT_NUM
         accounts['Quant_Eddie (Default)'] = QUANT_ACCOUNT_NUM
 

@@ -26,6 +26,8 @@ class QuestradeBot:
         else:
             if accessCode:
                 self.qtrade = Questrade(access_code=accessCode)
+            else:
+                self.qtrade = None
 
         self.acctNum = acctNum
 
