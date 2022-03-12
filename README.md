@@ -14,7 +14,7 @@ Users can quickly access to their account information and investing portfolios o
 
 ## Purpose
 
-PyQuant aims to provide optimal portfoloio management using historically proven asset allocation strategies to remove emotional errors and pursue rule-based investing philosophy.
+PyQuant implements historically proven asset allocation strategies to provide optimal portfoloio management by removing emotional human errors and following rule-based investing philosophy.
 
 
 ## Data Sources <a name="data-sources"></a>
