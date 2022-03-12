@@ -68,28 +68,28 @@ def _select_account():
         for account in accounts.keys():
             if account == accounts_answers.get('account'):
                 try:
-                    return QuestradeBot(accounts[account])
+                    qb = QuestradeBot(accounts[account])
+                    assert accounts[account] in qb.get_acct_id()
+                    return qb
                 except:
-                    validation_question = [
-                        {
-                            'type': 'password',
-                            'message': 'Enter your new valid access code from Questrade',
-                            'name': 'access_code'
-                        }
-                    ]
+                    while True:
+                        validation_question = [
+                            {
+                                'type': 'password',
+                                'message': 'VALIDATION ERROR: Enter new valid access code from Questrade',
+                                'name': 'access_code'
+                            }
+                        ]
 
-                    validation_answer = prompt(validation_question)
-                    
+                        validation_answer = prompt(validation_question)
+                        new_access_code = validation_answer.get('access_code')
+                        qb = QuestradeBot(accounts[account], accessCode=new_access_code)
+                        assert accounts[account] in qb.get_acct_id()
+                        return qb
+
 
 
 def main_menu():
-
-    validation_question = [
-        {
-            'type': 
-        }
-
-    ]
     # initialize questradebot
     qb = _select_account()
 
@@ -135,7 +135,6 @@ def account_summary(qb):
                 print(tabulate(bal, headers='keys'))
                 print()
             elif summary_answers.get('operation') == 'Investment Summary':
-                print('here?')
                 invest = qb.get_investment_summary()
                 print()
                 print(tabulate(invest, headers='keys'))
