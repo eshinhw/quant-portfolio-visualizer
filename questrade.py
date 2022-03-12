@@ -6,10 +6,6 @@ from strategies import LAA
 from qtrade import Questrade
 import fmp.fmp_prices as FMP_PRICES
 
-from credentials import QUANT_ACCOUNT_NUM, QUESTRADE_API_KEY, STANDARD_ACCOUNT_NUM
-
-START_DATE = '2018-01-01'
-
 
 class QuestradeBot:
     def __init__(self, acctNum, accessCode = None):
