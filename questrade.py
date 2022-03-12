@@ -17,21 +17,15 @@ class QuestradeBot:
         if path.exists("./access_token.yml"):
             try:
                 self.qtrade = Questrade(token_yaml='./access_token.yml')
-                self.qtrade.get_account_id()
             except:
                 try:
                     self.qtrade.refresh_access_token(from_yaml=True)
-                    self.qtrade.get_account_id()
                 except:
-                    print("Expiration Error: Get a new access code!")
                     remove("./access_token.yml")
                 
         else:
             if accessCode:
                 self.qtrade = Questrade(access_code=accessCode)
-            else:
-                print("Expiration Error: Get a new access code!")
-                quit()
 
         self.acctNum = acctNum
 
