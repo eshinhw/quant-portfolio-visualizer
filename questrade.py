@@ -19,17 +19,19 @@ class QuestradeBot:
                 self.qtrade = Questrade(token_yaml='./access_token.yml')
                 self.qtrade.get_account_id()
             except:
-                self.qtrade.refresh_access_token(from_yaml=True)
                 try:
+                    self.qtrade.refresh_access_token(from_yaml=True)
                     self.qtrade.get_account_id()
                 except:
-                    print("Get a new access code!")
+                    print("Expiration Error: Get a new access code!")
                     remove("./access_token.yml")
-                    self.qtrade = Questrade(access_code=QUESTRADE_API_KEY)
                 
         else:
-            self.qtrade = Questrade(access_code=QUESTRADE_API_KEY)
-        
+            try:
+                self.qtrade = Questrade(access_code=QUESTRADE_API_KEY)
+            except:
+                print("Expiration Error: Get a new access code!")
+                quit()
         self.acctNum = acctNum
 
     def get_acct_id(self):
