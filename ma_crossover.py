@@ -5,20 +5,6 @@ from pprint import pprint
 from oanda import Oanda
 from credentials import API_OANDA, CROSSOVER_ACCT
 
-
-"""
-1. Direction Check
-
-2. Entry
-
-3. Stop
-
-4. Target
-
-5. Manage Trade
-
-"""
-
 # Login
 
 if os.name == 'nt':
@@ -79,11 +65,6 @@ def bearish_crossover_test(symbol):
     return prev_sma > prev_lma and curr_sma < curr_lma and curr_close < curr_sma and curr_high < curr_sma
 
 def open_trades(symbol):
-    #print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
-
-    # decimal = DECIMAL_TABLE[symbol]['decimal']
-    # multiple = DECIMAL_TABLE[symbol]['multiple']
-
     try:
         # bullish cross over --> long
         if bullish_crossover_test(symbol):
@@ -114,8 +95,6 @@ def open_trades(symbol):
                 # there exists a trade in opposite direction which must be closed first.
                 oanda.close_open_trade(symbol)
                 oanda.create_limit_order(symbol, entry, stop, RISK_PER_TRADE)
-
-        time.sleep(1)
 
     except Exception as e:
         print(e)

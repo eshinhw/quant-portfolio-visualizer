@@ -2,17 +2,15 @@ import os
 import time
 import datetime as dt
 import numpy as np
-from demo_credentials import OANDA_API_KEY, TEST_ACCOUNT_ID, VOLATILITY_BREAKOUT
-from oandaTrader import OandaTrader
+from credentials import API_OANDA, VB_ACCT
+from oanda import Oanda
 # from fbprophet import Prophet
 
 # Login
 if os.name == 'nt':
-    oanda = OandaTrader(OANDA_API_KEY, VOLATILITY_BREAKOUT)
+    oanda = Oanda(API_OANDA, VB_ACCT)
 if os.name == 'posix':
-    oanda = OandaTrader(OANDA_API_KEY, VOLATILITY_BREAKOUT)
-
-INSTRUMENTS = oanda.fx_instruments()
+    oanda = Oanda(API_OANDA, VB_ACCT)
 
 RISK_PER_TRADE = 0.0002
 
@@ -23,25 +21,6 @@ TRADES_LIST = oanda.get_trade_list()
 
 SYMBOLS_ORDERS = oanda.symbols_in_orders()
 SYMBOLS_TRADES = oanda.symbols_in_trades()
-
-DECIMAL_TABLE = oanda.create_decimal_table()
-
-# def predict(symbol):
-#     df = oanda.get_ohlc(symbol,24,'H1')
-#     df = df.reset_index()
-#     df['ds'] = df['Date']
-#     df['y'] = df['Close']
-#     data = df[['ds','y']]
-
-#     end_date = get_start_time(symbol) + datetime.timedelta(days=1)
-
-#     model = Prophet()
-#     model.fit(data)
-
-#     future = model.make_future_dataframe(periods=30, freq='h')
-#     forecast = model.predict(future)
-#     predicted_price = forecast[forecast['ds'] == end_date]['yhat']
-#     return predicted_price
 
 def conviction(symbol):
     df = oanda.get_ohlc(symbol, 6, 'D')
@@ -66,56 +45,52 @@ def conviction(symbol):
 
 
 
-def open_trades():
-    #count = 0
+def open_trades(symbol):
 
-    for symbol in INSTRUMENTS:
-        #count += 1
-        #print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
-        try:
-            df = oanda.get_ohlc(symbol, 5, 'D')
-            # print(symbol)
-            # print(df)
+    #print(f"{symbol}\t : \t {count}/{len(INSTRUMENTS)}")
+    try:
+        df = oanda.get_ohlc(symbol, 5, 'D')
+        # print(symbol)
+        # print(df)
 
-            prev_high = df.iloc[-2]['High']
-            prev_low = df.iloc[-2]['Low']
+        prev_high = df.iloc[-2]['High']
+        prev_low = df.iloc[-2]['Low']
 
-            atr = oanda.calculate_ATR(symbol, 10, 'D')
+        atr = oanda.calculate_ATR(symbol, 10, 'D')
 
-            convince, bullish = conviction(symbol)
+        convince, bullish = conviction(symbol)
 
-            if symbol not in SYMBOLS_ORDERS and symbol not in SYMBOLS_TRADES:
-                if bullish:
-                    # bullish -> long at low
-                    curr_ask = oanda.get_current_ask_bid_price(symbol)[0]
+        if symbol not in SYMBOLS_ORDERS and symbol not in SYMBOLS_TRADES:
+            if bullish:
+                # bullish -> long at low
+                curr_ask = oanda.get_current_ask_bid_price(symbol)[0]
 
-                    limit_long_entry = prev_low + (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
-                    limit_sl = limit_long_entry - atr
-                    if curr_ask > limit_long_entry:
-                        oanda.create_limit_order(symbol, limit_long_entry, limit_sl, RISK_PER_TRADE)
+                limit_long_entry = prev_low + (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                limit_sl = limit_long_entry - atr
+                if curr_ask > limit_long_entry:
+                    oanda.create_limit_order(symbol, limit_long_entry, limit_sl, RISK_PER_TRADE)
 
-                    stop_long_entry = prev_high+(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
-                    stop_sl = stop_long_entry - atr
-                    if curr_ask < stop_long_entry:
-                        oanda.create_stop_order(symbol, stop_long_entry, stop_sl, RISK_PER_TRADE)
-                else:
-                    # bearish -> short at high
-                    curr_bid = oanda.get_current_ask_bid_price(symbol)[1]
+                stop_long_entry = prev_high+(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                stop_sl = stop_long_entry - atr
+                if curr_ask < stop_long_entry:
+                    oanda.create_stop_order(symbol, stop_long_entry, stop_sl, RISK_PER_TRADE)
+            else:
+                # bearish -> short at high
+                curr_bid = oanda.get_current_ask_bid_price(symbol)[1]
 
-                    limit_short_entry = prev_high - (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
-                    limit_sl = limit_short_entry + atr
-                    if curr_bid < limit_short_entry:
-                        oanda.create_limit_order(symbol, limit_short_entry, limit_sl, RISK_PER_TRADE)
+                limit_short_entry = prev_high - (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                limit_sl = limit_short_entry + atr
+                if curr_bid < limit_short_entry:
+                    oanda.create_limit_order(symbol, limit_short_entry, limit_sl, RISK_PER_TRADE)
 
-                    stop_short_entry = prev_low-(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
-                    stop_sl = stop_short_entry + atr
-                    if curr_bid > stop_short_entry:
-                        oanda.create_stop_order(symbol, stop_short_entry, stop_sl, RISK_PER_TRADE)
+                stop_short_entry = prev_low-(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                stop_sl = stop_short_entry + atr
+                if curr_bid > stop_short_entry:
+                    oanda.create_stop_order(symbol, stop_short_entry, stop_sl, RISK_PER_TRADE)
 
-            time.sleep(1)
-        except Exception as e:
-            print(e)
-            time.sleep(1)
+    except Exception as e:
+        print(e)
+
 
 if __name__ == '__main__':
     #open_trades()
