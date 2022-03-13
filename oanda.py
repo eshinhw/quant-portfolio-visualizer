@@ -9,7 +9,7 @@ import oandapyV20.endpoints.instruments as instruments
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.trades as trades
 
-class OandaTrader:
+class Oanda:
 
     def __init__(self, api_key, accountID) -> None:
         self.client = API(api_key)
