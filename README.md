@@ -13,7 +13,7 @@ Deleveop an automated trading bot to capitalize trading opportunities in FX mark
 
 ## Account Verification
 
-- Account Performance Verification: [Myfxbook - Trending MA Crossover](https://www.myfxbook.com/members/EddieShin/tf-ma/9190213)
+- [Myfxbook - Trending MA Crossover](https://www.myfxbook.com/members/EddieShin/tf-ma/9190213)
 
 ## Moving Averages Crossover Strategy
 
