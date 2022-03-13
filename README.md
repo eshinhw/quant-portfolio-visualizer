@@ -10,7 +10,7 @@ Using Questrade API, PyQuant retrieves account information and financial data to
 - generate portfolio performance matrices 
 - offer strategy rebalancing feature
 
-Users can quickly access to their account information and investing portfolios once they get access code from Questrade.
+Users can quickly access to their account information and portfolios once they get access code from Questrade.
 
 ## Purpose
 
