@@ -9,6 +9,7 @@ import oandapyV20.endpoints.instruments as instruments
 import oandapyV20.endpoints.orders as orders
 import oandapyV20.endpoints.trades as trades
 
+
 class Oanda:
 
     def __init__(self, api_key, accountID) -> None:
@@ -100,8 +101,6 @@ class Oanda:
         # https://www.youtube.com/watch?v=bNEpAOOulwk&ab_channel=KarenFoo
 
         account_balance = self.get_balance()
-        dec_table = self.create_decimal_table()
-
         decimal = 4
         multiple = 10000
 
@@ -220,34 +219,6 @@ class Oanda:
                     symbols.append(trade['instrument'])
         return symbols
 
-    def create_buy_market_order(self, symbol, size):
-        order_body = {
-            "order": {
-                "type": "MARKET",
-                "positionFill": "DEFAULT",
-                "instrument": symbol,
-                "timeInForce": "FOK",
-                "units": "100"
-            }
-        }
-
-        r = orders.OrderCreate(self.acctID, data=order_body)
-        self.client.request(r)
-
-
-    def create_sell_market_order(self, symbol, size):
-        order_body = {
-            "order": {
-                "type": "MARKET",
-                "positionFill": "DEFAULT",
-                "instrument": symbol,
-                "timeInForce": "FOK",
-                "units": "-100"
-            }
-        }
-        r = orders.OrderCreate(self.acctID, data=order_body)
-        self.client.request(r)
-
     def create_limit_order(self, symbol, entry, stop, risk):
         (units, entry, stop, distance) = self.calculate_unit_size(symbol, entry, stop, risk)
         # print(entry-stop)
@@ -262,7 +233,7 @@ class Oanda:
             "order": {
                 "price": str(entry),
                 "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
-                # "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(distance)},
+                "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(distance)},
                 "timeInForce": "GTC",
                 "instrument": symbol,
                 "units": "-" + str(units),
@@ -281,7 +252,7 @@ class Oanda:
                 "order": {
                     "price": str(entry),
                     "stopLossOnFill": {"timeInForce": "GTC", "price": str(stop)},
-                    # "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(distance)},
+                    "trailingStopLossOnFill": {"timeInForce": "GTC", "distance": str(distance)},
                     "timeInForce": "GTC",
                     "instrument": symbol,
                     "units": str(units),
@@ -349,7 +320,7 @@ class Oanda:
             self.client.request(r)
 
 if __name__ == "__main__":
-    pass
+    od = Oanda()
 
 
 
