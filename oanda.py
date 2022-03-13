@@ -21,10 +21,7 @@ class Oanda:
         return float(resp["account"]["balance"])
 
     def get_ohlc(self, symbol: str, count: int, interval: str):
-        r = instruments.InstrumentsCandles(instrument=symbol,
-                                           params={"count": count,
-                                                    "granularity": interval,
-                                                    "dailyAlignment": 17})
+        r = instruments.InstrumentsCandles(instrument=symbol, params={"count": count, "granularity": interval})
         resp = self.client.request(r)
 
         data = {"Date": [], "Open": [], "High": [], "Low": [], "Close": []}
