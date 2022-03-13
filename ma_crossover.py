@@ -2,7 +2,7 @@ import os
 import time
 import datetime as dt
 from pprint import pprint
-from oandaOrder import OandaOrder
+from OandaOrder import OandaOrder
 from credentials import OANDA_API_KEY, FORWARD_TESTING_ACCOUNT_ID, TEST_ACCOUNT_ID
 
 
