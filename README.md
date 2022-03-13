@@ -8,8 +8,8 @@ Deleveop an automated trading bot to capitalize trading opportunities in FX mark
 
 ## External Resources
 
-- Market Data: [OANDA API](https://developer.oanda.com/)
-- Trading Automation: [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
+- [OANDA API](https://developer.oanda.com/)
+- [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
 
 ## Account Verification
 
