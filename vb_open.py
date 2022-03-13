@@ -1,10 +1,7 @@
 import os
 import time
-import datetime as dt
-import numpy as np
 from credentials import API_OANDA, VB_ACCT, DEMO_ACCT
 from oanda import Oanda
-# from fbprophet import Prophet
 
 # Login
 if os.name == 'nt':
