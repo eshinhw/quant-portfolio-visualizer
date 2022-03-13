@@ -27,58 +27,14 @@ class OandaOrder(OandaData, OandaInstrument):
         decimal = dec_table[symbol]['decimal']
         multiple = dec_table[symbol]['multiple']
 
-        if '_USD' in symbol:
-            usdcad = self.get_current_ask_bid_price('USD_CAD')[0]
-            us_dolloar_per_trade = (account_balance * risk) / usdcad
-            entry = round(entry, decimal)
-            stop = round(stop, decimal)
-            # sl_pips NOT in fractions but in decimal by multiplying multiple
-            stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
-            unit_size = round(us_dolloar_per_trade / stop_loss_pips * multiple, 0)
-            return (unit_size, entry, stop, stop_loss_pips)
-
-        if '_JPY' in symbol:
-            cadjpy = self.get_current_ask_bid_price('CAD_JPY')[0]
-            jpy_per_trade = (account_balance * risk) * cadjpy
-            # risk_amt_per_trade_in_jpy = risk_amt_per_trade /
-            entry = round(entry, decimal)
-            stop = round(stop, decimal)
-            # sl_pips NOT in fractions but in decimal by multiplying multiple
-            stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
-            unit_size = round((jpy_per_trade / stop_loss_pips * multiple), 0)
-            #print(unit_size)
-            return (unit_size, entry, stop, stop_loss_pips)
-
-        if '_CAD' in symbol:
-            cad_dolloar_per_trade = (account_balance * risk)
-            entry = round(entry, decimal)
-            stop = round(stop, decimal)
-            # sl_pips NOT in fractions but in decimal by multiplying multiple
-            stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
-            unit_size = round(cad_dolloar_per_trade / stop_loss_pips * multiple, 0)
-            return (unit_size, entry, stop, stop_loss_pips)
-
-        if '_CHF' in symbol:
-            cadchf = self.get_current_ask_bid_price('CAD_CHF')[0]
-            chf_per_trade = (account_balance * risk) * cadchf
-            entry = round(entry, decimal)
-            stop = round(stop, decimal)
-            # sl_pips NOT in fractions but in decimal by multiplying multiple
-            stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
-            unit_size = round((chf_per_trade / stop_loss_pips * multiple), 0)
-            #print(unit_size)
-            return (unit_size, entry, stop, stop_loss_pips)
-
-        if '_SGD' in symbol:
-            cadsgd = self.get_current_ask_bid_price('CAD_SGD')[0]
-            sgd_per_trade = (account_balance * risk) * cadsgd
-            entry = round(entry, decimal)
-            stop = round(stop, decimal)
-            # sl_pips NOT in fractions but in decimal by multiplying multiple
-            stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
-            unit_size = round((sgd_per_trade / stop_loss_pips * multiple), 0)
-            #print(unit_size)
-            return (unit_size, entry, stop, stop_loss_pips)
+        usdcad = self.get_current_ask_bid_price('USD_CAD')[0]
+        us_dolloar_per_trade = (account_balance * risk) / usdcad
+        entry = round(entry, decimal)
+        stop = round(stop, decimal)
+        # sl_pips NOT in fractions but in decimal by multiplying multiple
+        stop_loss_pips = round(abs(entry - stop), decimal + 1) * multiple
+        unit_size = round(us_dolloar_per_trade / stop_loss_pips * multiple, 0)
+        return (unit_size, entry, stop, stop_loss_pips)
 
     def update_order_trade_status(self):
         trade_list = self.get_trade_list()
@@ -152,15 +108,13 @@ class OandaOrder(OandaData, OandaInstrument):
 
 
     def get_order_list(self) -> List[Dict]:
-        """ Retrieve a list of open orders
-        """
+        """ Retrieve a list of open orders"""
         r = orders.OrderList(self.acctID)
         resp = self.client.request(r)
         return resp['orders']
 
     def get_trade_list(self) -> List[Dict]:
-        """ Retrieve a list of open trades
-        """
+        """ Retrieve a list of open trades"""
         r = trades.TradesList(self.acctID)
         resp = self.client.request(r)
         return resp['trades']
