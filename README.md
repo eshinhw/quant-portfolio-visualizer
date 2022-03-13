@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="800" height="350" src="https://user-images.githubusercontent.com/41933169/139356204-1253068f-b11c-4507-a921-6e77112b7a55.png">
+  <img width="800" height="300" src="https://user-images.githubusercontent.com/41933169/139356204-1253068f-b11c-4507-a921-6e77112b7a55.png">
 </p>
 
 # PyTrader
