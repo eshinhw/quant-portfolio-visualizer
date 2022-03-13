@@ -65,12 +65,12 @@ def open_trades(symbol):
                 # bullish -> long at low
                 curr_ask = oanda.get_current_ask_bid_price(symbol)[0]
 
-                limit_long_entry = prev_low + (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                limit_long_entry = prev_low + (ENTRY_BUFFER / 10000)
                 limit_sl = limit_long_entry - atr
                 if curr_ask > limit_long_entry:
                     oanda.create_limit_order(symbol, limit_long_entry, limit_sl, RISK_PER_TRADE)
 
-                stop_long_entry = prev_high+(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                stop_long_entry = prev_high+(ENTRY_BUFFER / 10000)
                 stop_sl = stop_long_entry - atr
                 if curr_ask < stop_long_entry:
                     oanda.create_stop_order(symbol, stop_long_entry, stop_sl, RISK_PER_TRADE)
@@ -78,12 +78,12 @@ def open_trades(symbol):
                 # bearish -> short at high
                 curr_bid = oanda.get_current_ask_bid_price(symbol)[1]
 
-                limit_short_entry = prev_high - (ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                limit_short_entry = prev_high - (ENTRY_BUFFER / 10000)
                 limit_sl = limit_short_entry + atr
                 if curr_bid < limit_short_entry:
                     oanda.create_limit_order(symbol, limit_short_entry, limit_sl, RISK_PER_TRADE)
 
-                stop_short_entry = prev_low-(ENTRY_BUFFER / DECIMAL_TABLE[symbol]['multiple'])
+                stop_short_entry = prev_low-(ENTRY_BUFFER / 10000)
                 stop_sl = stop_short_entry + atr
                 if curr_bid > stop_short_entry:
                     oanda.create_stop_order(symbol, stop_short_entry, stop_sl, RISK_PER_TRADE)

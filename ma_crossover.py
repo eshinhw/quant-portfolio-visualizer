@@ -8,7 +8,7 @@ from credentials import API_OANDA, CROSSOVER_ACCT
 # Login
 
 if os.name == 'nt':
-    oanda = Oanda(OANDA_API_KEY, TEST_ACCOUNT_ID)
+    oanda = Oanda(API_OANDA, CROSSOVER_ACCT)
 if os.name == 'posix':
     oanda = Oanda(API_OANDA, CROSSOVER_ACCT)
 
