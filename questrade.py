@@ -4,7 +4,7 @@ import pandas as pd
 import datetime as dt
 from strategies import LAA
 from qtrade import Questrade
-import fmp.fmp_prices as FMP_PRICES
+
 
 
 class QuestradeBot:
