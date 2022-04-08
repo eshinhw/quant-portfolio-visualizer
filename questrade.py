@@ -5,8 +5,6 @@ import datetime as dt
 from strategies import LAA
 from qtrade import Questrade
 
-
-
 class QuestradeBot:
     def __init__(self, acctNum, accessCode = None):
         # Initialize Questrade Instance
