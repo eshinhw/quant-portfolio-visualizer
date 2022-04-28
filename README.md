@@ -17,7 +17,7 @@ The main purpose behind PyQuant is to implement historically-proven asset alloca
 
 ## Fixed Asset Allocation Portfolios <a name="fixed-asset-allocations"></a>
 
-- Traditonal 60/40 Portfolio
+- Traditonal 60% Equities + 40% Bonds Portfolio
 - Four Seasons Portfolio
 - All Weather Portfolio
 - Permanent Portfolio
