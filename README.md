@@ -1,21 +1,14 @@
 # PyQuant
 
-Welcome to PyQuant! :)
-
-PyQuant is a Command Line Interface (CLI) based investing portfolio management program developed with Questrade API. 
-
-Using Questrade API, PyQuant retrieves account information and financial data to:
+PyQuant is an investing portfolio management tool with Command Line Interface (CLI). PyQuant works with Questrade API to retrieve account information and financial data to:
 
 - provide account status summary
 - generate portfolio performance matrices 
-- offer strategy rebalancing feature
-
-Users can quickly access to their account information and portfolios once they get access code from Questrade.
+- perform portfolio rebalancing
 
 ## Purpose
 
-PyQuant implements historically proven asset allocation strategies to provide optimal portfoloio management by removing emotional human errors and following rule-based investing philosophy.
-
+The main purpose behind PyQuant is to implement historically-proven asset allocation strategies to provide optimal portfoloio management and remove human errors by following rule-based investing philosophy.
 
 ## Data Sources <a name="data-sources"></a>
 
