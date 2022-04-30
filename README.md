@@ -4,7 +4,7 @@
 
 # PyTrader
 
-Deleveop an automated trading bot to capitalize trading opportunities in FX markets.
+PyTrader is an automated trading bot to capitalize trading opportunities in FX markets.
 
 ## External Resources
 
