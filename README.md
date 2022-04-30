@@ -12,7 +12,7 @@ PyQuant is an investing portfolio management tool with Command Line Interface (C
 
 ## Purpose
 
-The main purpose behind PyQuant is to implement historically-proven asset allocation strategies to provide optimal portfoloio management and remove human errors by following rule-based investing philosophy.
+The main purpose is to implement historically-proven asset allocation strategies to provide optimal portfoloio management and remove human errors by following rule-based investing philosophy.
 
 ## Data Sources <a name="data-sources"></a>
 
