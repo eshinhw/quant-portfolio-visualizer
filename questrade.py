@@ -1,4 +1,4 @@
-from os import path, remove
+from os import path, remove, system
 import numpy as np
 import pandas as pd
 import datetime as dt
@@ -166,7 +166,8 @@ class QuestradeBot:
     def _monthly_return(self, assets):
         monthly_prices = pd.DataFrame()
         for asset in assets:
-            monthly_prices[asset] = yf.download(asset, start= dt.datetime(2018,1,1), end = dt.datetime.today,interval='1mo')['Adj Close']
+            monthly_prices[asset] = yf.download(asset, start= dt.datetime(2018,1,1), end = dt.datetime.today,interval='1mo', progress=False)['Adj Close']
+
         monthly_returns = monthly_prices.pct_change()
         monthly_returns.dropna(inplace=True)
         
@@ -176,7 +177,7 @@ class QuestradeBot:
         prices = pd.DataFrame() 
 
         for symbol in assets:
-            prices[symbol] = yf.download(symbol, start= dt.datetime(2018,1,1), end = dt.datetime.today(),interval='1mo')['Adj Close']
+            prices[symbol] = yf.download(symbol, start= dt.datetime(2018,1,1), end = dt.datetime.today(),interval='1mo', progress=False)['Adj Close']
         
         prices.dropna(inplace=True)
         monthly_returns = prices.pct_change()
