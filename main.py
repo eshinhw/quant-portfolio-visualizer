@@ -8,6 +8,7 @@ from strategies.VAA import VAA
 from strategies import LAA
 import accounts
 import pandas as pd
+import share_email
 
 
 def print_dividends(div):
@@ -147,7 +148,25 @@ def account_summary(qb):
                 print_dividends(div)    
 
         elif summary_answers.get('operation') == 'Share in Email':
-            print('Email Sharing to Other People')          
+            get_recipient_email = [
+                {
+                'type': 'input',
+                'name': 'email_address',
+                'message': 'What\'s your email?',
+                }
+            ]
+
+            email = prompt(get_recipient_email).get('email_address')
+            bal = qb.get_account_balance_summary().to_html()
+            invest = qb.get_investment_summary().to_html()
+            ret = qb.calculate_portfolio_performance().to_html()
+            try:
+                share_email.sendEmail(recipient_email=email, balance=bal, investment=invest, performance=ret)
+            except Exception as e:
+                print(e)
+                print(f"THERE IS SOMETHING WRONG WITH EMAIL SHARING. Please check your mail {email}")
+            else:
+                print(f'\t Email has been successfully sent to {email}')          
 
         elif summary_answers.get('operation') == 'Go to Main Menu':
             break             
