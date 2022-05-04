@@ -6,3 +6,4 @@ credentials.py
 .questrade.json
 .DS_Store
 accounts.json
+misc.py
