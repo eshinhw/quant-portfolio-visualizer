@@ -35,6 +35,8 @@ The main purpose is to implement historically-proven asset allocation strategies
 
 ## Usage
 
+Run `python main.py`.
+
 ### Main Menu
 
 <p align="center">
