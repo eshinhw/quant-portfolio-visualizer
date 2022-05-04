@@ -93,7 +93,8 @@ def account_summary(qb):
                     'Balance Summary', 
                     'Investment Summary',
                     'Portfolio Performance',
-                    'Historical Dividends', 
+                    'Historical Dividends',
+                    'Share in Email',
                     'Go to Main Menu',
                     'Exit Program'
                 ]
@@ -143,7 +144,10 @@ def account_summary(qb):
 
             elif div_answers.get('div_period') == 'Past 10 Years':
                 div = qb.get_historical_dividend_income(3650)
-                print_dividends(div)              
+                print_dividends(div)    
+
+        elif summary_answers.get('operation') == 'Share in Email':
+            print('Email Sharing to Other People')          
 
         elif summary_answers.get('operation') == 'Go to Main Menu':
             break             
