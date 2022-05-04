@@ -109,5 +109,5 @@ Below is the sample email.
 
 - Account verification when new account is added.
 - Multi-users access without getting new access code (different yaml file paths for each Questrade ID)
-- ~~Automatic email share of portfolio summary
+- ~~Automatic email share of portfolio summary~~
 - Improve performance comparison matrices
