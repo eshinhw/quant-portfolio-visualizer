@@ -11,9 +11,9 @@ PyTrader is an automated trading bot to capitalize trading opportunities in FX m
 - [OANDA API](https://developer.oanda.com/)
 - [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
 
-## Account Verification
+<!-- ## Account Verification
 
-- [Myfxbook - Trending MA Crossover](https://www.myfxbook.com/members/EddieShin/tf-ma/9190213)
+- [Myfxbook - Trending MA Crossover](https://www.myfxbook.com/members/EddieShin/tf-ma/9190213) -->
 
 ## Moving Averages Crossover Strategy
 
