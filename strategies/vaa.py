@@ -82,10 +82,10 @@ class VAA():
         ## Investment decision based on strategy algorithm
         if (self.mom_rank.iloc[-1] == 0).all():
             # if all scores are zero, hold cash
-            print("Hold 100% Cash")
+            return {"Cash": 1}
         else:
             invest = self.mom_rank.columns[(self.mom_rank == 1).iloc[-1]][0]
-            print(f"invest {invest}")
+            return invest
 
     def monthly_return(self):
         monthly_returns = self.prices.pct_change()

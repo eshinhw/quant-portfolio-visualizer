@@ -3,7 +3,6 @@ from os import path, remove, system
 import numpy as np
 import pandas as pd
 import datetime as dt
-from strategies import LAA
 from qtrade import Questrade
 import yfinance as yf
 from PyInquirer import prompt, print_json
@@ -24,24 +23,24 @@ class QuestradeBot:
     def __init__(self, acctNum):
         # Initialize Questrade Instance
         if path.exists("./access_token.yml"):
-            print("first try in questrade")
+            #print("first try in questrade")
             self.qtrade = Questrade(token_yaml='./access_token.yml')
             try:
                 self.qtrade.get_account_id()
             except:
-                print("first if statement")
+                #print("first if statement")
                 self.qtrade.refresh_access_token(from_yaml=True)
                 self.qtrade = Questrade(token_yaml='./access_token.yml')
                 try:
                     self.qtrade.get_account_id()
                 except:
-                    print("yml file removed!")
+                    #print("yml file removed!")
                     remove("./access_token.yml")
                     # get new access code
                     access_code = new_access_code()
                     self.qtrade = Questrade(access_code=access_code)
         else:
-            print("no yml file exist")
+            #print("no yml file exist")
             access_code = new_access_code()
             self.qtrade = Questrade(access_code=access_code)
             try:

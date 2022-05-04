@@ -7,7 +7,6 @@ from credentials import QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
 from pyfiglet import Figlet
 from tabulate import tabulate
 from strategies.VAA import VAA
-from strategies import LAA
 import accounts
 
 ACCOUNTS = accounts.load_accounts()
@@ -113,7 +112,7 @@ def account_summary(qb):
                     'type': 'list',
                     'name': 'div_period',
                     'message': 'Choose Period',
-                    'choices': ['Past 3 Months', 'Past 6 Months', 'Past 1 Year', 'Past 3 Years']
+                    'choices': ['Past 3 Months', 'Past 6 Months', 'Past 1 Year', 'Past 3 Years', 'Past 10 Years']
                 }
             ]
             div_answers = prompt(div_questions)                
@@ -122,41 +121,61 @@ def account_summary(qb):
                 div = qb.get_historical_dividend_income(90)
                 print_dividends(div)
                 
-            if div_answers.get('div_period') == 'Past 6 Months':
+            elif div_answers.get('div_period') == 'Past 6 Months':
                 div = qb.get_historical_dividend_income(180)
                 print_dividends(div)
                 
-            if div_answers.get('div_period') == 'Past 1 Year':
+            elif div_answers.get('div_period') == 'Past 1 Year':
                 div = qb.get_historical_dividend_income(365)
                 print_dividends(div)
                 
-            if div_answers.get('div_period') == 'Past 3 Years':
+            elif div_answers.get('div_period') == 'Past 3 Years':
                 div = qb.get_historical_dividend_income(1095)
-                print_dividends(div)               
+                print_dividends(div)
+
+            elif div_answers.get('div_period') == 'Past 10 Years':
+                div = qb.get_historical_dividend_income(3650)
+                print_dividends(div)              
 
         elif summary_answers.get('operation') == 'Go to Main Menu':
-            main_menu()              
+            break             
         elif summary_answers.get('operation') == 'Exit Program':
-            quit()            
+            quit()
+
+    main_menu()            
 
 def rebalance_strategy():
 
-    strategy_questions = {
-        'type': 'list',
-        'name': 'strategy_type',
-        'message': 'Select Allocation Strategy',
-        'choices': [
-            {'name': 'Vigilant Asset Allocation (VAA)'},
-            {'name': 'Lethargic Asset Allocation (LAA)'}
-        ]
-    }
+    while True:
+        strategy_questions = {
+            'type': 'list',
+            'name': 'strategy_type',
+            'message': 'Select Allocation Strategy',
+            'choices': [
+                {'name': 'Vigilant Asset Allocation (VAA)'},
+                {'name': 'Lethargic Asset Allocation (LAA)'},
+                {'name': 'Go to Main Menu'}
+            ]
+        }
 
-    if prompt(strategy_questions).get('strategy_type') == 'Vigilant Asset Allocation (VAA)':
-        vaa = VAA()
-        print(vaa.decision())
+        strategy_answer = prompt(strategy_questions)
+
+        if strategy_answer.get('strategy_type') == 'Vigilant Asset Allocation (VAA)':
+            vaa = VAA()
+            decision = vaa.decision()
+            print(f"Invest in {decision}")
+        
+        elif strategy_answer.get('strategy_type') == 'Lethargic Asset Allocation (LAA)':
+            vaa = VAA()
+            if vaa.decision() == "QQQ":
+                print({'IWD': 0.25, 'IEF': 0.25, 'GLD': 0.25, 'QQQ': 0.25})
+            else:
+                print({'IWD': 0.25, 'IEF': 0.25, 'GLD': 0.25, 'SHY': 0.25})
+
+        elif strategy_answer.get('strategy_type') == 'Go to Main Menu':
+            break
     
-    if prompt(strategy_questions).get('strategy_type') == 'Lethargic Asset Allocation (LAA)':
-        laa = LAA()
+    main_menu()
 
 
 if __name__ == "__main__":
