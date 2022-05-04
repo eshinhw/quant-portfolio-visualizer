@@ -7,28 +7,10 @@ from questrade import QuestradeBot
 from credentials import QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
 from pyfiglet import Figlet
 from tabulate import tabulate
-from init_accounts import select_account
 from strategies.VAA import VAA
+import accounts
 
-def main_menu():
-    # initialize questradebot
-    qb = select_account()
-
-    menu_questions = [
-        {
-            'type': 'list',
-            'name': 'main_menu',
-            'message': 'Select Menu',
-            'choices': ['Account Summary', 'Strategy Rebalancing']
-        }
-    ]
-    menu_answers = prompt(menu_questions)
-
-    if menu_answers.get('main_menu') == 'Account Summary':
-        account_summary(qb)
-
-    if menu_answers.get('main_menu') == 'Strategy Rebalancing':
-        rebalance_strategy(qb)
+ACCOUNTS = accounts.load_accounts()
 
 def print_dividends(div):
     if (div['Monthly_Dividend_Income'] == 0).all():
@@ -47,72 +29,112 @@ def print_output(df):
     print(tabulate(df, headers='keys'))
     print()
 
+def main_menu():
+    main_selection = [
+        {
+            'type': 'list',
+            'name': 'main_menu',
+            'message': 'Main Menu',
+            'choices': ['Account Overview', 'Allocation Rebalancing', 'Exit Program']
+        }
+    ]
+
+    if prompt(main_selection).get('main_menu') == 'Account Overview':
+        accounts_questions = [
+            {
+                'type': 'list',
+                'name': 'account',
+                'message': 'Account Options',
+                'choices': list(ACCOUNTS.keys()) + ['Add New Account', 'Reset Saved Accounts', 'Exit Program']
+            }
+        ]
+
+        if prompt(accounts_questions).get('account') == 'Add New Account':
+            accounts.add_new_account()
+        
+        elif prompt(accounts_questions).get('account') == 'Reset Saved Accounts':
+            os.remove('./accounts.json')
+        
+        elif prompt(accounts_questions).get('account') == 'Exit Program':
+            quit()
+        else:
+            acct_name = prompt(accounts_questions).get('account')
+            acctNum = ACCOUNTS[acct_name]
+            qb = QuestradeBot(acctNum)
+            account_summary(qb)
+         
+    if prompt(main_selection).get('main_menu') == 'Allocation Rebalancing':
+        rebalance_strategy()            
+    
+    if prompt(main_selection).get('main_menu') == 'Exit Program':
+        quit()
+
 
 def account_summary(qb):
     while True:
-            summary = [
+        summary = [
+            {
+                'type': 'list',
+                'name': 'operation',
+                'message': 'Select Operation',
+                'choices': [
+                    'Balance Summary', 
+                    'Investment Summary',
+                    'Portfolio Performance',
+                    'Historical Dividends', 
+                    'Go to Main Menu',
+                    'Exit Program'
+                ]
+            }
+        ]
+
+        summary_answers = prompt(summary)
+
+        if summary_answers.get('operation') == 'Balance Summary':
+            bal = qb.get_account_balance_summary()
+            print_output(bal)
+
+        elif summary_answers.get('operation') == 'Investment Summary':
+            invest = qb.get_investment_summary()
+            print_output(invest)
+
+        elif summary_answers.get('operation') == 'Portfolio Performance':
+            ret = qb.calculate_portfolio_performance()
+            print_output(ret)
+
+        elif summary_answers.get('operation') == 'Historical Dividends':
+            div_questions = [
                 {
                     'type': 'list',
-                    'name': 'operation',
-                    'message': 'Select Operation',
-                    'choices': [
-                        'Balance Summary', 
-                        'Investment Summary',
-                        'Portfolio Performance',
-                        'Historical Dividends', 
-                        'Go to Account Selection',
-                        'Exit Program'
-                    ]
+                    'name': 'div_period',
+                    'message': 'Choose Period',
+                    'choices': ['Past 3 Months', 'Past 6 Months', 'Past 1 Year', 'Past 3 Years']
                 }
             ]
+            div_answers = prompt(div_questions)                
+                
+            if div_answers.get('div_period') == 'Past 3 Months':
+                div = qb.get_historical_dividend_income(90)
+                print_dividends(div)
+                
+            if div_answers.get('div_period') == 'Past 6 Months':
+                div = qb.get_historical_dividend_income(180)
+                print_dividends(div)
+                
+            if div_answers.get('div_period') == 'Past 1 Year':
+                div = qb.get_historical_dividend_income(365)
+                print_dividends(div)
+                
+            if div_answers.get('div_period') == 'Past 3 Years':
+                div = qb.get_historical_dividend_income(1095)
+                print_dividends(div)               
 
-            summary_answers = prompt(summary)
+        elif summary_answers.get('operation') == 'Go to Account Selection':
+            main_menu()              
+        elif summary_answers.get('operation') == 'Exit Program':
+            quit()            
 
-            if summary_answers.get('operation') == 'Balance Summary':
-                bal = qb.get_account_balance_summary()
-                print_output(bal)
-
-            elif summary_answers.get('operation') == 'Investment Summary':
-                invest = qb.get_investment_summary()
-                print_output(invest)
-
-            elif summary_answers.get('operation') == 'Portfolio Performance':
-                ret = qb.calculate_portfolio_performance()
-                print_output(ret)
-
-            elif summary_answers.get('operation') == 'Historical Dividends':
-                div_questions = [
-                    {
-                        'type': 'list',
-                        'name': 'div_period',
-                        'message': 'Choose Period',
-                        'choices': ['Past 3 Months', 'Past 6 Months', 'Past 1 Year', 'Past 3 Years']
-                    }
-                ]
-                div_answers = prompt(div_questions)                
-                    
-                if div_answers.get('div_period') == 'Past 3 Months':
-                    div = qb.get_historical_dividend_income(90)
-                    print_dividends(div)
-                    
-                if div_answers.get('div_period') == 'Past 6 Months':
-                    div = qb.get_historical_dividend_income(180)
-                    print_dividends(div)
-                    
-                if div_answers.get('div_period') == 'Past 1 Year':
-                    div = qb.get_historical_dividend_income(365)
-                    print_dividends(div)
-                    
-                if div_answers.get('div_period') == 'Past 3 Years':
-                    div = qb.get_historical_dividend_income(1095)
-                    print_dividends(div)               
-
-            elif summary_answers.get('operation') == 'Go to Account Selection':
-                qb = select_account()                
-            elif summary_answers.get('operation') == 'Exit Program':
-                quit()            
-
-def rebalance_strategy(qb):
+def rebalance_strategy():
 
     strategy_questions = {
         'type': 'list',

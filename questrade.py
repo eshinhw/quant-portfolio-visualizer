@@ -5,30 +5,39 @@ import datetime as dt
 from strategies import LAA
 from qtrade import Questrade
 import yfinance as yf
+from PyInquirer import prompt, print_json
+
+def new_access_code():
+    ask_access_code = [
+        {
+            'type': 'password',
+            'message': 'VALIDATION ERROR: Enter new valid access code from Questrade',
+            'name': 'access_code'
+        }
+    ]
+    new_access_code = prompt(ask_access_code).get('access_code')
+    return new_access_code
+
 
 class QuestradeBot:
-    def __init__(self, acctNum, accessCode = None):
+    def __init__(self, acctNum):
         # Initialize Questrade Instance
         if path.exists("./access_token.yml"):
-            try:
-                #print("first try in questrade")
-                self.qtrade = Questrade(token_yaml='./access_token.yml')
-                #print(self.qtrade.account_id)
-                assert self.qtrade.account_id
-            except:
-                try:
-                    #print("second try in questrade")
-                    self.qtrade.refresh_access_token(from_yaml=True)
-                except:
-                    #print("last except in questrade")
+            print("first try in questrade")
+            self.qtrade = Questrade(token_yaml='./access_token.yml')
+            if not self.qtrade.account_id:
+                self.qtrade.refresh_access_token(from_yaml=True)
+                if not self.qtrade.account_id:
                     remove("./access_token.yml")
-
+                    # get new access code
+                    access_code = new_access_code()
+                    self.qtrade = Questrade(access_code=access_code)
         else:
-            try:
-                self.qtrade = Questrade(access_code=accessCode)
-            except:
-                # if self.qtrade == 100, ACCESS CODE IS NOT VALID!
-                self.qtrade = 100
+            access_code = new_access_code()
+            self.qtrade = Questrade(access_code=access_code)
+            while not self.qtrade.account_id:
+                access_code = new_access_code()
+                self.qtrade = Questrade(access_code=access_code)
 
         self.acctNum = acctNum
 
