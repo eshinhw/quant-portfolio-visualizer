@@ -1,3 +1,4 @@
+from __future__ import print_function, unicode_literals
 from os import path, remove, system
 import numpy as np
 import pandas as pd
@@ -25,19 +26,31 @@ class QuestradeBot:
         if path.exists("./access_token.yml"):
             print("first try in questrade")
             self.qtrade = Questrade(token_yaml='./access_token.yml')
-            if not self.qtrade.account_id:
+            try:
+                self.qtrade.get_account_id()
+            except:
+                print("first if statement")
                 self.qtrade.refresh_access_token(from_yaml=True)
-                if not self.qtrade.account_id:
+                self.qtrade = Questrade(token_yaml='./access_token.yml')
+                try:
+                    self.qtrade.get_account_id()
+                except:
+                    print("yml file removed!")
                     remove("./access_token.yml")
                     # get new access code
                     access_code = new_access_code()
                     self.qtrade = Questrade(access_code=access_code)
         else:
+            print("no yml file exist")
             access_code = new_access_code()
             self.qtrade = Questrade(access_code=access_code)
-            while not self.qtrade.account_id:
-                access_code = new_access_code()
-                self.qtrade = Questrade(access_code=access_code)
+            try:
+                accts_list = self.qtrade.get_account_id()
+            except:
+                while not isinstance(accts_list, list):
+                    print("in while loop")
+                    access_code = new_access_code()
+                    self.qtrade = Questrade(access_code=access_code)
 
         self.acctNum = acctNum
 

@@ -1,6 +1,5 @@
 from __future__ import print_function, unicode_literals
 from PyInquirer import prompt, print_json
-# from examples import custom_style_2
 import json
 import os
 from questrade import QuestradeBot
@@ -8,6 +7,7 @@ from credentials import QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
 from pyfiglet import Figlet
 from tabulate import tabulate
 from strategies.VAA import VAA
+from strategies import LAA
 import accounts
 
 ACCOUNTS = accounts.load_accounts()
@@ -39,7 +39,9 @@ def main_menu():
         }
     ]
 
-    if prompt(main_selection).get('main_menu') == 'Account Overview':
+    main_selection_answer = prompt(main_selection)
+
+    if main_selection_answer.get('main_menu') == 'Account Overview':
         accounts_questions = [
             {
                 'type': 'list',
@@ -49,24 +51,27 @@ def main_menu():
             }
         ]
 
-        if prompt(accounts_questions).get('account') == 'Add New Account':
+        accounts_answer = prompt(accounts_questions)
+
+        if accounts_answer.get('account') == 'Add New Account':
             accounts.add_new_account()
         
-        elif prompt(accounts_questions).get('account') == 'Reset Saved Accounts':
+        elif accounts_answer.get('account') == 'Reset Saved Accounts':
             os.remove('./accounts.json')
         
-        elif prompt(accounts_questions).get('account') == 'Exit Program':
+        elif accounts_answer.get('account') == 'Exit Program':
             quit()
+
         else:
-            acct_name = prompt(accounts_questions).get('account')
+            acct_name = accounts_answer.get('account')
             acctNum = ACCOUNTS[acct_name]
             qb = QuestradeBot(acctNum)
             account_summary(qb)
          
-    if prompt(main_selection).get('main_menu') == 'Allocation Rebalancing':
+    elif main_selection_answer.get('main_menu') == 'Allocation Rebalancing':
         rebalance_strategy()            
     
-    if prompt(main_selection).get('main_menu') == 'Exit Program':
+    elif main_selection_answer.get('main_menu') == 'Exit Program':
         quit()
 
 
@@ -129,7 +134,7 @@ def account_summary(qb):
                 div = qb.get_historical_dividend_income(1095)
                 print_dividends(div)               
 
-        elif summary_answers.get('operation') == 'Go to Account Selection':
+        elif summary_answers.get('operation') == 'Go to Main Menu':
             main_menu()              
         elif summary_answers.get('operation') == 'Exit Program':
             quit()            
@@ -151,7 +156,8 @@ def rebalance_strategy():
         print(vaa.decision())
     
     if prompt(strategy_questions).get('strategy_type') == 'Lethargic Asset Allocation (LAA)':
-        print("multiple strategies rebalancing")
+        laa = LAA()
+
 
 if __name__ == "__main__":
     os.system("clear")
