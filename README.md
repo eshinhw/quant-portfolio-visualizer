@@ -49,7 +49,9 @@ The main purpose is to implement historically-proven asset allocation strategies
 
 ### Add New Account
 
-New Questrade account can be added and will be saved in json file in the same location of `main.py`. Make sure new account number is correct!
+New Questrade account can be added and will be saved in json file in the same location of `main.py`. Make sure new account number is correct! 
+
+If you have two different Questrade IDs, unfortunately, multi-users feature is not supported yet. You have to get new access code from Questrade whenever you switch from one ID to another. :(
 
 <p align="center">
   <img width="500" height="300" src="https://user-images.githubusercontent.com/41933169/166627975-518800ed-c439-4da0-b22d-65a0cb4634f9.png">
