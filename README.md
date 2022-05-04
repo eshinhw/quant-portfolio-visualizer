@@ -87,6 +87,24 @@ Currently, PyQuant only offers rebalancing outputs for VAA and LAA based on hist
   <img width="500" height="300" src="https://user-images.githubusercontent.com/41933169/166628514-79c7e05a-3270-401c-b0fa-5abed9218256.png">
 </p>
 
+### Email Sharing
+
+Automatic email sent out can be set up by providing your gmail address and gmail app password. Gmail app password must be set up from your Google account. Once gmail app password is generated, the overall portfolio summary can be sent out to other email addresses.
+
+<p align="center">
+  <img width="500" height="300" src="https://user-images.githubusercontent.com/41933169/166745729-7eb723e8-2dba-4094-88c6-1fa35d7fce41.png">
+</p>
+
+<p align="center">
+  <img width="500" height="300" src="https://user-images.githubusercontent.com/41933169/166745730-2e73d573-efa1-4520-9ada-f5f28e256d27.png">
+</p>
+
+Below is the sample email.
+
+<p align="center">
+  <img width="700" height="500" src="https://user-images.githubusercontent.com/41933169/166746982-490a5849-9df5-42ef-9352-cfb566a21d7f.png">
+</p>
+
 ## Futher Improvement Features
 
 - Account verification when new account is added.
