@@ -1,6 +1,5 @@
 from __future__ import print_function, unicode_literals
 from PyInquirer import prompt, print_json
-# from examples import custom_style_2
 import json
 import os
 from questrade import QuestradeBot
@@ -8,7 +7,7 @@ from credentials import QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
 from pyfiglet import Figlet
 from tabulate import tabulate
 
-def _select_account():
+def load_accounts():
     if os.path.exists("./accounts.json"):
         with open('./accounts.json', 'r') as fp:
             accounts = json.load(fp)
@@ -20,6 +19,37 @@ def _select_account():
 
         with open('./accounts.json', 'w') as fp:
             json.dump(accounts, fp)
+    return accounts
+
+def init_questrade_bot(accounts, accounts_answers):
+    for account in accounts.keys():
+        if account == accounts_answers.get('account'):
+            try:
+                qb = QuestradeBot(accounts[account])
+                assert accounts[account] in qb.get_acct_id()
+                return qb
+            except:
+                while True:
+                    validation_question = [
+                        {
+                            'type': 'password',
+                            'message': 'VALIDATION ERROR: Enter new valid access code from Questrade',
+                            'name': 'access_code'
+                        }
+                    ]
+                    new_access_code = prompt(validation_question).get('access_code')
+                    #print(new_access_code)
+                    qb = QuestradeBot(accounts[account], accessCode=new_access_code)
+                    #print(accounts[account])
+                    if qb.qtrade == 100:
+                        print("ACCESS CODE IS NOT VALID. PLEASE GET A NEW ONE FROM QUESTRADE.")
+                    assert accounts[account] in qb.get_acct_id()
+                    return qb
+
+
+def select_account():
+
+    accounts = load_accounts()
 
     accounts_questions = [
         {
@@ -56,41 +86,14 @@ def _select_account():
         with open('./accounts.json', 'w') as fp:
             json.dump(accounts, fp)
 
-        return _select_account()
+        return select_account()
     
     elif accounts_answers.get('account') == 'Reset Saved Accounts':
         os.remove('./accounts.json')
-        return _select_account()
+        return select_account()
     
     elif accounts_answers.get('account') == 'Exit Program':
         quit()
 
     else:
-        print("last else")
-        for account in accounts.keys():
-            if account == accounts_answers.get('account'):
-                print("1")
-                try:
-                    qb = QuestradeBot(accounts[account])
-                    assert accounts[account] in qb.get_acct_id()
-                    return qb
-                except:
-                    print("before while True")
-                    while True:
-                        validation_question = [
-                            {
-                                'type': 'password',
-                                'message': 'VALIDATION ERROR: Enter new valid access code from Questrade',
-                                'name': 'access_code'
-                            }
-                        ]
-                        # try:
-                        validation_answer = prompt(validation_question)
-                        new_access_code = validation_answer.get('access_code')
-                        print(new_access_code)
-                        qb = QuestradeBot(accounts[account], accessCode=new_access_code)
-                        print(accounts[account])
-                        if qb.qtrade == 100:
-                            print("ACCESS CODE IS NOT VALID. PLEASE GET A NEW ONE FROM QUESTRADE.")
-                        assert accounts[account] in qb.get_acct_id()
-                        return qb
+        init_questrade_bot(accounts, accounts_answers)

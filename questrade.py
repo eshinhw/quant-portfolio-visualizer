@@ -11,16 +11,16 @@ class QuestradeBot:
         # Initialize Questrade Instance
         if path.exists("./access_token.yml"):
             try:
-                print("first try in questrade")
+                #print("first try in questrade")
                 self.qtrade = Questrade(token_yaml='./access_token.yml')
-                print(self.qtrade.account_id)
+                #print(self.qtrade.account_id)
                 assert self.qtrade.account_id
             except:
                 try:
-                    print("second try in questrade")
+                    #print("second try in questrade")
                     self.qtrade.refresh_access_token(from_yaml=True)
                 except:
-                    print("last except in questrade")
+                    #print("last except in questrade")
                     remove("./access_token.yml")
 
         else:
@@ -166,7 +166,7 @@ class QuestradeBot:
     def _monthly_return(self, assets):
         monthly_prices = pd.DataFrame()
         for asset in assets:
-            monthly_prices[asset] = yf.download(asset, start= dt.datetime(2018,1,1), end = dt.datetime.today,interval='1mo', progress=False)['Adj Close']
+            monthly_prices[asset] = yf.download(asset, start= dt.datetime(2018,1,1), end = dt.datetime.today(),interval='1mo', progress=False)['Adj Close']
 
         monthly_returns = monthly_prices.pct_change()
         monthly_returns.dropna(inplace=True)
@@ -242,6 +242,3 @@ class QuestradeBot:
             new_market_value = total_mv - (target_cash - curr_cash)
             print("sell some from investment to increase curr_cash")
 
-if __name__ == "__main__":
-    qb = QuestradeBot(QUANT_ACCOUNT_NUM)
-    print(qb.calculate_portfolio_performance())

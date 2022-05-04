@@ -6,8 +6,7 @@ import numpy as np
 import pandas as pd
 import datetime as dt
 import matplotlib.pyplot as plt
-import fmp.fmp_prices as FMP_PRICES
-
+import yfinance as yf
 
 
 class VAA():
@@ -38,7 +37,7 @@ class VAA():
         vaa_assets = self.offensive_assets + self.defensive_assets
         monthly_prices = pd.DataFrame()
         for asset in vaa_assets:
-            monthly_prices[asset] = FMP_PRICES.get_monthly_prices(asset)[asset]
+            monthly_prices[asset] = yf.download(asset, start= dt.datetime(2018,1,1), end = dt.datetime.today(),interval='1mo', progress=False)['Adj Close']
         monthly_prices.dropna(inplace=True)
         return monthly_prices
 
@@ -117,7 +116,7 @@ class VAA():
         print(self.mom_rank)
 
         if (self.offensive_momentum['Score'] < 0).any():
-            if (self.defensive_momentum['Score'] < 0).any():
+            if (self.defensive_momentum['Score'] < 0).all():
                 print('hold cash')
             else:
                 first = self.defensive_momentum.sort_values(by='Score', ascending=False).index[0]
