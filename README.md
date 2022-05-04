@@ -84,3 +84,10 @@ Currently, PyQuant only offers rebalancing outputs for VAA and LAA based on hist
 <p align="center">
   <img width="500" height="300" src="https://user-images.githubusercontent.com/41933169/166628514-79c7e05a-3270-401c-b0fa-5abed9218256.png">
 </p>
+
+## Futher Improvement Features
+
+- Account verification when new account is added.
+- Multi-users access without getting new access code (different yaml file paths for each Questrade ID)
+- Automatic email share of portfolio summary
+- Improve performance comparison matrices
