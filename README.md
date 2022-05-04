@@ -1,54 +1,34 @@
+<p align="center">
+  <img width="900" height="400" src="https://user-images.githubusercontent.com/41933169/165682213-9581daf4-9848-45ec-a09c-41f618a2d0ae.png">
+</p>
+
 # PyQuant
 
-Welcome to PyQuant! :)
-
-PyQuant is a Command Line Interface (CLI) based investing portfolio management program developed with Questrade API. 
-
-Using Questrade API, PyQuant retrieves account information and financial data to:
+PyQuant is an investing portfolio management tool with Command Line Interface (CLI). PyQuant works with Questrade API to retrieve account information and financial data to:
 
 - provide account status summary
 - generate portfolio performance matrices 
-- offer strategy rebalancing feature
-
-Users can quickly access to their account information and portfolios once they get access code from Questrade.
+- perform portfolio rebalancing
 
 ## Purpose
 
-PyQuant implements historically proven asset allocation strategies to provide optimal portfoloio management by removing emotional human errors and following rule-based investing philosophy.
-
+The main purpose is to implement historically-proven asset allocation strategies to provide optimal portfoloio management and remove human errors by following rule-based investing philosophy.
 
 ## Data Sources <a name="data-sources"></a>
 
 - [yfinance](https://pypi.org/project/yfinance/)
-- [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs/)
-
-## Prerequisites: Basics of Quant Investing <a name="prerequisites"></a>
-
-Below is a collection of jupyter notebooks which touch upon the basics of quantitative investing and data analysis in Python Pandas.
-
-- Working with Pandas DataFrame Notebook
-- Returns, Volatility and Sharpe Ratio of Stocks Notebook
-- Maximum Drawdown (MDD) Notebook
-- Portfolio Statistics and Optimizaion with PyPortfolioOpt Notebook
-- Performance Against Benchmark Notebook
+- [Questrade API](https://www.questrade.com/api/documentation/getting-started)
 
 ## Fixed Asset Allocation Portfolios <a name="fixed-asset-allocations"></a>
 
-- Traditonal 60/40 Portfolio
-
+- Traditonal 60% Equities + 40% Bonds Portfolio
 - Four Seasons Portfolio
-
 - All Weather Portfolio
-
 - Permanent Portfolio
 
 ## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
 
-- [Dual Momentum](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2042750)
-
-- [Vigilant Asset Allocation (VAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3002624)
-
-- Defensive Asset Allocation (DAA) <a name="defensive-asset-allocations"></a>
-
-- [Lethargic Asset Allocation (LAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3498092)
-
+- [Dual Momentum](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2042750) by Gary Antonacci
+- [Vigilant Asset Allocation (VAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3002624) by Wouter J. Keller
+- [Defensive Asset Allocation (DAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3212862) by Wouter J. Keller
+- [Lethargic Asset Allocation (LAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3498092) by Wouter J. Keller
