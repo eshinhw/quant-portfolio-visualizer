@@ -23,24 +23,26 @@ class QuestradeBot:
     def __init__(self, acctNum):
         # Initialize Questrade Instance
         if path.exists("./access_token.yml"):
-            #print("first try in questrade")
+            print("first try in questrade")
             self.qtrade = Questrade(token_yaml='./access_token.yml')
             try:
-                self.qtrade.get_account_id()
+                acct_list = self.qtrade.get_account_id()
+                print(acctNum in acct_list)
+                assert acctNum in acct_list
             except:
-                #print("first if statement")
+                print("first if statement")
                 self.qtrade.refresh_access_token(from_yaml=True)
                 self.qtrade = Questrade(token_yaml='./access_token.yml')
                 try:
-                    self.qtrade.get_account_id()
+                    assert acctNum in self.qtrade.get_account_id()
                 except:
-                    #print("yml file removed!")
+                    print("yml file removed!")
                     remove("./access_token.yml")
                     # get new access code
                     access_code = new_access_code()
                     self.qtrade = Questrade(access_code=access_code)
         else:
-            #print("no yml file exist")
+            print("no yml file exist")
             access_code = new_access_code()
             self.qtrade = Questrade(access_code=access_code)
             try:
@@ -237,7 +239,7 @@ class QuestradeBot:
         port_cagr = round(self._cagr(port_assets, port_weights) * 100, 2)
         port_mdd = round(self._mdd(port_assets, port_weights) * 100, 2)
 
-        stat = {'Portfolio': ['BenchMark', 'CurrAcct'], 'CAGR (%)': [BM_cagr, port_cagr], 'MDD (%)': [BM_mdd, port_mdd]}
+        stat = {'Portfolio': ['BenchMark', 'CurrentPortfolio'], 'CAGR (%)': [BM_cagr, port_cagr], 'MDD (%)': [BM_mdd, port_mdd]}
 
         stat_df = pd.DataFrame(stat)
         stat_df.set_index('Portfolio', inplace=True)

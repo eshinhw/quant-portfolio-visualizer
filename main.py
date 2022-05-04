@@ -9,7 +9,7 @@ from tabulate import tabulate
 from strategies.VAA import VAA
 import accounts
 
-ACCOUNTS = accounts.load_accounts()
+
 
 def print_dividends(div):
     if (div['Monthly_Dividend_Income'] == 0).all():
@@ -29,6 +29,7 @@ def print_output(df):
     print()
 
 def main_menu():
+    ACCOUNTS = accounts.load_accounts()
     main_selection = [
         {
             'type': 'list',
@@ -41,31 +42,39 @@ def main_menu():
     main_selection_answer = prompt(main_selection)
 
     if main_selection_answer.get('main_menu') == 'Account Overview':
-        accounts_questions = [
-            {
-                'type': 'list',
-                'name': 'account',
-                'message': 'Account Options',
-                'choices': list(ACCOUNTS.keys()) + ['Add New Account', 'Reset Saved Accounts', 'Exit Program']
-            }
-        ]
+        while True:
+            accounts_questions = [
+                {
+                    'type': 'list',
+                    'name': 'account',
+                    'message': 'Account Options',
+                    'choices': list(ACCOUNTS.keys()) + ['Add New Account', 'Reset Saved Accounts', 'Go to Main Menu', 'Exit Program']
+                }
+            ]
 
-        accounts_answer = prompt(accounts_questions)
+            accounts_answer = prompt(accounts_questions)
 
-        if accounts_answer.get('account') == 'Add New Account':
-            accounts.add_new_account()
+            if accounts_answer.get('account') == 'Add New Account':
+                accounts.add_new_account()
+                break
+            
+            elif accounts_answer.get('account') == 'Reset Saved Accounts':
+                os.remove('./accounts.json')
+                ACCOUNTS = accounts.load_accounts()
+
+            elif accounts_answer.get('account') == 'Go to Main Menu':
+                break
+            
+            elif accounts_answer.get('account') == 'Exit Program':
+                quit()
+
+            else:
+                acct_name = accounts_answer.get('account')
+                acctNum = ACCOUNTS[acct_name]
+                qb = QuestradeBot(acctNum)
+                account_summary(qb)
         
-        elif accounts_answer.get('account') == 'Reset Saved Accounts':
-            os.remove('./accounts.json')
-        
-        elif accounts_answer.get('account') == 'Exit Program':
-            quit()
-
-        else:
-            acct_name = accounts_answer.get('account')
-            acctNum = ACCOUNTS[acct_name]
-            qb = QuestradeBot(acctNum)
-            account_summary(qb)
+        main_menu()
          
     elif main_selection_answer.get('main_menu') == 'Allocation Rebalancing':
         rebalance_strategy()            
@@ -183,18 +192,3 @@ if __name__ == "__main__":
     fig = Figlet(font='slant')
     print(fig.renderText("PyQuant"))
     main_menu()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
