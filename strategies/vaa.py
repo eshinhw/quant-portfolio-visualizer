@@ -59,13 +59,11 @@ class VAA():
                 self.mom_score.loc[date, 'VWO'] = float("-inf")
                 self.mom_score.loc[date, 'AGG'] = float("-inf")
 
-                # if (self.mom_score.loc[date,['SHY', 'IEF', 'LQD']] < 0).any():
-                #     # hold cash
-                #     self.mom_score.loc[date, 'SHY'] = 0
-                #     self.mom_score.loc[date, 'IEF'] = 0
-                #     self.mom_score.loc[date, 'LQD'] = 0
-
-                #     # invest defensive asset
+                if (self.mom_score.loc[date,self.defensive_assets] < 0).all():
+                    # hold cash
+                    self.mom_score.loc[date, 'SHY'] = float("-inf")
+                    self.mom_score.loc[date, 'IEF'] = float("-inf")
+                    self.mom_score.loc[date, 'LQD'] = float("-inf")
 
             else:
                 # invest offensive asset
@@ -73,57 +71,33 @@ class VAA():
                 self.mom_score.loc[date, 'IEF'] = float("-inf")
                 self.mom_score.loc[date, 'LQD'] = float("-inf")
         
+        print(self.mom_score)
+        
         # rank across columns
         momentum_rank = self.mom_score.rank(axis=1, ascending=False)
+
+        print(momentum_rank)
 
         for symbol in momentum_rank.columns:
             # if mon_rank[symbol] == 1, change the value to 1. Otherwise, change it to 0.
             momentum_rank[symbol] = np.where(momentum_rank[symbol] == 1, 1, 0)
         return momentum_rank
-             
-
-
-
-
-    # def _weighted_entumentum(self):
-    #     ## Offensive assets momentum
-
-    #     offensive_momentumentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
-    #     for symbol in self.offensive_assets:
-    #         for period in self.momentum_periods:        
-    #             offensive_momentum_data[str(period)+'M'].append(FMP_PRICES.historical_monthly_momentum(symbol,period))
-    #     self.offensive_momentum = pd.DataFrame(offensive_momentum_data, index=self.offensive_assets)
-    #     self.offensive_momentum['Score'] = self.offensive_momentum.dot(self.momentum_weights)
-
-    #     print(self.offensive_momentum)
-
-    #     ## Defensive Assets Momentum
-
-    #     defensive_momentum_data = {'1M': [], '3M': [], '6M': [], '12M': []}
-
-    #     for symbol in self.defensive_assets:
-    #         for period in self.momentum_periods:        
-    #             defensive_momentum_data[str(period)+'M'].append(FMP_PRICES.historical_monthly_momentum(symbol,period))
-
-    #     self.defensive_momentum = pd.DataFrame(defensive_momentum_data, index=self.defensive_assets)
-    #     self.defensive_momentum['Score'] = self.defensive_momentum.dot(self.momentum_weights)
-
-    #     print(self.defensive_momentum)
 
     def decision(self):
         ## Investment decision based on strategy algorithm
-
         print(self.mom_rank)
+        df = pd.DataFrame({'a': [1,0,0,0,0], 'b': [0,0,0,0,1]})
+        print(df)
+        print(df.columns[(df == 1).iloc[-1]][0])
 
-        if (self.offensive_momentum['Score'] < 0).any():
-            if (self.defensive_momentum['Score'] < 0).all():
-                print('hold cash')
-            else:
-                first = self.defensive_momentum.sort_values(by='Score', ascending=False).index[0]
-                print('invest in ' + first)
+        if (self.mom_rank.iloc[-1] == 0).all():
+            # if all scores are zero, hold cash
+            print("hold cash")
         else:
-            first = self.offensive_momentum.sort_values(by='Score', ascending=False).index[0]
-            print('invest in ' + first)
+            self.mom_rank.columns[(self.mom_rank == 1).iloc[0]]
+
+
+        
 
     def monthly_return(self):
         monthly_returns = self.prices.pct_change()
