@@ -5,8 +5,9 @@ from questrade import QuestradeBot
 from pyfiglet import Figlet
 from tabulate import tabulate
 from strategies.VAA import VAA
+from strategies import LAA
 import accounts
-
+import pandas as pd
 
 
 def print_dividends(div):
@@ -161,7 +162,8 @@ def rebalance_strategy():
             'choices': [
                 {'name': 'Vigilant Asset Allocation (VAA)'},
                 {'name': 'Lethargic Asset Allocation (LAA)'},
-                {'name': 'Go to Main Menu'}
+                {'name': 'Go to Main Menu'},
+                {'name': 'Exit Program'}
             ]
         }
 
@@ -170,17 +172,16 @@ def rebalance_strategy():
         if strategy_answer.get('strategy_type') == 'Vigilant Asset Allocation (VAA)':
             vaa = VAA()
             decision = vaa.decision()
-            print(f"Invest in {decision}")
+            print_output(decision)
         
         elif strategy_answer.get('strategy_type') == 'Lethargic Asset Allocation (LAA)':
-            vaa = VAA()
-            if vaa.decision() == "QQQ":
-                print({'IWD': 0.25, 'IEF': 0.25, 'GLD': 0.25, 'QQQ': 0.25})
-            else:
-                print({'IWD': 0.25, 'IEF': 0.25, 'GLD': 0.25, 'SHY': 0.25})
+            print_output(LAA.decision())
 
         elif strategy_answer.get('strategy_type') == 'Go to Main Menu':
             break
+
+        elif strategy_answer.get('strategy_type') == 'Exit Program':
+            quit()
     
     main_menu()
 

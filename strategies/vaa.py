@@ -82,10 +82,19 @@ class VAA():
         ## Investment decision based on strategy algorithm
         if (self.mom_rank.iloc[-1] == 0).all():
             # if all scores are zero, hold cash
-            return {"Cash": 1}
+            allocate = {'Asset': ['Cash'], 'Weight (%)': [100]}
+            allocate_df = pd.DataFrame(allocate)
+            allocate_df.set_index('Asset', inplace=True)
+            return allocate_df
         else:
             invest = self.mom_rank.columns[(self.mom_rank == 1).iloc[-1]][0]
-            return invest
+            allocate = {'Asset': [invest], 'Description': [], 'Weight (%)': [100]}
+            for asset in allocate['Asset']:
+                desc = yf.Ticker(asset).info[0]['longName']
+                allocate['Description'].append(desc)
+            allocate_df = pd.DataFrame(allocate)
+            allocate_df.set_index('Asset', inplace=True)
+            return allocate_df
 
     def monthly_return(self):
         monthly_returns = self.prices.pct_change()

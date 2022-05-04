@@ -51,37 +51,4 @@ def sendEmail(subject, stock_bal, stock_port, quant_bal, quant_port):
         smtp.login(GMAIL_ADDRESS, GMAIL_PW)
         smtp.send_message(msg)
 
-USER_ID = 'eshinhw'
-ACCOUNT_TYPE = ESHINHW_ACCOUNT_TYPE
-QUESTRADE_CODE = ESHINHW_QUESTRADE_API_CODE
-
-# print(os.getcwd())
-
-try:
-    qbot = Questrade(USER_ID)
-    acctNums = qbot.accounts
-except:
-    # print(os.getcwd())
-#     os.remove(os.getcwd())
-    qbot = Questrade(USER_ID, refresh_token=QUESTRADE_CODE)
-
-acctData = {}
-acctNums = qbot.accounts
-for aNum in acctNums:
-    if aNum in ACCOUNT_TYPE:
-        aName = ACCOUNT_TYPE[aNum]
-        if aName == 'Stock Portfolio':
-            stock_bal = qbot.account_balances(aNum)
-            stock_portfolio = qbot.account_positions(aNum)
-            stock_return = qbot.portfolio_return(aNum)
-#             stock_dividends = qbot.get_dividend_income(aNum)
-        if aName == 'Quant Portfolio':
-            quant_bal = qbot.account_balances(aNum)
-            quant_portfolio = qbot.account_positions(aNum)
-            quant_return = qbot.portfolio_return(aNum)
-#             quant_dividends = qbot.get_dividend_income(aNum)
-    else:
-        print("Please define portfolio first in credentials.py")
-
 sendEmail('Questrade Portfolios Daily Report', stock_bal.to_html(), stock_portfolio.to_html(), quant_bal.to_html(), quant_portfolio.to_html())
-print("Sent Successfully ------ " + time.ctime())
