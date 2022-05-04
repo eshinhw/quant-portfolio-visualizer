@@ -1,9 +1,7 @@
 from __future__ import print_function, unicode_literals
 from PyInquirer import prompt, print_json
-import json
 import os
 from questrade import QuestradeBot
-from credentials import QUANT_ACCOUNT_NUM, STANDARD_ACCOUNT_NUM
 from pyfiglet import Figlet
 from tabulate import tabulate
 from strategies.VAA import VAA

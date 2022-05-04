@@ -23,33 +23,33 @@ class QuestradeBot:
     def __init__(self, acctNum):
         # Initialize Questrade Instance
         if path.exists("./access_token.yml"):
-            print("first try in questrade")
+            #print("first try in questrade")
             self.qtrade = Questrade(token_yaml='./access_token.yml')
             try:
                 acct_list = self.qtrade.get_account_id()
-                print(acctNum in acct_list)
+                #print(acctNum in acct_list)
                 assert acctNum in acct_list
             except:
-                print("first if statement")
+                #print("first if statement")
                 self.qtrade.refresh_access_token(from_yaml=True)
                 self.qtrade = Questrade(token_yaml='./access_token.yml')
                 try:
                     assert acctNum in self.qtrade.get_account_id()
                 except:
-                    print("yml file removed!")
+                    #print("yml file removed!")
                     remove("./access_token.yml")
                     # get new access code
                     access_code = new_access_code()
                     self.qtrade = Questrade(access_code=access_code)
         else:
-            print("no yml file exist")
+            #print("no yml file exist")
             access_code = new_access_code()
             self.qtrade = Questrade(access_code=access_code)
             try:
                 accts_list = self.qtrade.get_account_id()
             except:
                 while not isinstance(accts_list, list):
-                    print("in while loop")
+                    #print("in while loop")
                     access_code = new_access_code()
                     self.qtrade = Questrade(access_code=access_code)
 
