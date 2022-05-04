@@ -77,7 +77,7 @@ BenchMark Portfolio is Traditional 60% Equities + 40% Bonds Portfolio. Performan
 
 ### Allocation Rebalancing
 
-Currently, PyQuant only offers rebalancing outputs for VAA and LAA based on historical momentums.
+Currently, PyQuant only offers rebalancing outputs for VAA and LAA based on historical momentums. More allocation strategies will be added!
 
 <p align="center">
   <img width="500" height="300" src="https://user-images.githubusercontent.com/41933169/166628514-79c7e05a-3270-401c-b0fa-5abed9218256.png">
