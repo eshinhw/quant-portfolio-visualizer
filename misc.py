@@ -14,7 +14,6 @@ import datetime as dt
 import matplotlib.pyplot as plt
 from credentials import ESHINHW_ACCOUNT_TYPE, ESHINHW_QUESTRADE_API_CODE
 from credentials import ALWL6782_ACCOUNT_TYPE, ALWL6782_QUESTRADE_API_CODE
-from questradeAPI import Questrade
 from email.message import EmailMessage
 from credentials import GMAIL_ADDRESS, GMAIL_PW
 
