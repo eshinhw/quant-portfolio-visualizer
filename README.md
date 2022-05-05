@@ -111,3 +111,4 @@ Below is the sample email.
 - Multi-users access without getting new access code (different yaml file paths for each Questrade ID)
 - ~~Automatic email share of portfolio summary~~
 - Improve performance comparison matrices
+- Global Equities Momentum to determine when to buy equities
