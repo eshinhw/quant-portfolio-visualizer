@@ -112,3 +112,4 @@ Below is the sample email.
 - ~~Automatic email share of portfolio summary~~
 - Improve performance comparison matrices
 - Global Equities Momentum to determine when to buy equities
+- Fixed Asset Allocations Rebalancing
