@@ -2,6 +2,7 @@
 import pandas as pd
 import datetime as dt
 import yfinance as yf
+import numpy as np
 
 EQUITIES_ETF = ['SPY', 'QQQ', 'VXUS']
 
@@ -40,8 +41,24 @@ def momentum_score(prices):
     keller_mom_score.dropna(inplace=True)
     return keller_mom_score
 
-if __name__ == "__main__":
+def decision():
     prices_df = monthly_prices(EQUITIES_ETF)
     # print(equal_weighted_momentum(prices_df))
-    print(keller_momentum(prices_df))
-    print(momentum_score(prices_df))
+    keller_df = keller_momentum(prices_df)
+    ewmom_df = equal_weighted_momentum(prices_df)
+
+    keller_criteria = (keller_df.iloc[-1:] > 0).all().all()
+    ewmom_criteria = (ewmom_df.iloc[-1:] > 0).all().all()
+
+    if keller_criteria and ewmom_criteria:
+        # all equities have positive momentum based on keller momentum and equal weight momentum
+        # what to invest --> asset with highest momentum
+        keller_rank = keller_df.rank(axis=1, ascending=False)
+        for asset in keller_rank.columns:
+            keller_rank[asset] = np.where(keller_rank[asset] == 1, 1, 0)
+        best_asset = keller_rank.columns[(keller_rank == 1).iloc[-1]][0]
+        print(f"Start investing in {best_asset}")
+    else:
+        print("Global Equities Momentum is negative --> Not time to invest in equities")
+
+
