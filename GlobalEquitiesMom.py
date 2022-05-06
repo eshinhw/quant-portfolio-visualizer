@@ -15,7 +15,6 @@ def equal_weighted_momentum(prices):
     m12 = prices / prices.shift(12) - 1
     return m1 + m3 + m6 + m9 + m12
 
-
 def keller_momentum(x):
     """
     momentum_periods = [1,3,6,12]
@@ -59,6 +58,9 @@ def decision():
         best_asset = keller_rank.columns[(keller_rank == 1).iloc[-1]][0]
         print(f"Start investing in {best_asset}")
     else:
-        print("Global Equities Momentum is negative --> Not time to invest in equities")
+        print("Global Equities Momentums are negative --> Not time to invest in equities")
+
+
+decision()
 
 
