@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from email.message import EmailMessage
 from credentials import GMAIL_ADDRESS, GMAIL_PW
 
+
 def sendEmail(recipient_email, balance, investment, performance):
     msg = EmailMessage()
     msg["Subject"] = "Questrade Portfolio Summary"

@@ -13,9 +13,9 @@ import matplotlib.pyplot as plt
 # %%
 portfolios = {'GEM': ['SPY', 'VEU', 'BND'],
               'GBM': ['SPY', 'VEU', 'BND'],
-             'benchmark': ['SPY'],
-             'sixtyForty': ['SPY', 'BND'],
-             'Permanent': ['VTI', 'BIL', 'TLT', 'GLD']}
+              'benchmark': ['SPY'],
+              'sixtyForty': ['SPY', 'BND'],
+              'Permanent': ['VTI', 'BIL', 'TLT', 'GLD']}
 momentum = ['GEM', 'GBM']
 fixed_portfolio = ['sixtyForty']
 
@@ -36,7 +36,7 @@ prices = pd.DataFrame()
 for asset in combined_assets:
     prices[asset] = fmp.get_monthly_prices(asset)[asset]
 
-prices    
+prices
 
 # %% [markdown]
 # ## Global Equities Momentum Portfolio
@@ -48,7 +48,8 @@ for col in prices.columns:
         gem_prices[col] = prices[col]
 
 monthly_momentum = gem_prices.copy()
-monthly_momentum = monthly_momentum.apply(lambda x: x.shift(1)/x.shift(12) - 1, axis=0)
+monthly_momentum = monthly_momentum.apply(
+    lambda x: x.shift(1)/x.shift(12) - 1, axis=0)
 monthly_momentum.dropna(inplace=True)
 
 rank_df = monthly_momentum.rank(axis=1, ascending=False)
@@ -135,15 +136,16 @@ combined_df['benchmark'] = benchmark_cum_returns
 combined_df.iloc[0] = 1
 combined_df.index = pd.to_datetime(combined_df.index)
 
-stats_summary = pd.DataFrame(columns = ['Portfolio', 'CAGR (%)', 'MDD (%)', 'CAGR/MDD'])
+stats_summary = pd.DataFrame(
+    columns=['Portfolio', 'CAGR (%)', 'MDD (%)', 'CAGR/MDD'])
 
 beginning_month = combined_df.index[0].year
 
 for col in combined_df.columns:
     # compute CAGR
     first_value = combined_df[col][0]
-    last_value = combined_df[col][-1]  
-    years = len(combined_df[col].index)/12    
+    last_value = combined_df[col][-1]
+    years = len(combined_df[col].index)/12
     cagr = (last_value/first_value)**(1/years) - 1
 
     # compute MDD
@@ -151,13 +153,13 @@ for col in combined_df.columns:
     previous_peaks = cumulative_returns.cummax()
     drawdown = (cumulative_returns - previous_peaks) / previous_peaks
     portfolio_mdd = drawdown.min()
-    
+
     # save CAGR and MDD for each portfolio
-    
+
     stats_summary = stats_summary.append({'Portfolio': col,
                                          'CAGR (%)': cagr * 100,
-                                         'MDD (%)': portfolio_mdd * 100,
-                                         'CAGR/MDD': abs(cagr / portfolio_mdd).round(2)}, ignore_index=True) 
+                                          'MDD (%)': portfolio_mdd * 100,
+                                          'CAGR/MDD': abs(cagr / portfolio_mdd).round(2)}, ignore_index=True)
 
 stats_summary.set_index('Portfolio', inplace=True)
 stats_summary.sort_values('CAGR/MDD', ascending=False, inplace=True)
@@ -167,7 +169,7 @@ stats_summary
 # ## Performance Visualization
 
 # %%
-plt.figure(figsize=(15,10))
+plt.figure(figsize=(15, 10))
 plt.plot(combined_df)
 plt.legend(combined_df.columns)
 plt.xlabel('Date')
@@ -175,6 +177,3 @@ plt.ylabel('Returns')
 plt.title('Portfolio Performance Comparison')
 
 # %%
-
-
-

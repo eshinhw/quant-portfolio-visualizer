@@ -22,7 +22,7 @@ class VAA():
     def __str__(self) -> str:
         return "VAA"
 
-    def _weighted_momentum_score(self,x):
+    def _weighted_momentum_score(self, x):
         """
         momentum_periods = [1,3,6,12]
         momentum_weights = np.array([12,4,2,1])
@@ -37,28 +37,29 @@ class VAA():
         vaa_assets = self.offensive_assets + self.defensive_assets
         monthly_prices = pd.DataFrame()
         for asset in vaa_assets:
-            monthly_prices[asset] = yf.download(asset, start= dt.datetime(2018,1,1), end = dt.datetime.today(),interval='1mo', progress=False)['Adj Close']
+            monthly_prices[asset] = yf.download(asset, start=dt.datetime(
+                2018, 1, 1), end=dt.datetime.today(), interval='1mo', progress=False)['Adj Close']
         monthly_prices.dropna(inplace=True)
         return monthly_prices
 
     def momentum_score(self):
         # calcuate weighted momentum scores at each month
-        mom_score = self.prices.copy().apply(self._weighted_momentum_score,axis=0)
+        mom_score = self.prices.copy().apply(self._weighted_momentum_score, axis=0)
         mom_score.dropna(inplace=True)
         return mom_score
 
     def momentum_score_rank(self):
-        #print(self.mom_score[self.offensive_assets])
-        #print(self.mom_score[self.defensive_assets])
+        # print(self.mom_score[self.offensive_assets])
+        # print(self.mom_score[self.defensive_assets])
         for date in self.mom_score.index:
-            if (self.mom_score.loc[date,self.offensive_assets] < 0).any():
+            if (self.mom_score.loc[date, self.offensive_assets] < 0).any():
                 # check defensive assets
                 self.mom_score.loc[date, 'SPY'] = float("-inf")
                 self.mom_score.loc[date, 'VEA'] = float("-inf")
                 self.mom_score.loc[date, 'VWO'] = float("-inf")
                 self.mom_score.loc[date, 'AGG'] = float("-inf")
 
-                if (self.mom_score.loc[date,self.defensive_assets] < 0).all():
+                if (self.mom_score.loc[date, self.defensive_assets] < 0).all():
                     # hold cash
                     self.mom_score.loc[date, 'SHY'] = float("-inf")
                     self.mom_score.loc[date, 'IEF'] = float("-inf")
@@ -69,7 +70,7 @@ class VAA():
                 self.mom_score.loc[date, 'SHY'] = float("-inf")
                 self.mom_score.loc[date, 'IEF'] = float("-inf")
                 self.mom_score.loc[date, 'LQD'] = float("-inf")
-                
+
         # rank across columns
         momentum_rank = self.mom_score.rank(axis=1, ascending=False)
 
@@ -79,7 +80,7 @@ class VAA():
         return momentum_rank
 
     def decision(self):
-        ## Investment decision based on strategy algorithm
+        # Investment decision based on strategy algorithm
         if (self.mom_rank.iloc[-1] == 0).all():
             # if all scores are zero, hold cash
             allocate = {'Asset': ['Cash'], 'Weight (%)': [100]}
@@ -88,7 +89,8 @@ class VAA():
             return allocate_df
         else:
             invest = self.mom_rank.columns[(self.mom_rank == 1).iloc[-1]][0]
-            allocate = {'Asset': [invest], 'Description': [], 'Weight (%)': [100]}
+            allocate = {'Asset': [invest], 'Description': [], 'Weight (%)': [
+                100]}
             for asset in allocate['Asset']:
                 desc = yf.Ticker(asset).info[0]['longName']
                 allocate['Description'].append(desc)
@@ -104,23 +106,25 @@ class VAA():
     def cumulative_return(self):
         # we have to shift the returns upward by one to align with momentum signal above.
         monthly_returns = self.monthly_return()
-        monthly_returns = monthly_returns[self.mom_rank.index[0]:].shift(-1)        
-        vaa_port_returns = np.multiply(self.mom_rank, monthly_returns).sum(axis=1)      
+        monthly_returns = monthly_returns[self.mom_rank.index[0]:].shift(-1)
+        vaa_port_returns = np.multiply(
+            self.mom_rank, monthly_returns).sum(axis=1)
         vaa_port_cum_returns = np.exp(np.log1p(vaa_port_returns).cumsum())[:-1]
         return vaa_port_cum_returns
 
     def cagr(self):
         first_value = self.port_cum_returns[0]
-        last_value = self.port_cum_returns[-1]  
-        years = len(self.port_cum_returns.index)/12    
+        last_value = self.port_cum_returns[-1]
+        years = len(self.port_cum_returns.index)/12
         cagr = (last_value/first_value)**(1/years) - 1
         return cagr
-    
+
     def mdd(self):
         previous_peaks = self.port_cum_returns.cummax()
         drawdown = (self.port_cum_returns - previous_peaks) / previous_peaks
         port_mdd = drawdown.min()
         return port_mdd
+
 
 if __name__ == "__main__":
     vaa = VAA()

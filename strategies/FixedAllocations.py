@@ -1,25 +1,26 @@
+from credentials import GMAIL_ADDRESS, GMAIL_PW
+from email.message import EmailMessage
+from credentials import ALWL6782_ACCOUNT_TYPE, ALWL6782_QUESTRADE_API_CODE
+from credentials import ESHINHW_ACCOUNT_TYPE, ESHINHW_QUESTRADE_API_CODE
+import matplotlib.pyplot as plt
+import datetime as dt
+import pandas as pd
+import numpy as np
+import time
+import requests
+import math
+import smtplib
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "questradeAPI"))) # append questradeAPI directory path
+# append questradeAPI directory path
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "questradeAPI")))
 
 print(sys.path)
 
-import smtplib
-import math
-import requests
-import time
-import numpy as np
-import pandas as pd
-import datetime as dt
-import matplotlib.pyplot as plt
-from credentials import ESHINHW_ACCOUNT_TYPE, ESHINHW_QUESTRADE_API_CODE
-from credentials import ALWL6782_ACCOUNT_TYPE, ALWL6782_QUESTRADE_API_CODE
-from email.message import EmailMessage
-from credentials import GMAIL_ADDRESS, GMAIL_PW
 
 class FixedAllocation():
 
-    def __init__(self,name,assets,weights) -> None:
+    def __init__(self, name, assets, weights) -> None:
         self.name = name
         self.assets = assets
         self.weights = weights
@@ -29,8 +30,8 @@ class FixedAllocation():
         return self.name
 
     def daily_return(self):
-        data = yf.download(self.assets, start = start, end = end)
-        data = data.loc[:,'Adj Close']
+        data = yf.download(self.assets, start=start, end=end)
+        data = data.loc[:, 'Adj Close']
         #data = data.loc[:,('Adj Close', slice(None))]
         data.columns = self.assets
         rets = data.pct_change().dropna()
@@ -42,11 +43,11 @@ class FixedAllocation():
             monthly_prices[asset] = FMP_PRICES.get_monthly_prices(asset)[asset]
         monthly_returns = monthly_prices.pct_change()
         monthly_returns.dropna(inplace=True)
-        
+
         return monthly_returns
 
     def cumulative_returns(self):
-        prices = pd.DataFrame() 
+        prices = pd.DataFrame()
 
         for symbol in self.assets:
             prices[symbol] = FMP_PRICES.get_monthly_prices(symbol)[symbol]
@@ -60,11 +61,11 @@ class FixedAllocation():
 
     def cagr(self):
         first_value = self.port_cum_returns[0]
-        last_value = self.port_cum_returns[-1]  
-        years = len(self.port_cum_returns.index)/12    
+        last_value = self.port_cum_returns[-1]
+        years = len(self.port_cum_returns.index)/12
         cagr = (last_value/first_value)**(1/years) - 1
         return cagr
-    
+
     def mdd(self):
         previous_peaks = self.port_cum_returns.cummax()
         drawdown = (self.port_cum_returns - previous_peaks) / previous_peaks
@@ -75,8 +76,8 @@ class FixedAllocation():
         rets = self.daily_return()
 
         port = rp.Portfolio(returns=rets)
-        w = pd.DataFrame(self.weights, index = self.assets)
+        w = pd.DataFrame(self.weights, index=self.assets)
         ax = rp.jupyter_report(rets, w, rm='MV', rf=0, alpha=0.05, height=6, width=14,
-                       others=0.05, nrow=25)
-        
+                               others=0.05, nrow=25)
+
         return ax
