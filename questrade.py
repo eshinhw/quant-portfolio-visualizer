@@ -7,6 +7,7 @@ from qtrade import Questrade
 import yfinance as yf
 from PyInquirer import prompt, print_json
 
+
 def new_access_code():
     ask_access_code = [
         {
@@ -63,13 +64,13 @@ class QuestradeBot:
 
     def get_acct_positions(self):
         return self.qtrade.get_account_positions(self.acctNum)
-    
+
     def _get_account_activities(self):
         return self.qtrade.get_account_activities(self.acctNum)
 
     def get_usd_total_equity(self):
         balance = self.get_account_balance_summary()
-        return balance.loc['USD','Total_Equity']
+        return balance.loc['USD', 'Total_Equity']
 
     def get_usd_total_mv(self):
         balance = self.get_account_balance_summary()
@@ -77,7 +78,7 @@ class QuestradeBot:
 
     def get_cad_total_equity(self):
         balance = self.get_account_balance_summary()
-        return balance.loc['CAD','Total_Equity']
+        return balance.loc['CAD', 'Total_Equity']
 
     def get_cad_total_mv(self):
         balance = self.get_account_balance_summary()
@@ -94,7 +95,8 @@ class QuestradeBot:
     def get_account_balance_summary(self):
         bal = self.qtrade.get_account_balances(self.acctNum)
 
-        data = {'Currency': [], 'Cash': [], 'Market_Value': [], 'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
+        data = {'Currency': [], 'Cash': [], 'Market_Value': [],
+                'Total_Equity': [], 'Cash (%)': [], 'Investment (%)': []}
 
         for x in bal['perCurrencyBalances']:
             data['Currency'].append(x['currency'])
@@ -102,8 +104,10 @@ class QuestradeBot:
             data['Market_Value'].append(x['marketValue'])
             data['Total_Equity'].append(x['totalEquity'])
             if x['totalEquity'] != 0:
-                data['Cash (%)'].append(round(100 * x['cash']/x['totalEquity'],2))
-                data['Investment (%)'].append(round(100 * x['marketValue']/x['totalEquity'],2))
+                data['Cash (%)'].append(
+                    round(100 * x['cash']/x['totalEquity'], 2))
+                data['Investment (%)'].append(
+                    round(100 * x['marketValue']/x['totalEquity'], 2))
             else:
                 data['Cash (%)'].append(0)
                 data['Investment (%)'].append(0)
@@ -131,7 +135,8 @@ class QuestradeBot:
             # handle daily execution for closeQuantity
             if position['openQuantity'] != 0:
                 symbol = position['symbol']
-                description = self.qtrade.ticker_information(symbol)['description']
+                description = self.qtrade.ticker_information(symbol)[
+                    'description']
                 qty = position['openQuantity']
                 cmv = position['currentMarketValue']
                 currency = self.qtrade.ticker_information(symbol)['currency']
@@ -145,12 +150,13 @@ class QuestradeBot:
                 position_data['Quantities'].append(qty)
                 position_data['Market Value'].append(cmv)
                 position_data['Return (%)'].append(change)
-                position_data['Portfolio (%)'].append(round(100 * (cmv / total_market_value),2))
+                position_data['Portfolio (%)'].append(
+                    round(100 * (cmv / total_market_value), 2))
 
         portfolio = pd.DataFrame(position_data)
         portfolio.set_index('Symbol', inplace=True)
         #portfolio.index.name = None
-        #print(tabulate(portfolio))
+        # print(tabulate(portfolio))
         return portfolio
 
     def get_historical_dividend_income(self, period):
@@ -174,34 +180,39 @@ class QuestradeBot:
         for date in dateList:
             start = date[0]
             end = date[1]
-            activities = self.qtrade.get_account_activities(self.acctNum, start, end)
+            activities = self.qtrade.get_account_activities(
+                self.acctNum, start, end)
             monthly_div = 0
             for activity in activities:
                 if activity['type'] == 'Dividends':
                     monthly_div = monthly_div + activity['netAmount']
-            output[dt.datetime.strptime(start,"%Y-%m-%d").strftime("%Y-%m")] = monthly_div
+            output[dt.datetime.strptime(
+                start, "%Y-%m-%d").strftime("%Y-%m")] = monthly_div
             total_div_earned = total_div_earned + monthly_div
 
-        monthly_div_df = pd.DataFrame.from_dict(output, orient='index', columns=['Monthly_Dividend_Income'])
-             
+        monthly_div_df = pd.DataFrame.from_dict(
+            output, orient='index', columns=['Monthly_Dividend_Income'])
+
         return monthly_div_df
 
     def _monthly_return(self, assets):
         monthly_prices = pd.DataFrame()
         for asset in assets:
-            monthly_prices[asset] = yf.download(asset, start= dt.datetime(2018,1,1), end = dt.datetime.today(),interval='1mo', progress=False)['Adj Close']
+            monthly_prices[asset] = yf.download(asset, start=dt.datetime(
+                2018, 1, 1), end=dt.datetime.today(), interval='1mo', progress=False)['Adj Close']
 
         monthly_returns = monthly_prices.pct_change()
         monthly_returns.dropna(inplace=True)
-        
+
         return monthly_returns
 
     def _cumulative_returns(self, assets, weights):
-        prices = pd.DataFrame() 
+        prices = pd.DataFrame()
 
         for symbol in assets:
-            prices[symbol] = yf.download(symbol, start= dt.datetime(2018,1,1), end = dt.datetime.today(),interval='1mo', progress=False)['Adj Close']
-        
+            prices[symbol] = yf.download(symbol, start=dt.datetime(
+                2018, 1, 1), end=dt.datetime.today(), interval='1mo', progress=False)['Adj Close']
+
         prices.dropna(inplace=True)
         monthly_returns = prices.pct_change()
         monthly_returns = monthly_returns.shift(-1)
@@ -210,13 +221,13 @@ class QuestradeBot:
         return cum_returns
 
     def _cagr(self, assets, weights):
-        cum_ret = self._cumulative_returns(assets,weights)
+        cum_ret = self._cumulative_returns(assets, weights)
         first_value = cum_ret[0]
-        last_value = cum_ret[-1]  
-        years = len(cum_ret.index)/12    
+        last_value = cum_ret[-1]
+        years = len(cum_ret.index)/12
         cagr = (last_value/first_value)**(1/years) - 1
         return cagr
-    
+
     def _mdd(self, assets, weights):
         cum_ret = self._cumulative_returns(assets, weights)
         previous_peaks = cum_ret.cummax()
@@ -227,7 +238,7 @@ class QuestradeBot:
     def calculate_portfolio_performance(self):
 
         BM_assets = ['SPY', 'IEF']
-        BM_weights = np.array([0.6,0.4])
+        BM_weights = np.array([0.6, 0.4])
 
         BM_cagr = round(self._cagr(BM_assets, BM_weights) * 100, 2)
         BM_mdd = round(self._mdd(BM_assets, BM_weights) * 100, 2)
@@ -239,7 +250,8 @@ class QuestradeBot:
         port_cagr = round(self._cagr(port_assets, port_weights) * 100, 2)
         port_mdd = round(self._mdd(port_assets, port_weights) * 100, 2)
 
-        stat = {'Portfolio': ['BenchMark', 'CurrentPortfolio'], 'CAGR (%)': [BM_cagr, port_cagr], 'MDD (%)': [BM_mdd, port_mdd]}
+        stat = {'Portfolio': ['BenchMark', 'CurrentPortfolio'], 'CAGR (%)': [
+            BM_cagr, port_cagr], 'MDD (%)': [BM_mdd, port_mdd]}
 
         stat_df = pd.DataFrame(stat)
         stat_df.set_index('Portfolio', inplace=True)
@@ -254,7 +266,7 @@ class QuestradeBot:
         curr_cash = total_equity - total_mv
         print(curr_cash)
         target_cash = total_equity * (self.cash_rate/100)
-        
+
         if target_cash < curr_cash:
             # invest more from curr_cash
             invest_amount = curr_cash - target_cash
@@ -264,4 +276,3 @@ class QuestradeBot:
             # sell some from investment to increase curr_cash
             new_market_value = total_mv - (target_cash - curr_cash)
             print("sell some from investment to increase curr_cash")
-

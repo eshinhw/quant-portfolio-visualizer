@@ -21,12 +21,14 @@ def print_dividends(div):
         div_nonzero.loc["Total"] = div_nonzero.sum()
         print()
         print(tabulate(div_nonzero, headers='keys'))
-        print()   
+        print()
+
 
 def print_output(df):
     print()
     print(tabulate(df, headers='keys'))
     print()
+
 
 def main_menu():
     ACCOUNTS = accounts.load_accounts()
@@ -57,14 +59,14 @@ def main_menu():
             if accounts_answer.get('account') == 'Add New Account':
                 accounts.add_new_account()
                 break
-            
+
             elif accounts_answer.get('account') == 'Reset Saved Accounts':
                 os.remove('./accounts.json')
                 ACCOUNTS = accounts.load_accounts()
 
             elif accounts_answer.get('account') == 'Go to Main Menu':
                 break
-            
+
             elif accounts_answer.get('account') == 'Exit Program':
                 quit()
 
@@ -73,12 +75,12 @@ def main_menu():
                 acctNum = ACCOUNTS[acct_name]
                 qb = QuestradeBot(acctNum)
                 account_summary(qb)
-        
+
         main_menu()
-         
+
     elif main_selection_answer.get('main_menu') == 'Allocation Rebalancing':
-        rebalance_strategy()            
-    
+        rebalance_strategy()
+
     elif main_selection_answer.get('main_menu') == 'Exit Program':
         quit()
 
@@ -91,7 +93,7 @@ def account_summary(qb):
                 'name': 'operation',
                 'message': 'Select Operation',
                 'choices': [
-                    'Balance Summary', 
+                    'Balance Summary',
                     'Investment Summary',
                     'Portfolio Performance',
                     'Historical Dividends',
@@ -125,34 +127,34 @@ def account_summary(qb):
                     'choices': ['Past 3 Months', 'Past 6 Months', 'Past 1 Year', 'Past 3 Years', 'Past 10 Years']
                 }
             ]
-            div_answers = prompt(div_questions)                
-                
+            div_answers = prompt(div_questions)
+
             if div_answers.get('div_period') == 'Past 3 Months':
                 div = qb.get_historical_dividend_income(90)
                 print_dividends(div)
-                
+
             elif div_answers.get('div_period') == 'Past 6 Months':
                 div = qb.get_historical_dividend_income(180)
                 print_dividends(div)
-                
+
             elif div_answers.get('div_period') == 'Past 1 Year':
                 div = qb.get_historical_dividend_income(365)
                 print_dividends(div)
-                
+
             elif div_answers.get('div_period') == 'Past 3 Years':
                 div = qb.get_historical_dividend_income(1095)
                 print_dividends(div)
 
             elif div_answers.get('div_period') == 'Past 10 Years':
                 div = qb.get_historical_dividend_income(3650)
-                print_dividends(div)    
+                print_dividends(div)
 
         elif summary_answers.get('operation') == 'Share in Email':
             get_recipient_email = [
                 {
-                'type': 'input',
-                'name': 'email_address',
-                'message': 'What\'s your email?',
+                    'type': 'input',
+                    'name': 'email_address',
+                    'message': 'What\'s your email?',
                 }
             ]
 
@@ -161,19 +163,22 @@ def account_summary(qb):
             invest = qb.get_investment_summary().to_html()
             ret = qb.calculate_portfolio_performance().to_html()
             try:
-                share_email.sendEmail(recipient_email=email, balance=bal, investment=invest, performance=ret)
+                share_email.sendEmail(
+                    recipient_email=email, balance=bal, investment=invest, performance=ret)
             except Exception as e:
                 print(e)
-                print(f"THERE IS SOMETHING WRONG WITH EMAIL SHARING. Please check your mail {email}")
+                print(
+                    f"THERE IS SOMETHING WRONG WITH EMAIL SHARING. Please check your mail {email}")
             else:
-                print(f'\t Email has been successfully sent to {email}')          
+                print(f'\t Email has been successfully sent to {email}')
 
         elif summary_answers.get('operation') == 'Go to Main Menu':
-            break             
+            break
         elif summary_answers.get('operation') == 'Exit Program':
             quit()
 
-    main_menu()            
+    main_menu()
+
 
 def rebalance_strategy():
 
@@ -196,7 +201,7 @@ def rebalance_strategy():
             vaa = VAA()
             decision = vaa.decision()
             print_output(decision)
-        
+
         elif strategy_answer.get('strategy_type') == 'Lethargic Asset Allocation (LAA)':
             print_output(LAA.decision())
 
@@ -205,7 +210,7 @@ def rebalance_strategy():
 
         elif strategy_answer.get('strategy_type') == 'Exit Program':
             quit()
-    
+
     main_menu()
 
 
