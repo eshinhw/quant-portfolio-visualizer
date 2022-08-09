@@ -2,9 +2,9 @@
   <img width="900" height="400" src="https://user-images.githubusercontent.com/41933169/165682213-9581daf4-9848-45ec-a09c-41f618a2d0ae.png">
 </p>
 
-# AutoQuant
+# PyQuant
 
-AutoQuant is an investing portfolio management tool with Command Line Interface (CLI). AutoQuant works with Questrade API to retrieve account information and financial data to:
+PyQuant is an investing portfolio management tool with Command Line Interface (CLI). PyQuant works with Questrade API to retrieve account information and financial data to:
 
 - provide account status summary
 - generate portfolio performance matrices 
@@ -81,7 +81,7 @@ BenchMark Portfolio is Traditional 60% Equities + 40% Bonds Portfolio. Performan
 
 ### Allocation Rebalancing
 
-Currently, AutoQuant only offers rebalancing outputs for VAA and LAA based on historical momentums. More allocation strategies will be added!
+Currently, PyQuant only offers rebalancing outputs for VAA and LAA based on historical momentums. More allocation strategies will be added!
 
 <p align="center">
   <img width="500" height="300" src="https://user-images.githubusercontent.com/41933169/166628514-79c7e05a-3270-401c-b0fa-5abed9218256.png">
