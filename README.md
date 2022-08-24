@@ -1,6 +1,6 @@
 # Stock Alerts
 
-## Project System Design
+## Project Tech Stack
 
 - Frontend: HTML/CSS and TypeScript
 - Backend: Node.js and Express.js
