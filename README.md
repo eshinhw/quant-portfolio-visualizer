@@ -8,4 +8,4 @@
 
 ## API
 
-- Sendgrid API for automatic email
+- Sendgrid API: Automatic Email Config
