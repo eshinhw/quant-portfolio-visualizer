@@ -2,7 +2,8 @@
 
 ## Purpose
 
-Apply the basics of TypeScript to create a simple web application
+- Apply the basics of TypeScript to create a simple web application
+- Provide automatic email service for price and momentum alerts
 
 ## Project Tech Stack
 
