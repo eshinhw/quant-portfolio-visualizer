@@ -1,5 +1,9 @@
 # Stock Alerts
 
+## Purpose
+
+Apply the basics of TypeScript to create a simple web application
+
 ## Project Tech Stack
 
 - Frontend: HTML/CSS and TypeScript
