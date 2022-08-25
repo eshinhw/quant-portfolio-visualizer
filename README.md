@@ -1,4 +1,4 @@
-# Stock Alerts
+# Stock Price and Momentum Alerts
 
 ## Purpose
 
