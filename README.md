@@ -4,6 +4,7 @@
 
 - Apply the basics of TypeScript to create a simple web application
 - Provide automatic email service for price and momentum alerts
+- Calculate historical momentums and retrieve most recent prices for alerts
 
 ## Project Tech Stack
 
