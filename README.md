@@ -2,13 +2,13 @@
 
 ## Purpose
 
-- Apply the basics of TypeScript to create a simple web application
-- Provide automatic email service for price and momentum alerts
+- Apply the basics of JavaScript/TypeScript to create a simple web application
+- Provide automatic email service for stock price alerts
 - Calculate historical momentums and retrieve most recent prices for alerts
 
 ## Project Tech Stack
 
-- Frontend: HTML/CSS and TypeScript
+- Frontend: HTML/CSS, JavaScript, TypeScript
 - Backend: Node.js and Express.js
 - Database: MongoDB
 
