@@ -1,4 +1,4 @@
-# Stock Price and Momentum Alerts
+# Quant Wizard
 
 ## Purpose
 
