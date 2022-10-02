@@ -10,7 +10,7 @@
 
 - Frontend: HTML/CSS, JavaScript, TypeScript
 - Backend: Node.js and Express.js
-- Database: MongoDB
+- Database: MongoDB and PostgreSQL
 
 ## API
 
