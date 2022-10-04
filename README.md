@@ -1,6 +1,6 @@
 # Quant Wizard
 
-## Purpose
+## Project Goals
 
 - Apply the basics of JavaScript/TypeScript to create a simple web application
 - Provide automatic email service for stock price alerts
