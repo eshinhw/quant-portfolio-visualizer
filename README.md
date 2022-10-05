@@ -1,6 +1,6 @@
 # Quant Wizard
 
-## Purpose
+## Project Goals
 
 - Apply the basics of JavaScript/TypeScript to create a simple web application
 - Provide automatic email service for stock price alerts
@@ -9,8 +9,8 @@
 ## Project Tech Stack
 
 - Frontend: HTML/CSS, JavaScript, TypeScript
-- Backend: Node.js and Express.js
-- Database: MongoDB and PostgreSQL
+- Backend: Node.js, Express.js
+- Database: MongoDB, PostgreSQL
 
 ## API
 
