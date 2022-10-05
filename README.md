@@ -9,8 +9,8 @@
 ## Project Tech Stack
 
 - Frontend: HTML/CSS, JavaScript, TypeScript
-- Backend: Node.js and Express.js
-- Database: MongoDB and PostgreSQL
+- Backend: Node.js, Express.js
+- Database: MongoDB, PostgreSQL
 
 ## API
 
