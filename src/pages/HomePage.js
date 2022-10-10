@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NavBarDark from "../components/Navbar";
 import styled from "styled-components";
+import SymbolInput from "../components/Inputs";
 
 // why use back tick?
 let YellowBtn = styled.button`
@@ -21,15 +22,28 @@ let GeneralBtn = styled.button`
   padding: 10px;
 `;
 
-let ExtendedButton = styled.button(GeneralBtn) // use the same style of GeneralBtn
+let ExtendedButton = styled.button(GeneralBtn); // use the same style of GeneralBtn
 
 export default function HomePage() {
+  let [alert, setAlert] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setAlert(false);
+    }, 2000);
+  });
   return (
     <>
-      <GeneralBtn bg="blue">Button</GeneralBtn>
+      {alert ? (
+        <GeneralBtn id="btn" bg="blue">
+          Button
+        </GeneralBtn>
+      ) : null}
+
       <ExtendedButton>Hello</ExtendedButton>
       <BlackBox>Hello</BlackBox>
       <NavBarDark />
+      <SymbolInput />
     </>
   );
 }
