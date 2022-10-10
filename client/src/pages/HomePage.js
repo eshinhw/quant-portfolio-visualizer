@@ -34,14 +34,14 @@ export default function HomePage() {
   });
   return (
     <>
-      {alert ? (
+      {/* {alert ? (
         <GeneralBtn id="btn" bg="blue">
           Button
         </GeneralBtn>
-      ) : null}
+      ) : null} */}
 
-      <ExtendedButton>Hello</ExtendedButton>
-      <BlackBox>Hello</BlackBox>
+      {/* <ExtendedButton>Hello</ExtendedButton>
+      <BlackBox>Hello</BlackBox> */}
       <NavBarDark />
       <SymbolInput />
     </>
