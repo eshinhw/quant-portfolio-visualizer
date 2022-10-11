@@ -9,14 +9,6 @@ yahooFinance.historical({
   console.log(quotes)
 });
 
-// const apple = async function() {
-//   const results = await yahooFinance.search('AAPL');
-//   console.log(results)
-// }
-
-// apple()
-
-
 const express = require('express')
 const app = express()
 const port = 3000
