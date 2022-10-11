@@ -35,9 +35,9 @@ function SymbolInput() {
       </InputGroup>
       <Container>
         <Row>
-          {data.map((d) => {
+          {data.map((d, idx) => {
             console.log(d);
-            return <SymbolCard symbol={d.symbol} description={d.description} />;
+            return <SymbolCard key={idx} symbol={d.symbol} description={d.description} />;
           })}
         </Row>
       </Container>
