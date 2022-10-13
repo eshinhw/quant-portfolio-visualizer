@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import SymbolCard from "./Cards";
 import BasicExample from "./Cards";
+import axios from "axios";
 
 function SymbolInput() {
   const [symbol, setSymbol] = useState("");
@@ -23,6 +24,7 @@ function SymbolInput() {
     let newData = { symbol: symbol, description: `This is a stock ${symbol}` };
     setData([...data, newData]);
     setSymbol("");
+    axios.get()
   };
 
   return (
