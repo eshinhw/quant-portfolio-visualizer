@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route, Link, Outlet } from "react-router-dom";
+import Cart from "./components/Cart";
 import HomePage from "./pages/HomePage";
 
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="one" element={<div>First order free shipping!</div>}/>
           <Route path="two" element={<div>Second order $100 coupon!</div>}/>
         </Route>
+        <Route path="/cart" element={<Cart />}/>
       </Routes>
     </div>
   );

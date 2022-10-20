@@ -6,6 +6,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import SymbolCard from "./Cards";
 import BasicExample from "./Cards";
 import axios from "axios";
+import Cart from "./Cart";
 
 function SymbolInput() {
   const [symbol, setSymbol] = useState("");
@@ -43,6 +44,8 @@ function SymbolInput() {
           })}
         </Row>
       </Container>
+
+      <Cart/>
     </>
   );
 }
