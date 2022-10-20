@@ -1,5 +1,4 @@
-// const yahooFinance = require('yahoo-finance2').default; // NOTE the .default
-var yahooFinance = require('yahoo-finance');
+const yahooFinance = require('yahoo-finance');
 
 yahooFinance.historical({
   symbol: 'AAPL',
