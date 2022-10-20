@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import NavBarDark from "../components/Navbar";
 import styled from "styled-components";
-import SymbolInput from "../components/Inputs";
+import StockInput from "../components/StockInput";
+import NavBar from "../components/Navbar";
 
 // why use back tick?
 let YellowBtn = styled.button`
@@ -34,16 +34,8 @@ export default function HomePage() {
   });
   return (
     <>
-      {/* {alert ? (
-        <GeneralBtn id="btn" bg="blue">
-          Button
-        </GeneralBtn>
-      ) : null} */}
-
-      {/* <ExtendedButton>Hello</ExtendedButton>
-      <BlackBox>Hello</BlackBox> */}
-      <NavBarDark />
-      <SymbolInput />
+      <NavBar />
+      <StockInput />
     </>
   );
 }
