@@ -3,19 +3,6 @@ import styled from "styled-components";
 import StockInput from "../components/StockInput";
 import NavBar from "../components/Navbar";
 
-// why use back tick?
-let YellowBtn = styled.button`
-  background: yellow;
-  color: black;
-  padding: 10px;
-`;
-
-let BlackBox = styled.div`
-  background: blue;
-  color: white;
-  padding: 25px;
-`;
-
 let GeneralBtn = styled.button`
   background: ${(props) => props.bg};
   color: ${(props) => (props.bg == "blue" ? "white" : "black")};
