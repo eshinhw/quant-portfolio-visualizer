@@ -12,7 +12,6 @@ let GeneralBtn = styled.button`
 let ExtendedButton = styled.button(GeneralBtn); // use the same style of GeneralBtn
 
 export default function HomePage() {
-  let [alert, setAlert] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
