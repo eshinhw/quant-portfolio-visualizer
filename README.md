@@ -1,3 +1,3 @@
 # Quant Wizard
 
-Stock Prices and Momentum Alerts WebApp
+Stock Prices and Momentum Alerts Web App
