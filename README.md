@@ -1,3 +1,9 @@
-# Quant Wizard
+# Trading Automated
 
-Stock Prices and Momentum Alerts Web App
+A comprehensive web app providing automation tools for trading and investing
+
+- Questrade Dividend Visualizer
+- Uptrend Stock Picker based on Moving Averages
+- Positive Momentum Stock Picker
+- Position Sizing Calculator for Risk Management in Stock Trading
+
