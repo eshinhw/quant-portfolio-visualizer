@@ -8,10 +8,10 @@ export default function NavBar() {
       <Navbar bg="dark" variant="dark">
         <Container>
           <Navbar.Brand href="/">Trading Automated</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/signup">Sign Up</Nav.Link>
+          <Nav className="ml-auto">
+            <Nav.Link href="/screener">Screener</Nav.Link>
             <Nav.Link href="/login">Log In</Nav.Link>
+            <Nav.Link href="/signup">Sign Up</Nav.Link>
           </Nav>
         </Container>
       </Navbar>

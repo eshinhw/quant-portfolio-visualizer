@@ -3,6 +3,7 @@ import { Routes, Route, Link, Outlet } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/LoginPage";
 import Signup from "./pages/SignupPage";
+import Screener from "./pages/ScreenerPage";
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />}/>
+        <Route path="/screener" element={<Screener />}/>
         <Route path="*" element={<div>404 Not Found</div>} />
         <Route path="event" element={<Event />}>
           <Route path="one" element={<div>First order free shipping!</div>}/>
