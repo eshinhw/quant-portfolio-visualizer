@@ -5,7 +5,6 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import SymbolCard from "./StockCard";
 import axios from "axios";
-import "../css/StockInput.css";
 
 export default function StockInput() {
   const [symbol, setSymbol] = useState("");

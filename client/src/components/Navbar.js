@@ -7,7 +7,7 @@ export default function NavBar() {
     <>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="/">Quant Wizard</Navbar.Brand>
+          <Navbar.Brand href="/">Trading Automated</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/signup">Sign Up</Nav.Link>
