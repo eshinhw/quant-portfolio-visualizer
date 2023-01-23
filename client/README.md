@@ -1,4 +1,4 @@
-# Trading Automated Front End Doc
+# Trading Automated: Front-End Documentation
 
 ## Available Scripts
 
