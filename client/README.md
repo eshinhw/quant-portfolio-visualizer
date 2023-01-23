@@ -1,28 +1,12 @@
-# Quant Wizard
-
-## Project Goals
-
-- Apply the basics of JavaScript/TypeScript to create a simple web application
-- Provide automatic email service for stock price alerts
-- Calculate historical momentums and retrieve most recent prices for alerts
-
-## Project Tech Stack
-
-- Frontend: HTML/CSS, JavaScript, TypeScript
-- Backend: Node.js, Express.js
-- Database: MongoDB, PostgreSQL
-
-## API
-
-- Sendgrid API: Automatic Email Config
-
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Trading Automated Front End Doc
 
 ## Available Scripts
 
-In the project directory, you can run:
+For the first time using the project, you run:
+
+### `npm install`
+
+After the initial `npm install`, you can run:
 
 ### `npm start`
 
