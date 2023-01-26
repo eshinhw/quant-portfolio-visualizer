@@ -9,7 +9,7 @@ export default function NavBar() {
         <Container>
           <Navbar.Brand href="/">Trading Automated</Navbar.Brand>
           <Nav className="ml-auto">
-            <Nav.Link href="/sector-etf">Sector ETFs</Nav.Link>
+            <Nav.Link href="/sector-etf">Sector Analysis</Nav.Link>
             <Nav.Link href="/price-alert">Price Alert</Nav.Link>
             <Nav.Link href="/screener">Screener</Nav.Link>
             <Nav.Link href="/position-calculator">Position Calculator</Nav.Link>
