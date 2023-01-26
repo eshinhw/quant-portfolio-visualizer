@@ -12,6 +12,7 @@ export default function NavBar() {
             <Nav.Link href="/sector-etf">Sector ETFs</Nav.Link>
             <Nav.Link href="/price-alert">Price Alert</Nav.Link>
             <Nav.Link href="/screener">Screener</Nav.Link>
+            <Nav.Link href="/position-calculator">Position Calculator</Nav.Link>
             <Nav.Link href="/login">Log In</Nav.Link>
             <Nav.Link href="/signup">Sign Up</Nav.Link>
           </Nav>

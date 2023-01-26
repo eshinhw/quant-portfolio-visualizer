@@ -6,6 +6,7 @@ import Signup from "./pages/SignupPage";
 import Screener from "./pages/ScreenerPage";
 import PriceAlert from "./pages/PriceAlert";
 import SectorETF from "./pages/SectorETF";
+import PositionCalculator from "./pages/PositionCalculator";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/screener" element={<Screener />}/>
         <Route path="/price-alert" element={<PriceAlert />}/>
         <Route path="/sector-etf" element={<SectorETF />}/>
+        <Route path="/position-calculator" element={<PositionCalculator />}/>
         <Route path="*" element={<div>404 Not Found</div>} />
         <Route path="event" element={<Event />}>
           <Route path="one" element={<div>First order free shipping!</div>}/>
