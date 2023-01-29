@@ -46,3 +46,7 @@
   text-decoration: none;
   padding: 0 10px;
 }
+
+.header__menuItems a:hover {
+  color: #5AC53B;
+}
