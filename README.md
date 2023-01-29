@@ -1,5 +1,8 @@
 # Robinhood Clone - Stock Trading App
 
-![robinhood-img](https://user-images.githubusercontent.com/41933169/215360290-e56b2f48-313d-4fef-a6fa-509e82788784.svg)
+<p align="center">
+  <img width="900" height="200" src="https://user-images.githubusercontent.com/41933169/215360376-b0063525-5118-4ba5-8e9f-01253cc18d64.png">
+</p>
 
 ReactJS, Firebase, Material UI
+
