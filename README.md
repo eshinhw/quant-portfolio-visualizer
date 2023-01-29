@@ -8,6 +8,7 @@ A comprehensive web app providing automation tools for trading and investing
   - Bullish Trending based on Moving Averages & Positive Momentum Stocks
   - Dividend Growth Stocks
   - Sector Analysis
+  - Price Alert
 
 
 
