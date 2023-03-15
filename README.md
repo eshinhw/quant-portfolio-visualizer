@@ -181,4 +181,17 @@ PyTrader is an automated trading bot to capitalize trading opportunities in FX m
 </p>
 
 ReactJS, Firebase, Material UI
+# Trading Automated
+
+A comprehensive web app providing automation tools for trading and investing
+
+- Questrade Dividend Visualizer
+- Position Sizing Calculator for Risk Management in Stock Trading
+- Ultimate Stock Picker
+  - Bullish Trending based on Moving Averages & Positive Momentum Stocks
+  - Dividend Growth Stocks
+  - Sector Analysis
+  - Price Alert
+
+
 
