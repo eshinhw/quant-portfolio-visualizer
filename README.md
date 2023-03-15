@@ -17,13 +17,14 @@ Comprehensive Web Trading Platform
   - Fundamental & Technical Screener
   - Price Alert
 
-## Data Sources <a name="data-sources"></a>
+## Data Sources
 
 - [yfinance](https://pypi.org/project/yfinance/)
-- [Questrade API](https://www.questrade.com/api/documentation/getting-started)
 - [OANDA API](https://developer.oanda.com/)
+- [Questrade API](https://www.questrade.com/api/documentation/getting-started)
 - [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
 
+<!--
 ## Asset Allocation Strategies
 
 - Traditonal 60% Equities + 40% Bonds Portfolio
@@ -35,7 +36,7 @@ Comprehensive Web Trading Platform
 - [Defensive Asset Allocation (DAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3212862) by Wouter J. Keller
 - [Lethargic Asset Allocation (LAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3498092) by Wouter J. Keller
 
-<!--
+
 ## Usage
 
 Run `python main.py`.
