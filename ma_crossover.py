@@ -102,6 +102,10 @@ def open_trades(symbol):
 
 if __name__ == "__main__":
 
-    open_trades('EURUSD')
-    print("Run Successfully --> " + time.ctime())
+    # open_trades('EURUSD')
+    # print("Run Successfully --> " + time.ctime())
+
+    a = ('1')
+    dict_a = {}
+    dict_a['b'] = a
 
