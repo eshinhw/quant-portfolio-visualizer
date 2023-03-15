@@ -7,3 +7,5 @@ credentials.py
 .DS_Store
 accounts.json
 misc.py
+credentials.py
+keys
