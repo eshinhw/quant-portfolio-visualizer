@@ -174,3 +174,11 @@ PyTrader is an automated trading bot to capitalize trading opportunities in FX m
 - [Leveraged Trading](https://www.amazon.com/Leveraged-Trading-professional-approach-trading/dp/0857197215/ref=sr_1_1?crid=21M6UR528CUFU&keywords=Leveraged+Trading%3A+A+professional+approach+to+trading+FX%2C+stocks+on+margin%2C+CFDs%2C+spread+bets+and+futures+for+all+traders&qid=1636410285&sprefix=leveraged+trading+a+professional+approach+to+trading+fx%2C+stocks+on+margin%2C+cfds%2C+spread+bets+and+futures+for+all+traders%2Caps%2C309&sr=8-1) written by [Rob Carver](https://qoppac.blogspot.com/)
 - [Volatility Breakout Systems](https://www.traderslog.com/volatility-breakout-systems)
 - [Trading Strategy: L.W. Volatility Break-Out](https://www.whselfinvest.com/en-lu/trading-platform/free-trading-strategies/tradingsystem/56-volatility-break-out-larry-williams-free)
+# Robinhood Clone - Stock Trading App
+
+<p align="center">
+  <img width="900" height="200" src="https://user-images.githubusercontent.com/41933169/215360376-b0063525-5118-4ba5-8e9f-01253cc18d64.png">
+</p>
+
+ReactJS, Firebase, Material UI
+
