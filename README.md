@@ -2,9 +2,9 @@
   <img width="1200" height="400" src="https://user-images.githubusercontent.com/41933169/225430938-7c29b360-8e94-4a0d-a3f4-e0c304aa45f9.png">
 </p>
 
-# Trading Wizard
+# Trading Wizard Terminal (TWT)
 
-Comprehensive Web Trading Platform
+Ultimate Web Trading Platform for Global Financial Markets
 
 ## Main Features
 
