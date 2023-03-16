@@ -1,4 +1,4 @@
-# Trading Automated: Front-End Documentation
+# Trading Wizard: Front-End Documentation
 
 ## Available Scripts
 
