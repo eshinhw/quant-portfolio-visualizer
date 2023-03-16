@@ -1,37 +1,41 @@
 <p align="center">
-  <img width="900" height="400" src="https://user-images.githubusercontent.com/41933169/165682213-9581daf4-9848-45ec-a09c-41f618a2d0ae.png">
+  <img width="1200" height="400" src="https://user-images.githubusercontent.com/41933169/225430938-7c29b360-8e94-4a0d-a3f4-e0c304aa45f9.png">
 </p>
 
-# PyQuant
+# Trading Wizard
 
-PyQuant is a command-based investing portfolio management tool which works with `Questrade API` to retrieve account information and financial data to:
+Ultimate Web Trading Platform for Global Financial Markets
 
-- provide account status summary
-- generate portfolio performance matrices 
-- perform portfolio rebalancing
+## Main Features
 
-## Purpose
+- Account Management
+  - Balance Summary
+  - Performance Summary
+  - Dividend Visualizer
+- Trading Tools
+  - Position Sizing Calculator
+  - Fundamental & Technical Screener
+  - Price Alert
 
-The main purpose is to implement historically-proven asset allocation strategies to provide optimal portfoloio management and remove human errors by following rule-based investing philosophy.
-
-## Data Sources <a name="data-sources"></a>
+## Data Sources
 
 - [yfinance](https://pypi.org/project/yfinance/)
+- [OANDA API](https://developer.oanda.com/)
 - [Questrade API](https://www.questrade.com/api/documentation/getting-started)
+- [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
 
-## Fixed Asset Allocation Portfolios <a name="fixed-asset-allocations"></a>
+<!--
+## Asset Allocation Strategies
 
 - Traditonal 60% Equities + 40% Bonds Portfolio
 - Four Seasons Portfolio
 - All Weather Portfolio
 - Permanent Portfolio
-
-## Dynamic Asset Allocation Portfolios <a name="dynamic-asset-allocations"></a>
-
 - [Dual Momentum](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2042750) by Gary Antonacci
 - [Vigilant Asset Allocation (VAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3002624) by Wouter J. Keller
 - [Defensive Asset Allocation (DAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3212862) by Wouter J. Keller
 - [Lethargic Asset Allocation (LAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3498092) by Wouter J. Keller
+
 
 ## Usage
 
@@ -113,85 +117,4 @@ Below is the sample email.
 - Improve performance comparison matrices
 - Global Equities Momentum to determine when to buy equities
 - Fixed Asset Allocations Rebalancing
-  <img width="800" height="300" src="https://user-images.githubusercontent.com/41933169/139356204-1253068f-b11c-4507-a921-6e77112b7a55.png">
-</p>
-
-# PyTrader
-
-PyTrader is an automated trading bot to capitalize trading opportunities in FX markets.
-
-## External Resources
-
-- [OANDA API](https://developer.oanda.com/)
-- [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
-
-<!-- ## Account Verification
-
-- [Myfxbook - Trending MA Crossover](https://www.myfxbook.com/members/EddieShin/tf-ma/9190213) -->
-
-## Moving Averages Crossover Strategy
-
-### Trading Instrument
-
-- EUR/USD
-
-### Entry Rule
-
-- Long @ Bullish Crossover D 120MA X D 480MA
-- Short @ Bearish Crossover D 120MA X D 480MA
-
-### Position Sizing
-
-- 2% of total capital / trade
-- Stop Loss for Long Trade: Entry - 2.5%
-- Stop Loss for Short Trade: Entry + 2.5% 
-
-### Exit Rule
-
-- Trailing Stop automatically adjusts as the market moves in favor of position.
-
-## Volatility Breakout Strategy
-
-### Trading Instrument
-
-- EUR/USD
-
-### Entry Rule
-
-- If the current market price breaks above previous high + (previous range * K), buy at the breakout.
-- If the current market price falls below previous low - (previous range * K), sell at the breakout.
-
-### Position Sizing
-
-- 1% / trade
-
-### Exit Rule
-
-- Close all trades at the end of the day.
-
-## References
-
-- [Leveraged Trading](https://www.amazon.com/Leveraged-Trading-professional-approach-trading/dp/0857197215/ref=sr_1_1?crid=21M6UR528CUFU&keywords=Leveraged+Trading%3A+A+professional+approach+to+trading+FX%2C+stocks+on+margin%2C+CFDs%2C+spread+bets+and+futures+for+all+traders&qid=1636410285&sprefix=leveraged+trading+a+professional+approach+to+trading+fx%2C+stocks+on+margin%2C+cfds%2C+spread+bets+and+futures+for+all+traders%2Caps%2C309&sr=8-1) written by [Rob Carver](https://qoppac.blogspot.com/)
-- [Volatility Breakout Systems](https://www.traderslog.com/volatility-breakout-systems)
-- [Trading Strategy: L.W. Volatility Break-Out](https://www.whselfinvest.com/en-lu/trading-platform/free-trading-strategies/tradingsystem/56-volatility-break-out-larry-williams-free)
-# Robinhood Clone - Stock Trading App
-
-<p align="center">
-  <img width="900" height="200" src="https://user-images.githubusercontent.com/41933169/215360376-b0063525-5118-4ba5-8e9f-01253cc18d64.png">
-</p>
-
-ReactJS, Firebase, Material UI
-# Trading Automated
-
-A comprehensive web app providing automation tools for trading and investing
-
-- Questrade Dividend Visualizer
-- Position Sizing Calculator for Risk Management in Stock Trading
-- Ultimate Stock Picker
-  - Bullish Trending based on Moving Averages & Positive Momentum Stocks
-  - Dividend Growth Stocks
-  - Sector Analysis
-  - Price Alert
-
-
-
+-->
