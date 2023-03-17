@@ -1,1 +1,1 @@
-# Trading Automated: Back-End Documentation
+# Trading Wizard: Back-End Documentation
