@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "express": "^4.18.2",
-    "yahoo-finance": "^0.3.7"
-  }
-}
