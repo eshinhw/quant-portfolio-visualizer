@@ -9,7 +9,7 @@ Ultimate Web Trading Platform for Global Financial Markets
 ## Main Features
 
 - Total portfolio holdings and performance across accounts
-- Dividend visualizer to oversee dividends performance
+- Dividend visualizer to track dividends performance
 - Position sizing calculator to manage your risk properly
 - Custom watchlist to follow your favorite markets
 - Alerts on markets so you'll never miss a price movement
