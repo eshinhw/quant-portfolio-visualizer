@@ -8,14 +8,11 @@ Ultimate Web Trading Platform for Global Financial Markets
 
 ## Main Features
 
-- Account Management
-  - Balance Summary
-  - Performance Summary
-  - Dividend Visualizer
-- Trading Tools
-  - Position Sizing Calculator
-  - Fundamental & Technical Screener
-  - Price Alert
+- Total portfolio holdings and performance across accounts
+- Dividend visualizer to track dividends performance
+- Position sizing calculator to manage your risk properly
+- Custom watchlist to follow your favorite markets
+- Alerts on markets so you'll never miss a price movement
 
 ## Data Sources
 
