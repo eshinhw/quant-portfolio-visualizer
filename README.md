@@ -1,10 +1,6 @@
-<p align="center">
-  <img width="1200" height="400" src="https://user-images.githubusercontent.com/41933169/225430938-7c29b360-8e94-4a0d-a3f4-e0c304aa45f9.png">
-</p>
-
 # Trading Wizard
 
-Ultimate Web Trading Platform for Global Financial Markets
+Ultimate Web Trading Platform for Success in Financial Markets
 
 ## Main Features
 
