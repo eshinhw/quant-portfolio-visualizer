@@ -3,7 +3,7 @@ import { Container, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import SymbolCard from "../components/StockCard";
+import SymbolCard from "./components/StockCard";
 import axios from "axios";
 
 export default function StockInput() {

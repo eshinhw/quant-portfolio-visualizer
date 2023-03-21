@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import StockInput from "../components/StockInput";
-import NavBar from "../components/Navbar";
+import StockInput from "./components/StockInput";
+import NavBar from "./components/Navbar";
 
 let GeneralBtn = styled.button`
   background: ${(props) => props.bg};
