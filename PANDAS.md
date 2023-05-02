@@ -51,3 +51,8 @@ np.where(num >= 0, 'pos', 'neg') # ['neg', 'neg', 'pos', 'pos']
 
 ```
 
+## Data Concatenation
+
+- concat()
+- merge()
+- join()
