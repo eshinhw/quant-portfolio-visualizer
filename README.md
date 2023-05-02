@@ -1,13 +1,6 @@
 # Trading Wizard
 
-Financial Data Analysis in Python and Automated Trading System
-
-## Data Analysis in Python
-
-- [NumPy](NUMPY.md)
-- [Pandas](PANDAS.md)
-- [Matplotlib](MATPLOTLIB.md)
-- [SQL](SQL.md)
+Automated Trading Tools
 
 ## Main Features
 
