@@ -2,6 +2,11 @@
 
 Financial Data Analysis in Python and Automated Trading System
 
+## Data Analysis in Python
+
+- [Pandas Basics](PANDAS.md)
+- [SQL](SQL.md)
+
 ## Main Features
 
 - Total portfolio holdings and performance across accounts
@@ -16,11 +21,6 @@ Financial Data Analysis in Python and Automated Trading System
 - [OANDA API](https://developer.oanda.com/)
 - [Questrade API](https://www.questrade.com/api/documentation/getting-started)
 - [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
-
-## Data Analysis in Python
-
-- [Pandas Basics](PANDAS.md)
-- [SQL](SQL.md)
 
 <!--
 ## Asset Allocation Strategies
