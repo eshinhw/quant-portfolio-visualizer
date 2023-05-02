@@ -17,6 +17,11 @@ Ultimate Web Trading Platform for Success in Financial Markets
 - [Questrade API](https://www.questrade.com/api/documentation/getting-started)
 - [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
 
+## Data Analysis in Python
+
+- [Pandas Basics](PANDAS.md)
+- [SQL](SQL.md)
+
 <!--
 ## Asset Allocation Strategies
 
