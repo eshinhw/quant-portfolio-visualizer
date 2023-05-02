@@ -1,6 +1,6 @@
 # Trading Wizard
 
-Ultimate Web Trading Platform for Success in Financial Markets
+Financial Data Analysis in Python and Automated Trading System
 
 ## Main Features
 
