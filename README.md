@@ -4,7 +4,9 @@ Financial Data Analysis in Python and Automated Trading System
 
 ## Data Analysis in Python
 
-- [Pandas Basics](PANDAS.md)
+- [NumPy](NUMPY.md)
+- [Pandas](PANDAS.md)
+- [Matplotlib](MATPLOTLIB.md)
 - [SQL](SQL.md)
 
 ## Main Features
