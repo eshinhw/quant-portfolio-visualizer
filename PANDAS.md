@@ -1,4 +1,4 @@
-# Numpy and Pandas
+# Data Analysis in NumPy and Pandas
 
 ## axis=0 or axis=1
 
