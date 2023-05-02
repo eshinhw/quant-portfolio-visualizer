@@ -1,4 +1,4 @@
-# Pandas Basics
+# Numpy and Pandas
 
 ## axis=0 or axis=1
 
@@ -45,7 +45,9 @@ df.loc[filter_isin, ]
 ## Create a New Column
 
 ```python
-
+import numpy as np
+num = pd.Series([-2,-1,1,2])
+np.where(num >= 0, 'pos', 'neg') # ['neg', 'neg', 'pos', 'pos']
 
 ```
 
