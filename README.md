@@ -4,7 +4,7 @@ Automated Trading Tools
 
 ## Main Features
 
-- Total portfolio holdings and performance across accounts
+- Total portfolio holdings and performance across accounts from Questrade
 - Dividend visualizer to track dividends performance
 - Position sizing calculator to manage your risk properly
 - Custom watchlist to follow your favorite markets
