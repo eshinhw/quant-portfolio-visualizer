@@ -9,3 +9,4 @@ bars = client.get_aggs(ticker=ticker, multiplier=1,
 
 for bar in bars:
     print(bar)
+
