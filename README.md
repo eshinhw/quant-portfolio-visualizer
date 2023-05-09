@@ -1,6 +1,6 @@
 # Trading Wizard
 
-Automated Trading Tools
+A collection of useful trading tools and market indicators
 
 ## Main Features
 
@@ -9,6 +9,7 @@ Automated Trading Tools
 - Position sizing calculator to manage your risk properly
 - Custom watchlist to follow your favorite markets
 - Alerts on markets so you'll never miss a price movement
+- Market strength indicator
 
 ## Data Sources
 
