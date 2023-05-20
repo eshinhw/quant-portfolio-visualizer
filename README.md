@@ -1,4 +1,4 @@
-# Trading Wizard
+# Quant Portfolio Visualizer
 
 A collection of useful trading tools and market indicators
 
