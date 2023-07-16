@@ -2,6 +2,8 @@
 
 Interactive Quantitative Portfolio Web Visualizer
 
+- d3.js
+
 <!--
 ## Main Features
 
