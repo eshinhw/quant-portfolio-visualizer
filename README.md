@@ -1,7 +1,10 @@
 # Quant Portfolio Visualizer
 
-A collection of useful trading tools and market indicators
+Interactive Quantitative Portfolio Web Visualizer
 
+- d3.js
+
+<!--
 ## Main Features
 
 - Total portfolio holdings and performance across accounts from Questrade
@@ -18,7 +21,7 @@ A collection of useful trading tools and market indicators
 - [Questrade API](https://www.questrade.com/api/documentation/getting-started)
 - [Google Cloud Platform (GCP) Virtual Machine](https://cloud.google.com/)
 
-<!--
+
 ## Asset Allocation Strategies
 
 - Traditonal 60% Equities + 40% Bonds Portfolio
