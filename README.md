@@ -1,5 +1,10 @@
 # Factor Portfolio Visualizer
 
+<div align="center">
+<img width="1200" height="600" alt="" src="https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/73abda1f-93d2-47a6-8824-1a034271c983">
+</div>
+
+
 
 
 <!--
