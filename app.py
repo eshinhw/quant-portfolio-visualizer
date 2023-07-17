@@ -1,12 +1,11 @@
 from dash import Dash, html, dcc, callback, Output, Input, dash_table, ctx
 import plotly.express as px
-from factor import get_pbr_cummulative_returns
-from factor import pbr_factor_stat
+from factor import get_pbr_cummulative_returns, get_momentum_cummulative_returns, pbr_factor_stat, mom_factor_stat
 
 app = Dash(__name__)
 
 BUTTON_STYLE = {"color": "white", "background-color": "black", "padding": "12px 18px", "cursor": "pointer", "border": "none"}
-FACTORS = ['Value', 'Momentum', 'Quality', 'Low Volatility']
+FACTORS = ['Value', 'Momentum']
 
 app.layout = html.Div(
     [
@@ -52,7 +51,11 @@ def update_heading(factor):
       return html.H2(children=f"{factor} Portfolio Statistics ({startDate} - {endDate})", style={'textAlign': "center", "fontSize": "30px"})
     
     if factor == "Momentum":
-        return html.H2(children=f"{factor} Portfolio Statistics", style={'textAlign': "center", "fontSize": "30px"})
+        df = get_momentum_cummulative_returns()
+        startDate = df['Date'].iloc[0].replace("-",".")
+        endDate = df['Date'].iloc[-1].replace("-",".")
+        
+        return html.H2(children=f"{factor} Portfolio Statistics ({startDate} - {endDate})", style={'textAlign': "center", "fontSize": "30px"})
     
     if factor == "Quality":
         return html.H2(children=f"{factor} Portfolio Statistics", style={'textAlign': "center", "fontSize": "30px"})
@@ -68,7 +71,8 @@ def update_heading(factor):
 def update_table(factor):
     if factor == "Value":
       return pbr_factor_stat().to_dict("records")
-        
+    if factor == "Momentum":
+      return mom_factor_stat().to_dict("records")
 
 
 @callback(Output("graph-content", "figure"), Input("dropdown-selection", "value"))
@@ -78,8 +82,17 @@ def update_graph(factor):
         return px.line(
             df,
             x="Date",
-            y=["Lo 20", "Qnt 2", "Qnt 3", "Qnt 4", "Hi 20"],
+            y=[col for col in df.columns if col != 'Date']
         )
+    if factor == "Momentum":
+       df = get_momentum_cummulative_returns()
+       return px.line(
+            df,
+            x="Date",
+            y=[col for col in df.columns if col != 'Date'],
+        )
+    
+
         
 
 
