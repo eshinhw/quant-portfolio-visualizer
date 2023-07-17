@@ -70,11 +70,6 @@ def update_graph(factor):
             x="Date",
             y=[col for col in df.columns if col != 'Date'],
         )
-    
-
-        
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
