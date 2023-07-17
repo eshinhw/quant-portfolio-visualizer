@@ -19,13 +19,20 @@ app.layout = html.Div(
             [
                 html.H1(
                     children="Factor Portfolio Visualizer",
-                    style={"textAlign": "center", "fontSize": "35px"},
+                    style={"textAlign": "center", "fontSize": "38px"},
                 ),
                 html.Div(
                     [
-                        dcc.Dropdown(FACTORS, "Value", id="dropdown-selection", clearable=False),
+                        html.H3(children="Factor Selection:"),
+                        dcc.Dropdown(
+                            FACTORS, "Value", id="dropdown-selection", clearable=False, style={"width": "500px"}
+                        ),
                     ],
-                    style={"width": "500px"},
+                    style={
+                        "display": "flex",
+                        "gap": "10px",
+                        "align-items": "center",
+                    },
                 ),
             ],
             style={"display": "flex", "gap": "20px", "justify-content": "space-between", "align-items": "center"},
@@ -33,7 +40,7 @@ app.layout = html.Div(
         dcc.Graph(id="graph-content"),
         html.Div(id="factor-stat-header"),
         html.Div(
-            [dash_table.DataTable(id="table-content", sort_action="native", sort_mode="multi")],
+            [dash_table.DataTable(id="table-content", sort_action="native")],
             style={"margin": "50px 50px"},
         ),
     ]
@@ -97,4 +104,4 @@ def update_graph(factor):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
