@@ -1,4 +1,18 @@
-# Factor Portfolio Visualizer
+<div align="center">
+
+  ![coollogo_com-44991879](https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/ab633637-cce7-45ab-9633-afce3598a349)
+
+</div>
+
+
+<div align="center">
+
+  ![NPM](https://img.shields.io/npm/l/nextjs)
+  ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/eshinhw/dividend-watchlist)
+  ![GitHub issues](https://img.shields.io/github/issues/eshinhw/dividend-watchlist)
+  ![GitHub pull requests](https://img.shields.io/github/issues-pr/eshinhw/dividend-watchlist)
+  
+</div>
 
 <div align="center">
 <img width="1200" height="600" alt="" src="https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/d606f3de-1cb3-4d0b-988c-74a0978bb1af">
