@@ -1,8 +1,9 @@
 <div align="center">
 
-  ![coollogo_com-44991879](https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/ab633637-cce7-45ab-9633-afce3598a349)
+  ![logo](https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/f79d6ac2-5dfb-4acd-8463-d828a9a83370)
 
 </div>
+
 
 
 <div align="center">
