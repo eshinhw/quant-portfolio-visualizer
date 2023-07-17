@@ -4,7 +4,6 @@
 
 </div>
 
-
 <div align="center">
 
   ![NPM](https://img.shields.io/npm/l/nextjs)
@@ -15,7 +14,7 @@
 </div>
 
 <div align="center">
-<img width="1200" height="600" alt="" src="https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/d606f3de-1cb3-4d0b-988c-74a0978bb1af">
+<img width="1200" height="600" alt="" src="https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/2cd528cf-7385-4692-ab8c-464f59216e04">
 </div>
 
 
