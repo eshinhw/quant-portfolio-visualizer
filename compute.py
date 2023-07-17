@@ -43,3 +43,8 @@ def monthly_returns(assets):
 #     drawdown = (self.port_cum_returns - previous_peaks) / previous_peaks
 #     port_mdd = drawdown.min()
 #     return port_mdd
+
+
+if __name__ == "__main__":
+    print(monthly_prices(['AAPL']))
+    print(monthly_returns(['aapl']))

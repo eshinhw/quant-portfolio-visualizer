@@ -8,6 +8,8 @@ import datetime as dt
 import matplotlib.pyplot as plt
 import yfinance as yf
 
+from compute import monthly_prices
+
 
 class VAA():
 
