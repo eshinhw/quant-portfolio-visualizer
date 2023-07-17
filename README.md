@@ -1,8 +1,6 @@
-# Quant Portfolio Visualizer
+# Factor Portfolio Visualizer
 
-Interactive Quantitative Portfolio Web Visualizer
 
-- d3.js
 
 <!--
 ## Main Features
