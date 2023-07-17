@@ -15,32 +15,11 @@ app.layout = html.Div(
         ),
         html.Div([dcc.Dropdown(FACTORS, 'Value', id='dropdown-selection', clearable=False),], style={"width": "500px"})],style={"display": "flex", "gap": "20px", "justify-content": "space-between", "align-items": "center"}),
         
-        # html.Div([
-        #   html.Button("Value", id='value-button', style=BUTTON_STYLE),    
-        #   html.Button("Momentum", id='momentum-button', style=BUTTON_STYLE),    
-        #   html.Button("Quality", id='quality-button', style=BUTTON_STYLE),    
-        #   html.Button("Low Vol", id='low-vol-button', style=BUTTON_STYLE),    
-        # ], style={"display": "flex", "gap": "50px", "justify-content": "center", "align-items": "center", "margin-bottom": "30px", "margin-top": "5px"}),        
-        
-        # html.Div([dcc.Graph(id="graph-content"), html.Div([html.H2(children="Value Factor Portfolio Statistics", style={"textAlign": "center"}, id="factor-statistics"),html.Div([])], 
-        #          style={"display": "flex", "gap": "20px", "justify-content": "center", "align-items": "center"}),
         dcc.Graph(id="graph-content"),
         html.Div(id="factor-stat-header"),
         html.Div([dash_table.DataTable(id="table-content")], style={'margin': "50px 50px"})
     ]
-)
-
-# @callback(Output("breakpoint", "children"), Input("dropdown-selection", "value"))
-# def updateBreakpoints(factor):
-#     if factor == "Value":
-#         return dcc.RadioItems(
-#             ["Bottom-Mid-High", "Quintiles", "Deciles"],
-#             "Bottom-Mid-High",
-#             id="radioitems-selection",
-#             inline=True,
-#             style={"display": "flex", "gap": "20px", "justify-content": "start", "margin-left": "75px", "align-items": "center"}
-#         ),
-    
+)  
 
 @callback(Output(component_id="factor-stat-header", component_property="children"), [Input(component_id="dropdown-selection", component_property='value')])
 def update_heading(factor):
