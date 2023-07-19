@@ -6,7 +6,6 @@
 
 <div align="center">
 
-  ![NPM](https://img.shields.io/npm/l/nextjs)
   ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/eshinhw/factor-portfolio-visualizer)
   ![GitHub issues](https://img.shields.io/github/issues/eshinhw/factor-portfolio-visualizer)
   ![GitHub pull requests](https://img.shields.io/github/issues-pr/eshinhw/factor-portfolio-visualizer)
