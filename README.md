@@ -18,6 +18,13 @@
 
 </div>
 
+Smart Beta Factors
+
+- Value
+- Momentum
+- Size
+- Beta
+
 
 
 
