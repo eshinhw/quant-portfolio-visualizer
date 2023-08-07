@@ -18,7 +18,7 @@
 
 </div>
 
-Smart Beta Factors
+## Smart Beta Factors
 
 - Value
 - Momentum
