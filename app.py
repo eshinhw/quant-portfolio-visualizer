@@ -18,7 +18,7 @@ app.layout = html.Div(
         html.Div(
             [
                 html.H1(
-                    children="Factor Portfolio Visualizer",
+                    children="Quant Factor Visualizer",
                     style={"textAlign": "center", "fontSize": "38px"},
                 ),
                 html.Div(
