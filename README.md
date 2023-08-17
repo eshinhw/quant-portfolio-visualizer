@@ -1,6 +1,6 @@
 <div align="center">
 
-  ![logo](https://github.com/eshinhw/quantitative-factor-visualizer/assets/41933169/c0760f0c-49e6-423a-aa95-2bca906882c2)
+  ![logo](https://github.com/eshinhw/quant-factor-visualizer/assets/41933169/97fdd599-19dc-49ce-b1d6-3a3c6ecaf399)
 
 </div>
 
