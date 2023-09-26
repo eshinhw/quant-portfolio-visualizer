@@ -1,12 +1,11 @@
 <div align="center">
 
-  ![logo](https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/ed19658e-2b24-45e3-a420-602fa8a141e6)
+  ![logo](https://github.com/eshinhw/quant-factor-visualizer/assets/41933169/97fdd599-19dc-49ce-b1d6-3a3c6ecaf399)
 
 </div>
 
 <div align="center">
 
-  ![NPM](https://img.shields.io/npm/l/nextjs)
   ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/eshinhw/factor-portfolio-visualizer)
   ![GitHub issues](https://img.shields.io/github/issues/eshinhw/factor-portfolio-visualizer)
   ![GitHub pull requests](https://img.shields.io/github/issues-pr/eshinhw/factor-portfolio-visualizer)
@@ -14,8 +13,17 @@
 </div>
 
 <div align="center">
-<img width="1200" height="600" alt="" src="https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/2cd528cf-7385-4692-ab8c-464f59216e04">
+  
+  <img width="1200" height="600" alt="" src="https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/2cd528cf-7385-4692-ab8c-464f59216e04">
+
 </div>
+
+## Smart Beta Factors
+
+- Value
+- Momentum
+- Size
+- Beta
 
 
 
