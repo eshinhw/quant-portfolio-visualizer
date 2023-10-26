@@ -12,18 +12,29 @@
   
 </div>
 
+## Objectives
+
+- Develop an interactive dash app in Python with financial data.
+- Display the historical performances of quantitative factors in Quant Investing.
+
+## How to Install and Run
+
+1. Clone the repo
+2. Run `python app.py`
+
+## Data Source
+
+- [Kenneth R. French - Data Library](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html)
+
+## Demo Screenshot
+
 <div align="center">
   
   <img width="1200" height="600" alt="" src="https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/2cd528cf-7385-4692-ab8c-464f59216e04">
 
 </div>
 
-## Smart Beta Factors
 
-- Value
-- Momentum
-- Size
-- Beta
 
 
 
