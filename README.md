@@ -1,16 +1,32 @@
 <div align="center">
 
-  ![logo](https://github.com/eshinhw/quant-factor-visualizer/assets/41933169/97fdd599-19dc-49ce-b1d6-3a3c6ecaf399)
+  ![logo](https://github.com/eshinhw/quant-portfolio-visualizer/assets/41933169/5e05f0a5-384d-421c-8a56-aa8b2265b93c)
 
 </div>
 
 <div align="center">
 
-  ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/eshinhw/factor-portfolio-visualizer)
-  ![GitHub issues](https://img.shields.io/github/issues/eshinhw/factor-portfolio-visualizer)
-  ![GitHub pull requests](https://img.shields.io/github/issues-pr/eshinhw/factor-portfolio-visualizer)
+  ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/eshinhw/quant-portfolio-visualizer)
+  ![GitHub issues](https://img.shields.io/github/issues/eshinhw/quant-portfolio-visualizer)
+  ![GitHub pull requests](https://img.shields.io/github/issues-pr/eshinhw/quant-portfolio-visualizer)
   
 </div>
+
+## Objectives
+
+- Develop an interactive dash app in Python with financial data.
+- Display the historical performances of quantitative factors in Quant Investing.
+
+## How to Install and Run
+
+1. Clone the repo
+2. Run `python app.py`
+
+## Data Source
+
+- [Kenneth R. French - Data Library](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html)
+
+## Demo Screenshot
 
 <div align="center">
   
@@ -18,12 +34,7 @@
 
 </div>
 
-## Smart Beta Factors
 
-- Value
-- Momentum
-- Size
-- Beta
 
 
 
