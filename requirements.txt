@@ -1,0 +1,9 @@
+components==1.2.8
+dash==2.11.1
+dash_bootstrap_components==1.5.0
+matplotlib==3.7.1
+numpy==1.24.3
+pandas==1.5.3
+pandas_datareader==0.10.0
+plotly==5.9.0
+yfinance==0.2.18
