@@ -5,12 +5,13 @@ navbar = dbc.NavbarSimple(
         dbc.DropdownMenu(
             children=[
                 dbc.DropdownMenuItem("Market Beta", href="/beta"),
+                dbc.DropdownMenuItem("Size", href="/size"),
                 dbc.DropdownMenuItem("Value", href="/value"),
                 dbc.DropdownMenuItem("Momentum", href="/momentum"),
             ],
             nav=True,
             in_navbar=True,
-            label="Fama-French",
+            label="Fama-French Factors",
         ),
         dbc.DropdownMenu(
             children=[
