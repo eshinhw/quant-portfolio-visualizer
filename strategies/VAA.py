@@ -7,7 +7,7 @@ import pandas as pd
 import datetime as dt
 import yfinance as yf
 
-from compute import monthly_prices
+from utils import monthly_prices
 
 
 class VAA:
@@ -38,7 +38,11 @@ class VAA:
         monthly_prices = pd.DataFrame()
         for asset in vaa_assets:
             monthly_prices[asset] = yf.download(
-                asset, start=dt.datetime(2018, 1, 1), end=dt.datetime.today(), interval="1mo", progress=False
+                asset,
+                start=dt.datetime(2018, 1, 1),
+                end=dt.datetime.today(),
+                interval="1mo",
+                progress=False,
             )["Adj Close"]
         monthly_prices.dropna(inplace=True)
         return monthly_prices
@@ -153,7 +157,11 @@ class VAA2:
         monthly_prices = pd.DataFrame()
         for asset in vaa_assets:
             monthly_prices[asset] = yf.download(
-                asset, start=dt.datetime(2018, 1, 1), end=dt.datetime.today(), interval="1mo", progress=False
+                asset,
+                start=dt.datetime(2018, 1, 1),
+                end=dt.datetime.today(),
+                interval="1mo",
+                progress=False,
             )["Adj Close"]
         monthly_prices.dropna(inplace=True)
         return monthly_prices
