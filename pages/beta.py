@@ -19,6 +19,7 @@ def update_table():
 
 def update_heading():
     df = get_beta_cummulative_returns()
+
     startDate = df["Date"].iloc[0].replace("-", ".")
     endDate = df["Date"].iloc[-1].replace("-", ".")
     return html.H3(
