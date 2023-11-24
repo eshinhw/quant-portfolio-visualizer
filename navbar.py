@@ -13,26 +13,17 @@ navbar = dbc.NavbarSimple(
             in_navbar=True,
             label="Fama-French Factors",
         ),
-        dbc.DropdownMenu(
-            children=[
-                dbc.DropdownMenuItem("Classic 60/40", href="/classic"),
-                dbc.DropdownMenuItem("Permanent", href="#"),
-                dbc.DropdownMenuItem("All Season", href="#"),
-            ],
-            nav=True,
-            in_navbar=True,
-            label="Fixed Portfolios",
-        ),
-        dbc.DropdownMenu(
-            children=[
-                dbc.DropdownMenuItem("More pages", header=True),
-                dbc.DropdownMenuItem("Page 2", href="#"),
-                dbc.DropdownMenuItem("Page 3", href="#"),
-            ],
-            nav=True,
-            in_navbar=True,
-            label="Dynamic Asset Allocations",
-        ),
+        dbc.NavItem(dbc.NavLink("Fixed Portfolios", href="/fixed")),
+        # dbc.DropdownMenu(
+        #     children=[
+        #         dbc.DropdownMenuItem("Page 1", href="#"),
+        #         dbc.DropdownMenuItem("Page 2", href="#"),
+        #         dbc.DropdownMenuItem("Page 3", href="#"),
+        #     ],
+        #     nav=True,
+        #     in_navbar=True,
+        #     label="Momentum Portfolios",
+        # ),
     ],
     brand="Quant Portfolio Visualizer",
     brand_href="/",
