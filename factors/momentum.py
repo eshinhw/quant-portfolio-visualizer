@@ -8,11 +8,10 @@ QUINTILES = ["Lo 20", "Qnt 2", "Qnt 3", "Qnt 4", "Hi 20"]
 def get_momentum_cummulative_returns():
     data = {}
 
-    df_mom = web.DataReader(
-        "10_Portfolios_Prior_12_2", "famafrench", start="1900-01-01"
-    )
-    df_mom_vw = df_mom[0]
-    df_mom_cum = np.log(1 + df_mom_vw / 100).cumsum()
+    df_mom = pd.read_csv("./famafrench/10_Portfolios_Prior_12_2.csv", skiprows=12)
+    df_mom["Date"] = pd.to_datetime(df_mom["Date"], format="%Y%m")
+    df_mom.set_index("Date", inplace=True)
+    df_mom_cum = np.log(1 + df_mom / 100).cumsum()
     df_mom_cum.reset_index(inplace=True)
     df_mom_cum["Date"] = df_mom_cum["Date"].astype(str)
     return df_mom_cum
@@ -21,9 +20,8 @@ def get_momentum_cummulative_returns():
 def mom_factor_stat():
     data = {}
 
-    monthly_ret = web.DataReader(
-        "10_Portfolios_Prior_12_2", "famafrench", start="1900-01-01"
-    )[0]
+    monthly_ret = get_momentum_cummulative_returns()
+    monthly_ret.set_index("Date", inplace=True)
     n = len(monthly_ret)
     ret_ari = (monthly_ret / 100).mean(axis=0) * 12
     ret_geo = (1 + monthly_ret / 100).prod() ** (12 / n) - 1
