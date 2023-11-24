@@ -1,6 +1,6 @@
 import dash
 from dash import Dash, html, dcc, callback, Output, Input, dash_table, ctx
-from factors.pbr import get_pbr_cummulative_returns, pbr_factor_stat
+from factors.value import get_pbr_cummulative_returns, pbr_factor_stat
 import plotly.express as px
 
 
