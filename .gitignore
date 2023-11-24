@@ -31,3 +31,6 @@ venv/
 **/.vscode
 
 **/test.ipynb
+*.pyc
+.DS_Store
+.env
