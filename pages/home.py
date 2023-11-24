@@ -28,12 +28,11 @@ layout = html.Div(
                         html.Li("Permanent Portfolio"),
                     ]
                 ),
-                html.H5("Dynamic Portfolios"),
+                html.H5("Momentum Portfolios"),
             ],
             style={
                 "margin-left": "60px",
                 "padding-left": "12px",
-                # "margin-right": "56px",
                 "margin-top": "20px",
                 "max-width": "1320px",
             },
