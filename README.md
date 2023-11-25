@@ -15,7 +15,26 @@
 ## Objectives
 
 - Develop an interactive dash app in Python with financial data.
-- Display the historical performances of quantitative factors in Quant Investing.
+- Display the historical performances of quantitative factors in Quant Investing from Fama-French Data Library.
+- Introduce various types of portfolio asset allocation strategies and analyze the historical performances and statistics.
+
+## Fama-French Quantitative Factors
+
+- Market Beta
+- Size
+- Value
+- Momentum
+
+## Portfolio Asset Allocation Strategies
+
+- Traditonal 60% Equities + 40% Bonds Portfolio
+- Four Seasons Portfolio
+- All Weather Portfolio
+- Permanent Portfolio
+- [Dual Momentum](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2042750) by Gary Antonacci
+- [Vigilant Asset Allocation (VAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3002624) by Wouter J. Keller
+- [Defensive Asset Allocation (DAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3212862) by Wouter J. Keller
+- [Lethargic Asset Allocation (LAA)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3498092) by Wouter J. Keller
 
 ## How to Install and Run
 
