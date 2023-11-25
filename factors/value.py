@@ -23,9 +23,7 @@ def get_pbr_cummulative_returns():
 
 def pbr_factor_stat():
     data = {}
-
     monthly_ret = get_pbr_cummulative_returns()
-    print(monthly_ret)
     monthly_ret.set_index("Date", inplace=True)
     n = len(monthly_ret)
     ret_ari = (monthly_ret / 100).mean(axis=0) * 12
