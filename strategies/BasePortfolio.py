@@ -21,7 +21,7 @@ class BasePortfolio:
         return prices
 
     def monthly_returns(self):
-        # monthly returns
+        # monthly returns calculation
         prices = self.monthly_prices()
         monthly_returns = prices.pct_change().dropna()
         return monthly_returns
