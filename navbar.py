@@ -26,7 +26,7 @@ navbar = dbc.NavbarSimple(
         # ),
     ],
     brand="Quant Portfolio Visualizer",
-    brand_href="/",
+    brand_href="/home",
     color="primary",
     dark=True,
 )

@@ -5,6 +5,7 @@ import dash_bootstrap_components as dbc
 
 app = Dash(
     __name__,
+    title="Quant Portfolio Visualizer",
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     pages_folder="pages",
     use_pages=True,
