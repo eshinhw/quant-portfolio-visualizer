@@ -2,6 +2,8 @@ import datetime as dt
 import numpy as np
 import yfinance as yf
 
+import pandas as pd
+
 
 class BasePortfolio:
     def __init__(self, name: str, assets: list[str], weights: list[float]) -> None:
