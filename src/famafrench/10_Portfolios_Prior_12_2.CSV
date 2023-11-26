@@ -1,15 +1,3 @@
-This file was created by CMPT_PRIOR_RETS using the 202309 CRSP database.,,,,,,,,,,
-It contains value- and equal-weighted returns for  10 prior-return portfolios.,,,,,,,,,,
-The portfolios are constructed monthly. PRIOR_RET is from -12 to - 2.,,,,,,,,,,
-,,,,,,,,,,
-The annual returns are from January to December.,,,,,,,,,,
-,,,,,,,,,,
-Missing data are indicated by -99.99 or -999.,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-,,,,,,,,,,
-  Average Equal Weighted Returns -- Monthly,,,,,,,,,,
 Date,Lo PRIOR,PRIOR 2,PRIOR 3,PRIOR 4,PRIOR 5,PRIOR 6,PRIOR 7,PRIOR 8,PRIOR 9,Hi PRIOR
 192701,-0.47,1.04,4.17,2.4,-0.31,3.08,1.48,0.64,-0.59,1.18
 192702,8.49,3.88,8.33,7.59,4.79,5.47,5.4,4.3,5.76,5.58
