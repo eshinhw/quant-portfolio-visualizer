@@ -8,7 +8,10 @@ QUINTILES = ["Lo 20", "Qnt 2", "Qnt 3", "Qnt 4", "Hi 20"]
 def get_momentum_cummulative_returns():
     data = {}
 
-    df_mom = pd.read_csv("./src/famafrench/10_Portfolios_Prior_12_2.csv", skiprows=12)
+    df_mom = pd.read_csv(
+        "/Users/eddieshin/github/quant-portfolio-visualizer/src/famafrench/10_Portfolios_Prior_12_2.csv",
+        skiprows=12,
+    )
     df_mom["Date"] = pd.to_datetime(df_mom["Date"], format="%Y%m")
     df_mom.set_index("Date", inplace=True)
     df_mom_cum = np.log(1 + df_mom / 100).cumsum()
