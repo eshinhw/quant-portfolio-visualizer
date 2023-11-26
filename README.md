@@ -27,7 +27,7 @@
 
 ## Portfolio Asset Allocation Strategies
 
-- Traditonal 60% Equities + 40% Bonds Portfolio
+- Classic 60% Equities + 40% Bonds Portfolio
 - Four Seasons Portfolio
 - All Weather Portfolio
 - Permanent Portfolio
