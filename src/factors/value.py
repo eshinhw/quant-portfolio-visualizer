@@ -7,7 +7,7 @@ QUINTILES = ["Lo 20", "Qnt 2", "Qnt 3", "Qnt 4", "Hi 20"]
 
 def get_pbr_cummulative_returns():
     monthly_ret = pd.read_csv(
-        "/Users/eddieshin/github/quant-portfolio-visualizer/src/famafrench/Portfolios_Formed_on_BE-ME.CSV",
+        "./src/famafrench/Portfolios_Formed_on_BE-ME.CSV",
         skiprows=23,
         header=0,
     )
