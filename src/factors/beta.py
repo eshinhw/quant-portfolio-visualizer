@@ -7,7 +7,7 @@ QUINTILES = ["Lo 20", "Qnt 2", "Qnt 3", "Qnt 4", "Hi 20"]
 
 def get_beta_cummulative_returns():
     monthly_ret = pd.read_csv(
-        "./src/famafrench/Portfolios_Formed_on_BETA.CSV",
+        "https://github.com/eshinhw/quant-portfolio-visualizer/blob/main/src/famafrench/Portfolios_Formed_on_BETA.csv",
         skiprows=13,
     )
     monthly_ret[["Lo 20", "Qnt 2", "Qnt 3", "Qnt 4", "Hi 20"]]
