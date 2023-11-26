@@ -10,7 +10,6 @@ def get_momentum_cummulative_returns():
 
     df_mom = pd.read_csv(
         "https://github.com/eshinhw/quant-portfolio-visualizer/blob/main/src/famafrench/10_Portfolios_Prior_12_2.CSV",
-        skiprows=12,
     )
     df_mom["Date"] = pd.to_datetime(df_mom["Date"], format="%Y%m")
     df_mom.set_index("Date", inplace=True)
