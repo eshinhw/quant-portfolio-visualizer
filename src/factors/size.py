@@ -7,7 +7,7 @@ QUINTILES = ["Lo 20", "Qnt 2", "Qnt 3", "Qnt 4", "Hi 20"]
 
 def get_size_cummulative_returns():
     monthly_ret = pd.read_csv(
-        "https://github.com/eshinhw/quant-portfolio-visualizer/blob/main/src/famafrench/Portfolios_Formed_on_ME.CSV",
+        "https://github.com/eshinhw/quant-portfolio-visualizer/blob/main/src/famafrench/Portfolios_Formed_on_ME.CSV?raw=true",
     )
     monthly_ret[["Lo 20", "Qnt 2", "Qnt 3", "Qnt 4", "Hi 20"]]
     monthly_ret["Date"] = pd.to_datetime(monthly_ret["Date"], format="%Y%m")
