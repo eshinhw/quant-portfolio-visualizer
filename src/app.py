@@ -1,5 +1,5 @@
 from dash import Dash, html, dcc, callback, Output, Input, dash_table, ctx
-from navbar import navbar
+from src.navbar import navbar
 import dash
 import dash_bootstrap_components as dbc
 

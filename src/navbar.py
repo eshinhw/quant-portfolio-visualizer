@@ -14,16 +14,24 @@ navbar = dbc.NavbarSimple(
             label="Fama-French Factors",
         ),
         dbc.NavItem(dbc.NavLink("Fixed Portfolios", href="/fixed")),
-        # dbc.DropdownMenu(
-        #     children=[
-        #         dbc.DropdownMenuItem("Page 1", href="#"),
-        #         dbc.DropdownMenuItem("Page 2", href="#"),
-        #         dbc.DropdownMenuItem("Page 3", href="#"),
-        #     ],
-        #     nav=True,
-        #     in_navbar=True,
-        #     label="Momentum Portfolios",
-        # ),
+        dbc.DropdownMenu(
+            children=[
+                dbc.DropdownMenuItem("Absolute Momentum", href="/absolute_momentum"),
+                dbc.DropdownMenuItem("Relative Momentum", href="/relative_momentum"),
+                dbc.DropdownMenuItem("Dual Momentum", href="/dual_momentum"),
+            ],
+            nav=True,
+            in_navbar=True,
+            label="Momentum Portfolios",
+        ),
+        dbc.DropdownMenu(
+            children=[
+                dbc.DropdownMenuItem("Vigilant Asset Allocation (VAA)", href="/vaa"),
+            ],
+            nav=True,
+            in_navbar=True,
+            label="Keller Portfolios",
+        ),
     ],
     brand="Quant Portfolio Visualizer",
     brand_href="/",

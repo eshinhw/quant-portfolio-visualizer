@@ -7,7 +7,7 @@ import pandas as pd
 import datetime as dt
 import yfinance as yf
 
-from utils import monthly_prices
+from src.utils import monthly_prices
 
 
 class VAA:
