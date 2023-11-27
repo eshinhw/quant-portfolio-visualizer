@@ -5,7 +5,7 @@ from dash import Dash, html, dcc, callback, Output, Input, dash_table, ctx
 import plotly.express as px
 import pandas as pd
 
-dash.register_page(__name__)
+dash.register_page(__name__, title="Quant Portfolio Visualizer")
 
 cp = BasePortfolio("Classic 60/40 Portfolio", ["SPY", "IEF"], [0.6, 0.4])
 

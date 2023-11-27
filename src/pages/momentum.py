@@ -6,7 +6,7 @@ from factors.momentum import (
 from dash import Dash, html, dcc, callback, Output, Input, dash_table, ctx
 import plotly.express as px
 
-dash.register_page(__name__)
+dash.register_page(__name__, title="Quant Portfolio Visualizer")
 
 
 def update_graph():

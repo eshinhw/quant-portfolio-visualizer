@@ -4,7 +4,7 @@ from dash import Dash, html, dcc, callback, Output, Input, dash_table, ctx
 import plotly.express as px
 
 
-dash.register_page(__name__, path="/")
+dash.register_page(__name__, path="/", title="Quant Portfolio Visualizer")
 
 
 layout = html.Div(

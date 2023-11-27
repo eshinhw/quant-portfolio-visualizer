@@ -4,7 +4,7 @@ from factors.beta import get_beta_cummulative_returns, beta_factor_stat
 import plotly.express as px
 
 
-dash.register_page(__name__)
+dash.register_page(__name__, title="Quant Portfolio Visualizer")
 
 
 def update_graph():

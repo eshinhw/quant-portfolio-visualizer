@@ -4,7 +4,7 @@ from factors.value import get_pbr_cummulative_returns, pbr_factor_stat
 import plotly.express as px
 
 
-dash.register_page(__name__)
+dash.register_page(__name__, title="Quant Portfolio Visualizer")
 
 
 def update_graph():

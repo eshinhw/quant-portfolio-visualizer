@@ -4,7 +4,7 @@ from factors.size import get_size_cummulative_returns, size_factor_stat
 import plotly.express as px
 
 
-dash.register_page(__name__)
+dash.register_page(__name__, title="Quant Portfolio Visualizer")
 
 
 def update_graph():
