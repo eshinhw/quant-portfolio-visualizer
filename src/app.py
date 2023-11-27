@@ -9,6 +9,8 @@ app = Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     pages_folder="pages",
     use_pages=True,
+    assets_folder="../assets",
+    update_title=None,
 )
 
 server = app.server
