@@ -2,6 +2,8 @@ import dash
 from dash import Dash, html, dcc, callback, Output, Input, dash_table, ctx
 from factors.value import get_pbr_cummulative_returns, pbr_factor_stat
 import plotly.express as px
+import dash_bootstrap_components as dbc
+import utils
 
 
 dash.register_page(__name__, title="Quant Portfolio Visualizer")
@@ -26,13 +28,18 @@ def update_heading():
     )
 
 
-layout = html.Div(
+layout = dbc.Container(
     [
-        update_heading(),
-        dcc.Graph(id="graph-content", figure=update_graph()),
+        utils.update_heading("Value", get_pbr_cummulative_returns()),
+        dcc.Graph(
+            id="graph-content", figure=utils.update_graph(get_pbr_cummulative_returns())
+        ),
         dash_table.DataTable(
-            id="table-content", sort_action="native", data=update_table()
+            id="table-content",
+            sort_action="native",
+            data=utils.update_table(pbr_factor_stat()),
+            style_table={"overflowX": "auto"},
         ),
     ],
-    className="m-2",
+    fluid="md",
 )
