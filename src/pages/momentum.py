@@ -26,4 +26,5 @@ layout = dbc.Container(
         ),
     ],
     fluid="md",
+    className="content-container",
 )
