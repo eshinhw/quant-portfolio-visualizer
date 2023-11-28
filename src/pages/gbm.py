@@ -58,12 +58,12 @@ def create_cum_returns_graph():
 
 def create_table():
     gbm_port = get_port_returns()
-    print(gbm_port)
+
     stats = {"Portfolio": ["Global Balanced Momentum"], "CAGR": [], "MDD": []}
     # compute CAGR
     first_value = gbm_port.iloc[0, -1]
     last_value = gbm_port.iloc[-1, -1]
-    print(first_value, last_value)
+
     years = gbm_port.shape[0] / 12
     cagr = (last_value / first_value) ** (1 / years) - 1
 

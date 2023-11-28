@@ -37,7 +37,6 @@ def get_gem_port_rets():
     monthly_gem_returns = gem_prices.pct_change()
     monthly_gem_returns.dropna(inplace=True)
     monthly_gem_returns = monthly_gem_returns[rank_df.index[0] :].shift(-1)
-    print(monthly_gem_returns)
 
     monthly_gem_returns["port_ret"] = np.multiply(rank_df, monthly_gem_returns).sum(
         axis=1
@@ -60,12 +59,12 @@ def create_cum_ret_graph():
 
 def create_table():
     gem_port = get_gem_port_rets()
-    print(gem_port)
+
     stats = {"Portfolio": ["Global Equities Momentum"], "CAGR": [], "MDD": []}
     # compute CAGR
     first_value = gem_port.iloc[0, -2]
     last_value = gem_port.iloc[-1, -2]
-    print(first_value, last_value)
+
     years = gem_port.shape[0] / 12
     cagr = (last_value / first_value) ** (1 / years) - 1
 
