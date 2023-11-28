@@ -14,16 +14,15 @@ navbar = dbc.NavbarSimple(
             label="Fama-French Factors",
         ),
         dbc.NavItem(dbc.NavLink("Fixed Portfolios", href="/fixed")),
-        # dbc.DropdownMenu(
-        #     children=[
-        #         dbc.DropdownMenuItem("Absolute Momentum", href="/absolute_momentum"),
-        #         dbc.DropdownMenuItem("Relative Momentum", href="/relative_momentum"),
-        #         dbc.DropdownMenuItem("Dual Momentum", href="/dual_momentum"),
-        #     ],
-        #     nav=True,
-        #     in_navbar=True,
-        #     label="Momentum Portfolios",
-        # ),
+        dbc.DropdownMenu(
+            children=[
+                dbc.DropdownMenuItem("GEM (Global Equities Momentum)", href="/gem"),
+                dbc.DropdownMenuItem("GBM (Global Balanced Momentum)", href="/gbm"),
+            ],
+            nav=True,
+            in_navbar=True,
+            label="Momentum Portfolios",
+        ),
         # dbc.DropdownMenu(
         #     children=[
         #         dbc.DropdownMenuItem("Vigilant Asset Allocation (VAA)", href="/vaa"),
