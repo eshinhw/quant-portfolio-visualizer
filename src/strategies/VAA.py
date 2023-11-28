@@ -252,9 +252,3 @@ if __name__ == "__main__":
     vaa = VAA()
     vaa.decision()
     print(vaa.monthly_return())
-
-
-if __name__ == "__main__":
-    vaa = VAA()
-    vaa.decision()
-    print(vaa.monthly_return())
