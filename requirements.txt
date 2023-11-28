@@ -7,3 +7,4 @@ pandas==1.5.3
 pandas_datareader==0.10.0
 plotly==5.9.0
 yfinance==0.2.18
+gunicorn==21.2.0
