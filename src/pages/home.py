@@ -28,6 +28,16 @@ layout = dbc.Container(
                     ]
                 ),
                 html.H5("Momentum Portfolios"),
+                html.Ul(
+                    [
+                        html.Li(
+                            dcc.Link("Global Equities Momentum (GEM)", href="/gem")
+                        ),
+                        html.Li(
+                            dcc.Link("Global Balanced Momentum (GBM)", href="/gbm")
+                        ),
+                    ]
+                ),
             ],
         ),
     ],
