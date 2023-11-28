@@ -22,9 +22,9 @@ layout = dbc.Container(
                 html.H5("Fixed Portfolios"),
                 html.Ul(
                     [
-                        html.Li(dcc.Link("Classic 60/40 Portfolio", href="/classic")),
-                        html.Li(dcc.Link("All Weather Portfolio", href="/allweather")),
-                        html.Li(dcc.Link("Permanent Portfolio", href="/permanent")),
+                        html.Li(dcc.Link("Classic 60/40 Portfolio", href="/fixed")),
+                        html.Li(dcc.Link("All Weather Portfolio", href="/fixed")),
+                        html.Li(dcc.Link("Permanent Portfolio", href="/fixed")),
                     ]
                 ),
                 html.H5("Momentum Portfolios"),
