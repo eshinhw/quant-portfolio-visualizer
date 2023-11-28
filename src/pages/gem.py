@@ -82,6 +82,15 @@ def create_table():
     return df.to_dict("records")
 
 
+def create_mdd_graph():
+    gem_port = get_gem_port_rets()
+    # compute MDD
+    cumulative_returns = gem_port["GEM"]
+    previous_peaks = cumulative_returns.cummax()
+    drawdown = (cumulative_returns - previous_peaks) / previous_peaks
+    return px.line(drawdown)
+
+
 layout = dbc.Container(
     [
         html.Div(
@@ -100,7 +109,15 @@ layout = dbc.Container(
                 html.H5("Historical Cummulative Returns", style={"margin-top": "20px"}),
                 dcc.Graph(
                     figure=create_cum_ret_graph(),
-                    id="total-perf-graph",
+                    responsive=True,
+                ),
+            ]
+        ),
+        html.Div(
+            [
+                html.H5("Historical Drawdowns", style={"margin-top": "20px"}),
+                dcc.Graph(
+                    figure=create_mdd_graph(),
                     responsive=True,
                 ),
             ]
