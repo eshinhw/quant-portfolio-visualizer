@@ -70,7 +70,6 @@ layout = dbc.Container(
                     update_table(),
                     id="total-perf-table",
                     style_cell={"textAlign": "center"},
-                    style_table={"overflowX": "auto"},
                     sort_action="native",
                 ),
             ]
