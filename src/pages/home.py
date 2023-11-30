@@ -19,7 +19,7 @@ layout = dbc.Container(
                         html.Li(dcc.Link("Momentum", href="/momentum")),
                     ]
                 ),
-                html.H5("Fixed Portfolios"),
+                html.H5("Fixed Weights Portfolios"),
                 html.Ul(
                     [
                         html.Li(dcc.Link("Classic 60/40 Portfolio", href="/fixed")),
