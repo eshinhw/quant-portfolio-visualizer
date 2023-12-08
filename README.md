@@ -24,7 +24,6 @@
 - Size
 - Value
 - Momentum
-  dafdsa
 
 ## Portfolio Asset Allocation Strategies
 
