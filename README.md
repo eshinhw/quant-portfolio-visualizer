@@ -50,7 +50,7 @@
 
 <div align="center">
   
-  <img width="1200" height="600" alt="" src="https://github.com/eshinhw/factor-portfolio-visualizer/assets/41933169/2cd528cf-7385-4692-ab8c-464f59216e04">
+  <img width="1200" height="600" alt="" src="https://github.com/eshinhw/quant-portfolio-visualizer/assets/41933169/1a6eedaa-36a3-448f-b94f-b73b4b4c2784">
 
 </div>
 
