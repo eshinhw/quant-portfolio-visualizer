@@ -40,7 +40,9 @@
 ## How to Install and Run
 
 1. Clone the repo
-2. Run `python app.py`
+2. Run virtual environment by `source venv/bin/activate`
+3. Run `python src/app.py`
+4. Wait until you see `Dash is running on http://127.0.0.1:8050/` on the console.
 
 ## Data Source
 
@@ -49,7 +51,7 @@
 ## Demo Screenshot
 
 <div align="center">
-  
-  <img width="1200" height="600" alt="" src="https://github.com/eshinhw/quant-portfolio-visualizer/assets/41933169/1a6eedaa-36a3-448f-b94f-b73b4b4c2784">
+
+  <img width="1200" height="600" alt="" src="https://github.com/eshinhw/quant-portfolio-visualizer/assets/41933169/f62c82a0-d2f1-4289-ae30-864aae4364b1">
 
 </div>
